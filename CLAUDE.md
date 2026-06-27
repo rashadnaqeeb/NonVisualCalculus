@@ -154,6 +154,33 @@ with no error the player can see. Every catch logs via `Plugin.Logger.LogWarning
 failed and where. No empty catches, no catch-and-return-default without logging. A logged failure is
 actionable; a silent one is invisible.
 
+## Gotchas
+
+Recurring traps found while building readers. These bite again on each new screen, so check them
+before assuming a control reads cleanly.
+
+**Animated numbers read 4x and out of order.** DE renders numbers with `NumericFlipClock` (and
+subclasses `AbilityGradeFlipClock`/`MoneyFlipClock`/`LongNumericFlipClock`), a split-flap that stacks
+the digit as several `TMP_Text` layers, so a `GetComponentsInChildren<TMP_Text>` sweep returns the
+same digit several times, often before its label ("5 5 5 5 INT"). Read `flipClock.targetValue` (an int,
+exposed as a property by Il2CppInterop; use `targetValue` not `currentValue` so it's right mid-animation).
+Hits archetype stats, character-sheet attributes/skills, and money.
+
+**Menu labels are not all TMP, and captions are display-styled.** Many menus (save/load especially)
+are mostly legacy `UnityEngine.UI.Text`, not TMP, so sweep both. Button captions are bracket-framed
+ALL-CAPS for display ("[ DELETE SELECTED]") while the I2 term resolves to natural case ("Delete
+selected"); strip the brackets (UI-scoped only, not in the general TextFilter) so it recases and isn't
+voiced as "left bracket". Icon buttons are image-only with no text child: their root `I2.Loc.Localize`
+term ends in `_IMG`; the spoken caption lives at the sibling `Buttons/<base>_TEXT` term.
+
+**Tooling traps.** Launch via `steam.exe -applaunch 632470` (the `steam://rungameid/...` URL silently
+no-ops here). Kill the game with `MSYS_NO_PATHCONV=1 taskkill.exe /F /IM disco.exe` (plain `taskkill`
+from the Bash tool mangles `/F` into a path). Don't invoke `powershell.exe` from the Bash tool; the
+auto-mode classifier blocks it, so build with `dotnet build` directly. Adding or altering a
+`DiscoAccess.Core` type is NOT picked up by F6/`POST /reload` (Core loads permanently in the host's
+default context); the reload reports success but `Module.Tick` then throws `TypeLoadException` every
+frame, so do a full restart (close game, `dotnet build`, relaunch). Pure-module edits hot-reload fine.
+
 ## Common LLM Antipatterns
 
 ### Comments and docs: state what is, not what isn't
