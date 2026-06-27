@@ -27,9 +27,29 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
-        public void Clean_CollapsesWhitespaceAndNewlines()
+        public void Clean_CollapsesSpacesAndTabs()
         {
-            Assert.Equal("line one line two", TextFilter.Clean("line one\n\n   line two\t"));
+            Assert.Equal("line one line two", TextFilter.Clean("line   one\t line two"));
+        }
+
+        [Fact]
+        public void Clean_NewlineBecomesSentenceBreak()
+        {
+            Assert.Equal("line one. line two", TextFilter.Clean("line one\n\n   line two\t"));
+        }
+
+        [Fact]
+        public void Clean_NewlineAfterSentencePunctuation_NotDoubled()
+        {
+            Assert.Equal("Easier for dyslexics. Unavailable in Chinese.",
+                TextFilter.Clean("Easier for dyslexics.\nUnavailable in Chinese."));
+        }
+
+        [Fact]
+        public void Clean_MultiLineList_ReadsAsSentences()
+        {
+            Assert.Equal("Full, all voiced. Psychological, except narration. Classic, intros only",
+                TextFilter.Clean("Full, all voiced\nPsychological, except narration\nClassic, intros only"));
         }
     }
 }
