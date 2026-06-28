@@ -21,10 +21,12 @@ namespace DiscoAccess.Module.Nav
     /// still runs. The lever is reasserted each frame in case the game re-enables InControl (e.g. on
     /// focus/device change).
     ///
-    /// The lever is taken ONLY while we actively drive a registered screen: a screen with no registered
-    /// <see cref="Screen"/> (not yet migrated) and any frame the caller marks suppressed (a modal popup is
-    /// up, running its own navigation) hand the keyboard back to the game, so the legacy focus-follower
-    /// fallback and the game's own popups keep working while screens migrate one at a time.
+    /// The lever is taken while we drive a registered screen OR the popup overlay. DE's shared
+    /// confirmation/error/quit popup (<see cref="PopupOverlay"/>) floats over any view rather than matching a
+    /// ViewType, so it is resolved by visibility ahead of the view's own screen and driven as a navigable
+    /// overlay; the screen underneath is kept attached and resumed in place when the popup closes. A screen
+    /// with no registered <see cref="Screen"/> (not yet migrated) and no popup hands the keyboard back to the
+    /// game, so the legacy focus-follower fallback keeps working while screens migrate one at a time.
     /// </summary>
     public sealed class ScreenManager
     {
@@ -42,9 +44,15 @@ namespace DiscoAccess.Module.Nav
         // Whether we drove (owned the keyboard) last frame, so the lever is restored exactly once when we
         // stop driving rather than forced every frame (which would fight a lock the game itself set).
         private bool _wasOwning;
-        // Whether a modal popup suppressed us last frame, so a registered screen re-announces its focus
-        // when the popup closes (the popup leaves our navigator's focus untouched but unspoken).
-        private bool _wasSuppressed;
+        // The attached screen's root, kept so the screen under a popup resumes in place (its tree and
+        // remembered focus intact) when the popup closes, without a rebuild that would lose the player's
+        // place. Null when no registered screen is attached.
+        private Container _baseRoot;
+        // Whether the popup overlay drove last frame, so the screen underneath re-announces its focus when
+        // the popup closes (the popup left our navigator pointed at its own tree, the screen's untouched but
+        // unspoken). Paired with the live message to re-announce when one prompt replaces another in place.
+        private bool _popupActive;
+        private string _lastPopupMessage;
         // Whether ViewsPagesBridge.Current has ever returned: before the view system finishes booting it
         // throws, which is expected; once it has worked, a later throw is a real failure.
         private bool _bridgeReady;
@@ -112,13 +120,38 @@ namespace DiscoAccess.Module.Nav
         public void DeferEscapeToGame() => InControl.InputManager.Enabled = true;
 
         /// <summary>Resolve the active screen and set keyboard ownership for this frame. Call before
-        /// polling input. <paramref name="suppressed"/> forces the keyboard back to the game even on a
-        /// registered screen (a modal popup is up and owns the frame). <paramref name="editEnded"/> means a
-        /// text edit just committed, so the standing screen re-reads the focused control once.</summary>
-        public void Tick(bool suppressed, bool editEnded)
+        /// polling input. <paramref name="editEnded"/> means a text edit just committed, so the standing
+        /// screen re-reads the focused control once.</summary>
+        public void Tick(bool editEnded)
         {
-            bool wasSuppressed = _wasSuppressed;
-            _wasSuppressed = suppressed;
+            // The popup overlay floats over any view; while up, our navigator drives it ahead of the view's
+            // own screen. It needs no view system, so it is resolved before the view-ready gate below. The
+            // screen underneath stays attached (_attachedScreen/_baseRoot untouched) so it resumes on close.
+            if (PopupOverlay.IsShowing())
+            {
+                InControl.InputManager.Enabled = false; // reasserted each frame, like the screen path
+                _wasOwning = true;
+                OwnsKeyboard = true;
+                string msg = PopupOverlay.Message();
+                // Build and announce on open, and again when one prompt replaces another in place (the
+                // controller is reused, so its visibility never drops between two sequential prompts).
+                if (!_popupActive || msg != _lastPopupMessage)
+                {
+                    _nav.Attach(PopupOverlay.BuildRoot());
+                    _host.Speech.Speak(msg, interrupt: true); // supersedes; the landing button queues behind
+                    _nav.AnnounceCurrent();
+                    _popupActive = true;
+                    _lastPopupMessage = msg;
+                }
+                return;
+            }
+
+            // The popup just closed: the screen under it (if registered) resumes below. Flag it so the
+            // standing-screen branch re-attaches our navigator to that screen's root and re-announces the
+            // focus the popup left untouched but unspoken.
+            bool popupJustClosed = _popupActive;
+            _popupActive = false;
+            _lastPopupMessage = null;
 
             if (!TryGetView(out ViewType view))
             {
@@ -132,7 +165,7 @@ namespace DiscoAccess.Module.Nav
 
             Screen screen = Resolve(view);
             bool registered = screen != null;
-            bool own = registered && !suppressed;
+            bool own = registered;
 
             // Take the lever only while we actively drive, reasserted each frame (the game re-enables
             // InControl on focus/device changes), and restore it exactly once when we stop. On frames we
@@ -151,19 +184,25 @@ namespace DiscoAccess.Module.Nav
                 {
                     _nav.Attach(null);
                     _attachedScreen = null;
+                    _baseRoot = null;
                 }
                 return;
             }
 
             if (screen == _attachedScreen)
             {
+                // A popup just closed over us: it left our navigator pointed at its own tree, so restore it
+                // to this screen's root (kept intact under the popup) before refreshing and re-announcing.
+                if (popupJustClosed)
+                    _nav.Attach(_baseRoot);
+
                 // Refresh the screen's dynamic content FIRST (a rich screen may rebuild its tree and re-home
                 // focus), THEN announce once. Announcing after the update means we read the live focus, not a
                 // cell the rebuild just destroyed, and the single announce avoids double-speaking. Speak when:
-                // a modal popup just closed over us (focus untouched but unheard), a text edit just committed
-                // (hear the result and landing), or the update re-homed focus this frame.
+                // a popup just closed over us (focus untouched but unheard), a text edit just committed (hear
+                // the result and landing), or the update re-homed focus this frame.
                 bool refocused = screen.OnUpdate(_host, _nav);
-                if (wasSuppressed || editEnded || refocused)
+                if (popupJustClosed || editEnded || refocused)
                     _nav.AnnounceCurrent();
                 return;
             }
@@ -176,10 +215,12 @@ namespace DiscoAccess.Module.Nav
             // handed back to the game by the pump, see DeferEscapeToGame.)
             try
             {
-                _nav.Attach(screen.BuildRoot(_host));
+                Container root = screen.BuildRoot(_host);
+                _nav.Attach(root);
                 _host.Speech.Speak(screen.ScreenName, interrupt: true); // supersedes; the landing queues behind
                 _nav.AnnounceCurrent();
                 _attachedScreen = screen;
+                _baseRoot = root; // kept so the screen resumes in place under a popup
                 _buildFailed = null;
             }
             catch (System.Exception e)
@@ -194,6 +235,7 @@ namespace DiscoAccess.Module.Nav
                 OwnsKeyboard = false;
                 _nav.Attach(null);
                 _attachedScreen = null;
+                _baseRoot = null;
             }
         }
 
@@ -229,6 +271,9 @@ namespace DiscoAccess.Module.Nav
             InControl.InputManager.Enabled = true;
             _nav.Attach(null);
             _attachedScreen = null;
+            _baseRoot = null;
+            _popupActive = false;
+            _lastPopupMessage = null;
             _wasOwning = false;
             OwnsKeyboard = false;
         }

@@ -30,7 +30,8 @@ namespace DiscoAccess.Module
     /// tooltip via <see cref="OptionAdapter"/>; an Adjust Abilities stat via <see cref="AbilityAdapter"/>;
     /// a signature skill portrait via <see cref="SkillAdapter"/>; anything else via the generic
     /// <see cref="FocusReader"/> - and re-announces just the changed part on an in-place change. It also
-    /// announces the screen the player just opened. A modal confirmation/error popup overrides both paths.
+    /// announces the screen the player just opened. The confirmation popup is driven by the ScreenManager
+    /// overlay (it owns the keyboard while up), so this fallback stands down for it like any owned screen.
     ///
     /// This is the implementor the host loads by interface scan; future dialogue/inventory/world readers
     /// and any Harmony patches join it here, and the focus-follower shrinks as screens migrate.
@@ -67,7 +68,7 @@ namespace DiscoAccess.Module
         // setting it as their signature where focus does not move. Null when the focus is not a skill.
         private string _lastSkillSignature;
         // The authored name of the screen last announced, for detecting a screen change. Null before any
-        // named screen is shown.
+        // named screen is shown. (The confirmation popup is driven by the ScreenManager overlay, not here.)
         private string _lastScreen;
         // When a screen opens its focus settles over several frames (e.g. options lands on the tab
         // header, then on the first setting), and only the last is worth speaking. While the unscaled
@@ -77,9 +78,6 @@ namespace DiscoAccess.Module
         // Set with the settle window so the control spoken when it expires queues behind the screen name
         // instead of interrupting it; cleared once that one focus is spoken.
         private bool _suppressFocusInterrupt;
-        // The message of the confirmation/error popup currently up, for announcing it once on open and
-        // again if it changes to a new prompt. Null when no popup is shown.
-        private string _lastDialogMessage;
 
         public void Load(IModHost host)
         {
@@ -132,9 +130,6 @@ namespace DiscoAccess.Module
 
         public void Tick()
         {
-            // A modal confirmation/error popup (quit, errors, yes/no prompts) runs its own navigation and
-            // needs the game's input; read it first so our navigator stands down (hands the keyboard back)
-            // wherever it appears, including over a registered screen. Read once and reused below.
             // A rename cell entered edit mode last frame and parked its field here; focus it now, a frame
             // after the activating Enter, so the field does not consume that Enter and commit immediately.
             // Done before the editing check so the freshly focused field suppresses us this same frame.
@@ -145,18 +140,15 @@ namespace DiscoAccess.Module
                 if (pending != null) { pending.Select(); pending.ActivateInputField(); }
             }
 
-            string dialog = ConfirmDialogAdapter.TryRead();
-            bool dialogUp = !string.IsNullOrEmpty(dialog);
-
             // Recompute the text-edit gate up front, before input is polled: while a save-name field owns
             // the keyboard our navigator must stand down so keys reach it. A text edit does NOT hand the
             // keyboard back to the game (see TextEditGate); it only gates our own dispatch, via _editGate.
             _editGate.Update();
 
             // Resolve keyboard ownership for this frame BEFORE polling input (the UI category gates on it):
-            // our navigator takes the keyboard on a registered screen with no popup; a popup hands it back.
-            // A just-ended text edit asks the standing screen to re-read the focused control once.
-            _screens.Tick(suppressed: dialogUp, editEnded: _editGate.JustEnded);
+            // our navigator takes the keyboard on a registered screen or the confirmation popup overlay. A
+            // just-ended text edit asks the standing screen to re-read the focused control once.
+            _screens.Tick(editEnded: _editGate.JustEnded);
 
             // Poll our own keyboard input. A Global hotkey fires no matter what screen or popup is up; a
             // UI key routes into the navigator only while it owns the keyboard and is not gated for an edit.
@@ -170,11 +162,6 @@ namespace DiscoAccess.Module
             // DEV: drive navigation and text entry from a command file, so the flow can be exercised
             // headless (a backgrounded window takes no real keys). Dormant unless DISCOACCESS_DEV=1.
             if (_devEnabled) PumpDevCommands();
-
-            // The popup owns the frame while up; announce it (and reset the focus dedup on close so the
-            // restored control re-announces).
-            if (TickDialog(dialog))
-                return;
 
             // Speak "edit mode" as editing engages so the player knows they can type. The matching re-read
             // when editing ends is driven through _screens.Tick (editEnded) above, so it lands after any
@@ -337,31 +324,6 @@ namespace DiscoAccess.Module
                 return ArchetypeAnnouncer.Compose(archetype);
 
             return FocusReader.Read(selected);
-        }
-
-        // Announce DE's shared confirmation/error popup when it appears, and again if its message changes
-        // to a new prompt. Returns whether a popup is up, so Tick skips the focus work it cannot see. The
-        // popup supersedes whatever was being said, so it interrupts like navigation. When it closes, the
-        // restored focus is forced to re-announce: the popup set no focus, so the dedup would otherwise
-        // leave the user not knowing where they landed.
-        private bool TickDialog(string message)
-        {
-            if (string.IsNullOrEmpty(message))
-            {
-                if (_lastDialogMessage != null)
-                {
-                    _lastSelected = IntPtr.Zero;
-                    _lastDialogMessage = null;
-                }
-                return false;
-            }
-
-            if (message != _lastDialogMessage)
-            {
-                _host.Speech.Speak(message, interrupt: true);
-                _lastDialogMessage = message;
-            }
-            return true;
         }
 
         // The window after a screen opens during which focus is left to settle before it is read. Long
