@@ -1,6 +1,11 @@
 using System;
+using DiscoAccess.Core.Input;
 using DiscoAccess.Core.Modularity;
+using DiscoAccess.Core.Strings;
 using DiscoAccess.Core.UI;
+using DiscoAccess.Core.UI.Nav;
+using DiscoAccess.Module.Input;
+using DiscoAccess.Module.Nav;
 using HarmonyLib;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -25,6 +30,13 @@ namespace DiscoAccess.Module
     {
         private IModHost _host;
         private Harmony _harmony;
+        // The keyboard input substrate, owned here so it is rebuilt fresh on each hot-reload (a Core
+        // static registry would accumulate duplicate registrations). Holds no native handle.
+        private InputManager _input;
+        // Our own UI navigation, driven while focus mode owns the keyboard. The legacy focus-follower
+        // below runs only when focus mode is off, and is being superseded screen by screen.
+        private ScreenManager _screens;
+        private static readonly InputCategory[] UiCategory = { InputCategory.UI };
         private IntPtr _lastSelected = IntPtr.Zero;
         // The value-only readout of the focused options control, for detecting an in-place change
         // (adjusting a slider, toggling) where focus does not move. Null when the focus is not an
@@ -59,6 +71,38 @@ namespace DiscoAccess.Module
             // future readers register them through this instance.
             _harmony = new Harmony("com.rashad.discoaccess.module");
 
+            // Stand up the keyboard input substrate and our UI navigation.
+            _input = new InputManager();
+            _screens = new ScreenManager(_host);
+            FocusMode.Init(_host);
+
+            // Focus mode (Global): the master switch. On takes the keyboard for our nav; off hands it back.
+            _input.Register("focus.toggle", Strings.InputToggleFocusMode, InputCategory.Global, () =>
+            {
+                FocusMode.Toggle();
+                _host.Speech.Speak(FocusMode.Active ? Strings.FocusModeOn : Strings.FocusModeOff, interrupt: true);
+                if (!FocusMode.Active) _screens.Reset();
+            }).AddBinding(new KeyboardBinding(KeyCode.A, ctrl: true, shift: true));
+
+            // UI navigation keys: live only while focus mode declares the UI category, and routed into the
+            // navigator by the dispatcher below. Directions and Tab auto-repeat while held.
+            _input.Register(UiActions.Up, Strings.InputNavigateUp, InputCategory.UI).AddBinding(new KeyboardBinding(KeyCode.UpArrow)).Repeating();
+            _input.Register(UiActions.Down, Strings.InputNavigateDown, InputCategory.UI).AddBinding(new KeyboardBinding(KeyCode.DownArrow)).Repeating();
+            _input.Register(UiActions.Left, Strings.InputNavigateLeft, InputCategory.UI).AddBinding(new KeyboardBinding(KeyCode.LeftArrow)).Repeating();
+            _input.Register(UiActions.Right, Strings.InputNavigateRight, InputCategory.UI).AddBinding(new KeyboardBinding(KeyCode.RightArrow)).Repeating();
+            _input.Register(UiActions.Next, Strings.InputNextControl, InputCategory.UI).AddBinding(new KeyboardBinding(KeyCode.Tab)).Repeating();
+            _input.Register(UiActions.Prev, Strings.InputPrevControl, InputCategory.UI).AddBinding(new KeyboardBinding(KeyCode.Tab, shift: true)).Repeating();
+            _input.Register(UiActions.Activate, Strings.InputActivate, InputCategory.UI)
+                .AddBinding(new KeyboardBinding(KeyCode.Return)).AddBinding(new KeyboardBinding(KeyCode.KeypadEnter));
+            _input.Register(UiActions.Back, Strings.InputBack, InputCategory.UI).AddBinding(new KeyboardBinding(KeyCode.Escape));
+            _input.Register(UiActions.Home, Strings.InputJumpFirst, InputCategory.UI).AddBinding(new KeyboardBinding(KeyCode.Home));
+            _input.Register(UiActions.End, Strings.InputJumpLast, InputCategory.UI).AddBinding(new KeyboardBinding(KeyCode.End));
+
+            // The UI category is live only in focus mode; a fired UI key routes into the navigator.
+            _input.ActiveCategoriesProvider = () => FocusMode.Active ? UiCategory : null;
+            _input.JustPressedDispatcher = a =>
+                FocusMode.Active && a.Category == InputCategory.UI && _screens.Dispatch(a.Key);
+
             // Surface any view ScreenAdapter neither names nor silences (e.g. one a game update added),
             // so it is noticed and named rather than going silently unannounced.
             foreach (var view in ScreenAdapter.UnmappedScreens())
@@ -67,6 +111,19 @@ namespace DiscoAccess.Module
 
         public void Tick()
         {
+            // Poll our own keyboard input first, every frame, ungated by the focus reader's early returns
+            // below: a Global hotkey must work no matter what screen or popup is up.
+            _input.Tick(Time.unscaledTime);
+
+            // Focus mode owns the keyboard: reassert the input mutes and drive our own navigation. The
+            // legacy focus-follower below is the focus-mode-off path, superseded screen by screen.
+            if (FocusMode.Active)
+            {
+                FocusMode.Tick();
+                _screens.Tick();
+                return;
+            }
+
             // A modal confirmation/error popup (quit, errors, yes/no prompts) runs its own navigation and
             // sets no focus selection, so the focus poller below cannot see it; catch it here and let it
             // own the frame while it is open.
@@ -284,8 +341,13 @@ namespace DiscoAccess.Module
 
         public void Dispose()
         {
+            // Hand the keyboard back to the game before tearing down, so a reload never leaves
+            // NavigationManager disabled or a view's Escape listener removed.
+            FocusMode.Set(false);
             _harmony?.UnpatchSelf();
             _harmony = null;
+            _input = null; // owns no native handle; the registration list goes with the dropped context
+            _screens = null;
             _host = null;
         }
     }

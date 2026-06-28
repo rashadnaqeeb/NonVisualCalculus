@@ -10,6 +10,29 @@ namespace DiscoAccess.Core.Strings
         public const string ModLoaded = "Disco Elysium access loaded";
         public const string ModuleFailed = "DiscoAccess features failed to load";
 
+        // Focus mode: our keyboard-navigation master switch. On engages our own UI navigation (and mutes
+        // the game's menu input); off hands the keyboard back to the game. Spoken on toggle.
+        public const string FocusModeOn = "focus mode on";
+        public const string FocusModeOff = "focus mode off";
+
+        // Input action descriptions: the human-readable name of each bound action, for a keybindings
+        // reader to speak. DE names none of these (they are our own controls), so they are authored.
+        public const string InputToggleFocusMode = "Toggle focus mode";
+        public const string InputNavigateUp = "Navigate up";
+        public const string InputNavigateDown = "Navigate down";
+        public const string InputNavigateLeft = "Navigate left";
+        public const string InputNavigateRight = "Navigate right";
+        public const string InputNextControl = "Next control";
+        public const string InputPrevControl = "Previous control";
+        public const string InputActivate = "Activate control";
+        public const string InputBack = "Back";
+        public const string InputJumpFirst = "Jump to first";
+        public const string InputJumpLast = "Jump to last";
+
+        // Control role words, spoken after a control's label so the user knows what it is.
+        public const string RoleButton = "button";
+        public const string RoleList = "list";
+
         // Options screen: control-type words, spoken after the setting name so the user knows the
         // interaction model (adjust, toggle, or open a menu).
         public const string ControlSlider = "slider";
