@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using DiscoAccess.Core.Input;
 using DiscoAccess.Core.Modularity;
 using DiscoAccess.Core.Strings;
@@ -36,7 +34,7 @@ namespace DiscoAccess.Module
     /// This is the implementor the host loads by interface scan; future dialogue/inventory/world readers
     /// and any Harmony patches join it here, and the focus-follower shrinks as screens migrate.
     /// </summary>
-    public sealed class FocusModule : IModModule
+    public sealed class FocusModule : IModModule, IDevDriver
     {
         private IModHost _host;
         private Harmony _harmony;
@@ -82,7 +80,6 @@ namespace DiscoAccess.Module
         public void Load(IModHost host)
         {
             _host = host;
-            _devEnabled = Environment.GetEnvironmentVariable("DISCOACCESS_DEV") == "1";
             // A per-load id so a reload's Dispose unpatches exactly this load's patches. No patches yet;
             // future readers register them through this instance.
             _harmony = new Harmony("com.rashad.discoaccess.module");
@@ -158,10 +155,6 @@ namespace DiscoAccess.Module
             // Home/End, Escape) drive the results through _input above; this reads only the unbound typed
             // text, gated on the same text-edit state so it never fights the save-name field.
             _typeahead.Tick(_screens, _editGate.Active);
-
-            // DEV: drive navigation and text entry from a command file, so the flow can be exercised
-            // headless (a backgrounded window takes no real keys). Dormant unless DISCOACCESS_DEV=1.
-            if (_devEnabled) PumpDevCommands();
 
             // Speak "edit mode" as editing engages so the player knows they can type. The matching re-read
             // when editing ends is driven through _screens.Tick (editEnded) above, so it lands after any
@@ -369,85 +362,25 @@ namespace DiscoAccess.Module
             return go != null ? go.GetComponent<Selectable>() : null;
         }
 
-        // DEV: a command file dropped by the test harness, drained one command per frame so injected keys
-        // mimic real key-per-frame input. Lines: "nav:down|up|left|right|enter|back|tab|home|end", "type:<text>".
-        // Off unless DISCOACCESS_DEV=1, so normal play never touches the file.
-        private bool _devEnabled;
-        private readonly Queue<string> _devCmds = new Queue<string>();
-        private static readonly string DevCmdFile = Path.Combine(Path.GetTempPath(), "disco_devcmd.txt");
-
-        private void PumpDevCommands()
+        // Dev seam (IDevDriver): drive our navigator from the dev server's /input, the headless counterpart
+        // to a real key. Mirrors the live JustPressedDispatcher: dispatch only while our navigator owns the
+        // keyboard and no text field has it, and hand an unconsumed Escape back to the game. Returns null
+        // when our navigator is not driving, so the host falls back to the game's own input injector.
+        public string DispatchUi(string action)
         {
-            try
+            if (_screens == null || !_screens.OwnsKeyboard || _editGate.Active)
+                return null;
+            bool consumed = _screens.Dispatch(action);
+            if (!consumed && action == UiActions.Back)
             {
-                if (File.Exists(DevCmdFile))
-                {
-                    foreach (var line in File.ReadAllLines(DevCmdFile))
-                        if (!string.IsNullOrWhiteSpace(line)) _devCmds.Enqueue(line.Trim());
-                    File.Delete(DevCmdFile);
-                }
+                _screens.DeferEscapeToGame();
+                return "back handed to the game (screen has no Back of its own)";
             }
-            catch (Exception e) { _host.LogWarning("dev cmd read: " + e.Message); }
-
-            if (_devCmds.Count == 0) return;
-            string cmd = _devCmds.Dequeue();
-            try { ApplyDevCommand(cmd); }
-            catch (Exception e) { _host.LogWarning("dev cmd '" + cmd + "': " + e.Message); }
+            return (consumed ? "consumed " : "unconsumed ") + action;
         }
 
-        private void ApplyDevCommand(string cmd)
-        {
-            int colon = cmd.IndexOf(':');
-            string verb = colon >= 0 ? cmd.Substring(0, colon) : cmd;
-            string arg = colon >= 0 ? cmd.Substring(colon + 1) : "";
-
-            if (verb == "type")
-            {
-                InputField f = FocusedInputField();
-                if (f == null) { _host.LogWarning("dev type: no focused field"); return; }
-                f.text += arg;
-                f.caretPosition = f.text.Length;
-                return;
-            }
-            if (verb != "nav") return;
-
-            // Enter/Back on a focused text field route to the field (commit/cancel), like a real key would.
-            InputField field = FocusedInputField();
-            if (field != null && (arg == "enter" || arg == "back"))
-            {
-                if (arg == "enter") field.onEndEdit.Invoke(field.text);
-                field.DeactivateInputField();
-                return;
-            }
-
-            if (!_screens.OwnsKeyboard) return; // a UI key only acts while our navigator owns the keyboard
-            string action = DevAction(arg);
-            if (action != null) _screens.Dispatch(action);
-        }
-
-        private static string DevAction(string dir)
-        {
-            switch (dir)
-            {
-                case "up": return UiActions.Up;
-                case "down": return UiActions.Down;
-                case "left": return UiActions.Left;
-                case "right": return UiActions.Right;
-                case "enter": return UiActions.Activate;
-                case "back": return UiActions.Back;
-                case "tab": return UiActions.Next;
-                case "home": return UiActions.Home;
-                case "end": return UiActions.End;
-                default: return null;
-            }
-        }
-
-        private static InputField FocusedInputField()
-        {
-            EventSystem es = EventSystem.current;
-            GameObject go = es != null ? es.currentSelectedGameObject : null;
-            return go != null ? go.GetComponent<InputField>() : null;
-        }
+        // Dev seam (IDevDriver): our navigator's live state for the dev server's /nav.
+        public string DescribeNav() => _screens != null ? _screens.DescribeNav() : "(no screen manager)\n";
 
         public void Dispose()
         {

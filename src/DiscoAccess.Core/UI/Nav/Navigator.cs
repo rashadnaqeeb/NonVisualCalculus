@@ -24,6 +24,10 @@ namespace DiscoAccess.Core.UI.Nav
 
         public UIElement? Current => Path.Count > 0 ? Path[Path.Count - 1] : null;
 
+        /// <summary>The current focus path (root excluded), outermost first. Read-only view for dev
+        /// introspection; navigation still mutates the path only through the Navigator's own methods.</summary>
+        public IReadOnlyList<UIElement> FocusPath => Path;
+
         /// <summary>Bind to a screen root and set initial focus silently. The caller announces the screen
         /// name and then <see cref="AnnounceCurrent"/> for the landing. A null root detaches (no nav).</summary>
         public void Attach(Container? root)

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using DiscoAccess.Core.Modularity;
 using DiscoAccess.Core.UI.Nav;
 using Sunshine.Views;
@@ -98,6 +99,35 @@ namespace DiscoAccess.Module.Nav
 
         /// <summary>Route a fired UI action into the navigator. Returns whether it was consumed.</summary>
         public bool Dispatch(string actionKey) => _nav.Handle(actionKey);
+
+        /// <summary>Dev introspection: our navigator's live state, independent of the game's selection -
+        /// keyboard ownership, the popup overlay, the attached screen, and the focus path with the text each
+        /// node would speak. Reads live UI; caches nothing.</summary>
+        public string DescribeNav()
+        {
+            var sb = new StringBuilder();
+            sb.Append("owns keyboard: ").Append(OwnsKeyboard).Append('\n');
+            sb.Append("popup overlay: ").Append(_popupActive).Append('\n');
+            sb.Append("screen: ").Append(_attachedScreen != null ? _attachedScreen.GetType().Name : "(none)").Append('\n');
+
+            IReadOnlyList<UIElement> path = _nav.FocusPath;
+            if (path.Count == 0)
+            {
+                sb.Append("focus: (none)\n");
+                return sb.ToString();
+            }
+
+            var parts = new List<string>(path.Count);
+            foreach (UIElement e in path)
+            {
+                string t = e.GetFocusText();
+                parts.Add(string.IsNullOrEmpty(t) ? "(" + e.GetType().Name + ")" : t);
+            }
+            sb.Append("path: ").Append(string.Join(" > ", parts)).Append('\n');
+            UIElement cur = _nav.Current;
+            sb.Append("current: ").Append(cur != null ? cur.GetFocusText() : "(none)").Append('\n');
+            return sb.ToString();
+        }
 
         /// <summary>Whether the navigator's type-ahead buffer holds a character (the raw reader gates a
         /// typed Space on this so a lone Space is not swallowed into an empty search).</summary>

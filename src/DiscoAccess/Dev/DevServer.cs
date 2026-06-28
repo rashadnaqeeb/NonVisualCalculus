@@ -3,7 +3,9 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Threading;
 using BepInEx.Logging;
+using DiscoAccess.Core.Modularity;
 using DiscoAccess.Core.Speech;
+using DiscoAccess.Core.UI.Nav;
 using DiscoAccess.Modularity;
 
 namespace DiscoAccess.Dev
@@ -14,9 +16,15 @@ namespace DiscoAccess.Dev
     /// alone. Exposes that loopback server so an external driver can:
     ///   POST /eval             body = C# source, run against the live game (REPL state persists
     ///                          across calls); returns output + result/errors.
-    ///   POST /input            body = verb (up|down|left|right|confirm). Drives DE's focus system.
+    ///   POST /input            body = verb (up|down|left|right|confirm|back|tab|prev|home|end). Drives
+    ///                          our own navigator when it owns the keyboard (a migrated screen or the popup
+    ///                          overlay), else falls back to DE's focus system for not-yet-migrated screens.
+    ///                          Enter/Escape on a focused text field commit/cancel the edit first.
+    ///   POST /type             body = text appended to the focused input field (e.g. a save name).
     ///   POST /reload           rebuild the feature module from its freshly built DLL, no restart.
     ///   GET  /focus             the current uGUI selection (name/path/text), independent of speech.
+    ///   GET  /nav               our navigator's own focus state (ownership, popup, focus path), which the
+    ///                          game-level /focus cannot see; "[no module]" when the module is not loaded.
     ///   GET  /speech?since=N    lines the mod has spoken since cursor N (we can't hear the TTS).
     ///   GET  /screenshot        capture a PNG of the current frame; returns the file path.
     ///   GET  /health            liveness.
@@ -150,14 +158,20 @@ namespace DiscoAccess.Dev
             if (route == "/input" && method == "POST")
             {
                 string verb = (body ?? "").Trim();
-                return OnMainThread(() => InputInjector.Inject(verb));
+                return OnMainThread(() => DriveInput(verb));
             }
+
+            if (route == "/type" && method == "POST")
+                return OnMainThread(() => TextInjector.Type(body ?? ""));
 
             if (route == "/reload" && method == "POST")
                 return OnMainThread(ReloadModule);
 
             if (route == "/focus" && method == "GET")
                 return OnMainThread(FocusInspector.Describe);
+
+            if (route == "/nav" && method == "GET")
+                return OnMainThread(DescribeNav);
 
             if (route == "/screenshot" && method == "GET")
                 return Screenshot();
@@ -178,6 +192,70 @@ namespace DiscoAccess.Dev
                 return "ok\n";
 
             return "[404] " + method + " " + route + "\n";
+        }
+
+        // Drive input. Prefer our own navigator (the module's IDevDriver): on a migrated screen or the
+        // popup overlay it owns the keyboard and the game's NavigationManager is muted, so the game injector
+        // would no-op. When our navigator is not driving (a not-yet-migrated screen, or no module), fall
+        // back to the game's focus system so the legacy follower can still be exercised.
+        private string DriveInput(string verb)
+        {
+            string v = (verb ?? "").Trim().ToLowerInvariant();
+
+            // A focused text field (a save-name edit) takes Enter/Escape first, committing or cancelling the
+            // edit the way a real key would, before navigation or the game injector see them. No field
+            // focused returns null, so these fall through to the normal handling below.
+            if (v == "confirm" || v == "enter" || v == "ok")
+            {
+                string commit = TextInjector.TryCommit();
+                if (commit != null) return "[field] " + commit + "\n";
+            }
+            else if (v == "back" || v == "escape" || v == "cancel")
+            {
+                string cancel = TextInjector.TryCancel();
+                if (cancel != null) return "[field] " + cancel + "\n";
+            }
+
+            var driver = _loader.Module as IDevDriver;
+            if (driver != null)
+            {
+                string action = VerbToAction(v);
+                if (action != null)
+                {
+                    string r = driver.DispatchUi(action);
+                    if (r != null)
+                        return "[nav] " + r + "\n";
+                }
+            }
+            return "[game] " + InputInjector.Inject(v);
+        }
+
+        // Map a dev verb to a UiActions key our navigator understands. Unknown verbs return null so /input
+        // falls through to the game injector (which handles the directional/confirm/back subset).
+        private static string VerbToAction(string v)
+        {
+            switch (v)
+            {
+                case "up": return UiActions.Up;
+                case "down": return UiActions.Down;
+                case "left": return UiActions.Left;
+                case "right": return UiActions.Right;
+                case "confirm": case "enter": case "ok": return UiActions.Activate;
+                case "back": case "escape": case "cancel": return UiActions.Back;
+                case "tab": case "next": return UiActions.Next;
+                case "prev": case "shifttab": case "shift-tab": return UiActions.Prev;
+                case "home": return UiActions.Home;
+                case "end": return UiActions.End;
+                default: return null;
+            }
+        }
+
+        // Our navigator's own state, from the module's IDevDriver. "[no module]" when none is loaded, so the
+        // caller can tell "module dead" apart from "navigator idle".
+        private string DescribeNav()
+        {
+            var driver = _loader.Module as IDevDriver;
+            return driver != null ? driver.DescribeNav() : "[no module] nav driver unavailable\n";
         }
 
         /// <summary>F6 reloads through here (on the main thread) so the evaluator resets exactly like
