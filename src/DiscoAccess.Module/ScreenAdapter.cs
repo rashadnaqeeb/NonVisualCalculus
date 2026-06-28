@@ -43,12 +43,6 @@ namespace DiscoAccess.Module
             ViewType.DIALOGUE, ViewType.CUTSCENE, ViewType.TEST, ViewType.CLEAR, ViewType.SPECIAL,
         };
 
-        /// <summary>The authored name of the current screen, or null for a silenced view.</summary>
-        public static string CurrentScreenName()
-        {
-            return Names.TryGetValue(ViewsPagesBridge.Current, out string name) ? name : null;
-        }
-
         /// <summary>
         /// Views that are neither named nor silenced, so they would slip through unannounced. Empty
         /// in a correct build; the host logs any at load (a game update adding a ViewType lands here).
