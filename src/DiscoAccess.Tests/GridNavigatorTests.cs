@@ -231,5 +231,78 @@ namespace DiscoAccess.Tests
             Assert.True(nav.EnsureFocusValid()); // old focus orphaned -> re-homed
             Assert.Same(newFirst, nav.Current);
         }
+
+        // Panel root > a [Load, Delete] grid with one named row each; a deletable flag per row drives
+        // whether that row's Delete cell is focusable. Distinct names so type-ahead can pick a row.
+        private static (Container root, Grid grid, Cell[][] cells) NamedGrid(params (string name, bool deletable)[] rows)
+        {
+            var root = new Container(ContainerShape.Panel);
+            var grid = new Grid();
+            var cells = new Cell[rows.Length][];
+            for (int r = 0; r < rows.Length; r++)
+            {
+                var load = new Cell("Load", rows[r].name);
+                var del = new Cell("Delete", rows[r].name, rows[r].deletable);
+                cells[r] = new[] { load, del };
+                grid.AddRow(load, del);
+            }
+            root.Add(grid);
+            return (root, grid, cells);
+        }
+
+        [Fact]
+        public void TypeSearch_InGrid_MatchesWholeRow_NotEachCell()
+        {
+            var (root, _, cells) = NamedGrid(("Alpha", true), ("Bravo", true), ("Charlie", true));
+            var nav = NewNav();
+            nav.Attach(root); // lands on Alpha's Load (row 0, col 0)
+
+            nav.TypeSearchChar('a'); // Alpha (starts), then Bravo, Charlie (contain 'a') - one result per row
+            Assert.Same(cells[0][0], nav.Current);
+
+            // Stepping the results moves to the NEXT ROW's Load, not Alpha's own Delete cell (which would be
+            // a separate result if the grid searched per cell instead of per row).
+            Assert.True(nav.Handle(UiActions.Down));
+            Assert.Same(cells[1][0], nav.Current); // Bravo's Load, column kept
+        }
+
+        [Fact]
+        public void TypeSearch_InGrid_KeepsTheFocusedColumn()
+        {
+            var (root, _, cells) = NamedGrid(("Alpha", true), ("Bravo", true));
+            var nav = NewNav();
+            nav.Attach(root);
+            nav.Handle(UiActions.Right); // move to Alpha's Delete column
+
+            nav.TypeSearchChar('b'); // jump to Bravo, keeping the Delete column
+            Assert.Same(cells[1][1], nav.Current);
+        }
+
+        [Fact]
+        public void TypeSearch_InGrid_FallsBackWhenColumnAbsentInRow()
+        {
+            var (root, _, cells) = NamedGrid(("Alpha", true), ("Bravo", false)); // Bravo not deletable
+            var nav = NewNav();
+            nav.Attach(root);
+            nav.Handle(UiActions.Right); // Alpha's Delete column
+
+            nav.TypeSearchChar('b'); // Bravo has no focusable Delete -> land on its Load instead
+            Assert.Same(cells[1][0], nav.Current);
+        }
+
+        [Fact]
+        public void AfterGridSearch_LeftRightMoveBetweenRowButtons()
+        {
+            var (root, _, cells) = NamedGrid(("Alpha", true), ("Bravo", true));
+            var nav = NewNav();
+            nav.Attach(root);
+            nav.TypeSearchChar('b'); // lands on Bravo's Load, search live
+            Assert.True(nav.SearchActive);
+
+            // Right is not a search key: it ends the search and does a normal grid move to the next column.
+            Assert.True(nav.Handle(UiActions.Right));
+            Assert.Same(cells[1][1], nav.Current); // Bravo's Delete
+            Assert.False(nav.SearchActive);
+        }
     }
 }

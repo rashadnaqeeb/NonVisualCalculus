@@ -91,6 +91,19 @@ namespace DiscoAccess.Module.Nav
         /// <summary>Route a fired UI action into the navigator. Returns whether it was consumed.</summary>
         public bool Dispatch(string actionKey) => _nav.Handle(actionKey);
 
+        /// <summary>Whether the navigator's type-ahead buffer holds a character (the raw reader gates a
+        /// typed Space on this so a lone Space is not swallowed into an empty search).</summary>
+        public bool SearchHasBuffer => _nav.SearchHasBuffer;
+
+        /// <summary>Feed one typed character into the navigator's type-ahead search.</summary>
+        public void TypeSearch(char c) => _nav.TypeSearchChar(c);
+
+        /// <summary>Delete the last character from the navigator's type-ahead search.</summary>
+        public void BackspaceSearch() => _nav.BackspaceSearch();
+
+        /// <summary>Silently drop any live type-ahead search (the keyboard left our navigator).</summary>
+        public void ClearSearch() => _nav.ClearSearch(announce: false);
+
         /// <summary>Re-enable the game's input for now, so an Escape our navigator did not consume (a screen
         /// with no Back of its own, like the title menu) reaches the game's own Escape handling - nothing at
         /// the title, resume in the pause menu. We never swallow Escape into a silent no-op the game would

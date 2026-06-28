@@ -94,6 +94,13 @@ namespace DiscoAccess.Core.Strings
         // language). It is drawn under the shared LANGUAGE header with no label of its own, so authored.
         public const string SecondaryLanguage = "secondary language";
 
+        // Type-ahead search: spoken when clearing a live search (Escape), and the buffer text first
+        // (the distinguishing part) when it matches nothing. DE has no equivalent strings, so authored.
+        public const string SearchCleared = "search cleared";
+
+        /// <summary>Spoken when the typed search buffer matches no item in the focused list.</summary>
+        public static string SearchNoMatch(string buffer) => buffer + ", no match";
+
         /// <summary>A continuous slider's position as a percentage of its travel.</summary>
         public static string Percent(int value) => value + " percent";
 

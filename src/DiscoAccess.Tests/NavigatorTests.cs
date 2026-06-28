@@ -203,6 +203,147 @@ namespace DiscoAccess.Tests
             Assert.Equal("C", nav.Current!.Label);
         }
 
+        [Fact]
+        public void TypeSearch_LandsOnMatchingItem()
+        {
+            var (root, _, items) = MainMenuTree();
+            var nav = NewNav();
+            nav.Attach(root);
+            _spoken.Clear();
+
+            nav.TypeSearchChar('n'); // "New Game" starts with n
+            Assert.Same(items[1], nav.Current);
+            Assert.Equal("New Game, button", _spoken[^1]);
+            Assert.True(nav.SearchActive);
+        }
+
+        [Fact]
+        public void WhileSearching_DownStepsResults_NotFocus()
+        {
+            var (root, _, items) = MainMenuTree();
+            var nav = NewNav();
+            nav.Attach(root);
+            nav.TypeSearchChar('e'); // matches Continue and New Game (substring); shortest-name first
+            var afterType = nav.Current;
+            _spoken.Clear();
+
+            // Down is consumed as a result step (search active), landing on the other match, not item below.
+            Assert.True(nav.Handle(UiActions.Down));
+            Assert.NotSame(afterType, nav.Current);
+            Assert.True(nav.SearchActive);
+        }
+
+        [Fact]
+        public void Escape_WhileSearching_ClearsSearch_AndAnnounces()
+        {
+            var (root, _, _) = MainMenuTree();
+            var nav = NewNav();
+            nav.Attach(root);
+            nav.TypeSearchChar('n');
+            _spoken.Clear();
+
+            Assert.True(nav.Handle(UiActions.Back)); // Escape clears the live search first
+            Assert.False(nav.SearchActive);
+            Assert.Equal("search cleared", _spoken[^1]);
+        }
+
+        [Fact]
+        public void NonSearchKey_WhileSearching_EndsSearch_AndActsNormally()
+        {
+            var (root, _, items) = MainMenuTree();
+            var nav = NewNav();
+            nav.Attach(root);
+            nav.TypeSearchChar('n'); // lands on New Game
+
+            // Enter is not a search key: it ends the search and activates the found item.
+            Assert.True(nav.Handle(UiActions.Activate));
+            Assert.False(nav.SearchActive);
+            Assert.Equal(1, items[1].Activations); // New Game activated
+        }
+
+        [Fact]
+        public void TypeSearch_NoMatch_AnnouncesBuffer_AndKeepsFocus()
+        {
+            var (root, _, items) = MainMenuTree();
+            var nav = NewNav();
+            nav.Attach(root);
+            _spoken.Clear();
+
+            nav.TypeSearchChar('z'); // nothing in the list matches
+            Assert.Same(items[0], nav.Current); // focus unchanged
+            Assert.Equal("z, no match", _spoken[^1]);
+        }
+
+        [Fact]
+        public void TypeSearch_WorksWhenRootIsTheListItself()
+        {
+            // The title main menu's root is a bare vertical list (no Panel wrapper). Search must scope to
+            // the whole list, not collapse to the single focused item.
+            var list = new Container(ContainerShape.VerticalList);
+            var items = new[] { new Button("Continue"), new Button("New Game"), new Button("Options"), new Button("Quit") };
+            foreach (var b in items) list.Add(b);
+            var nav = NewNav();
+            nav.Attach(list); // the root IS the list
+            _spoken.Clear();
+
+            nav.TypeSearchChar('o'); // "Options" - not the focused item (focus lands on Continue)
+            Assert.Same(items[2], nav.Current);
+            Assert.Equal("Options, button", _spoken[^1]);
+        }
+
+        [Fact]
+        public void Backspace_ReMatchesShorterBuffer()
+        {
+            var root = new Container(ContainerShape.Panel);
+            var list = new Container(ContainerShape.VerticalList, "fruit");
+            var apple = new Button("Apple");
+            var apricot = new Button("Apricot");
+            list.Add(apple);
+            list.Add(apricot);
+            root.Add(list);
+            var nav = NewNav();
+            nav.Attach(root);
+
+            nav.TypeSearchChar('a');
+            nav.TypeSearchChar('p');
+            nav.TypeSearchChar('r');
+            nav.TypeSearchChar('i'); // "apri" -> only Apricot
+            Assert.Same(apricot, nav.Current);
+
+            nav.BackspaceSearch();
+            nav.BackspaceSearch(); // back to "ap" -> Apple (shorter) ranks first again
+            Assert.Same(apple, nav.Current);
+            Assert.True(nav.SearchActive);
+        }
+
+        [Fact]
+        public void Backspace_EmptyingBuffer_ClearsAndAnnounces()
+        {
+            var (root, _, _) = MainMenuTree();
+            var nav = NewNav();
+            nav.Attach(root);
+            nav.TypeSearchChar('n'); // one-character buffer
+            _spoken.Clear();
+
+            nav.BackspaceSearch(); // deletes the last (only) character -> search ends
+            Assert.False(nav.SearchActive);
+            Assert.Equal("search cleared", _spoken[^1]);
+        }
+
+        [Fact]
+        public void Backspace_WithNoBuffer_DoesNothing()
+        {
+            var (root, _, items) = MainMenuTree();
+            var nav = NewNav();
+            nav.Attach(root);
+            _spoken.Clear();
+
+            nav.BackspaceSearch(); // no live search -> a no-op
+            Assert.Same(items[0], nav.Current);
+            Assert.False(nav.SearchActive);
+            Assert.Empty(_spoken);
+        }
+
         // A screen root that advertises a back action (Escape closes it).
         private sealed class BackContainer : Container
         {

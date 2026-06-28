@@ -52,6 +52,9 @@ namespace DiscoAccess.Module
         // Active, our navigator stands down so keystrokes reach the field; the input dispatcher set up in
         // Load gates on it, as must any future raw-key path (type-ahead). See TextEditGate for the why.
         private readonly TextEditGate _editGate = new TextEditGate();
+        // Reads OS-typed characters into our navigator's type-ahead search each frame. Owns no native
+        // handle (rebuilt fresh on reload); gates itself on the text-edit state below.
+        private readonly TypeaheadInput _typeahead = new TypeaheadInput();
         // The value-only readout of the focused options control, for detecting an in-place change
         // (adjusting a slider, toggling) where focus does not move. Null when the focus is not an
         // options control.
@@ -158,6 +161,11 @@ namespace DiscoAccess.Module
             // Poll our own keyboard input. A Global hotkey fires no matter what screen or popup is up; a
             // UI key routes into the navigator only while it owns the keyboard and is not gated for an edit.
             _input.Tick(Time.unscaledTime);
+
+            // Read OS-typed characters into the navigator's type-ahead search. Bound nav keys (arrows,
+            // Home/End, Escape) drive the results through _input above; this reads only the unbound typed
+            // text, gated on the same text-edit state so it never fights the save-name field.
+            _typeahead.Tick(_screens, _editGate.Active);
 
             // DEV: drive navigation and text entry from a command file, so the flow can be exercised
             // headless (a backgrounded window takes no real keys). Dormant unless DISCOACCESS_DEV=1.
