@@ -11,9 +11,10 @@ namespace DiscoAccess.Module
     /// past the split-flap animation, like the archetype reader reads its flip clocks), which doubles as
     /// the index into <c>AbilityGradeFlipClock.GradeStrings</c> for the qualitative grade word. The name
     /// is the ability's localized full name (Intellect, not the on-screen INT); the description is the
-    /// sibling <c>AbilityDescriptionText</c> of the grade clock's label panel. A StatPanel shown without
-    /// a grade clock (the character sheet reuses the type) has no settled value to read here, so it
-    /// returns null and falls through to the generic reader. Extraction only; no caching past the live
+    /// sibling <c>AbilityDescriptionText</c> of the grade clock's label panel. The in-game character sheet
+    /// reuses the type without a grade clock (the abilities are fixed there, shown as a plain number): then
+    /// the settled value is the <c>statNumber</c> label and the per-ability description is absent, so the
+    /// value and grade are read and the description left null. Extraction only; no caching past the live
     /// read.
     /// </summary>
     public static class AbilityAdapter
@@ -21,12 +22,27 @@ namespace DiscoAccess.Module
         public static AbilityState TryRead(Selectable selectable)
         {
             var panel = selectable.GetComponent<StatPanel>();
-            if (panel == null || panel.abilityGradeFlipClock == null)
+            if (panel == null)
                 return null;
 
-            int value = panel.abilityGradeFlipClock.targetValue;
             string name = GameLocalization.Translate("Abilities/ABILITY_NAME_" + panel.ability);
-            return new AbilityState(name, value, Grade(value), Description(panel));
+
+            // Create Your Own (Adjust Abilities / Set Signature): the score is the grade clock's settled
+            // target, which also indexes the grade word, and the description sits beside the clock. The
+            // clock is only the live display while its object is active; in-game it is present but dormant
+            // (inactive, target 0), so gate on its active state rather than its mere existence.
+            if (panel.abilityGradeFlipClock != null && panel.abilityGradeFlipClock.gameObject.activeInHierarchy)
+            {
+                int value = panel.abilityGradeFlipClock.targetValue;
+                return new AbilityState(name, value, Grade(value), Description(panel));
+            }
+
+            // In-game character sheet: the grade clock is dormant; the settled score is the plain statNumber
+            // label, and the per-ability description text is absent there, so it is left null.
+            if (panel.statNumber != null && int.TryParse(panel.statNumber.text, out int score))
+                return new AbilityState(name, score, Grade(score), null);
+
+            return null;
         }
 
         // The grade word for a score, from the game's grade table indexed by the score itself. Index 0 is

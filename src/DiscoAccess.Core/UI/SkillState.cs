@@ -8,6 +8,10 @@ namespace DiscoAccess.Core.UI
     /// on-screen detail panel, which never follows controller focus); the value is the skill's displayed
     /// total. <see cref="IsSignature"/> is true when this skill is the one currently set as the
     /// signature. The description is optional (a lookup miss leaves it null).
+    ///
+    /// <see cref="CanRaise"/> is set on the in-game character sheet, where a skill point can be spent to
+    /// raise the skill: true when the skill is upgradeable and points remain. The signature-skill screen
+    /// leaves it false (no leveling there), so the announcer adds the "can raise" marker only on the sheet.
     /// </summary>
     public sealed class SkillState
     {
@@ -15,13 +19,15 @@ namespace DiscoAccess.Core.UI
         public int Value { get; }
         public string? Description { get; }
         public bool IsSignature { get; }
+        public bool CanRaise { get; }
 
-        public SkillState(string name, int value, string? description, bool isSignature)
+        public SkillState(string name, int value, string? description, bool isSignature, bool canRaise = false)
         {
             Name = name;
             Value = value;
             Description = description;
             IsSignature = isSignature;
+            CanRaise = canRaise;
         }
     }
 }

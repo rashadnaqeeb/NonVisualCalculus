@@ -63,6 +63,14 @@ namespace DiscoAccess.Core.Strings
         // shows this only as an emblem on the portrait, with no localized word to read, so it is authored.
         public const string StatusSignature = "signature";
 
+        // Marks a skill on the character sheet that a skill point can be spent on right now (the skill is
+        // upgradeable and points remain). DE shows this only as a glow on the portrait, no word to read.
+        public const string StatusCanRaise = "can raise";
+
+        // The character sheet's pool of unspent skill points, spoken as "{n} skill points". DE shows it
+        // only as a row of pips with no spoken label.
+        public const string StatusSkillPoints = "skill points";
+
         // Spoken on the Adjust Abilities screen when a raise is rejected because the shared ability-point
         // pool is empty. DE only greys out the plus button, with no message a blind player could hear.
         public const string AbilityNoPointsLeft = "no more points to assign";

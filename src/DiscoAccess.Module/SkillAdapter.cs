@@ -34,6 +34,23 @@ namespace DiscoAccess.Module
             return new SkillState(name, Value(panel), Description(panel.skill), isSignature);
         }
 
+        /// <summary>Read a skill portrait on the in-game character sheet for its grid line: name, displayed
+        /// total, signature marker, and a "can raise" marker set when the skill is upgradeable and the
+        /// player has a skill point to spend (<paramref name="pointsAvailable"/>, computed by the caller
+        /// from the leveling controller). The value is the displayed <c>SkillNumber</c> label, the settled
+        /// total (the skill model's own <c>value</c> field is not the live total). The description is the
+        /// skill's short tagline, the same one the signature-skill screen reads.</summary>
+        public static SkillState ReadLeveling(SkillPortraitPanel panel, bool pointsAvailable)
+        {
+            string name = Skill.SkillTypeToLocalizedName(panel.skill, false);
+            // In-game the skill model on the panel is dormant (the static signatureSkill is char-creation
+            // only, and currentSkill is not the live total), so the live signature signal is the portrait's
+            // signature frame being shown.
+            bool isSignature = panel.signatureFrame != null && panel.signatureFrame.gameObject.activeInHierarchy;
+            bool canRaise = panel.isUpgradeable && pointsAvailable;
+            return new SkillState(name, Value(panel), Description(panel.skill), isSignature, canRaise);
+        }
+
         // The displayed total sits in the portrait's SkillNumber label. It is a plain TextMeshPro here
         // (the leveling flip clocks are not used on this screen), so its text is the settled value.
         private static int Value(SkillPortraitPanel panel)
