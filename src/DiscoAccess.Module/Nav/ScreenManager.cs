@@ -89,6 +89,7 @@ namespace DiscoAccess.Module.Nav
             Register(new SignatureSkillScreen());
             Register(new CharacterSheetScreen());
             Register(new ThoughtCabinetScreen());
+            Register(new JournalScreen());
             Register(new HelpOverlayScreen());
         }
 

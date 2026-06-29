@@ -124,6 +124,46 @@ namespace DiscoAccess.Core.Strings
             return string.Join(" ", parts);
         }
 
+        // Journal. The tasks/map tabs and the active/done filter are read as the game's own tab labels
+        // (TASKS, MAP, ACTIVE, DONE) plus the shared "selected" marker, so they need no authored names.
+
+        // Task and subtask status words. DE shows a resolved task only as struck-through coloured text, with
+        // no spoken word; a cancelled task reads "forfeited", a completed one "done".
+        public const string JournalStatusActive = "active";
+        public const string JournalStatusDone = "done";
+        public const string JournalStatusCancelled = "cancelled";
+        // Marks a time-limited task. DE shows it only as a clock icon.
+        public const string JournalTimed = "timed";
+
+        // The detail panel's filed/resolved time labels. The game's own resolution line reads stale for an
+        // active task, so the line is composed from the model with these authored labels ("forfeited"
+        // matching the game's word for a cancelled task, "completed" for a done one).
+        public const string JournalFiled = "filed";
+        public const string JournalCompleted = "completed";
+        public const string JournalForfeited = "forfeited";
+
+        // Found white checks (map tab) state: available to try now (the game's white state, open or
+        // reopened), locked behind an unmet precondition, or only spotted in the world. DE shows these as
+        // colour, with no spoken word.
+        public const string JournalCheckAvailable = "available";
+        public const string JournalCheckLocked = "locked";
+        public const string JournalCheckSeen = "seen";
+
+        // Quicktravel points on the map, and their state. DE draws the names into the map art and shows the
+        // current spot only by a marker, so the names and state words are authored.
+        public const string JournalYouAreHere = "you are here";
+        public const string JournalVisited = "visited";
+        public const string JournalLocChurch = "Church";
+        public const string JournalLocFishingVillage = "Fishing Village";
+        public const string JournalLocWaterfront = "Waterfront";
+
+        // List labels for the journal's tab-stops, spoken when Tab enters them.
+        public const string JournalTasksLabel = "tasks";
+        public const string JournalTaskInfoLabel = "task info";
+        public const string JournalFastTravelLabel = "fast travel locations";
+        public const string JournalWhiteChecksLabel = "white checks";
+        public const string JournalOfficerProfileLabel = "officer profile";
+
         // Screen names, spoken when a screen opens (the landed control then queues behind). DE exposes
         // its screens only as a Unity enum with no localized title, so these are authored; mapped from
         // the live enum in ScreenAdapter, which names every player-facing view.
