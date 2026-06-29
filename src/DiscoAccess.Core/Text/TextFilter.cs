@@ -23,6 +23,7 @@ namespace DiscoAccess.Core.Text
                 return string.Empty;
 
             string s = RichTags.Replace(raw, string.Empty);
+            s = s.Replace("*", string.Empty); // DE marks emphasis as *word*; drop the markers for speech
             s = s.Replace(' ', ' ');   // non-breaking space
             s = s.Replace('​', ' ');   // zero-width space TMP sometimes injects
             s = FoldPunctuation(s);
@@ -37,10 +38,9 @@ namespace DiscoAccess.Core.Text
         }
 
         // Fold the Unicode typographic punctuation common in game text (smart dashes, curly quotes,
-        // ellipsis) to plain ASCII. Besides reading more cleanly, this is required for the line to be
-        // spoken at all: the Prism backend rejects some valid multi-byte UTF-8 as InvalidUtf8 depending
-        // on the byte offset of the multi-byte character, dropping the whole line, so a description with
-        // an en dash (Drama's "Lie - and detect lies.") goes silent. ASCII text never trips that.
+        // ellipsis) to plain ASCII so it reads cleanly - an em dash in particular is otherwise announced
+        // as "dash" and breaks the flow. (Lines carrying multi-byte characters that Prism would drop are
+        // kept speakable generally by the speech pipeline's parity nudge; see SpeechPipeline.)
         private static string FoldPunctuation(string s)
         {
             s = s.Replace('–', '-')   // en dash

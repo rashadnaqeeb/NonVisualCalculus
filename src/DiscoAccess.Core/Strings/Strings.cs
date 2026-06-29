@@ -177,6 +177,19 @@ namespace DiscoAccess.Core.Strings
         public const string ScreenThought = "thought";
         public const string ScreenCollage = "collage mode";
 
+        // The navigable affordance that advances a conversation when there are no response choices. DE's own
+        // continue control is an image with no clean text label, so the word is authored; the player reaches
+        // it by pressing Down past the current line.
+        public const string DialogueContinue = "continue";
+
+        // A response that carries a skill check reads its breakdown inline after the option text: the skill
+        // name and difficulty come from the game, these name the check colour (white = retryable, red =
+        // one-shot) and label the trailing modifier list. The skill, difficulty, and odds lead; the modifiers
+        // (the conditions that feed the check) come last.
+        public const string CheckWhite = "white check";
+        public const string CheckRed = "red check";
+        public const string CheckModifiers = "modifiers";
+
         // Spoken when the player activates the main menu's Collage button. Collage is DE's screenshot
         // composition mode, a visual canvas with no accessible path; our navigator blocks the open and
         // says why rather than dropping the player into an unreadable screen.

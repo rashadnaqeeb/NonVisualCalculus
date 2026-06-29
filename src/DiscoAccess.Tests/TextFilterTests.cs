@@ -65,10 +65,27 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
-        public void Clean_FoldedTextIsPureAscii()
+        public void Clean_FoldsDashesQuotesEllipsisToAscii()
         {
             string cleaned = TextFilter.Clean("smart – — ‘ ’ “ ” …");
             Assert.All(cleaned, c => Assert.True(c < 128, $"non-ASCII char U+{(int)c:X4} survived"));
+        }
+
+        // Characters with no ASCII reading (e.g. the approx-equals sign) are left for the screen reader to
+        // pronounce; the speech pipeline keeps the line speakable, so the filter no longer rewrites them.
+        [Fact]
+        public void Clean_KeepsNonFoldedSymbols()
+        {
+            Assert.Equal("Write: ≈50.", TextFilter.Clean("Write: ≈50."));
+        }
+
+        // DE marks emphasis with *asterisks*; they are stripped so the words read without the markers.
+        [Theory]
+        [InlineData("I want to talk about *you*.", "I want to talk about you.")]
+        [InlineData("a *field autopsy*", "a field autopsy")]
+        public void Clean_StripsEmphasisAsterisks(string input, string expected)
+        {
+            Assert.Equal(expected, TextFilter.Clean(input));
         }
     }
 }

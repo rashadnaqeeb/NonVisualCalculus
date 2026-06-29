@@ -91,6 +91,7 @@ namespace DiscoAccess.Module.Nav
             Register(new ThoughtCabinetScreen());
             Register(new JournalScreen());
             Register(new InventoryScreen());
+            Register(new DialogueScreen());
             Register(new HelpOverlayScreen());
         }
 
