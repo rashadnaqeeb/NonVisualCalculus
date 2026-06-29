@@ -79,6 +79,25 @@ namespace DiscoAccess.Tests
             Assert.Equal("Write: ≈50.", TextFilter.Clean("Write: ≈50."));
         }
 
+        // When game text that ends a sentence is concatenated with our own comma delimiter, the two
+        // marks collide; the deliberate second mark wins so the join reads cleanly.
+        [Theory]
+        [InlineData("Lonesome Long Way Home., +1", "Lonesome Long Way Home, +1")]
+        [InlineData("Lonesome Long Way Home. , +1", "Lonesome Long Way Home, +1")]
+        [InlineData("first item, . second", "first item. second")]
+        public void Clean_FoldsCollidingPeriodAndComma(string input, string expected)
+        {
+            Assert.Equal(expected, TextFilter.Clean(input));
+        }
+
+        // A genuine ellipsis is a run of identical dots, never a mixed period/comma collision, so the
+        // collision fold leaves it intact.
+        [Fact]
+        public void Clean_LeavesEllipsisIntact()
+        {
+            Assert.Equal("wait... stop", TextFilter.Clean("wait... stop"));
+        }
+
         // DE marks emphasis with *asterisks*; they are stripped so the words read without the markers.
         [Theory]
         [InlineData("I want to talk about *you*.", "I want to talk about you.")]

@@ -36,6 +36,8 @@ namespace DiscoAccess.Module.Nav
         private Container _flow;
         private UIElement _landing;
         private string _builtSig;
+        // Held so the response cells' select action can route through the game's button click and log a miss.
+        private IModHost _host;
         // The current line we have already spoken, so the per-frame update reads each new line exactly once.
         // Keyed on the conversation's subtitle, never the transcript tail, so a player response (logged but
         // never a subtitle) is not read back.
@@ -46,6 +48,7 @@ namespace DiscoAccess.Module.Nav
 
         public override Container BuildRoot(IModHost host)
         {
+            _host = host;
             _root = new Container(ContainerShape.Panel);
             _flow = new Container(ContainerShape.VerticalList);
             _root.Add(_flow);
@@ -59,6 +62,7 @@ namespace DiscoAccess.Module.Nav
 
         public override bool OnUpdate(IModHost host, TraditionalNavigator nav)
         {
+            _host = host;
             // A player line the game is holding for a continue is the player's own choice echoed as a
             // subtitle (we do not read it back); advancing it manually has no payoff and stalls the reader
             // silently, so auto-advance past it to the line that follows. Fire once per such line.
@@ -113,6 +117,11 @@ namespace DiscoAccess.Module.Nav
             for (int i = 0; i < entries.Count; i++)
             {
                 bool last = i == entries.Count - 1;
+                // A line that resolved a check gets a silent roll line above it: the dice and modifiers the
+                // game's own outcome line (skill, difficulty, success/failure) leaves out, read with Up.
+                FinalEntry fe = entries[i].Entry;
+                if (fe != null && fe.HasCheck && fe.checkResult != null && fe.checkResult.HasRoll())
+                    _flow.Add(new DialogueCheckRollCell(fe.checkResult));
                 var cell = last
                     ? new DialogueLineCell(entries[i], DialogueAdapter.ContinueAvailable, DialogueAdapter.Continue)
                     : new DialogueLineCell(entries[i]);
@@ -128,7 +137,7 @@ namespace DiscoAccess.Module.Nav
             for (int i = 0; i < responseCount; i++)
             {
                 Response r = responses[i];
-                var cell = new DialogueResponseCell(logger, r, i + 1, () => DialogueAdapter.SelectResponse(r));
+                var cell = new DialogueResponseCell(logger, r, i + 1, () => DialogueAdapter.SelectResponse(r, _host));
                 _flow.Add(cell);
                 if (firstResponse == null && cell.CanFocus)
                     firstResponse = cell;

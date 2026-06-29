@@ -190,6 +190,14 @@ namespace DiscoAccess.Core.Strings
         public const string CheckRed = "red check";
         public const string CheckModifiers = "modifiers";
 
+        // A resolved check's silent roll line, placed in the transcript above the game's own outcome line
+        // (which already speaks the skill, difficulty and success/failure). It exposes the dice and the
+        // modifiers as a running sum against the base target: "<total>/<target>: rolled <d1> plus <d2>,
+        // plus <skill> <name>, minus <n> <modifier>". Only these connectives are authored.
+        public const string CheckRolled = "rolled";
+        public const string CheckPlus = "plus";
+        public const string CheckMinus = "minus";
+
         // Spoken when the player activates the main menu's Collage button. Collage is DE's screenshot
         // composition mode, a visual canvas with no accessible path; our navigator blocks the open and
         // says why rather than dropping the player into an unreadable screen.

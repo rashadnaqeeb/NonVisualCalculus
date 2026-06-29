@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DiscoAccess.Core.Modularity;        // IModHost
 using DiscoPages;                         // DialogueBridgePages
 using PixelCrushers.DialogueSystem;       // DialogueManager, ConversationState, Response, SelectedResponseEventArgs
 using ConversationLogger = Sunshine.ConversationLogger;
@@ -64,9 +65,30 @@ namespace DiscoAccess.Module
         /// runs the same path the on-screen continue button would).</summary>
         public static void Continue() => Logger()?.continueButton?.WasClicked();
 
-        /// <summary>Choose a player response through the game's own selection path, which advances the
-        /// conversation - the next line announces itself through the screen's per-frame update.</summary>
-        public static void SelectResponse(Response response)
-            => DialogueManager.conversationView.SelectResponse(new SelectedResponseEventArgs(response));
+        /// <summary>Choose a player response by clicking its own on-screen button, the game's real click
+        /// path. For a skill check that runs the full pipeline - rolls the dice, locks a white check, plays
+        /// the dice animation, and records the result on the outcome line - which the bare
+        /// <c>conversationView.SelectResponse</c> skips, leaving the check unrolled and re-selectable. Match
+        /// the button to the response by its destination entry, since two interop proxies of one response
+        /// are not reference-equal. Falls back to the conversation API (logged) if no button is found, so a
+        /// plain response still advances even though a check there would not roll.</summary>
+        public static void SelectResponse(Response response, IModHost host)
+        {
+            DialogueEntry want = response != null ? response.destinationEntry : null;
+            if (want != null)
+                foreach (SunshineResponseButton b in Resources.FindObjectsOfTypeAll<SunshineResponseButton>())
+                {
+                    if (b == null || !b.gameObject.activeInHierarchy || b.button == null)
+                        continue;
+                    DialogueEntry have = b.response != null ? b.response.destinationEntry : null;
+                    if (have == null || have.id != want.id || have.conversationID != want.conversationID)
+                        continue;
+                    b.button.onClick.Invoke();
+                    return;
+                }
+            host?.LogWarning("DialogueAdapter: no on-screen button matched the selected response; a check there "
+                + "will not roll. Falling back to the conversation API.");
+            DialogueManager.conversationView.SelectResponse(new SelectedResponseEventArgs(response));
+        }
     }
 }

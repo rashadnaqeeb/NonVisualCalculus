@@ -16,6 +16,12 @@ namespace DiscoAccess.Core.Text
         // Any remaining line break (after sentence punctuation, where the pause already exists).
         private static readonly Regex LineBreak = new Regex("\\s*[\\r\\n]+\\s*", RegexOptions.Compiled);
         private static readonly Regex Whitespace = new Regex("\\s+", RegexOptions.Compiled);
+        // A sentence period and a separating comma that collide when game text (which usually ends a
+        // sentence with a period) is concatenated with our own delimiter (a comma). The second mark is
+        // the deliberate one, so it wins: ".," reads as "," and ",." reads as ".". Mixed pairs only, so
+        // an ellipsis (a run of identical dots) is never touched.
+        private static readonly Regex PeriodThenComma = new Regex("\\.\\s*,", RegexOptions.Compiled);
+        private static readonly Regex CommaThenPeriod = new Regex(",\\s*\\.", RegexOptions.Compiled);
 
         public static string Clean(string? raw)
         {
@@ -33,6 +39,10 @@ namespace DiscoAccess.Core.Text
             // sentence punctuation the break is just a space, so the punctuation is not doubled.
             s = BreakAfterText.Replace(s, ". ");
             s = LineBreak.Replace(s, " ");
+            // Collapse a period-then-comma (or comma-then-period) collision to the second, deliberate
+            // mark before the whitespace pass tidies the spacing it leaves behind.
+            s = PeriodThenComma.Replace(s, ", ");
+            s = CommaThenPeriod.Replace(s, ". ");
             s = Whitespace.Replace(s, " ").Trim();
             return s;
         }
