@@ -28,7 +28,7 @@ namespace DiscoAccess.Core.Strings
         public const string RoleList = "list";
         public const string RoleTab = "tab";
 
-        // Marks the tab whose content is currently shown (the options screen's Settings/Controls tabs).
+        // Marks the tab whose content is currently shown (the journal screen's tabs and filter toggles).
         public const string StatusSelected = "selected";
 
         // Marks the save menu's create-new slot, so activating it reads as a new save, not an overwrite.
@@ -39,15 +39,6 @@ namespace DiscoAccess.Core.Strings
         // field into edit mode, announced with StatusEditMode, after which regular typing fills it.
         public const string ActionRename = "rename";
         public const string StatusEditMode = "edit mode";
-
-        // Readable key names for the options Controls tab, which draws each key as an icon image with no
-        // text. Only keys whose icon name is not already readable need an entry; single letters and
-        // function keys (C, F1) are read straight from the sprite name. See the module's KeyGlyph.
-        public const string KeyEscape = "Escape";
-        public const string KeyTab = "Tab";
-        public const string KeyLeftClick = "left click";
-        public const string KeyRightClick = "right click";
-        public const string KeyMouseWheel = "mouse wheel";
 
         // Options screen: control-type words, spoken after the setting name so the user knows the
         // interaction model (adjust, toggle, or open a menu).
