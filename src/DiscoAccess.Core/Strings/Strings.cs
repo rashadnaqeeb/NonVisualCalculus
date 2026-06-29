@@ -26,7 +26,6 @@ namespace DiscoAccess.Core.Strings
 
         // Control role words, spoken after a control's label so the user knows what it is.
         public const string RoleButton = "button";
-        public const string RoleList = "list";
         public const string RoleTab = "tab";
 
         // Marks the tab whose content is currently shown (the journal screen's tabs and filter toggles).

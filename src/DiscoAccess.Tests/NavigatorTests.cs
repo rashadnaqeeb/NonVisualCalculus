@@ -82,7 +82,7 @@ namespace DiscoAccess.Tests
             Assert.Same(items[0], nav.Current);
 
             nav.AnnounceCurrent();
-            Assert.Equal(new[] { "main menu, list, Continue, button" }, _spoken);
+            Assert.Equal(new[] { "main menu, Continue, button" }, _spoken);
         }
 
         [Fact]
@@ -206,10 +206,10 @@ namespace DiscoAccess.Tests
 
             Assert.True(nav.Handle(UiActions.Next));
             Assert.Same(detail, nav.Current);
-            Assert.Equal(new[] { "details, list, Version, button" }, _spoken);
+            Assert.Equal(new[] { "details, Version, button" }, _spoken);
 
             Assert.True(nav.Handle(UiActions.Prev));
-            Assert.Equal("main menu, list, Continue, button", _spoken[^1]);
+            Assert.Equal("main menu, Continue, button", _spoken[^1]);
         }
 
         [Fact]

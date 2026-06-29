@@ -1,13 +1,12 @@
 using System.Collections.Generic;
-using static DiscoAccess.Core.Strings.Strings;
 
 namespace DiscoAccess.Core.UI.Nav
 {
     /// <summary>
     /// A structural blueprint: holds children, remembers its focused child (for restore on re-entry), and
-    /// exposes shape geometry. Navigation policy lives in the Navigator. A labeled list announces its
-    /// label and a "list" role when focus enters it; an unlabeled panel is silent structure. Per the
-    /// house rule, no positional counts ("3 of 10") are announced - the user tracks position.
+    /// exposes shape geometry. Navigation policy lives in the Navigator. A labeled container announces just
+    /// its label when focus enters it; an unlabeled panel is silent structure. Per the house rule, no
+    /// positional counts ("3 of 10") are announced - the user tracks position.
     /// </summary>
     public class Container : UIElement
     {
@@ -33,10 +32,9 @@ namespace DiscoAccess.Core.UI.Nav
 
         public override string? Label => _label;
 
-        // A labeled list reads "label, list" on entry; a panel is pure structure (no role). An unlabeled
-        // container stays silent (GetFocusText drops a role with no label only via this guard).
-        public override string? Role
-            => _label != null && Shape != ContainerShape.Panel ? RoleList : null;
+        // A container speaks only its label on entry, never a role word; a panel is pure structure (no
+        // label). The container's identity is its label, so a role suffix ("list") was just noise.
+        public override string? Role => null;
 
         /// <summary>A container with nothing focusable inside - never a landing target. Covers a structural
         /// Panel (pure layout) and a content list/table/grid that is momentarily empty (e.g. a grid built a
