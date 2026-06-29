@@ -16,10 +16,18 @@ namespace DiscoAccess.Core.UI.Nav
         private readonly List<List<UIElement>> _rows = new List<List<UIElement>>();
         private int _cols;
 
-        public Grid(string? label = null) : base(ContainerShape.Grid, label) { }
+        public Grid(string? label = null, bool raggedColumns = false) : base(ContainerShape.Grid, label)
+            => RaggedColumns = raggedColumns;
 
         public int RowCount => _rows.Count;
         public int ColCount => _cols;
+
+        /// <summary>Whether each column is an independent list of its own length (a category grid), as
+        /// opposed to a rectangular grid where every row spans every column. In a ragged grid a horizontal
+        /// move switches column and lands on the focusable cell nearest the current row (the shorter column
+        /// is clamped), rather than scanning sideways past a gap to the next focusable column. Short columns
+        /// are padded with non-focusable cells so every category keeps its fixed column index.</summary>
+        public bool RaggedColumns { get; }
 
         /// <summary>Add a row of cells, left to right. Each cell is registered as a focusable child.</summary>
         public void AddRow(params UIElement[] cells)

@@ -86,6 +86,44 @@ namespace DiscoAccess.Core.Strings
         public const string StatusMinimum = "minimum";
         public const string StatusMaximum = "maximum";
 
+        // Thought cabinet status words. The slot and thought states are game enums shown only as art (slot
+        // frames, text colors), with no spoken label, so these are authored. A slot is empty (unlocked,
+        // unfilled), unlockable (can be bought now), or locked (not yet buyable); a thought is available
+        // (gathered, not placed), researching (placed and cooking), researched (fixed), forgotten, or
+        // undiscovered.
+        public const string ThoughtSlotEmpty = "empty slot";
+        public const string ThoughtSlotUnlockable = "locked slot, can unlock";
+        public const string ThoughtSlotLocked = "locked slot";
+        public const string ThoughtAvailable = "available";
+        public const string ThoughtResearched = "researched";
+        public const string ThoughtForgotten = "forgotten";
+        public const string ThoughtUnknown = "unknown thought";
+
+        // The master list of all thoughts, the second tab-stop of the thought cabinet; spoken as its list
+        // label when Tab enters it.
+        public const string ThoughtListLabel = "all thoughts";
+
+        // Research time, in-game hours and minutes (research advances as in-game time passes). A cooking
+        // thought reads how much is left; an available thought reads how long it will take to research.
+        public const string ThoughtTimeRemaining = "remaining";
+        public const string ThoughtResearchTime = "research time";
+
+        /// <summary>A cooking thought's research stage, spoken as "researching, {n} percent".</summary>
+        public static string ThoughtResearching(int percent) => "researching, " + percent + " percent";
+
+        /// <summary>An in-game duration in hours and minutes, e.g. "2 hours 15 minutes", "45 minutes",
+        /// "3 hours". Zero reads as "less than a minute" (a research time that rounds to nothing left).</summary>
+        public static string Duration(int minutes)
+        {
+            if (minutes <= 0)
+                return "less than a minute";
+            int h = minutes / 60, m = minutes % 60;
+            var parts = new System.Collections.Generic.List<string>(2);
+            if (h > 0) parts.Add(h + (h == 1 ? " hour" : " hours"));
+            if (m > 0) parts.Add(m + (m == 1 ? " minute" : " minutes"));
+            return string.Join(" ", parts);
+        }
+
         // Screen names, spoken when a screen opens (the landed control then queues behind). DE exposes
         // its screens only as a Unity enum with no localized title, so these are authored; mapped from
         // the live enum in ScreenAdapter, which names every player-facing view.

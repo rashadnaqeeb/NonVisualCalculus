@@ -239,17 +239,30 @@ namespace DiscoAccess.Core.UI.Nav
         private bool GridArrow(NavDirection dir, Grid grid)
         {
             if (!grid.TryCoords(Current!, out int r, out int c)) return false;
-            int nr = r, nc = c;
+
+            // A ragged (category) grid: a horizontal move switches column and lands on the focusable cell
+            // nearest the current row, clamping when the target column is shorter, rather than scanning
+            // sideways past gaps to another column (which would jump across categories).
+            if (grid.RaggedColumns && (dir == NavDirection.Left || dir == NavDirection.Right))
+            {
+                int nc = c + (dir == NavDirection.Right ? 1 : -1);
+                if (nc < 0 || nc >= grid.ColCount) return true; // off the side: consume, no wrap
+                var target = NearestFocusableInColumn(grid, nc, r);
+                if (target != null && target != Current) LandOnGridCell(target);
+                return true;
+            }
+
+            int nr = r, ncol = c;
             while (true)
             {
                 switch (dir)
                 {
                     case NavDirection.Down: nr++; break;
                     case NavDirection.Up: nr--; break;
-                    case NavDirection.Right: nc++; break;
-                    case NavDirection.Left: nc--; break;
+                    case NavDirection.Right: ncol++; break;
+                    case NavDirection.Left: ncol--; break;
                 }
-                var cell = grid.CellAt(nr, nc);
+                var cell = grid.CellAt(nr, ncol);
                 if (cell == null)
                 {
                     // Off the edge. A vertical move spills into an adjacent block (a bottom bar under the
@@ -259,6 +272,21 @@ namespace DiscoAccess.Core.UI.Nav
                 }
                 if (cell.CanFocus) { LandOnGridCell(cell); return true; }
             }
+        }
+
+        // The focusable cell in a column closest to a target row: the row itself if focusable, else the
+        // nearest above or below it (a tie prefers the one above). Null when the column holds no focusable
+        // cell. Used to clamp a horizontal move in a ragged grid onto a shorter column.
+        private static UIElement? NearestFocusableInColumn(Grid grid, int col, int row)
+        {
+            for (int d = 0; d < grid.RowCount; d++)
+            {
+                var above = grid.CellAt(row - d, col);
+                if (above != null && above.CanFocus) return above;
+                var below = grid.CellAt(row + d, col);
+                if (below != null && below.CanFocus) return below;
+            }
+            return null;
         }
 
         // Vertical movement that cannot proceed inside the current block spills into the adjacent block of
@@ -353,16 +381,17 @@ namespace DiscoAccess.Core.UI.Nav
         {
             var container = Current?.Parent;
 
-            // In a grid, jump to the first/last focusable cell of the current row (the attribute's first or
-            // last skill), staying on that row.
+            // In a grid, jump to the first/last focusable cell of the current column (the top or bottom of
+            // the column - a category's first or last thought, a slot column's top or bottom), staying in
+            // that column.
             if (container is Grid grid)
             {
-                if (!grid.TryCoords(Current!, out int gr, out _)) return true;
+                if (!grid.TryCoords(Current!, out _, out int gc)) return true;
                 int step = first ? 1 : -1;
-                int start = first ? 0 : grid.ColCount - 1;
-                for (int cc = start; cc >= 0 && cc < grid.ColCount; cc += step)
+                int start = first ? 0 : grid.RowCount - 1;
+                for (int rr = start; rr >= 0 && rr < grid.RowCount; rr += step)
                 {
-                    var cell = grid.CellAt(gr, cc);
+                    var cell = grid.CellAt(rr, gc);
                     if (cell != null && cell.CanFocus)
                     {
                         if (cell != Current) LandOnGridCell(cell);

@@ -88,6 +88,7 @@ namespace DiscoAccess.Module.Nav
             Register(new AdjustAbilitiesScreen());
             Register(new SignatureSkillScreen());
             Register(new CharacterSheetScreen());
+            Register(new ThoughtCabinetScreen());
             Register(new HelpOverlayScreen());
         }
 

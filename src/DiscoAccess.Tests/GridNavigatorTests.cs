@@ -58,6 +58,76 @@ namespace DiscoAccess.Tests
             return (root, grid, cells);
         }
 
+        // Panel root > a ragged (category) grid: a "!"-prefixed name is a non-focusable gap padding a
+        // shorter column, so every column keeps its index. Built with RaggedColumns so horizontal moves
+        // clamp onto a shorter column instead of scanning across gaps.
+        private static (Container root, Grid grid, Cell[][] cells) RaggedGridOf(params string[][] rows)
+        {
+            var root = new Container(ContainerShape.Panel);
+            var grid = new Grid(raggedColumns: true);
+            var cells = new Cell[rows.Length][];
+            for (int r = 0; r < rows.Length; r++)
+            {
+                cells[r] = new Cell[rows[r].Length];
+                var rowCells = new UIElement[rows[r].Length];
+                for (int c = 0; c < rows[r].Length; c++)
+                {
+                    bool focusable = !rows[r][c].StartsWith("!");
+                    var cell = new Cell(rows[r][c].TrimStart('!'), focusable);
+                    cells[r][c] = cell;
+                    rowCells[c] = cell;
+                }
+                grid.AddRow(rowCells);
+            }
+            root.Add(grid);
+            return (root, grid, cells);
+        }
+
+        // Columns of length 3, 1, 2. Right from a deep row of column 0 clamps onto the shorter column's
+        // nearest filled row; Up/Down stay within a column and stop at its own end.
+        [Fact]
+        public void RaggedGrid_HorizontalMove_ClampsToShorterColumnsNearestRow()
+        {
+            var (root, _, cells) = RaggedGridOf(
+                new[] { "A0", "A1", "A2" },
+                new[] { "B0", "!g", "B2" },
+                new[] { "C0", "!g", "!g" });
+            var nav = NewNav();
+            nav.Attach(root);
+            nav.Handle(UiActions.Down); // C0? no - row1 col0 = B0
+            nav.Handle(UiActions.Down); // row2 col0 = C0
+            Assert.Same(cells[2][0], nav.Current);
+            _spoken.Clear();
+
+            // Right from C0 (row 2): column 1 has only row 0 (A1), so clamp up to it.
+            Assert.True(nav.Handle(UiActions.Right));
+            Assert.Same(cells[0][1], nav.Current);
+            Assert.Equal(new[] { "A1" }, _spoken);
+
+            // Right again to column 2: its nearest filled row to row 0 is row 0 (A2).
+            Assert.True(nav.Handle(UiActions.Right));
+            Assert.Same(cells[0][2], nav.Current);
+        }
+
+        // In a ragged column, Down stops at the column's own last filled row (the rest are gaps); it does
+        // not jump into another column.
+        [Fact]
+        public void RaggedGrid_DownPastColumnEnd_Consumes()
+        {
+            var (root, _, cells) = RaggedGridOf(
+                new[] { "A0", "A1", "A2" },
+                new[] { "B0", "!g", "B2" },
+                new[] { "C0", "!g", "!g" });
+            var nav = NewNav();
+            nav.Attach(root);
+            nav.Handle(UiActions.Right); // column 1 (A1), which has only row 0
+            _spoken.Clear();
+
+            Assert.True(nav.Handle(UiActions.Down)); // no more in this column -> consume, stay
+            Assert.Same(cells[0][1], nav.Current);
+            Assert.Empty(_spoken);
+        }
+
         // The 4x6 signature skill grid shape (attribute rows by skill columns), abbreviated.
         private static (Container root, Grid grid, Cell[][] cells) SkillGrid() => GridOf(
             new[] { "Logic", "Encyclopedia", "Rhetoric", "Drama", "Conceptualization", "Visual Calculus" },
@@ -154,21 +224,45 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
-        public void HomeAndEnd_JumpWithinRow()
+        public void HomeAndEnd_JumpWithinColumn()
         {
             var (root, _, cells) = SkillGrid();
             var nav = NewNav();
             nav.Attach(root);
-            nav.Handle(UiActions.Down); // row 1, column 0 (Volition)
+            nav.Handle(UiActions.Right); // row 0, column 1 (Encyclopedia)
             _spoken.Clear();
 
             Assert.True(nav.Handle(UiActions.End));
-            Assert.Same(cells[1][5], nav.Current); // Suggestion, end of the Psyche row
-            Assert.Equal("Suggestion", _spoken[^1]);
+            Assert.Same(cells[3][1], nav.Current); // bottom of column 1 (Perception)
+            Assert.Equal("Perception", _spoken[^1]);
 
             Assert.True(nav.Handle(UiActions.Home));
-            Assert.Same(cells[1][0], nav.Current); // back to Volition
-            Assert.Equal("Volition", _spoken[^1]);
+            Assert.Same(cells[0][1], nav.Current); // top of column 1 (Encyclopedia)
+            Assert.Equal("Encyclopedia", _spoken[^1]);
+        }
+
+        // In a ragged grid, End jumps to the last filled row of the current column (not into a gap), and
+        // Home to its first.
+        [Fact]
+        public void RaggedGrid_HomeAndEnd_JumpWithinColumnSkippingGaps()
+        {
+            var (root, _, cells) = RaggedGridOf(
+                new[] { "A0", "A1", "A2" },
+                new[] { "B0", "!g", "B2" },
+                new[] { "C0", "!g", "!g" });
+            var nav = NewNav();
+            nav.Attach(root);
+            nav.Handle(UiActions.Right); // column 1 (A1)
+            nav.Handle(UiActions.Right); // column 2 (A2), which has rows 0 and 1
+            _spoken.Clear();
+
+            Assert.True(nav.Handle(UiActions.End));
+            Assert.Same(cells[1][2], nav.Current); // last filled row of column 2 (B2), skipping the row-2 gap
+            Assert.Equal("B2", _spoken[^1]);
+
+            Assert.True(nav.Handle(UiActions.Home));
+            Assert.Same(cells[0][2], nav.Current); // first row of column 2 (A2)
+            Assert.Equal("A2", _spoken[^1]);
         }
 
         [Fact]
