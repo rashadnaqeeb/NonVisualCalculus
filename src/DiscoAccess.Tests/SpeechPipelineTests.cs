@@ -14,11 +14,6 @@ namespace DiscoAccess.Tests
             public void Stop() { }
         }
 
-        private sealed class FakeClock : IClock
-        {
-            public double NowSeconds { get; set; }
-        }
-
         public SpeechPipelineTests()
         {
             // The tap is a static seam shared across tests; reset it so cases don't leak into each other.
@@ -26,9 +21,9 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
-        public void Speak_InvokesTap_AfterCleanAndDedupGate()
+        public void Speak_InvokesTap_AfterCleanGate()
         {
-            var pipeline = new SpeechPipeline(new FakeBackend(), new FakeClock());
+            var pipeline = new SpeechPipeline(new FakeBackend());
             var tapped = new List<string>();
             SpeechPipeline.Spoken = (text, interrupt) => tapped.Add(text);
 
@@ -39,17 +34,16 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
-        public void Speak_DoesNotInvokeTap_ForDedupedLine()
+        public void Speak_InvokesTap_ForEachRepeatedLine()
         {
-            var clock = new FakeClock();
-            var pipeline = new SpeechPipeline(new FakeBackend(), clock);
+            var pipeline = new SpeechPipeline(new FakeBackend());
             var tapped = new List<string>();
             SpeechPipeline.Spoken = (text, interrupt) => tapped.Add(text);
 
-            pipeline.Speak("anchored cursor");
-            pipeline.Speak("anchored cursor"); // within the dedup window: suppressed
+            pipeline.Speak("minimum");
+            pipeline.Speak("minimum");
 
-            Assert.Equal(new[] { "anchored cursor" }, tapped);
+            Assert.Equal(new[] { "minimum", "minimum" }, tapped);
         }
     }
 }

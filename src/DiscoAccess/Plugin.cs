@@ -5,7 +5,6 @@ using BepInEx.Unity.IL2CPP;
 using DiscoAccess.Core.Speech;
 using DiscoAccess.Core.Strings;
 using DiscoAccess.Dev;
-using DiscoAccess.Engine;
 using DiscoAccess.Host;
 using DiscoAccess.Modularity;
 using DiscoAccess.Speech;
@@ -41,7 +40,7 @@ namespace DiscoAccess
             _prism = new PrismBackend(Log);
             _prism.Initialize();
 
-            SpeechPipeline.Instance = new SpeechPipeline(_prism, new StopwatchClock());
+            SpeechPipeline.Instance = new SpeechPipeline(_prism);
 
             var host = new ModHost(Log, SpeechPipeline.Instance);
 
