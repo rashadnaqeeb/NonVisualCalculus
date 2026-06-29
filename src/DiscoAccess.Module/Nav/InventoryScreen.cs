@@ -51,7 +51,7 @@ namespace DiscoAccess.Module.Nav
             BuildEquipment();
             BuildTabs();
 
-            _itemsList = new Container(ContainerShape.VerticalList, Strings.InventoryItemsLabel);
+            _itemsList = new LiveLabelContainer(ContainerShape.VerticalList, InventoryAdapter.CurrentTabName);
             _root.Add(_itemsList);
             PopulateItems();
 

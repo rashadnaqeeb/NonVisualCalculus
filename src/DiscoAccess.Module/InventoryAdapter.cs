@@ -25,6 +25,22 @@ namespace DiscoAccess.Module
 
         public static InventoryTooltip Tooltip() => Object.FindObjectOfType<InventoryTooltip>();
 
+        // The active category tab's display name, read from its live button text, so the item list can be
+        // labeled with whatever the filter is actually set to (Tools, Clothes, ...) rather than a fixed
+        // "items" that collides with the Items tab. Falls back to the authored label when the tab panel or
+        // its button text is unavailable.
+        public static string CurrentTabName()
+        {
+            InventoryTabPanel tp = InventoryTabPanel.Singleton;
+            if (tp == null) return Strings.InventoryItemsLabel;
+            ItemTabGroup g = tp.CurrentItemTabGroup;
+            InventoryTabButton button = null;
+            if (tp.inventoryTabButtons != null && tp.inventoryTabButtons.TryGetValue(g, out button)
+                && button != null && button.ButtonText != null)
+                return TextFilter.Clean(button.ButtonText.text);
+            return Strings.InventoryItemsLabel;
+        }
+
         // Every dock of a given nature, in scene order. Equipment and held docks are stable across a screen
         // (the doll), so they are gathered once at build; inventory docks belong to the active tab and are
         // gathered fresh each rebuild.
@@ -172,9 +188,9 @@ namespace DiscoAccess.Module
 
         // The keys / bullets display slots' content, from their own tooltip data: the keys slot lists the
         // keys held (one per line, read as sentences), the bullets slot the ammo count ("You've got 1
-        // bullet"). Both carry a localized title that doubles as the label. The slots are not always shown
-        // (no keys, no firearm), and FindObjectOfType returns only an active one, so a hidden slot yields
-        // null here and its cell drops out of navigation.
+        // bullet"). Both carry a localized title that doubles as the label. An empty slot (no keys, no
+        // bullets) yields null here - either the slot is hidden (FindObjectOfType returns only an active one)
+        // or it is shown but its tooltip has no description - and its cell drops out of navigation.
         public static string KeysText()
         {
             Sunshine.KeysSlot slot = Object.FindObjectOfType<Sunshine.KeysSlot>();
@@ -187,14 +203,15 @@ namespace DiscoAccess.Module
             return slot != null ? TooltipReadout(slot.GetTooltipData(), Strings.InventoryBullets) : null;
         }
 
-        // Compose a generic tooltip's title and description into one line, falling back to an authored label
-        // when the slot has no data.
+        // Compose a generic tooltip's title and description into one line. The description carries what the
+        // slot holds (the keys list, the bullet count), so an empty description means an empty slot: return
+        // null to drop the cell rather than announce a bare label for nothing.
         private static string TooltipReadout(GenericTooltipData data, string fallbackLabel)
         {
-            if (data == null) return fallbackLabel;
+            string desc = data != null ? TextFilter.Clean(data.Description) : null;
+            if (string.IsNullOrEmpty(desc)) return null;
             string title = string.IsNullOrEmpty(data.Title) ? fallbackLabel : TextFilter.Clean(data.Title);
-            string desc = TextFilter.Clean(data.Description);
-            return string.IsNullOrEmpty(desc) ? title : title + ", " + desc;
+            return title + ", " + desc;
         }
 
         private static string Leaf(Transform parent, string child)
