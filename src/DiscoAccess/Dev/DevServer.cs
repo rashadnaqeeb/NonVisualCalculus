@@ -25,6 +25,8 @@ namespace DiscoAccess.Dev
     ///   GET  /focus             the current uGUI selection (name/path/text), independent of speech.
     ///   GET  /nav               our navigator's own focus state (ownership, popup, focus path), which the
     ///                          game-level /focus cannot see; "[no module]" when the module is not loaded.
+    ///   GET  /gui               raw dump of the active uGUI hierarchy (paths, component types, text,
+    ///                          CanvasGroup alpha); surfaces structure /focus and /nav hide. Diff vs /nav.
     ///   GET  /speech?since=N    lines the mod has spoken since cursor N (we can't hear the TTS).
     ///   GET  /screenshot        capture a PNG of the current frame; returns the file path.
     ///   GET  /health            liveness.
@@ -172,6 +174,9 @@ namespace DiscoAccess.Dev
 
             if (route == "/nav" && method == "GET")
                 return OnMainThread(DescribeNav);
+
+            if (route == "/gui" && method == "GET")
+                return OnMainThread(GuiInspector.Describe);
 
             if (route == "/screenshot" && method == "GET")
                 return Screenshot();

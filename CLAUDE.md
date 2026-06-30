@@ -89,18 +89,50 @@ working there, and when a feature branch we made is done, merge it to main (fast
 and delete it. This governs where a commit lands, not whether to commit - still only commit, merge, or
 push when the user asks.
 
-**Dev loop (in-process HTTP server + hot-reload).** A loopback dev server runs on `127.0.0.1:8771`
-by default (off with `DISCOACCESS_NO_DEV=1`, port via `DISCOACCESS_DEV_PORT`), exposing `POST /eval`
-(live Roslyn C# REPL against game types; state persists across calls), `GET /speech?since=N` (read
-back what the mod spoke), `GET /focus` (the current uGUI selection, independent of speech, works even
-if the module is broken), `POST /input` (up|down|left|right move + select via `NavigationManager`,
-confirm via `NavigationManager.Submit()`, back via the active Sunshine `View.CloseOnEscapeKey()` -
-all the game's own logical handlers, never OS synthetic keys, which a backgrounded window can't take),
-`GET /screenshot`, `GET /health`, and `POST /reload`. The hot loop for feature code, no game restart:
-edit `DiscoAccess.Module`, `dotnet build src/DiscoAccess.Module/DiscoAccess.Module.csproj` (its
-`DeployModule` target copies just the unlocked module DLL), then `curl -X POST .../reload` or press
-**F6** in-game. The host reloads the module from its DLL bytes; the socket, Prism, and REPL stay live.
-Host code changes still need a restart (close the game first, since the host DLLs are then locked).
+**Dev driver (in-process HTTP server + hot-reload) - for iteration, not a player feature.** A loopback
+dev server is baked into the host (`Debug` only) and **on by default**, binding **127.0.0.1 only**
+(reachable from this machine alone). Disable with `DISCOACCESS_NO_DEV=1`; set the port with
+`DISCOACCESS_DEV_PORT` (default 8771). It lets an agent introspect and drive the live game over
+`http://127.0.0.1:8771`.
+
+Bring-up: launch through Steam (kill/launch commands under Gotchas), then poll
+`curl -s --retry 60 --retry-connrefused --retry-delay 1 http://127.0.0.1:8771/health`. The dev server
+forces `Application.runInBackground = true`, so the game keeps simulating while its window is unfocused
+and you can drive it with your terminal focused.
+
+Endpoints (loopback; drive with `curl`):
+- `POST /eval` - body is C# source, compiled by **Roslyn** and run on the Unity main thread against the
+  live game. REPL **state persists across calls**. Returns captured output, compile diagnostics, and
+  exceptions (caught - eval errors never crash the game).
+- `POST /input` - body is a verb (`up|down|left|right|confirm|back|tab|prev|home|end|secondary`). Drives
+  **our own navigator** when it owns the keyboard (a migrated screen or the popup overlay, where DE's
+  `NavigationManager` is muted), else falls back to DE's focus system for not-yet-migrated screens - both
+  via the game's **own logical handlers**, never OS synthetic keys (a backgrounded window can't take
+  those). Enter/Escape on a focused text field commit/cancel the edit first. Read results via `/speech`.
+- `POST /type` - body is text appended to the focused input field (e.g. a save name).
+- `POST /reload` - rebuild the feature module from its freshly built DLL, no restart (same path as **F6**).
+- `GET /focus` - the current uGUI selection (EventSystem + `NavigationManager`, with the path and text),
+  independent of speech, works even if the module failed to load or its `Tick` threw.
+- `GET /nav` - our navigator's **interpreted** state (ownership, popup, focus path) that the game-level
+  `/focus` cannot see; `[no module]` when the module is not loaded.
+- `GET /gui` - **raw** dump of the active uGUI hierarchy (paths, component types, TMP/legacy text,
+  CanvasGroup alpha). Surfaces structure `/focus` and `/nav` hide (data living in sub-objects no focus
+  label exposes, e.g. DE's Pages/SubPage wrapping); **diff against `/nav`** to find where the mod loses
+  information, then `/eval` into what it reveals. Lists active objects only; `/screenshot` is the
+  visibility truth for alpha-hidden ones.
+- `GET /speech?since=N` - lines the mod has spoken since cursor N (we can't hear the TTS). The tap is
+  upstream of the Prism backend, so it works even with speech muted.
+- `GET /screenshot` - capture a PNG of the current frame; returns the file path to `Read`.
+- `GET /health` - liveness.
+
+**Headless / overnight runs:** set `DISCOACCESS_NO_SPEECH=1` to skip Prism init so an unattended session
+doesn't depend on a running screen reader (NVDA). Spoken text is still captured for `/speech`.
+
+Iteration loop for feature code, no game restart: edit `DiscoAccess.Module`,
+`dotnet build src/DiscoAccess.Module/DiscoAccess.Module.csproj` (its `DeployModule` target copies just
+the unlocked module DLL), then `curl -X POST .../reload` or press **F6** in-game. The host reloads the
+module from its DLL bytes; the socket, Prism, and REPL stay live. Host or Core changes still need a
+restart (close the game first, since those DLLs are then locked).
 
 The REPL is Roslyn, not Mono.CSharp (whose Reflection.Emit codegen calls net4x AppDomain overloads
 the CoreCLR runtime removed, so it throws on every eval). Roslyn's deps (Microsoft.CodeAnalysis.\*,
@@ -113,7 +145,7 @@ After a game update, relaunch once through Steam to regenerate `BepInEx/interop/
 ## Architecture
 
 Four projects, the Hand-of-Fate split adapted to IL2CPP, with the engine-coupled side split again
-into a permanent host and a reloadable module so feature code can hot-reload (see Dev loop above):
+into a permanent host and a reloadable module so feature code can hot-reload (see Dev driver above):
 
 - **`DiscoAccess.Core`** (netstandard2.0) - engine-agnostic logic: the speech pipeline, text filter,
   announcement composition, the authored-strings table, and the `IModHost`/`IModModule` contracts.

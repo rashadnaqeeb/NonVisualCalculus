@@ -24,6 +24,14 @@ namespace DiscoAccess.Core.Speech
 
         public bool Enabled { get; set; } = true;
 
+        /// <summary>
+        /// When set, the backend is not driven but the <see cref="Spoken"/> tap still fires, so a
+        /// headless/overnight dev run reads back through /speech without depending on a screen reader.
+        /// Set by the host from DISCOACCESS_NO_SPEECH. Distinct from <see cref="Enabled"/>, which gates
+        /// the line entirely (tap included).
+        /// </summary>
+        public bool Muted { get; set; }
+
         public SpeechPipeline(ISpeechBackend backend)
         {
             _backend = backend;
@@ -38,7 +46,8 @@ namespace DiscoAccess.Core.Speech
             if (clean.Length == 0)
                 return;
 
-            _backend.Speak(clean, interrupt);
+            if (!Muted)
+                _backend.Speak(clean, interrupt);
             Spoken?.Invoke(clean, interrupt);
         }
 

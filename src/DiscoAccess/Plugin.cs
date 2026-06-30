@@ -38,10 +38,18 @@ namespace DiscoAccess
             Logger = Log;
             Log.LogInfo($"{Name} {Version} loading");
 
+            // Headless/overnight dev runs set DISCOACCESS_NO_SPEECH=1 so an unattended session doesn't
+            // depend on a running screen reader. We skip Prism init (so it never logs a spurious "no
+            // backend" and never touches NVDA) but still mute via the pipeline; spoken text is captured
+            // for /speech regardless, since the dev tap is upstream of the backend.
+            bool muteSpeech = System.Environment.GetEnvironmentVariable("DISCOACCESS_NO_SPEECH") == "1";
             _prism = new PrismBackend(Log);
-            _prism.Initialize();
+            if (muteSpeech)
+                Log.LogInfo("Speech muted (DISCOACCESS_NO_SPEECH=1); spoken text still captured for /speech");
+            else
+                _prism.Initialize();
 
-            SpeechPipeline.Instance = new SpeechPipeline(_prism);
+            SpeechPipeline.Instance = new SpeechPipeline(_prism) { Muted = muteSpeech };
 
             // Settings persist through our BepInEx config file and are owned here (permanent) so they
             // survive a module hot-reload; the module reads them through IModHost.Settings.
