@@ -12,4 +12,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <!-- System.Numerics.Vector3 is the world layer's plain point type (no Unity in Core); not in the
+         netstandard2.0 surface by default. The Module converts UnityEngine.Vector3 at the boundary. -->
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+  </ItemGroup>
+
 </Project>

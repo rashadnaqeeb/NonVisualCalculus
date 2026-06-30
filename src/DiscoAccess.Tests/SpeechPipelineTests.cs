@@ -4,6 +4,9 @@ using Xunit;
 
 namespace DiscoAccess.Tests
 {
+    // The static SpeechPipeline.Spoken tap is shared process-wide; this collection serializes this class
+    // with any other that calls Speak (OverlayFrameworkTests) so a concurrent Speak can't pollute the tap.
+    [Collection("UsesSpeechPipeline")]
     public class SpeechPipelineTests
     {
         private sealed class FakeBackend : ISpeechBackend
