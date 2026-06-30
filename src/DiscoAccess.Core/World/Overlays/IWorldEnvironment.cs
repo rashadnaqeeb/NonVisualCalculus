@@ -28,5 +28,18 @@ namespace DiscoAccess.Core.World.Overlays
         /// <paramref name="range"/> when no wall stands within range). Backs the wall-tone proximity
         /// volume; the Module casts the game's navmesh.</summary>
         float WallDistance(Vector3 from, Vector3 direction, float range);
+
+        /// <summary>Hold the game camera on <paramref name="point"/> so the orb streamer (which culls against
+        /// the camera frustum) wakes the orbs around it, and so an orb the cursor sits on is rendered - the
+        /// gate its clickable needs before it can be interacted with. The Module takes a camera lock (which
+        /// freezes the game's own camera, so it stops pulling the view back to the character between our
+        /// focuses) and snaps the focus rather than tweening, so the frustum updates promptly. A no-op before
+        /// the camera exists (early boot), which is a not-ready state rather than a failure.</summary>
+        void FocusCamera(Vector3 point);
+
+        /// <summary>Release the camera lock taken by <see cref="FocusCamera"/>, handing the camera back to the
+        /// game - which recenters on the character. Called when control is lost, a menu floats over the world,
+        /// or the world is left, so the game's own dialogue and cutscene cameras are unopposed. Idempotent.</summary>
+        void ReleaseCamera();
     }
 }

@@ -28,6 +28,8 @@ namespace DiscoAccess.Tests
                 if (dir.X > 0.5f) return East;
                 return West;
             }
+            public void FocusCamera(Vector3 point) { }
+            public void ReleaseCamera() { }
         }
 
         private sealed class FakeTones : IWallTones

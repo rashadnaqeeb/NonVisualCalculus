@@ -57,6 +57,34 @@ namespace DiscoAccess.Module.World
             return Mathf.Sqrt(dx * dx + dz * dz);
         }
 
+        // A stable lock token. While it sits in the camera's lock set the game's own camera logic - pan, zoom,
+        // and the recenter-on-character that otherwise pulls the view back between our focuses - is frozen, so
+        // our SetFocus is the only thing moving the camera. Confirmed live: SetFocus still drives the camera
+        // while locked. One per environment instance; released on leaving the world (and on module teardown,
+        // via the overlay's exit), so it never leaks a frozen camera.
+        private readonly Il2CppSystem.Object _camLock = new Il2CppSystem.Object();
+
+        /// <summary>Hold the camera on a world point so the orb streamer wakes the orbs around it. Takes the
+        /// camera lock once (re-added if the controller was swapped on an area change, checked live) so the
+        /// game stops reclaiming the view, then snaps the focus with instant=true so the frustum updates this
+        /// frame rather than tweening; the empty zoom keeps the current zoom. A no-op before the camera exists
+        /// (early boot) - a not-ready state, not a failure, so it is silent like the player-position cold read.</summary>
+        public void FocusCamera(Snv point)
+        {
+            CameraController cam = CameraController.Current;
+            if (cam == null) return;
+            if (!cam.CheckLock(_camLock)) cam.AddLock(_camLock);
+            cam.SetFocus(WorldConvert.ToUnity(point), new Il2CppSystem.Nullable<float>(), true);
+        }
+
+        /// <summary>Release the camera lock, handing the camera back to the game (which recenters on the
+        /// character). Idempotent: only removes the lock when this controller actually holds it.</summary>
+        public void ReleaseCamera()
+        {
+            CameraController cam = CameraController.Current;
+            if (cam != null && cam.CheckLock(_camLock)) cam.RemoveLock(_camLock);
+        }
+
         // NavMesh.AllAreas (-1, every area in the mask); the const isn't surfaced on the interop proxy.
         private const int AllAreas = -1;
 

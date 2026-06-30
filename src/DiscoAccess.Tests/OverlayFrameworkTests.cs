@@ -18,10 +18,14 @@ namespace DiscoAccess.Tests
             public Vector3 Player = new Vector3(0f, 0f, 0f);
             public bool Control = true;
             public Vector3? Wall; // when set, TraceMove returns this regardless of intent (blocked)
+            public readonly List<Vector3> Focused = new List<Vector3>(); // camera focus points, in order
             public Vector3 PlayerPosition => Player;
             public bool HasControl => Control;
             public Vector3 TraceMove(Vector3 from, Vector3 intended) => Wall ?? intended;
             public float WallDistance(Vector3 from, Vector3 direction, float range) => range; // open in every direction
+            public int Released; // camera-lock releases
+            public void FocusCamera(Vector3 point) => Focused.Add(point);
+            public void ReleaseCamera() => Released++;
         }
 
         private sealed class FakeBackend : ISpeechBackend

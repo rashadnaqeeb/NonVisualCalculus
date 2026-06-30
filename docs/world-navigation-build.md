@@ -393,6 +393,36 @@ arrival), cancellable by Space. The game-acting hotkeys (screens, pause/help, st
 quick-actions) live in `WorldCommands`, each calling the game's own method directly since the wholesale
 mute leaves no key for the game to read.
 
+## Camera follow
+
+The exploration cursor drives the game camera so the orbs around wherever the player is looking stream in
+(orbs are camera-frustum culled by `NPCUnloader`, so an orb only wakes, gaining its text and type, once the
+camera is on it), and so an orb under the cursor is rendered, the gate its clickable needs before it can be
+interacted with. Validated live in the Whirling backyard: gliding the cursor moved the camera focus to
+track it, the orb set changed as it moved, and the camera held on a resting cursor instead of snapping back
+to the character.
+
+The mechanism is a small testable `CameraFollow` (`Core/World/Overlays/`) behind a new `IWorldEnvironment`
+seam (`FocusCamera`/`ReleaseCamera`), driven from `Overlay.Tick` and gated on `InputActive && HasControl`.
+It re-focuses only after the cursor drifts past two metres (one camera move per couple of metres, not per
+frame; a re-focus to an unchanged point would needlessly recompute the frustum and churn the streamer), and
+releases on going inactive or on overlay exit. The Module backs `FocusCamera` with
+`CameraController.Current.SetFocus(point, no-zoom, instant: true)`.
+
+The non-obvious decision is the camera lock. The game has no automatic character-follow in free roam, but
+it *does* reclaim the camera back to the character in the gaps when we stop issuing `SetFocus` (confirmed
+live: a resting cursor's camera drifted back to the character at the character-focus height within a
+second). So `FocusCamera` first takes a camera lock (`AddLock`, with a stable per-environment
+`Il2CppSystem.Object` token, re-added via `CheckLock` if the controller was swapped on an area change),
+which freezes the game's own camera logic; `SetFocus` still drives the camera while the lock is held
+(confirmed live, contrary to a first reading of the decompile). `isSlaved` is left untouched, since
+toggling it stalls orb streaming. On release we remove only our own token (never
+`RemoveAllLocksAndCenterViewport`, which would drop the game's locks too), and the game then recenters on
+the character. During a conversation the game adds its own camera lock for dialogue framing; our lock has
+already released by then (control is lost), so the two never fight, confirmed by the full round trip: glide
+to Yard Cuno, Enter, his conversation starts with our lock gone and the game's in place, and on the
+conversation ending the world re-engages and the cursor follows again.
+
 ## Deferred
 
 These are real forks left open on purpose, not oversights.
@@ -418,10 +448,10 @@ These are real forks left open on purpose, not oversights.
 - Bounds refinement: doorway segments and footprint circles. Every proxy currently reports a point
   bound; the richer shapes exist in `ScanBounds` but are not yet wired to the proxies.
 - Name cleaning and the spoiler-safe fallback for slug names, per the naming rules in the scouting notes.
-- Camera follow, so orbs stream in around the cursor as it explores. This is also required for orb
-  interaction, not only reveal: an orbital orb's clickable `OrbUI` activates only when the orb is
-  rendered, so the camera must be on a target before its orb can be interacted with (confirmed live, the
-  in-range `IsOrbiting` flag flips at the radius but `OrbUI` stays inactive without the camera).
+- Orb interaction. Camera follow (now built, see above) keeps an orb under the cursor rendered, which is
+  the gate its clickable needs, so this is unblocked: the remaining work is making `OrbProxy.IsActionable`
+  and `Interact` real (likely through `SenseOrb.StartConversation`, in range) and letting the Enter verb
+  target orbs, which `WorldReader.NearestActionableTo` currently skips.
 - Recentering the cursor onto the player when an area is entered.
 
 ## Validation snapshot

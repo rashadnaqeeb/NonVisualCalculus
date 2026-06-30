@@ -18,6 +18,7 @@ namespace DiscoAccess.Core.World.Overlays
         private readonly IWorldEnvironment _env;
         private readonly SpeechPipeline _speech;
         private readonly MotionTracker _motion = new MotionTracker();
+        private readonly CameraFollow _camera;
 
         public Cursor Cursor { get; }
 
@@ -40,6 +41,7 @@ namespace DiscoAccess.Core.World.Overlays
             _env = env;
             _speech = speech;
             Cursor = new Cursor(env);
+            _camera = new CameraFollow(env);
         }
 
         /// <summary>Add a system (one per concrete type; a duplicate replaces the prior instance).</summary>
@@ -62,6 +64,7 @@ namespace DiscoAccess.Core.World.Overlays
         public void OnExit()
         {
             foreach (var s in _systems) s.OnExit(this);
+            _camera.Release();
             _motion.Reset();
         }
 
@@ -78,6 +81,10 @@ namespace DiscoAccess.Core.World.Overlays
             if (_env.HasControl) Cursor.Glide(dirX, dirZ, dt, speed);
             _motion.Update(Cursor.Position, dt, intent);
             for (int i = 0; i < _systems.Count; i++) _systems[i].Tick(dt, this);
+            // Keep the camera on the cursor so orbs stream in around it (and an orb under the cursor renders,
+            // the gate its clickable needs). Released when a menu floats over the world or control is lost, so
+            // the dialogue/cutscene camera is unopposed.
+            _camera.Tick(Cursor.Position, InputActive && _env.HasControl);
         }
 
         /// <summary>Gather every system's announcements for the request, keep those matching the requested
