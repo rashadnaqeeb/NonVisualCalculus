@@ -38,9 +38,30 @@ and `src/` (ilspy C# per type - Assembly-CSharp, DialogueSystem, PixelCrushers, 
 up any game type/method/field signature here before guessing.
 
 **Caveat: the Cpp2IL dummy DLLs have accurate signatures but EMPTY method bodies** (everything returns
-`false`/`default`/`null`). Read structure from them, never logic. For real behavior, re-dump targeted
-classes with Cpp2IL's IL-recovery mode (`tools/Cpp2IL.exe`), read the public Pixel Crushers docs, or
-confirm live with debug logging. Re-dump after a game update.
+`false`/`default`/`null`). Read structure from them, never logic. For real behavior, prefer the Ghidra
+pipeline (next paragraph); failing that, re-dump targeted classes with Cpp2IL's IL-recovery mode
+(`tools/Cpp2IL.exe`), read the public Pixel Crushers docs, or confirm live with debug logging.
+
+**Real method bodies via Ghidra (`tools/re/`).** The game binary is decompiled to readable C with
+il2cpp method names, named struct fields (`this->fields.textOverride`), typed parameters, call
+targets, and string literals resolved to their text. **Prefer reading this over probing the live game
+through the dev HTTP server** when working out how a method behaves, where a hook belongs, or what text
+a call returns: the decompiled code is ground truth read in one shot, whereas a live probe only samples
+one hypothesis at a time and leaves uncertainty. Use the HTTP server to confirm runtime values, not to
+discover structure. Two artifacts: the full pre-decompiled tree at `decompiled/ghidra/` (one `.c` per
+type under namespace dirs, plus `_strings.txt`) to browse and grep, and the saved Ghidra project for
+fresh single-class dumps via `tools/re/decompile.sh 'Type$$'` (the `$$` separates Type from Method,
+e.g. `SenseOrb$$`), which writes `decompiled/ghidra/<query>.c`. After a game update run
+`tools/re/refresh.sh` once to rebuild everything. See `tools/re/README.md`.
+
+**Accessibility in `decompiled/` is not the proxy's.** The decompiled sources report each method's
+original accessibility, but the Il2CppInterop proxies we actually compile against
+(`<game>/BepInEx/interop/`) generate most members public. A method shown `private` in `decompiled/`
+(e.g. `QuicktravelController.IsQuicktravelAvailable()`) is usually still callable from
+`DiscoAccess.Module` and the dev REPL, so don't conclude "private, won't compile" from the source;
+verify by building (`dotnet build`) or calling it in the REPL. To check a proxy method is bound to
+native rather than returning a stub default, call a sibling whose true value differs from the default
+(`IsOutside()` returning true proved the binding works).
 
 ## Build & deploy
 
@@ -53,6 +74,20 @@ the dll copy is skipped (file locked) and you'll run a stale build. `build.ps1` 
 - `dotnet build DiscoAccess.slnx -c Debug` - build all four projects and deploy.
 - `dotnet test DiscoAccess.slnx` - run the unit suite (Core only; no game, no Unity).
 - `dotnet build -c Release` compiles without deploying.
+
+**Build Debug to test.** Always build Debug (the default) when verifying a change - only Debug deploys,
+so `-c Release` proves compilation but leaves a stale deployed build and an untested change; reach for
+it only for a deliberate non-deploying compile. If a Debug deploy is skipped because the running game
+has the DLLs locked (`MSB3021` "being used by another process") and the change needs a restart to take
+effect (any `DiscoAccess.Core` or host change, which can't hot-reload), carry the whole cycle yourself
+rather than handing back a "you need to relaunch": close the game, re-run `dotnet build` so the deploy
+lands, then relaunch through Steam (kill/launch commands under Gotchas). A pure-module change needs no
+restart (F6 / `POST /reload`).
+
+**Git.** Commits land on `main` by default; if a session already started on a feature branch keep
+working there, and when a feature branch we made is done, merge it to main (fast-forward when possible)
+and delete it. This governs where a commit lands, not whether to commit - still only commit, merge, or
+push when the user asks.
 
 **Dev loop (in-process HTTP server + hot-reload).** A loopback dev server runs on `127.0.0.1:8771`
 by default (off with `DISCOACCESS_NO_DEV=1`, port via `DISCOACCESS_DEV_PORT`), exposing `POST /eval`
@@ -147,6 +182,18 @@ users; strip fluff, never information.
 - Include all gameplay-relevant detail (dialogue and response text, skill-check odds, item details, an
   orb's type and distance); concise means no fluff, not less information. Avoid emdashes (the reader
   announces them as "dash", breaking flow) and fancy punctuation.
+- Selected state uses the word "selected" (`Strings.StatusSelected`), not "active" - the mod standard,
+  matching the journal/options tabs (`OptionTab`). Don't invent per-screen status words.
+- Read stats/abilities as full words (Intellect, Psyche, Physique, Motorics), never the on-screen
+  abbreviations (INT/PSY/FYS/MOT). Full names come from
+  `GameLocalization.Translate("Abilities/ABILITY_NAME_" + ability)` where ability is the `AbilityType`
+  (the inventory panel object for physique is named "PHQ" but the term is "FYS").
+- Label a section/readout for what it is, reusing the game's own header string when one exists (e.g.
+  prepend the inventory's "BONUSES FROM ITEMS:" header to the bonuses line).
+- Fold an item's detail (effects + description) onto the item itself rather than a separate Tab-stop:
+  it saves a keypress and makes specific stats type-ahead searchable. Read detail from the item model,
+  not the shared tooltip, which lags a frame behind focus. Don't bind information to dedicated "status
+  keys"; make it reachable through normal navigation.
 
 **No silent failures.** The mod runs on a per-frame pump, Harmony patches, and IL2CPP interop, which
 fail invisibly unless logged: a swallowed exception in the pump or a patch silently stops a feature
@@ -212,3 +259,10 @@ if (controller == null) return new List();
 `var name = entity?.GetController()?.Sections?.FirstOrDefault()?.Name ?? "default";`
 
 **CORRECT**: `var name = entity.GetController().Sections.FirstOrDefault()?.Name ?? "default";`
+
+### No throwaway dev hacks
+Never hack a temporary bypass into the tree to dodge a proper reload or restart (e.g.
+`if (_devEnabled || true)` to force-enable a dev affordance). The tree stays clean at all times - the
+hot-reload (F6 / `POST /reload`) and rebuild+relaunch loops are cheap and meant to be used normally. To
+toggle a gated dev feature, set its real config (env var, etc.) and reload or relaunch. Keep gates
+honest.

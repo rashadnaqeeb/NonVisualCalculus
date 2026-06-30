@@ -25,3 +25,13 @@ Directory.Build.local.props
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Ghidra/IL2CPP RE pipeline: heavy vendored tools + generated project/output (reproduce via tools/re/README).
+/tools/re/dl/
+/tools/re/ghidra/
+/tools/re/jdk/
+/tools/re/il2cppdumper/
+/tools/re/project/
+/tools/re/out/
+/tools/re/in/
+/tools/re/*.log
