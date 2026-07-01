@@ -21,6 +21,10 @@ namespace DiscoAccess.Core.Settings
         /// on the line silently, leaving the player to read it on their own terms.</summary>
         public ToggleSetting AutoReadDialogue { get; }
 
+        /// <summary>Speak the world's background barks (TV, NPC chatter, proximity remarks) as they float up,
+        /// queued so they never cut off the player. Off leaves the world silent of ambient talk.</summary>
+        public ToggleSetting ReadAmbientDialogue { get; }
+
         /// <summary>The loudness of the directional wall tones, a 0..100 percent. Defaults low (5%): the tones
         /// are an ambient orientation bed, not a foreground cue, so they sit under speech until turned up.</summary>
         public RangeSetting WallToneVolume { get; }
@@ -33,6 +37,8 @@ namespace DiscoAccess.Core.Settings
         {
             AutoReadDialogue = Add(new ToggleSetting(
                 "auto_read_dialogue", SettingAutoReadDialogue, defaultValue: true, store));
+            ReadAmbientDialogue = Add(new ToggleSetting(
+                "read_ambient_dialogue", SettingReadAmbientDialogue, defaultValue: true, store));
             WallToneVolume = Add(new RangeSetting(
                 "wall_tone_volume", SettingWallToneVolume, defaultValue: 5, step: 5, store));
             WallTonesContinuous = Add(new ToggleSetting(

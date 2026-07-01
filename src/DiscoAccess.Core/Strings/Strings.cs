@@ -216,6 +216,7 @@ namespace DiscoAccess.Core.Strings
         // Mod settings labels, spoken as the setting's name in the mod menu. Authored: these are the mod's
         // own options, with no game string to read.
         public const string SettingAutoReadDialogue = "Automatically read dialogue";
+        public const string SettingReadAmbientDialogue = "Read ambient dialogue";
         public const string SettingWallToneVolume = "Wall tone volume";
         public const string SettingWallTonesContinuous = "Continuous wall tones";
 
