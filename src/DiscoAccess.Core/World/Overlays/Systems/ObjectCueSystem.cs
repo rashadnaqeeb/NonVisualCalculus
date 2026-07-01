@@ -154,6 +154,7 @@ namespace DiscoAccess.Core.World.Overlays.Systems
         {
             IWorldItem? best = null;
             float bestDist = HoverMargin;
+            float bestBody = float.MaxValue;
             foreach (IWorldItem it in _model.Items)
             {
                 // Accessible AND visible: what a sighted player could see and act on. An accessible thing
@@ -165,11 +166,15 @@ namespace DiscoAccess.Core.World.Overlays.Systems
                 if (!it.RidesPlayer && Geo.Distance(it.Position, player) < PlayerEpsilon) continue;
                 // Distance to the footprint's nearest part, XZ-only: whether the cursor is over a thing is a
                 // flat-map question, so a thing whose geometry sits up high (a staircase, an exit whose trigger
-                // origin floats above the steps) is still on the cursor gliding beneath it. Strict less-than so
-                // an exact tie keeps the first-seen item rather than flapping as the poll reorders the registry.
+                // origin floats above the steps) is still on the cursor gliding beneath it. An exact tie - the
+                // cursor inside several overlapping footprints reads distance 0 to each (a crate inside a wide
+                // disc, two abutting boxes) - goes to the thing whose BODY is nearest the cursor, so the more
+                // specific thing wins and a wide footprint can never permanently shadow a small one sitting
+                // inside it. Geometry decides, so the pick is stable however the poll reorders the registry.
                 Vector3 np = it.Bounds.NearestPoint(cursor);
                 float d = Geo.DistanceXZ(np, cursor);
-                if (d >= bestDist) continue;
+                float body = Geo.DistanceXZ(it.Position, cursor);
+                if (d > bestDist || (d == bestDist && (best == null || body >= bestBody))) continue;
                 // Height-reachability gate. XZ-only detection would also put the cursor "on" a thing hanging
                 // well above (or below) the ground it is clamped to - the Whirling balcony door overhanging the
                 // plaza reads as under the cursor though its body sits metres overhead. Drop such a candidate
@@ -180,7 +185,7 @@ namespace DiscoAccess.Core.World.Overlays.Systems
                 // names something the player cannot get to. The oracle call is reached only for an off-level
                 // nearest candidate, so it runs rarely, not for every item every frame.
                 if (System.Math.Abs(np.Y - cursor.Y) > VerticalReach && !it.IsActionable(player)) continue;
-                bestDist = d; best = it;
+                bestDist = d; bestBody = body; best = it;
             }
             return best;
         }

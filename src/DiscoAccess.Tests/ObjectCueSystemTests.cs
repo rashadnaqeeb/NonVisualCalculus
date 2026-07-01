@@ -222,6 +222,29 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
+        public void ThingInsideAWiderFootprint_WinsTheTie()
+        {
+            // A crate inside a wide footprint (an orb's widened disc, a rug under a table): the cursor over
+            // the crate is inside BOTH footprints at distance 0. Before the body tie-break the pick fell to
+            // registry order, so the wide thing - registered first here, the failing order - shadowed the
+            // crate permanently. The nearer body wins the tie: the crate names on itself, and the wide thing
+            // still names on its own bare ground.
+            var backend = new FakeBackend();
+            var (overlay, _, model, _, _) = Build(backend);
+            model.List.Add(new FakeItem { Name = "wide orb", Position = new Vector3(5f, 0f, 0f), HalfExtent = 3f, Cat = WorldTaxonomy.Orb });
+            model.List.Add(new FakeItem { Name = "crate", Position = new Vector3(4f, 0f, 0f), HalfExtent = 0.5f });
+
+            overlay.Cursor.Position = new Vector3(4f, 0f, 0f); // on the crate, inside the wide footprint
+            overlay.AnnounceCurrent();
+            Assert.Equal(new[] { "crate" }, backend.Spoken);
+
+            backend.Spoken.Clear();
+            overlay.Cursor.Position = new Vector3(7f, 0f, 0f); // off the crate, still inside the wide footprint
+            overlay.AnnounceCurrent();
+            Assert.Equal(new[] { "wide orb" }, backend.Spoken);
+        }
+
+        [Fact]
         public void ElevatedReachableThing_AtTheCursorsXZ_IsStillSelected()
         {
             // A reachable thing whose geometry sits well above the ground (a staircase, an exit whose trigger

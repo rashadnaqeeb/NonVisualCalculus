@@ -15,34 +15,58 @@ namespace DiscoAccess.Module.World
     /// </summary>
     internal sealed class OrbProxy : IWalkTarget
     {
-        // The cursor footprint radius is capped here, the orb mirror of an entity's MaxFootprintHalf: a few
-        // orbs carry a very large interaction sphere (up to 16 m), and a footprint that wide would read
-        // distance-zero from far off and shadow nearby things, so the sensed disc is clamped while the orb's
-        // own InteractionRadius still governs the actual trigger range.
+        // The footprint disc for any orb is its small drawn body - the thing a sighted player sees and
+        // clicks - never its InteractionRadius trigger range (up to 16 m): a footprint that wide reads
+        // distance-zero across a whole plaza, dominating the cursor everywhere near the orb, while the
+        // radius still governs the actual trigger range (Interact, WithinInteractionRadius). For a
+        // thought-cabinet orb riding the character the same disc is the near-player footprint: wide enough
+        // that the cursor centred on the character is on it, tight enough not to shadow a real interactable
+        // next to the player.
+        private const float BodyRadius = 0.5f;
+
+        // How far the body disc may widen to reach walkable ground (see FootprintRadius), the orb mirror of
+        // an entity's MaxFootprintHalf, so an orb far off the mesh cannot regrow a plaza-wide footprint.
         private const float MaxFootprintRadius = 4f;
 
-        // The footprint for a thought-cabinet orb that rides the character. Such an orb reports a zero
-        // interaction radius and sits exactly on the character, so it gets a small fixed disc instead: wide
-        // enough that the cursor centred on the character is on it, tight enough not to shadow a real
-        // interactable next to the player.
-        private const float PlayerFootprintRadius = 0.5f;
-
         private readonly SenseOrb _orb;
+        // Resolved once (see FootprintRadius): the widening measures the orb's centre against the static
+        // navmesh and a world-anchored orb does not move, so the radius is structural - the same
+        // size-not-state caching EntityProxy does; the disc centre is still read live.
+        private float _footprintRadius = -1f;
 
         public OrbProxy(SenseOrb orb) { _orb = orb; }
 
         public string Name => OrbNaming.Resolve(_orb.textOverride, MorselText(), _orb.conversation);
         public Vector3 Position => WorldConvert.ToSnv(_orb.transform.position);
 
-        // The footprint is a circle sized to the orb's interaction radius (capped), not a bare point, so the
-        // cursor is "on" the orb anywhere within the disc it can be triggered from - the same real-footprint
-        // treatment an entity gets from its renderer bounds, and the fix for an orb whose exact centre sits
-        // off the walkable mesh (out over water, a gap) while its interaction reaches walkable ground. The
-        // hit test is XZ-only (ObjectCueSystem), so height is folded away here exactly as for an entity.
-        public ScanBounds Bounds
-            => IsThoughtFamily
-                ? ScanBounds.Circle(Position, PlayerFootprintRadius)
-                : ScanBounds.Circle(Position, System.Math.Min(_orb.InteractionRadius, MaxFootprintRadius));
+        // The footprint is the body disc - the same click-target treatment an entity gets from its click
+        // colliders - widened for a world orb whose centre sits off the walkable mesh (out over water, a
+        // gap): the cursor is clamped to walkable ground, so a bare body disc there could never be under it,
+        // and the disc grows just enough to reach the nearest walkable point. The hit test is XZ-only
+        // (ObjectCueSystem), so height is folded away here exactly as for an entity.
+        public ScanBounds Bounds => ScanBounds.Circle(Position, FootprintRadius());
+
+        private float FootprintRadius()
+        {
+            if (_footprintRadius >= 0f) return _footprintRadius;
+            _footprintRadius = BodyRadius;
+            if (!IsThoughtFamily)
+            {
+                UnityEngine.Vector3 body = WorldConvert.ToUnity(Position);
+                // NavMesh.AllAreas (-1); the const isn't surfaced on the interop proxy. Sampled past the
+                // widening cap because the sample distance is 3D while the widening is XZ-only: a high
+                // orb must still find the ground straight under it (XZ offset ~0) rather than fail the
+                // sample and widen to the cap. No walkable ground within 8 m means no cursor can ever be
+                // near, so the radius then does not matter and the bare body disc stands.
+                if (UnityEngine.AI.NavMesh.SamplePosition(body, out var hit, 8f, -1))
+                {
+                    float dx = hit.position.x - body.x, dz = hit.position.z - body.z;
+                    float reach = (float)System.Math.Sqrt(dx * dx + dz * dz) + BodyRadius;
+                    _footprintRadius = System.Math.Min(reach, MaxFootprintRadius);
+                }
+            }
+            return _footprintRadius;
+        }
         public string Category => WorldTaxonomy.Orb;
 
         // What the cursor reports, in two flavours. An orb already triggered is excluded from both (WasShown):

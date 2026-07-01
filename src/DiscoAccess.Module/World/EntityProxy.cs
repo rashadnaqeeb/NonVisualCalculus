@@ -18,8 +18,13 @@ namespace DiscoAccess.Module.World
         // skybox quad parented to an entity) can't become a footprint that swallows the cursor everywhere.
         private const float MaxFootprintHalf = 4f;
 
+        // A collider union flat on an XZ axis below this is degenerate for the flat cursor (an upright click
+        // plane like the eternite ice sheet's zero-depth box would leave an unhittable hairline), so it is
+        // rejected in favour of the renderer fallback.
+        private const float DegenerateHalf = 0.01f;
+
         private readonly BasicEntity _e;
-        // The footprint's half-widths, computed once from the entity's combined renderer bounds. Size is
+        // The footprint's half-widths, computed once from the entity's click colliders or renderer bounds. Size is
         // structural (an object's physical extent does not change), so it is measured once and cached, while
         // the box centre is read live from the transform each frame - a moving NPC's footprint still follows
         // it. Caching the size, not re-scanning every frame, is the deliberate divergence: a per-frame
@@ -38,8 +43,9 @@ namespace DiscoAccess.Module.World
             _e.TryCast<Character>() != null, Category, SceneAreaTokens());
         public Vector3 Position => WorldConvert.ToSnv(_e.transform.position);
 
-        // The real footprint: a Box on the XZ plane sized to the entity's combined renderer bounds, so the
-        // cursor is "on" the thing anywhere over its surface, not only dead-centre. Centred on the live body
+        // The real footprint: a Box on the XZ plane sized to the entity's click colliders (or, failing those,
+        // its renderer bounds), so the cursor is "on" the thing anywhere a sighted player could click it,
+        // not only dead-centre. Centred on the live body
         // transform, so a moving NPC's footprint follows it. The cursor's hit test (ObjectCueSystem.Under) is
         // XZ-only, so a thing whose geometry sits up high - a staircase, an exit whose trigger origin floats
         // above the steps it spans - is still on the cursor when it glides beneath the footprint. An entity
@@ -55,17 +61,60 @@ namespace DiscoAccess.Module.World
             }
         }
 
-        // Measure the footprint half-widths once, from the union of the entity's SOLID mesh renderers. Only
-        // enabled mesh and skinned-mesh renderers count: an entity drags along scattered effect renderers
-        // (particles, projectiles, blob shadows, outline meshes) parented under it but positioned across the
-        // scene, and encapsulating those blew a character's footprint out to the cap. The body mesh alone
-        // gives the true footprint (a person reads ~0.6 m, a crate its box). Zero-bounds and disabled
-        // renderers are skipped; the result is capped so nothing pathological swallows the cursor; an entity
-        // with no mesh (a flat canvas billboard) stays a point. Resolved once (see the fields).
+        // Measure the footprint half-widths once (see the fields), preferring the entity's click colliders
+        // over its renderers. The colliders ARE the shape a sighted player clicks - the game's own mouse
+        // picking raycasts against them - and they are authored padded for clickability (a coin's collider
+        // reads ~0.5 m across over a ~0.2 m mesh), which is exactly the forgiveness the cursor wants. They
+        // also stay tight where renderer bounds inflate (a skinned character's animation-swept AABB). The
+        // renderer sweep remains the fallback for the few entities with no usable collider.
         private void EnsureFootprint()
         {
             if (_footprintResolved) return;
             _footprintResolved = true;
+            if (ColliderFootprint()) return;
+            RendererFootprint();
+        }
+
+        // The union AABB of the enabled colliders the game's mouse picking hits this entity through: each
+        // MouseOverHighlight under the entity gathers its own Collider[] at startup, so reading that array
+        // reuses the game's curated click shape rather than re-guessing which colliders are the body. False
+        // (fall back to renderers) when there is no highlight or no enabled collider, or when the union is
+        // flat on an XZ axis (see DegenerateHalf) - an upright click plane reads fine to a mouse ray but
+        // has no footprint on the flat cursor's map.
+        private bool ColliderFootprint()
+        {
+            var highlights = _e.GetComponentsInChildren<MouseOverHighlight>();
+            if (highlights == null) return false;
+            bool any = false;
+            UnityEngine.Bounds acc = default;
+            for (int i = 0; i < highlights.Count; i++)
+            {
+                var colliders = highlights[i].m_collider;
+                if (colliders == null) continue;
+                for (int j = 0; j < colliders.Count; j++)
+                {
+                    UnityEngine.Collider c = colliders[j];
+                    if (c == null || !c.enabled) continue;
+                    UnityEngine.Bounds b = c.bounds;
+                    if (b.size.x == 0f && b.size.y == 0f && b.size.z == 0f) continue;
+                    if (!any) { acc = b; any = true; } else acc.Encapsulate(b);
+                }
+            }
+            if (!any || acc.extents.x < DegenerateHalf || acc.extents.z < DegenerateHalf) return false;
+            _halfX = System.Math.Min(acc.extents.x, MaxFootprintHalf);
+            _halfZ = System.Math.Min(acc.extents.z, MaxFootprintHalf);
+            return true;
+        }
+
+        // The fallback: the union of the entity's SOLID mesh renderers. Only enabled mesh and skinned-mesh
+        // renderers count: an entity drags along scattered effect renderers (particles, projectiles, blob
+        // shadows, outline meshes) parented under it but positioned across the scene, and encapsulating
+        // those blew a character's footprint out to the cap. The body mesh alone gives the true footprint
+        // (a person reads ~0.6 m, a crate its box). Zero-bounds and disabled renderers are skipped; the
+        // result is capped so nothing pathological swallows the cursor; an entity with no mesh (a flat
+        // canvas billboard) stays a point.
+        private void RendererFootprint()
+        {
             var renderers = _e.GetComponentsInChildren<UnityEngine.Renderer>();
             if (renderers == null) return;
             bool any = false;
