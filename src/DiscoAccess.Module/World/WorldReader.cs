@@ -29,9 +29,11 @@ namespace DiscoAccess.Module.World
         /// <summary>The cursor glide rate, metres per second.</summary>
         private const float GlideSpeed = 4f;
         // How near the cursor must be to an actionable thing's body for Enter to target it rather than walk
-        // to bare ground. Generous, because the freeform cursor is navmesh-clamped and a thing's body can sit
-        // off the mesh (a door in a wall, a prop on a ledge), so the cursor only ever gets near it.
-        private const float SnapRadius = 2.5f;
+        // to bare ground. Tied to the cursor's name-on-stop reach so the two can never drift apart: everything
+        // Enter can snap to was named when the glide stopped, never a surprise interaction on unannounced
+        // ground. The reach is generous for the same reason - the freeform cursor is navmesh-clamped and a
+        // body can sit off the mesh (a door in a wall, a prop on a ledge), so the cursor only gets near it.
+        private const float SnapRadius = ObjectCueSystem.ReachRadius;
 
         /// <summary>The live reader, for dev-server introspection/driving.</summary>
         public static WorldReader Active;
@@ -39,6 +41,7 @@ namespace DiscoAccess.Module.World
         private readonly IModHost _host;
         private readonly IAudioEngine _audio;
         private readonly Overlay _overlay;
+        private readonly ObjectCueSystem _objects;
         private readonly SpatialSystem _spatial;
         private readonly WallToneSystem _wallTones;
         private readonly WorldModel _model = new WorldModel();
@@ -58,6 +61,12 @@ namespace DiscoAccess.Module.World
             _audio = host.Audio;
             var env = new WorldEnvironment();
             _overlay = new Overlay(env, host.Speech);
+            // The cursor's object sense: the enter/exit blips while gliding and the name of the thing under
+            // the cursor on stop. Registered before the spatial system so its name leads the joined readout
+            // ("crate; northeast, 2 meters"). Reads the same live registry the sonar and scanner will.
+            _objects = new ObjectCueSystem(_model, _audio);
+            _objects.BindMode(() => PlayMode.Continuous);
+            _overlay.With(_objects);
             _spatial = new SpatialSystem();
             // Until the settings menu wires the world systems, the cursor readout is simply on.
             _spatial.BindMode(() => PlayMode.Continuous);

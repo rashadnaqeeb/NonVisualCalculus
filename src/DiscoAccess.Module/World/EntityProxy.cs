@@ -16,7 +16,10 @@ namespace DiscoAccess.Module.World
 
         public EntityProxy(BasicEntity e) { _e = e; }
 
-        public string Name => _e.name;
+        // The spoken name, composed by Core from the raw fields: a clean GameObject.name, else a
+        // spoiler-filtered conversation title for a non-character slug, else a generic type word. A Character
+        // is treated as a named thing so its conversation title is never spoken in its place.
+        public string Name => EntityNaming.Resolve(_e.name, _e.conversation, _e.TryCast<Character>() != null, Category);
         public Vector3 Position => WorldConvert.ToSnv(_e.transform.position);
         public ScanBounds Bounds => ScanBounds.Point(Position);
         public string Category => Classify(_e);

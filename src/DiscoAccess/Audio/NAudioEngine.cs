@@ -25,10 +25,14 @@ namespace DiscoAccess.Audio
         private MixingSampleProvider _mixer;
         private IWavePlayer _out;
         private bool _failed;
-        // The four wall-tone WAVs decoded to mono once and reused across world entries (the overlay disposes
-        // and rebuilds its voices each time it engages, but the samples don't change).
-        private readonly Dictionary<string, float[]> _wallCache = new Dictionary<string, float[]>();
+        // WAVs decoded to mono once and reused (wall tones across world entries; cursor cues across the
+        // session) - keyed by full path, so wall tones and cursor cues share one cache.
+        private readonly Dictionary<string, float[]> _clipCache = new Dictionary<string, float[]>();
+        // Paths whose decode has already been warned about, so a genuinely missing asset logs once instead of
+        // once per glide-blip - the failure itself is not cached (see LoadMono).
+        private readonly HashSet<string> _warnedClips = new HashSet<string>();
         private string _wallDir;
+        private string _cueDir;
 
         public NAudioEngine(ManualLogSource log) { _log = log; }
 
@@ -36,6 +40,11 @@ namespace DiscoAccess.Audio
         private string WallDir => _wallDir ??= Path.Combine(
             Path.GetDirectoryName(typeof(NAudioEngine).Assembly.Location) ?? ".",
             "assets", "audio", "walltones", "1");
+
+        // The cursor enter/exit cue WAVs deploy beside this assembly under assets/audio/cursor.
+        private string CueDir => _cueDir ??= Path.Combine(
+            Path.GetDirectoryName(typeof(NAudioEngine).Assembly.Location) ?? ".",
+            "assets", "audio", "cursor");
 
         public bool Available => !_failed;
 
@@ -82,19 +91,32 @@ namespace DiscoAccess.Audio
             _mixer.AddMixerInput(new ToneShot(Rate, frequency, seconds, volume, pan));
         }
 
-        // Decode a wall-tone WAV to a mono float[] at the mixer rate, cached. A load failure logs and yields
-        // an empty buffer (that direction goes silent) rather than crashing the audio thread.
+        public void PlayCue(AudioCue cue, float volume, float pan)
+        {
+            if (!EnsureStarted()) return;
+            float[] clip = LoadMono(Path.Combine(CueDir, CueFile(cue)));
+            if (clip.Length == 0) return; // missing/unreadable asset already logged by LoadMono
+            _mixer.AddMixerInput(new ClipShot(Rate, clip, volume, pan));
+        }
+
+        private static string CueFile(AudioCue cue) => cue == AudioCue.CursorEnter ? "enter.wav" : "exit.wav";
+
+        // Decode a WAV to a mono float[] at the mixer rate, caching only successes. A load failure logs (once
+        // per path) and yields an empty buffer (that voice goes silent) rather than crashing the audio thread.
+        // The failure is deliberately not cached: a cursor cue loads lazily mid-session, so a transient lock
+        // (a Debug redeploy, antivirus) must not silence it for the rest of the session - the next play retries.
         private float[] LoadMono(string path)
         {
-            if (_wallCache.TryGetValue(path, out float[] cached)) return cached;
+            if (_clipCache.TryGetValue(path, out float[] cached)) return cached;
             float[] buf;
             try { buf = DecodeMono(path); }
             catch (Exception e)
             {
-                _log?.LogWarning("[audio] wall tone load failed (" + path + "): " + e.Message);
-                buf = Array.Empty<float>();
+                if (_warnedClips.Add(path))
+                    _log?.LogWarning("[audio] clip load failed (" + path + "): " + e.Message);
+                return Array.Empty<float>();
             }
-            _wallCache[path] = buf;
+            _clipCache[path] = buf;
             return buf;
         }
 
@@ -183,6 +205,39 @@ namespace DiscoAccess.Audio
                     buffer[offset + f * 2] = s * _gainL;
                     buffer[offset + f * 2 + 1] = s * _gainR;
                     _pos++;
+                    produced += 2;
+                }
+                return produced;
+            }
+        }
+
+        // A sampled one-shot: a decoded mono clip played once at a constant-power pan. Returns fewer than
+        // `count` samples once the clip is exhausted, so the shared mixer auto-removes it (like ToneShot).
+        private sealed class ClipShot : ISampleProvider
+        {
+            private readonly float[] _buf;
+            private readonly float _gainL, _gainR;
+            private int _pos;
+
+            public ClipShot(int rate, float[] buf, float vol, float pan)
+            {
+                _buf = buf;
+                PanGains(pan, out float l, out float r);
+                _gainL = vol * l;
+                _gainR = vol * r;
+                WaveFormat = WaveFormat.CreateIeeeFloatWaveFormat(rate, 2);
+            }
+
+            public WaveFormat WaveFormat { get; }
+
+            public int Read(float[] buffer, int offset, int count)
+            {
+                int frames = count / 2, produced = 0;
+                for (int f = 0; f < frames && _pos < _buf.Length; f++)
+                {
+                    float s = _buf[_pos++];
+                    buffer[offset + f * 2] = s * _gainL;
+                    buffer[offset + f * 2 + 1] = s * _gainR;
                     produced += 2;
                 }
                 return produced;

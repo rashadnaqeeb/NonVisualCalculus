@@ -59,6 +59,8 @@
       <_DeployDll Include="$(TargetDir)*.dll" />
       <!-- WOTR's set-1 wall-tone WAVs; the engine resolves them at assets/audio/walltones/1 beside the plugin. -->
       <_WallToneAsset Include="$(RepoRoot)assets\audio\walltones\1\*.wav" />
+      <!-- The cursor enter/exit cue WAVs (rising = enter, falling = exit); resolved at assets/audio/cursor beside the plugin. -->
+      <_CursorCueAsset Include="$(RepoRoot)assets\audio\cursor\*.wav" />
     </ItemGroup>
     <MakeDir Directories="$(PluginDeployDir)" />
     <!-- Retries=0: when iterating with the game running, the host/Roslyn DLLs are locked; fail fast
@@ -70,6 +72,9 @@
           DestinationFolder="$(GameDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
     <Copy SourceFiles="@(_WallToneAsset)"
           DestinationFolder="$(PluginDeployDir)\assets\audio\walltones\1"
+          SkipUnchangedFiles="true" ContinueOnError="true" />
+    <Copy SourceFiles="@(_CursorCueAsset)"
+          DestinationFolder="$(PluginDeployDir)\assets\audio\cursor"
           SkipUnchangedFiles="true" ContinueOnError="true" />
     <Message Importance="high" Text="DiscoAccess deployed -> $(PluginDeployDir)" />
   </Target>

@@ -17,10 +17,13 @@ interact (a conversation, a container, an exit) or to bare ground; and reach the
 screens, the pause and help menus, the status readouts (time, money, health), and the gameplay
 quick-actions through the world keymap. The navigation model below is wired: being in the world owns the
 keyboard the same way a migrated menu does. **Wall tones** sound the nearest walls in the four cardinals
-around the cursor, so the player hears the room's edges as they glide. Underneath, a live registry
-classifies every entity in the area and filters it down to the actionable set, and an audio engine places
-stereo cues. What is still missing to make the world fully legible are the remaining leaf sensing systems
-(the sonar and the scanner) that turn the registry into a sense of what surrounds the cursor.
+around the cursor, so the player hears the room's edges as they glide. The **cursor object cue** names the
+things it passes over: a stereo click as the cursor crosses each thing's footprint while gliding, and the
+thing's spoken name (the object noun, resolved by `EntityNaming`) folded into the point readout when the
+glide stops. Underneath, a live registry classifies every entity in the area and filters it down to the
+actionable set, and an audio engine places stereo cues. What is still missing to make the world fully
+legible are the remaining leaf sensing systems (the sonar and the scanner) that turn the registry into a
+sense of what surrounds the cursor.
 
 ## Architecture
 
@@ -78,6 +81,16 @@ Core overlay framework (`Core/World/Overlays/`):
   `Spatial.ProximityVolume` curve, then drives the engine's four wall-tone voices. It mutes (zeroing the
   volumes, keeping the voices) when the play gate is closed, control is lost, or a menu owns input over the
   world (`Overlay.InputActive`). Its volume and play mode are read live through bound providers.
+- `ObjectCueSystem` (under `Overlays/Systems/`) is the cursor's sense of the things it glides over, the
+  WOTR `ObjectCueSystem` model: while gliding it plays a short stereo blip each time the cursor crosses
+  into or out of a thing's footprint (a rising click on entering one, including swapping straight from one
+  thing to another; a falling click on leaving to bare ground, panned toward the thing); and on a glide
+  stroke ending it contributes the name of the thing under the cursor to the point readout, so the player
+  hears "woodpile; southeast, 11 meters" (name first, then the spatial system's position). It reads the
+  full visible set (scenery included) - the cursor is the look-around sense, while the sonar and scanner
+  read only the actionable set - finding the nearest visible thing within a small hover radius of the
+  cursor (a footprint stand-in until real bounds are wired), skipping the player's own entity. It self-
+  gates like the wall tones (silent under a cutscene, lost control, or a menu over the world).
 
 Core audio contract (`Core/Audio/`):
 
@@ -92,14 +105,27 @@ Core world-model contracts (`Core/World/`):
 - `IWorldModel` is the registry contract: the live collection of items plus `Added`/`Removed` events, so a
   consumer can attach to a thing (for example a sonar voice) and follow it rather than re-scanning.
 - `WorldTaxonomy` is the flat category set (npc, door, exit, container, orb, other).
+- `EntityNaming` resolves the spoken name from the raw fields a proxy extracts (engine-free, unit-tested),
+  since there is no clean display-name field. The rule speaks the object NOUN, not a bare category word:
+  a named character keeps their full name ("Kim Kitsuragi"), or reads "person" for a slug; a door/exit
+  keeps a clean name else its category word; everything else extracts the noun from the `GameObject.name`
+  (the last word of a clean "Harbor Crate 22" is "crate"; the slug clutter "box_3 rooftop" carries its
+  noun before the underscore, "box"; "empty bottle" keeps the last word "bottle"). Where a slug's leading
+  word is a location instead ("Ice_eternite"), a spoiler-filtered examine-conversation title names it
+  ("Eternite") - the title is stripped of its "<area> / " scaffolding and rejected outright if it looks
+  mechanical or conditional (a check word, a difficulty number, multiple clauses), so meta a sighted
+  player cannot see is never spoken. Validated live across Martinaise's ~370 entities.
 
 Host audio (`DiscoAccess/Audio/`):
 
 - `NAudioEngine` is one shared mixer feeding one output device. The wall tones loop WOTR's set-1 WAV
   assets (north/south/east/west, decoded once and cached, summed at fixed compass pan: east hard right,
-  west hard left, north/south centred); the one-shot cue is still a procedural windowed sine with
-  constant-power pan. The device opens lazily and self-disables on failure, so a machine with no audio
-  device never crashes the mod. The WAVs deploy beside the plugin under `assets/audio/walltones/1`.
+  west hard left, north/south centred); the procedural one-shot is still a windowed sine with constant-
+  power pan. `PlayCue(AudioCue, volume, pan)` fires a sampled one-shot the engine owns (a decoded mono WAV
+  panned constant-power, auto-removed when finished) for the cursor enter/exit clicks: `CursorEnter` is the
+  rising click, `CursorExit` the falling one. The device opens lazily and self-disables on failure, so a
+  machine with no audio device never crashes the mod. The wall-tone WAVs deploy beside the plugin under
+  `assets/audio/walltones/1`, the cursor cue WAVs (`enter.wav`/`exit.wav`) under `assets/audio/cursor`.
 
 Module world layer (`Module/World/`):
 
@@ -446,8 +472,8 @@ These are real forks left open on purpose, not oversights.
   sonify" category toggles). The wall tones' volume and continuous/when-moving toggle are wired.
 - Sampled audio assets, if the procedural cues prove insufficient.
 - Bounds refinement: doorway segments and footprint circles. Every proxy currently reports a point
-  bound; the richer shapes exist in `ScanBounds` but are not yet wired to the proxies.
-- Name cleaning and the spoiler-safe fallback for slug names, per the naming rules in the scouting notes.
+  bound; the richer shapes exist in `ScanBounds` but are not yet wired to the proxies. Until they are, the
+  cursor's object cue uses a fixed hover radius as a footprint stand-in.
 - Orb interaction. Camera follow (now built, see above) keeps an orb under the cursor rendered, which is
   the gate its clickable needs, so this is unblocked: the remaining work is making `OrbProxy.IsActionable`
   and `Interact` real (likely through `SenseOrb.StartConversation`, in range) and letting the Enter verb

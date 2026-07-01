@@ -20,6 +20,12 @@ namespace DiscoAccess.Core.Audio
         /// pitch); a sampled variant joins it when sound assets are authored.</summary>
         void PlayOneShot(float frequency, float seconds, float volume, float pan);
 
+        /// <summary>Fire a named one-shot cue (a sampled WAV the engine owns) already spatialized by the
+        /// caller: at <paramref name="volume"/> (0..1) and stereo <paramref name="pan"/> (-1 left .. 1 right).
+        /// Used for the cursor's enter/exit blips. A missing or unreadable asset plays nothing rather than
+        /// throwing.</summary>
+        void PlayCue(AudioCue cue, float volume, float pan);
+
         /// <summary>Create the four directional wall-tone voices (driven each frame). Dispose removes them
         /// from the mixer.</summary>
         IWallTones CreateWallTones();

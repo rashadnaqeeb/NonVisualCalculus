@@ -327,6 +327,17 @@ namespace DiscoAccess.Core.Strings
         // The world sensing systems' names, spoken in the settings menu. Authored (the mod's own systems).
         public const string WorldSystemSpatial = "cursor position";
         public const string WorldSystemWallTones = "wall tones";
+        public const string WorldSystemObjectCue = "cursor objects";
+
+        // Generic type words: the spoken name for a thing whose own name is a slug and has no spoiler-safe
+        // title to fall back to (see EntityNaming). A door reads "door", a crate "container", and so on, so
+        // nothing the cursor passes over goes nameless. Authored (the game has no short type label).
+        public const string WorldThingDoor = "door";
+        public const string WorldThingExit = "exit";
+        public const string WorldThingContainer = "container";
+        public const string WorldThingPerson = "person";
+        public const string WorldThingOrb = "orb";
+        public const string WorldThingObject = "object";
 
         // The walk-then-interact verb's spoken feedback. The mod authors these (DE has no equivalent line):
         // committing a walk, the bare-ground walk with no target, the reachability refusal, and the cancel.

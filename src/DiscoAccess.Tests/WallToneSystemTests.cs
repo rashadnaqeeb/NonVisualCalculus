@@ -47,6 +47,7 @@ namespace DiscoAccess.Tests
             public readonly FakeTones Tones = new FakeTones();
             public bool Available => true;
             public void PlayOneShot(float frequency, float seconds, float volume, float pan) { }
+            public void PlayCue(AudioCue cue, float volume, float pan) { }
             public IWallTones CreateWallTones() { Created++; return Tones; }
         }
 

@@ -1,12 +1,14 @@
+using DiscoAccess.Core.Strings;
 using DiscoAccess.Core.World;
 using Vector3 = System.Numerics.Vector3;
 
 namespace DiscoAccess.Module.World
 {
     /// <summary>
-    /// The <see cref="IWorldItem"/> over a live <see cref="SenseOrb"/> (a clue/thought orb in the scene).
-    /// Content is the orb's full localized prose (<c>GetText</c>); a streamed-out orb reads
-    /// <see cref="OrbType.NONE"/> with empty text, so it is not yet visible.
+    /// The <see cref="IWorldItem"/> over a live <see cref="SenseOrb"/> (a clue/thought orb in the scene). The
+    /// spoken name is a short locator word ("orb") so the cursor can announce an orb's position without
+    /// dumping its full clue prose; reading that prose (<c>SenseOrb.GetText</c>) is the orb reader's job once
+    /// orb interaction lands. A streamed-out orb reads <see cref="OrbType.NONE"/>, so it is not yet visible.
     /// </summary>
     internal sealed class OrbProxy : IWorldItem
     {
@@ -14,7 +16,7 @@ namespace DiscoAccess.Module.World
 
         public OrbProxy(SenseOrb orb) { _orb = orb; }
 
-        public string Name => _orb.GetText();
+        public string Name => Strings.WorldThingOrb;
         public Vector3 Position => WorldConvert.ToSnv(_orb.transform.position);
         public ScanBounds Bounds => ScanBounds.Point(Position);
         public string Category => WorldTaxonomy.Orb;
