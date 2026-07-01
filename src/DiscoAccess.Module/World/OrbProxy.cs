@@ -46,8 +46,19 @@ namespace DiscoAccess.Module.World
         // eyes, so an accessible-but-undrawn orb (an orbital orb the character has not walked up to yet, like
         // the halogen-watermark orb read from across the plaza) must still be findable. The party-orbiting
         // thought-cabinet family (afterthought/obsession/paralyzer/thought) rides the character rather than
-        // sitting in the world, so it is not a spatial cursor target and is excluded.
-        public bool IsAccessible => IsWorldAnchored && !_orb.WasShown() && (_orb.IsAccessible || _orb.IsMorsel);
+        // sitting in the world, so it is not a spatial cursor target and is excluded. A DORMANT Modus Mullen
+        // orb is likewise excluded (see IsMullenDormant): outside that hidden minigame it is an inactive husk
+        // with no clickable orbUI, so Interact could not trigger it and it would sit under the cursor
+        // unclearable - but once the minigame activates it (ShowOrbs gives it a live orbUI) it becomes a real
+        // target and is findable again.
+        public bool IsAccessible
+            => IsWorldAnchored && !IsMullenDormant && !_orb.WasShown() && (_orb.IsAccessible || _orb.IsMorsel);
+
+        // A Modus Mullen orb that the minigame has not activated: it carries no orbUI, so the game gives it no
+        // click target and our Interact has nothing to Open. Scoped to Mullen orbs - a non-Mullen clue orb
+        // deliberately needs no live orbUI to be findable (it gains one when the character walks up to it,
+        // which a dormant Mullen orb never does).
+        private bool IsMullenDormant => _orb.isMullenOrb && _orb.orbUI == null;
         public bool IsVisible => IsAccessible;
 
         private bool IsWorldAnchored
