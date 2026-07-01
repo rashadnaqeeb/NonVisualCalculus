@@ -33,6 +33,11 @@ namespace DiscoAccess.Core.World.Overlays.Systems
         // A thing this close to the player IS the player (the player's own entity, if it is in the registry);
         // never hover-announce the character you are standing on when the cursor is centred.
         private const float PlayerEpsilon = 0.5f;
+        // How far above or below the cursor's ground level a thing may sit and still count as "under" it.
+        // Beyond this it is on a different level - a balcony door overhanging the plaza, something down a pit -
+        // reachable only by going elsewhere. Paired with the reachability oracle (see Under), so only genuinely
+        // unreachable off-level things are dropped, never a staircase or step-exit the cursor glides beneath.
+        private const float VerticalReach = 2.5f;
         // Crossover distance for the blip pan: close in the pan tracks the lateral offset, far out it
         // saturates toward the bearing.
         private const float PanWidth = 3f;
@@ -157,12 +162,22 @@ namespace DiscoAccess.Core.World.Overlays.Systems
                 if (!it.RidesPlayer && Geo.Distance(it.Position, player) < PlayerEpsilon) continue;
                 // Distance to the footprint's nearest part, XZ-only: whether the cursor is over a thing is a
                 // flat-map question, so a thing whose geometry sits up high (a staircase, an exit whose trigger
-                // origin floats above the steps) is still on the cursor gliding beneath it. Height is not a
-                // reachability signal - the IsAccessible gate and the navmesh clamp (which keeps the cursor off
-                // the junk-parked, off-map entities that pass the gate) do the filtering. Strict less-than so an
-                // exact tie keeps the first-seen item rather than flapping as the poll reorders the registry.
-                float d = Geo.DistanceXZ(it.Bounds.NearestPoint(cursor), cursor);
-                if (d < bestDist) { bestDist = d; best = it; }
+                // origin floats above the steps) is still on the cursor gliding beneath it. Strict less-than so
+                // an exact tie keeps the first-seen item rather than flapping as the poll reorders the registry.
+                Vector3 np = it.Bounds.NearestPoint(cursor);
+                float d = Geo.DistanceXZ(np, cursor);
+                if (d >= bestDist) continue;
+                // Height-reachability gate. XZ-only detection would also put the cursor "on" a thing hanging
+                // well above (or below) the ground it is clamped to - the Whirling balcony door overhanging the
+                // plaza reads as under the cursor though its body sits metres overhead. Drop such a candidate
+                // only when it is BOTH off the cursor's level AND the game cannot path to it from here: a
+                // staircase or step-exit stays pathable and is kept, a same-level thing the oracle over-rejects
+                // (an NPC behind a bar counter) has no height gap and is kept, and an orb overhead is always
+                // actionable and is kept. Only the unreachable off-level case is dropped, so the cursor never
+                // names something the player cannot get to. The oracle call is reached only for an off-level
+                // nearest candidate, so it runs rarely, not for every item every frame.
+                if (System.Math.Abs(np.Y - cursor.Y) > VerticalReach && !it.IsActionable(player)) continue;
+                bestDist = d; best = it;
             }
             return best;
         }
