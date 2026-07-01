@@ -34,7 +34,8 @@ namespace DiscoAccess.Module.World
         // thing (see AuthoredName): the destination area for an exit, else the conversant actor. Core combines
         // it with GameObject.name fallbacks. A Character is treated as a named thing so a title is never spoken
         // in its place.
-        public string Name => EntityNaming.Resolve(_e.name, AuthoredName(), _e.conversation, _e.TryCast<Character>() != null, Category);
+        public string Name => EntityNaming.Resolve(_e.name, AuthoredName(), _e.conversation,
+            _e.TryCast<Character>() != null, Category, SceneAreaTokens());
         public Vector3 Position => WorldConvert.ToSnv(_e.transform.position);
 
         // The real footprint: a Box on the ground plane sized to the entity's combined renderer bounds, so the
@@ -121,6 +122,32 @@ namespace DiscoAccess.Module.World
             if (c == null) return null;
             Actor a = db.GetActor(c.ConversantID);
             return a == null ? null : LocalizationUtils.GetActorLocalizedField(a, "Name");
+        }
+
+        // The current scene's location stems, for Core to strip off the front of a slug-named container
+        // ("martinaise-east-photo-of-rene" to "photo of rene"). The scene name is the English internal id
+        // the same slugs are built from, so its word stems match; the generic level/type suffixes
+        // (int/ext/f2/s1/antechamber) are not places and are dropped. Cheap and read live (naming runs only
+        // for the item under the cursor, not the whole scan), so no caching.
+        private static string[] SceneAreaTokens()
+        {
+            string scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            var toks = new System.Collections.Generic.List<string>();
+            foreach (string part in scene.ToLowerInvariant().Split('-'))
+            {
+                if (part.Length < 2 || part == "int" || part == "ext" || part == "antechamber") continue;
+                if ((part[0] == 'f' || part[0] == 's') && IsAllDigits(part, 1)) continue; // f2, s1
+                toks.Add(part);
+            }
+            return toks.ToArray();
+        }
+
+        private static bool IsAllDigits(string s, int from)
+        {
+            if (from >= s.Length) return false;
+            for (int i = from; i < s.Length; i++)
+                if (s[i] < '0' || s[i] > '9') return false;
+            return true;
         }
 
         public string Category => Classify(_e);

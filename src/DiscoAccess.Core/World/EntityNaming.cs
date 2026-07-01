@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 using static DiscoAccess.Core.Strings.Strings;
 
@@ -18,9 +20,17 @@ namespace DiscoAccess.Core.World
     /// - An exit prefers its authored name too, which the proxy resolves as the localized DESTINATION it leads
     ///   to ("Whirling-in-Rags", "Cuno's shack"), so the player hears where a door goes; else its clean name,
     ///   else the category word "exit". A plain door keeps its own clean name, else "door".
-    /// - Everything else (containers, props) prefers the authored name; failing that speaks the object noun
-    ///   pulled from the <c>GameObject.name</c> (the last word of "Harbor Crate 22" is "crate"; the slug
-    ///   clutter "box_3 rooftop" carries its noun before the underscore, "box"), and as a last resort a
+    /// - A container prefers the authored name; failing that it is named from the <c>GameObject.name</c> by
+    ///   its object TYPE when a generic container word is present ("box", "crate", "money", "trash can"),
+    ///   position-independent so the designer's word order and location decoration stop mattering ("Box
+    ///   Backroom" and "FV money Shack" reduce to "box"/"money"). A container that is a SPECIFIC item (no
+    ///   generic type word) keeps its full flavor name instead, cleaned: a trailing generic "container" tag
+    ///   is dropped ("Phasmid Nest Container" to "phasmid nest") and a leading run of location tokens (the
+    ///   current area name, compass words) is stripped ("martinaise east photo of rene" to "photo of rene",
+    ///   "South Shack" to "shack"). See <see cref="ResolveContainer"/>.
+    /// - A prop (everything else) prefers the authored name; failing that it speaks the object noun pulled
+    ///   from the <c>GameObject.name</c> (the last word of "Harbor Crate 22" is "crate"; the slug clutter
+    ///   "box_3 rooftop" carries its noun before the underscore, "box"), and as a last resort a
     ///   spoiler-filtered conversation title for the location-slug form ("Ice_eternite").
     ///
     /// <paramref name="authoredName"/> is whatever authored display name the proxy resolved for this thing
@@ -29,7 +39,9 @@ namespace DiscoAccess.Core.World
     /// </summary>
     public static class EntityNaming
     {
-        public static string Resolve(string? rawName, string? authoredName, string? conversationTitle, bool isNamedCharacter, string category)
+        public static string Resolve(string? rawName, string? authoredName, string? conversationTitle,
+                                     bool isNamedCharacter, string category,
+                                     IReadOnlyCollection<string>? areaTokens = null)
         {
             string name = Normalize(rawName);
             string? authored = CleanAuthored(authoredName);
@@ -59,12 +71,18 @@ namespace DiscoAccess.Core.World
                 return name.Length > 0 && !IsSlug(name) ? name : (typeKw ?? WorldThingExit);
             }
 
-            // Containers and props: the game's authored object name when it has one ("Pile of Eternite"),
-            // else the object noun from the name. For the slug clutter whose leading token is a location
-            // ("Ice_eternite"), a spoiler-safe title reads better than the noun extractor's guess, so try it
-            // before extracting; the title-less clutter ("box_3 rooftop") just extracts its noun.
+            // Containers and props share the authored-name preference ("Pile of Eternite", "Policeman Cloak").
             if (authored != null) return authored;
 
+            // A container names itself by object TYPE or, for a specific item, its full flavor name; only
+            // containers get this, so a prop that reads like one (the interactable trash can, a pile) keeps
+            // the noun extractor below untouched.
+            if (category == WorldTaxonomy.Container)
+                return ResolveContainer(name, areaTokens);
+
+            // Props: the object noun from the name. For the slug clutter whose leading token is a location
+            // ("Ice_eternite"), a spoiler-safe title reads better than the noun extractor's guess, so try it
+            // before extracting; the title-less clutter ("box_3 rooftop") just extracts its noun.
             if (name.Length > 0 && FirstToken(name).IndexOf('_') >= 0)
             {
                 string? slugTitle = SpoilerSafeTitle(conversationTitle);
@@ -74,6 +92,129 @@ namespace DiscoAccess.Core.World
 
             string? title = SpoilerSafeTitle(conversationTitle);
             return title ?? TypeWord(category);
+        }
+
+        // Generic container words: a word that is ONLY a container type, carrying no identity of its own, so
+        // a container named with one is "just a box/crate/money/..." and its location decoration is noise -
+        // speak the type. Kept deliberately to purely-generic words (never "suit", "jacket", "nest", which
+        // are the specific item and must survive), so the set only ever loses a nicer name, never speaks a
+        // worse one. Grows as new areas surface new container words. Matched as whole lowercase tokens.
+        private static readonly HashSet<string> ContainerTypeWords = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "box", "crate", "can", "bottle", "barrel", "dumpster", "bucket", "jar", "sack",
+            "bag", "pot", "cup", "chest", "canister", "metalbox", "trashcan", "drawer", "locker",
+            "cabinet", "safe", "wallet", "grate", "vent", "money",
+        };
+
+        // Martinaise sub-district slugs (the English internal names, as they appear leading a container's
+        // GameObject.name: "Yard Woodpile", "Landsend Rock", "Ice Pillars", "Jam Cigars"). Stripped as a
+        // leading location run off a specific item's flavor name, so the noun survives without its district
+        // prefix ("cigars", not "jam cigars" - "jam" is the Traffic Jam district). Map-specific and matched
+        // as whole lowercase tokens, the district mirror of the noun list; extended per map.
+        private static readonly HashSet<string> DistrictSlugs = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "yard", "pier", "harbour", "harbor", "fishmarket", "landsend", "coast", "ice", "village",
+            "fv", "plaza", "canal", "waterlock", "boardwalk", "jam", "traffic",
+        };
+
+        // The generic bucket tag a designer appends to a specific container ("Phasmid Nest Container"): too
+        // generic to speak, so it is dropped when flavor remains, leaving the item's real name.
+        private static bool IsBucketWord(string t) => t == "container" || t == "containers";
+
+        // The eight compass words, stripped as a leading location run off a specific container's flavor name
+        // ("South Shack" to "shack"). Matched as whole lowercase tokens.
+        private static readonly HashSet<string> CompassWords = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "north", "south", "east", "west", "northeast", "northwest", "southeast", "southwest",
+        };
+
+        // The spoken name for a container. Tier one: a generic container word anywhere in the name is the
+        // type, spoken position-independent so word order and location decoration stop mattering ("Box
+        // Backroom" and "FV money Shack" reduce to "box"/"money", two-word "trash can" before "can"). Tier
+        // two: a specific item (no generic type word) keeps its full flavor name, cleaned - a trailing
+        // generic "container" tag dropped and a leading run of location tokens (the current area name, a
+        // compass word) stripped, so "martinaise east photo of rene" reads "photo of rene" while "Leopard
+        // Suit" stays "leopard suit". Only the token alias ("buoya" to "buoy A") is authored.
+        private static string ResolveContainer(string name, IReadOnlyCollection<string>? areaTokens)
+        {
+            string[] tokens = Tokenize(name);
+            if (tokens.Length == 0) return WorldThingContainer;
+
+            string? typeWord = FindContainerType(tokens);
+            if (typeWord != null) return typeWord;
+
+            var flavor = new List<string>(tokens);
+            if (flavor.Count > 1 && IsBucketWord(flavor[flavor.Count - 1]))
+                flavor.RemoveAt(flavor.Count - 1);
+            while (flavor.Count > 1 && IsLeadingLocation(flavor[0], areaTokens))
+                flavor.RemoveAt(0);
+
+            var sb = new StringBuilder();
+            for (int i = 0; i < flavor.Count; i++)
+            {
+                if (i > 0) sb.Append(' ');
+                sb.Append(AliasToken(flavor[i]));
+            }
+            return sb.ToString();
+        }
+
+        // The generic container type named anywhere in the tokens, two-word types ("trash can") before the
+        // single word they contain ("can"), else the first single-word type in reading order (so "FV money
+        // Shack" takes "money", not a later word). Null when the container is a specific item.
+        private static string? FindContainerType(string[] tokens)
+        {
+            for (int i = 0; i + 1 < tokens.Length; i++)
+                if (tokens[i] == "trash" && tokens[i + 1] == "can") return "trash can";
+            foreach (string t in tokens)
+                if (IsContainerTypeWord(t)) return t;
+            return null;
+        }
+
+        // Whether a token is a generic container word, allowing a regular English plural so "crates"/"boxes"
+        // count as "crate"/"box"; the plural form is spoken back verbatim ("Jam Crates" reads "crates").
+        private static bool IsContainerTypeWord(string t)
+        {
+            if (ContainerTypeWords.Contains(t)) return true;
+            if (t.Length > 4 && t.EndsWith("es", StringComparison.Ordinal)
+                && ContainerTypeWords.Contains(t.Substring(0, t.Length - 2))) return true; // boxes -> box
+            if (t.Length > 3 && t.EndsWith("s", StringComparison.Ordinal)
+                && ContainerTypeWords.Contains(t.Substring(0, t.Length - 1))) return true;  // crates -> crate
+            return false;
+        }
+
+        // A leading token that is location scaffolding on a specific container's name: a compass word, a known
+        // sub-district slug ("Yard Woodpile" to "woodpile"), or the current scene's area token(s) the module
+        // passes in (the English scene-name stems, e.g. "martinaise" for Martinaise-ext), which prefix a slug
+        // like "martinaise-east-photo-of-rene".
+        private static bool IsLeadingLocation(string token, IReadOnlyCollection<string>? areaTokens)
+        {
+            if (CompassWords.Contains(token)) return true;
+            if (DistrictSlugs.Contains(token)) return true;
+            if (areaTokens != null)
+                foreach (string a in areaTokens)
+                    if (string.Equals(a, token, StringComparison.Ordinal)) return true;
+            return false;
+        }
+
+        // Speak a container flavor token, applying the internal-spelling aliases (only "buoya" to "buoy A"
+        // today), so the numbered buoy reads as its letter rather than "buoya".
+        private static string AliasToken(string token)
+            => token == "buoya" ? WorldBuoyA : token;
+
+        // Split a container name into lowercase word tokens on any separator (space, underscore, hyphen),
+        // dropping single-character noise (the "R" in "Vent R") and bare index numbers, so a slug and a
+        // spaced name reduce to the same token list.
+        private static string[] Tokenize(string name)
+        {
+            var list = new List<string>();
+            foreach (string t in Regex.Split(name, @"[\s_\-]+"))
+            {
+                string w = t.ToLowerInvariant();
+                if (w.Length < 2) continue;
+                if (Regex.IsMatch(w, @"^\d+$")) continue;
+                list.Add(w);
+            }
+            return list.ToArray();
         }
 
         // The game's authored display name (a conversant actor, or an exit's destination area), accepted when

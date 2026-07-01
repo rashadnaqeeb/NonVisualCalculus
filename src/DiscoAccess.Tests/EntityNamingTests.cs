@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DiscoAccess.Core.World;
 using Xunit;
 
@@ -5,8 +6,9 @@ namespace DiscoAccess.Tests
 {
     public class EntityNamingTests
     {
-        private static string Resolve(string? name, string? authored = null, string? title = null, bool named = false, string cat = WorldTaxonomy.Container)
-            => EntityNaming.Resolve(name, authored, title, named, cat);
+        private static string Resolve(string? name, string? authored = null, string? title = null, bool named = false,
+                                      string cat = WorldTaxonomy.Container, IReadOnlyCollection<string>? area = null)
+            => EntityNaming.Resolve(name, authored, title, named, cat, area);
 
         [Fact]
         public void AuthoredConversant_IsPreferredForProps()
@@ -127,14 +129,31 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
-        public void Container_SpeaksTheObjectNoun_NotTheLocation()
+        public void Container_GenericTypeWord_NamesByType_DroppingLocation()
         {
-            // The clean "<location> <object>" name reduces to the object noun, lowercased.
+            // A generic container word names the thing by its type; the location decoration is dropped.
             Assert.Equal("crate", Resolve("Harbor Crate 22"));
             Assert.Equal("crate", Resolve("Fishmarket Crate"));
             Assert.Equal("bucket", Resolve("Yard Bucket"));
             Assert.Equal("money", Resolve("Church Bench Money"));
             Assert.Equal("metalbox", Resolve("Waterlock Metalbox"));
+        }
+
+        [Fact]
+        public void Container_TypeWord_IsPositionIndependent()
+        {
+            // The type word is taken wherever it sits, so a name in "<type> <location>" order (the swap that
+            // fooled last-word extraction) resolves the same as "<location> <type>".
+            Assert.Equal("box", Resolve("Box Backroom"));      // type first, location last
+            Assert.Equal("money", Resolve("FV money Shack"));  // location, type, then another location word
+            Assert.Equal("box", Resolve("Box_Tare pier"));
+        }
+
+        [Fact]
+        public void Container_TwoWordType_BeatsTheSingleWordInside()
+        {
+            Assert.Equal("trash can", Resolve("Pier Trash Can"));
+            Assert.Equal("can", Resolve("can"));
         }
 
         [Fact]
@@ -146,26 +165,87 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
-        public void SlugClutter_NounIsBeforeTheUnderscore()
+        public void Container_SlugAndSpacedNames_ReduceAlike()
         {
-            // "object_index location" - the noun is the token before the underscore.
+            // Any separator tokenizes the same, so a slug and a spaced name yield the same type word.
             Assert.Equal("box", Resolve("box_3 rooftop"));
             Assert.Equal("crate", Resolve("crate_1 gate"));
             Assert.Equal("crate", Resolve("crate_landsend"));
-        }
-
-        [Fact]
-        public void AdjectiveNoun_KeepsTheNoun()
-        {
-            // "empty bottle" is adjective-then-noun: the noun is the last word.
             Assert.Equal("bottle", Resolve("empty bottle"));
+            Assert.Equal("bottle", Resolve("empty_bottle (24)")); // adjective_noun: the noun still wins
         }
 
         [Fact]
-        public void HyphenName_NounIsTheLastWord_TitleIgnored()
+        public void Container_SpecificItem_KeepsItsFullFlavorName()
         {
-            // The title here is a location ("RAILING"); the name still yields the better noun.
-            Assert.Equal("jacket", Resolve("Filthy-jacket", title: "BOARDWALK / RAILING"));
+            // No generic type word, so the container is a specific item: speak its whole cleaned name rather
+            // than a single extracted noun.
+            Assert.Equal("leopard suit", Resolve("Leopard Suit"));
+            Assert.Equal("filthy jacket", Resolve("Filthy-jacket", title: "BOARDWALK / RAILING")); // title ignored
+        }
+
+        [Fact]
+        public void Container_TrailingContainerTag_IsDropped_KeepingFlavor()
+        {
+            Assert.Equal("phasmid nest", Resolve("Phasmid Nest Container"));
+            Assert.Equal("flashlight", Resolve("Flashlight container"));
+            Assert.Equal("police motor carriage", Resolve("police-motor-carriage container"));
+        }
+
+        [Fact]
+        public void Container_PluralTypeWord_Matches_SpokenPlural()
+        {
+            // A regular plural still counts as the type; the plural form is spoken back.
+            Assert.Equal("crates", Resolve("Jam Crates Right"));
+            Assert.Equal("boxes", Resolve("Harbor Boxes"));
+            Assert.Equal("barrels", Resolve("Fishmarket Barrels"));
+        }
+
+        [Fact]
+        public void Container_LeadingLocation_IsStripped_FromAFlavorName()
+        {
+            // A compass word leads a flavor name off; the current area's stem strips a slug prefix.
+            Assert.Equal("shack", Resolve("South Shack"));
+            Assert.Equal("photo of rene",
+                Resolve("martinaise-east-photo-of-rene", area: new[] { "martinaise" }));
+        }
+
+        [Fact]
+        public void Container_LeadingDistrictSlug_IsStripped_LeavingTheNoun()
+        {
+            // A specific item whose noun is not a generic type still loses its leading district prefix.
+            Assert.Equal("woodpile", Resolve("Yard Woodpile"));
+            Assert.Equal("rock", Resolve("Landsend Rock"));
+            Assert.Equal("machine", Resolve("Fishmarket Machine"));
+            Assert.Equal("pillars", Resolve("Ice Pillars 3"));
+            Assert.Equal("pile of clothes", Resolve("Village Pile Of Clothes"));
+            Assert.Equal("cigars", Resolve("Jam Cigars")); // "jam" is the Traffic Jam district
+        }
+
+        [Fact]
+        public void Container_DistrictStrip_LeavesRealFlavorNamesIntact()
+        {
+            // The leading word here is flavor, not a district, so the whole name survives.
+            Assert.Equal("leopard suit", Resolve("Leopard Suit"));
+            Assert.Equal("abandoned building pilsner", Resolve("Abandoned Building Pilsner"));
+        }
+
+        [Fact]
+        public void Container_BuoyaToken_ReadsAsBuoyA()
+        {
+            // The internal "buoya" spelling reads as the numbered buoy; the "container" tag drops first.
+            Assert.Equal("buoy A", Resolve("Buoya Container"));
+            // Paired with a type word the type wins, so the alias never surfaces there.
+            Assert.Equal("money", Resolve("Buoya Money"));
+        }
+
+        [Fact]
+        public void Container_NewNounLogic_IsGatedToContainers()
+        {
+            // A prop that reads like a container keeps the prop noun extractor: "Box Backroom" stays the
+            // last word for a prop, only the container path swaps it to the type word.
+            Assert.Equal("backroom", Resolve("Box Backroom", cat: WorldTaxonomy.Other));
+            Assert.Equal("box", Resolve("Box Backroom", cat: WorldTaxonomy.Container));
         }
 
         [Fact]

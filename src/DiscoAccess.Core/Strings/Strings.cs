@@ -343,6 +343,9 @@ namespace DiscoAccess.Core.Strings
         public const string WorldFloor = "floor";
         public const string WorldBasement = "basement";
         public const string WorldThingContainer = "container";
+        // The container token "buoya" is the internal spelling of the numbered coastal buoy "buoy A";
+        // spoken so the letter reads as itself, not "buoya". Authored (the game keeps only the slug form).
+        public const string WorldBuoyA = "buoy A";
         public const string WorldThingPerson = "person";
         public const string WorldThingOrb = "orb";
         public const string WorldThingObject = "object";
