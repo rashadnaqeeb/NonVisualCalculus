@@ -48,7 +48,7 @@ namespace DiscoAccess.Tests
             public Vector3 Position { get; set; }
             public bool Visible { get; set; } = true;
             public bool Accessible { get; set; } = true;
-            public string Cat { get; set; } = WorldTaxonomy.Other;
+            public string Cat { get; set; } = WorldTaxonomy.Interactable;
             // A footprint half-extent: 0 is a point (the default), >0 is a square Box the size of the thing,
             // so a test can put a wide object under the cursor from its edge.
             public float HalfExtent { get; set; }

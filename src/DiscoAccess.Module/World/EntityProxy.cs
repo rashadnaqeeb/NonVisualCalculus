@@ -210,7 +210,49 @@ namespace DiscoAccess.Module.World
 
         public string Category => Classify(_e);
         public bool IsAccessible => _e.IsAccessible;
-        public bool IsVisible => true; // present in the scene; fog/streaming refinement comes later
+
+        // Whether a sighted player can currently see this thing. Interiors hide unentered rooms behind a
+        // fog-of-war volume (Sunshine.Unseen.Zone, under "fow-unrevealers") rendered as black void; the
+        // game's own MouseOverHighlight.RegisterAndTurnMeOff finds an entity's zone by casting straight up
+        // on the fog layer, and this replicates that probe. UNSEEN is the never-entered black; ACTIVE and
+        // INACTIVE (seen before, currently dimmed) are both knowable, so only UNSEEN hides. No zone above
+        // (exteriors, revealed space) is visible. Read live, so a room reveals the frame its door opens.
+        //
+        // A body inside a fog volume is not the whole story: a BOUNDARY thing - a closed room's own door,
+        // sitting in the wall - has its body under the room's volume yet is plainly seen (and knocked on)
+        // from the corridor. Its interaction stand-point sits on the approach side, so a fogged body gets a
+        // second probe there: stand-point in revealed space = visible boundary (Klaasje's corridor door);
+        // stand-point also fogged = genuinely inside (her bathroom door, reachable only through the room).
+        // The stand-point call is heavier, so it runs only for the few fogged bodies, not per item.
+        public bool IsVisible
+        {
+            get
+            {
+                if (!HiddenAt(_e.transform.position)) return true;
+                Party party = Party.Player;
+                Character main = party != null ? party.Main : null;
+                if (main == null) return false;
+                return !HiddenAt(_e.GetInteractionLocation(LocationAt(WorldConvert.ToSnv(main.transform.position))).position);
+            }
+        }
+
+        // Whether this point sits under an unrevealed room's fog volume (the game's own zone probe: cast up
+        // on the fog layer, read the zone's status off the hit).
+        private static bool HiddenAt(UnityEngine.Vector3 point)
+        {
+            if (!UnityEngine.Physics.Raycast(point, UnityEngine.Vector3.up,
+                    out UnityEngine.RaycastHit hit, FogProbeDistance, FogLayerMask))
+                return false;
+            var zone = hit.collider.GetComponent<Sunshine.Unseen.Zone>();
+            return zone != null && zone.status == Sunshine.Unseen.Zone.Status.UNSEEN;
+        }
+
+        // The fog layer the game's own zone probe casts against (MouseOverHighlight.RegisterAndTurnMeOff).
+        private const int FogLayerMask = 0x2000;
+        // Far enough to reach this room's fog volume overhead, short of the next floor up: the Whirling's
+        // co-loaded floors stack ~6 m apart in world space, so a longer cast could hit the floor above's
+        // volume and hide a thing that is in plain view.
+        private const float FogProbeDistance = 4f;
         public bool RidesPlayer => false; // an entity is world-anchored, never carried by the character
 
         // The interaction stand-point and the reachability oracle, both approach-relative (computed from the
@@ -252,7 +294,7 @@ namespace DiscoAccess.Module.World
             if (e.TryCast<Door>() != null) return WorldTaxonomy.Door;
             if (e.TryCast<TransitionEntity>() != null) return WorldTaxonomy.Exit;
             if (e.TryCast<ContainerSource>() != null) return WorldTaxonomy.Container;
-            return WorldTaxonomy.Other;
+            return WorldTaxonomy.Interactable;
         }
     }
 }

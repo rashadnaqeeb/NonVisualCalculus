@@ -2,8 +2,8 @@
 
 The infrastructure for world navigation, ported from the WOTR accessibility mod and adapted to
 DiscoAccess's architecture. This is the build record and decision log; the feasibility findings that
-preceded it are in `world-navigation-scouting.md`. The first leaf feature that sits on this foundation,
-**wall tones**, is now built; the other two (sonar and the scanner) are not yet (see Deferred, below).
+preceded it are in `world-navigation-scouting.md`. Two leaf features now sit on this foundation, the
+**wall tones** and the **scanner** (the review cursor); the sonar is not yet built (see Deferred, below).
 
 Everything here was validated live in Martinaise via the dev server, and the implementation was audited
 line-by-line against the WOTR source; the divergences recorded below are deliberate.
@@ -22,10 +22,13 @@ things it passes over: a stereo click as the cursor crosses each thing's real fo
 the thing's spoken name (resolved by `EntityNaming` from the game's own authored name) folded into the point
 readout when the glide stops. The cursor senses exactly the actionable interactable set, the same set the
 Enter verb acts on, through one shared selection, so what it names and what Enter clicks can never disagree.
-Underneath, a live registry classifies every entity in the area and filters it down to that set, and an
-audio engine places stereo cues. What is still missing to make the world fully legible are the remaining
-leaf sensing systems (the sonar and the scanner) that turn the registry into a sense of what surrounds the
-cursor.
+The **scanner** (PageUp/PageDown, see its section below) browses the same actionable set as a review
+cursor: cycle it by category, hear each thing's name, bearing, distance, and a stereo ping, then plant
+the cursor on it (Home) or walk to it and act (I) - a tactical overview that never moves your position.
+Underneath, a live registry classifies every entity in the area and filters it down to that set (with
+the game's own fog of war hiding unentered rooms), and an audio engine places stereo cues. What is
+still missing to make the world fully legible is the last leaf sensing system, the sonar, which turns
+the registry into an ambient sense of what surrounds the cursor.
 
 ## Architecture
 
@@ -220,10 +223,16 @@ play gate, `HasControl` (cutscene/conversation), and `Overlay.InputActive` (a me
 in-world view, where the game still reads CLEAR but the overlay is no longer driven) — the last closes the
 gap where continuous tones would otherwise drone under the mod menu.
 
-A flat taxonomy. WOTR has a two-level category tree. Disco's smaller world gets a flat set
-(npc/door/exit/container/orb/other); the "what does the sonar sonify" toggle maps onto these. The
-taxonomy is the coupling that matters most, since the scanner, the sonar sounds, and the announcements
-all key off the same category strings, so it was worth getting the shape right before any leaf is built.
+A flat taxonomy, at two granularities. WOTR has a two-level category tree. Disco's smaller world gets a
+flat set, but the set exists at two grains: the fine classification a proxy reports
+(npc/door/exit/container/orb/interactable - `interactable` is the conversational-prop remainder, the
+trash can with lines behind the Whirling), which the naming rules key off (an in-place door names by its
+examine actor, a transition exit by its destination), and the browse categories the scanner cycles and
+the sonar will sonify (npc/interactable/container/orb/exit), where **door folds into exit** via
+`WorldTaxonomy.ScanCategory`. The fold is the player model, confirmed against the game's type tree: a
+`Door` never changes area (it swings open in place, reconnecting the navmesh - the Whirling bedroom
+doors), the area-changers are all `TransitionEntity`, and to the player both are "a way through", the
+WOTR rule that a closed door cutting the navmesh IS the exit there.
 
 `IsAccessible` is the actionability gate. The registry holds everything (about 420 entities in
 Martinaise), and `IsAccessible` collapses it to the roughly 100 actionable things a sighted player with
@@ -321,9 +330,17 @@ Status:
   distinct by modifier from Ctrl+T (thought cabinet). The bars are named by the game's Health/Morale terms,
   not the Endurance/Volition skills that set their maximums.
 
-Reserved for the leaf systems:
-- Tab and Shift+Tab cycle the scanner through interactables when that system lands.
-- Up and Down arrow, and Q, are currently unassigned in the world.
+The scanner (the review cursor), WOTR's key scheme:
+- PageDown and PageUp cycle the reviewed thing through the current category, nearest-first from the
+  movement cursor; Ctrl+PageDown and Ctrl+PageUp step the browse category (Everything, people,
+  interactables, containers, orbs, exits), skipping empty ones.
+- Home plants the movement cursor on the reviewed thing (the explicit bridge from reviewing to being
+  there; the camera follows, so it is also "go look at it").
+- I walks the character to the reviewed thing and interacts, through the same walk-then-interact verb
+  as Enter (bare I; Ctrl+I is the inventory, distinct by modifier).
+
+Still unassigned in the world: Up and Down arrow, Q, and Tab (freed when the scanner took the WOTR
+keys instead of the Tab reservation).
 
 Talk-to-Kim is intentionally dropped: you reach the same conversation by walking to Kim and interacting,
 so it needs no dedicated key.
@@ -438,6 +455,55 @@ into a spot our path could not reach), cancellable by Space. The game-acting hot
 quick-actions) live in `WorldCommands`, each calling the game's own method directly since the wholesale
 mute leaves no key for the game to read.
 
+## The scanner (review cursor)
+
+The second leaf feature, WOTR's scanner model ported whole: a categorized, distance-sorted browse of
+the actionable things in the area whose selection is a **second point of attention** alongside the
+movement cursor - the look-without-moving counterpart (NVDA object-navigator style). Cycling it speaks
+the thing's name and its bearing and distance and pings it in stereo, without moving the cursor, the
+camera, or the character; the two act verbs (Home, I) are the explicit bridges from reviewing to acting.
+This is deliberately NOT a mover of the one cursor: WOTR runs two cursors with two act verbs (Enter acts
+on what the movement cursor is inside; I acts on the review selection; Home connects them), and that
+model ports unchanged, so the cursor's "name and Enter can never disagree" invariant is never touched.
+
+The mechanics, all WOTR's: the list is rebuilt from the live registry on every keypress (the world set
+changes as rooms reveal and orbs stream; a held list would go stale), the selection is continued across
+rebuilds by proxy identity, the first press announces without stepping, a fresh list enters at the
+nearest thing (or farthest, stepping backward), empty categories are skipped (the synthetic Everything
+at index 0 always lands), and a vanished selection re-enters at nearest. Divergences: no per-item
+positional counts ("3 of 12" violates the announcement rules; the category landing does speak the set
+size, "exits, 6", which is information), and no subcategory level (the taxonomy is flat). The spoken
+distance and bearing measure to the thing's `InteractionPoint` (computed only for the landed thing; the
+sort uses cheap body positions), and the review ping is spatialized to the same point - `Spatial.Pan` /
+`DistanceVolume`, the cursor-enter cue until per-category sounds are authored with the sonar. The set
+is `IsAccessible && IsVisible`, the same gate the cursor's own sense uses. `Core/World/Scanner.cs` is
+the engine-free logic (unit-tested); `WorldReader` owns it and exposes the verbs; the keys live in
+`UiModule` under `InputCategory.World`.
+
+## Fog of war: the IsVisible gate
+
+Building the scanner surfaced a real fog-of-war system the scouting pass missed ("Disco has no fog" is
+true only outdoors). Interiors hide unentered rooms behind `Sunshine.Unseen.Zone` volumes (parented
+under "fow-unrevealers"), rendered as black void, with a three-state status - UNSEEN (never entered),
+ACTIVE (on view now), INACTIVE (seen before, dimmed) - the exact knowable/currently-seen split WOTR's
+visibility model uses. The game's own `MouseOverHighlight.RegisterAndTurnMeOff` finds an entity's zone
+by raycasting straight up on the fog layer (mask 0x2000); `EntityProxy.IsVisible` replicates that probe,
+hiding only UNSEEN, with no zone (exteriors, revealed space) visible. The probe distance is 4 m: the
+co-loaded Whirling floors stack about 6 m apart in world space, so a longer cast would hit the floor
+above's volume and hide things in plain view.
+
+The body probe alone over-hides **boundary doors**: a closed room's own door sits in the wall under the
+room's volume, yet is plainly seen (and knocked on) from the corridor. A fogged body therefore gets a
+second probe at its interaction stand-point, which sits on the approach side: stand-point in revealed
+space = visible boundary (Klaasje's corridor door), stand-point also fogged = genuinely inside (her
+bathroom door, reachable only through the room). Validated live on Whirling floor 2 with her room
+UNSEEN. This gate composes into everything downstream: the cursor's `Under()` (so it never names what a
+sighted player cannot see), the Enter verb, and the scanner's lists and counts - the chained-door case
+(reviewing a door inside an unrevealed room) simply cannot arise, because the door is not offered until
+its room reveals, one step at a time, exactly the sighted experience. Known residual: a fog volume that
+does not quite cover a room's far door (Kim's bathroom door on floor 2) leaks that door as visible - the
+game's own accessibility data leaks it identically, and acting on it reports can't-reach.
+
 ## Camera follow
 
 The exploration cursor drives the game camera so the orbs around wherever the player is looking stream in
@@ -481,12 +547,17 @@ These are real forks left open on purpose, not oversights.
   poll the working menu keys do. Worth a sighted confirmation pass on a focused window.
 - The dedicated map key. The map has no standalone view (it is a journal sub-page), so a Ctrl+M map key
   would need cross-frame sub-page navigation; dropped, since the map is reachable through Ctrl+J's journal.
-- The remaining leaf sensing systems: the sonar sweep and the scanner / review cursor. The infrastructure
-  is shaped for them; they are the next features. The sonar must suppress out-of-sight things (those behind
-  a wall from the cursor), or it is annoying; the gate is a navmesh line-of-sight raycast from the cursor to
-  the thing's nearest point, added to the environment seam when the sonar is built. (Wall tones, the first
-  leaf, are now built; they mute on loss of control and under a menu, zeroing the volumes while keeping the
-  voices, per the requirement noted here originally.)
+- The remaining leaf sensing system: the sonar sweep. (Wall tones and the scanner are now built.) The
+  sonar must suppress out-of-sight things (those behind a wall from the cursor), or it is annoying; the
+  gate is a navmesh line-of-sight raycast from the cursor to the thing's nearest point, added to the
+  environment seam when the sonar is built - the fog IsVisible gate is necessary but not sufficient for
+  it (fog hides unentered rooms; the navmesh LOS also suppresses the revealed-but-walled-off). Note the
+  navmesh LOS must never gate the scanner or cursor naming: it would hide Cunoesse behind her fence,
+  who a sighted player sees and talks to across it.
+- Scanner follow-ups deferred on purpose: orbs list awake-only (a dormant camera-streamed orb has no
+  text or type to speak; the camera-follow streams them in as you look around, and a measured wake takes
+  0.3 to 1.2 seconds after the camera lands, so a camera-nudge-on-review enhancement is cheap if the
+  small category proves annoying); per-category review-ping sounds arrive with the sonar's audio pass.
 - The remaining settings-menu wiring for the world systems (the sonar's on/off and "what does the sonar
   sonify" category toggles). The wall tones' volume and continuous/when-moving toggle are wired.
 - Sampled audio assets, if the procedural cues prove insufficient.

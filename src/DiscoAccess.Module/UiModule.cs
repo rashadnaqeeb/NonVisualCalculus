@@ -111,6 +111,17 @@ namespace DiscoAccess.Module
                 .AddBinding(new KeyboardBinding(KeyCode.Return)).AddBinding(new KeyboardBinding(KeyCode.KeypadEnter));
             _input.Register(WorldActions.Stop, Strings.InputWorldStop, InputCategory.World, () => _world.Cancel()).AddBinding(new KeyboardBinding(KeyCode.Space));
 
+            // The scanner (review cursor), the WOTR key scheme: PageDown/PageUp cycle the reviewed thing
+            // nearest-first, Ctrl steps the browse category, Home plants the movement cursor on it, and I
+            // walks-and-interacts with it (bare I; Ctrl+I is the inventory, distinct by modifier - the same
+            // split as T time / Ctrl+T thought cabinet).
+            _input.Register(WorldActions.ScanNext, Strings.InputWorldScanNext, InputCategory.World, () => _world.ScanNext()).AddBinding(new KeyboardBinding(KeyCode.PageDown));
+            _input.Register(WorldActions.ScanPrev, Strings.InputWorldScanPrev, InputCategory.World, () => _world.ScanPrev()).AddBinding(new KeyboardBinding(KeyCode.PageUp));
+            _input.Register(WorldActions.ScanNextCategory, Strings.InputWorldScanNextCategory, InputCategory.World, () => _world.ScanNextCategory()).AddBinding(new KeyboardBinding(KeyCode.PageDown, ctrl: true));
+            _input.Register(WorldActions.ScanPrevCategory, Strings.InputWorldScanPrevCategory, InputCategory.World, () => _world.ScanPrevCategory()).AddBinding(new KeyboardBinding(KeyCode.PageUp, ctrl: true));
+            _input.Register(WorldActions.ScanCursorTo, Strings.InputWorldScanCursorTo, InputCategory.World, () => _world.ScanCursorTo()).AddBinding(new KeyboardBinding(KeyCode.Home));
+            _input.Register(WorldActions.ScanInteract, Strings.InputWorldScanInteract, InputCategory.World, () => _world.ScanInteract()).AddBinding(new KeyboardBinding(KeyCode.I));
+
             // Information screens: the game's own hotkey letter under Ctrl, so the bare letters stay free for
             // the cursor/status keys (C recenters, T/M read time/money). They open the game's view; our screen
             // reader then drives it, and Escape (the screen's Back) closes it. The map has no standalone view

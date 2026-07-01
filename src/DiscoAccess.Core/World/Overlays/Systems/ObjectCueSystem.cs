@@ -156,7 +156,10 @@ namespace DiscoAccess.Core.World.Overlays.Systems
             float bestDist = HoverMargin;
             foreach (IWorldItem it in _model.Items)
             {
-                if (!it.IsAccessible) continue;
+                // Accessible AND visible: what a sighted player could see and act on. An accessible thing
+                // inside an unrevealed room (a door behind a closed door, hidden in the fog-of-war black)
+                // is neither named nor clicked until the room reveals.
+                if (!it.IsAccessible || !it.IsVisible) continue;
                 // Drop anything sitting on the player - that is the character's own entity - unless the thing
                 // legitimately rides the character (a thought-cabinet orb orbiting it), which must stay findable.
                 if (!it.RidesPlayer && Geo.Distance(it.Position, player) < PlayerEpsilon) continue;

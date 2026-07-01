@@ -15,8 +15,8 @@ namespace DiscoAccess.Tests
         {
             // The game's own examine name beats the noun extractor: "Pile of Eternite", not "eternite".
             Assert.Equal("Pile of Eternite",
-                Resolve("Eternite_door", authored: "Pile of Eternite", title: "YARD / PILE OF ETERNITE", cat: WorldTaxonomy.Other));
-            Assert.Equal("Drainage Pipe", Resolve("Drainage Pipe", authored: "Drainage Pipe", cat: WorldTaxonomy.Other));
+                Resolve("Eternite_door", authored: "Pile of Eternite", title: "YARD / PILE OF ETERNITE", cat: WorldTaxonomy.Interactable));
+            Assert.Equal("Drainage Pipe", Resolve("Drainage Pipe", authored: "Drainage Pipe", cat: WorldTaxonomy.Interactable));
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace DiscoAccess.Tests
             Assert.Equal("crate", Resolve("Harbor Crate 22", authored: "You"));        // the player
             Assert.Equal("box", Resolve("box_3 rooftop", authored: "actor_5"));         // a machine id
             Assert.Equal("crate", Resolve("Harbor Crate 22", authored: "   "));         // blank
-            Assert.Equal("stone", Resolve("stone_x", authored: "STONE PERC", cat: WorldTaxonomy.Other)); // meta token
+            Assert.Equal("stone", Resolve("stone_x", authored: "STONE PERC", cat: WorldTaxonomy.Interactable)); // meta token
         }
 
         [Fact]
@@ -244,7 +244,7 @@ namespace DiscoAccess.Tests
         {
             // A prop that reads like a container keeps the prop noun extractor: "Box Backroom" stays the
             // last word for a prop, only the container path swaps it to the type word.
-            Assert.Equal("backroom", Resolve("Box Backroom", cat: WorldTaxonomy.Other));
+            Assert.Equal("backroom", Resolve("Box Backroom", cat: WorldTaxonomy.Interactable));
             Assert.Equal("box", Resolve("Box Backroom", cat: WorldTaxonomy.Container));
         }
 
@@ -252,23 +252,23 @@ namespace DiscoAccess.Tests
         public void LocationLeadingSlug_PrefersSpoilerSafeTitle()
         {
             // "Ice_eternite" - the noun extractor would guess the location "ice"; the title names it.
-            Assert.Equal("Eternite", Resolve("Ice_eternite", title: "ICE / ETERNITE", cat: WorldTaxonomy.Other));
+            Assert.Equal("Eternite", Resolve("Ice_eternite", title: "ICE / ETERNITE", cat: WorldTaxonomy.Interactable));
             Assert.Equal("Pile Of Eternite",
-                Resolve("Eternite_door", title: "YARD / PILE OF ETERNITE", cat: WorldTaxonomy.Other));
+                Resolve("Eternite_door", title: "YARD / PILE OF ETERNITE", cat: WorldTaxonomy.Interactable));
         }
 
         [Fact]
         public void LocationLeadingSlug_UnsafeTitle_FallsBackToExtractedNoun()
         {
             // The title is rejected (a check word), so the pre-underscore token is spoken instead.
-            Assert.Equal("stone", Resolve("stone_perc_1", title: "STONE PERC", cat: WorldTaxonomy.Other));
+            Assert.Equal("stone", Resolve("stone_perc_1", title: "STONE PERC", cat: WorldTaxonomy.Interactable));
         }
 
         [Fact]
         public void EmptyName_NoTitle_FallsBackToCategoryWord()
         {
             Assert.Equal("container", Resolve("", cat: WorldTaxonomy.Container));
-            Assert.Equal("object", Resolve(null, cat: WorldTaxonomy.Other));
+            Assert.Equal("object", Resolve(null, cat: WorldTaxonomy.Interactable));
         }
 
         [Fact]

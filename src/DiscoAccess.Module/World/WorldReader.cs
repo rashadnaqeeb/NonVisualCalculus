@@ -2,6 +2,7 @@ using System;
 using DiscoAccess.Core.Audio;
 using DiscoAccess.Core.Modularity;
 using DiscoAccess.Core.Strings;
+using DiscoAccess.Core.World;
 using DiscoAccess.Core.World.Overlays;
 using DiscoAccess.Core.World.Overlays.Systems;
 using Sunshine.Views;
@@ -46,6 +47,7 @@ namespace DiscoAccess.Module.World
         private readonly WorldModel _model = new WorldModel();
         private readonly WalkInteract _walk;
         private readonly DistrictReader _districts;
+        private readonly Scanner _scanner;
         private bool _engaged;
         private Snv _lastPlayer; // character position last in-world frame, to catch a reposition (load/teleport)
         private bool _hasLastPlayer;
@@ -81,6 +83,9 @@ namespace DiscoAccess.Module.World
             _overlay.With(_wallTones);
             _walk = new WalkInteract(host);
             _districts = new DistrictReader(host);
+            // The review cursor: browses the same live registry the cursor senses, sorted from the movement
+            // cursor (the "look around from here" reference), speaking and pinging through the same pipes.
+            _scanner = new Scanner(_model, () => _overlay.Cursor.Position, host.Speech, _audio);
             Active = this;
         }
 
@@ -121,7 +126,7 @@ namespace DiscoAccess.Module.World
         {
             bool inWorld = _inWorld; // resolved this frame by ResolveOwnership, which always runs first
             if (inWorld && !_engaged) { _overlay.OnEnter(); _engaged = true; }
-            else if (!inWorld && _engaged) { _overlay.OnExit(); _engaged = false; _walk.Abandon(); _hasLastPlayer = false; }
+            else if (!inWorld && _engaged) { _overlay.OnExit(); _engaged = false; _walk.Abandon(); _scanner.Reset(); _hasLastPlayer = false; }
             if (!inWorld) { _wasGliding = false; return; }
 
             // A save load or scene transition repositions the character out from under the cursor, which keeps
@@ -195,6 +200,38 @@ namespace DiscoAccess.Module.World
                 _walk.BeginInteract(target, player);
             else
                 _walk.BeginWalk(cursor, Strings.WorldWalking);
+        }
+
+        // ---- the scanner (review cursor) verbs, fired by the world keys ----
+
+        /// <summary>Cycle the scanner selection through the current category (PageDown / PageUp).</summary>
+        public void ScanNext() { if (_engaged) _scanner.StepItem(1); }
+        public void ScanPrev() { if (_engaged) _scanner.StepItem(-1); }
+
+        /// <summary>Step the scanner's browse category (Ctrl+PageDown / Ctrl+PageUp).</summary>
+        public void ScanNextCategory() { if (_engaged) _scanner.StepCategory(1); }
+        public void ScanPrevCategory() { if (_engaged) _scanner.StepCategory(-1); }
+
+        /// <summary>Plant the movement cursor on the scanned thing (Home) - the explicit opt-in bridge from
+        /// reviewing to being there: the camera follows the cursor, so this is also "go look at it" (streams
+        /// orbs in around it), and the point readout then names it exactly as a glide arrival would.</summary>
+        public void ScanCursorTo()
+        {
+            if (!_engaged) return;
+            IWorldItem target = _scanner.Selected;
+            if (target == null) { _host.Speech.Speak(Strings.WorldScanNothing, interrupt: true); return; }
+            _overlay.Cursor.Position = target.Position;
+            _overlay.AnnounceCurrent();
+        }
+
+        /// <summary>Walk to the scanned thing and interact (I) - the review counterpart of Enter, through the
+        /// same walk-then-interact verb, so reachability is attempted and reported, never pre-judged.</summary>
+        public void ScanInteract()
+        {
+            if (!_engaged) return;
+            IWalkTarget target = _scanner.Selected as IWalkTarget;
+            if (target == null) { _host.Speech.Speak(Strings.WorldScanNothing, interrupt: true); return; }
+            _walk.BeginInteract(target, _overlay.Cursor.PlayerPosition);
         }
 
         // The plain in-game world is the CLEAR view. Confirmed live: during free-roam ViewsPagesBridge.Current

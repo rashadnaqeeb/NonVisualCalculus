@@ -32,6 +32,13 @@ namespace DiscoAccess.Core.Strings
         public const string InputWorldRecenter = "Recenter cursor on character";
         public const string InputWorldInteract = "Walk and interact";
         public const string InputWorldStop = "Stop";
+        // The scanner (review cursor) keys: cycle its selection and act on it without moving the cursor.
+        public const string InputWorldScanNext = "Scanner next item";
+        public const string InputWorldScanPrev = "Scanner previous item";
+        public const string InputWorldScanNextCategory = "Scanner next category";
+        public const string InputWorldScanPrevCategory = "Scanner previous category";
+        public const string InputWorldScanCursorTo = "Move cursor to scanned item";
+        public const string InputWorldScanInteract = "Walk and interact with scanned item";
         // The world's information-screen, pause, and help keys.
         public const string InputWorldInventory = "Open inventory";
         public const string InputWorldCharacterSheet = "Open character sheet";
@@ -331,6 +338,24 @@ namespace DiscoAccess.Core.Strings
         public const string WorldSystemSpatial = "cursor position";
         public const string WorldSystemWallTones = "wall tones";
         public const string WorldSystemObjectCue = "cursor objects";
+
+        // The scanner's spoken category names (the review cursor's browse groups) and its list readouts.
+        // Authored: the taxonomy is the mod's own grouping, so the game has no label for it. Plural, since a
+        // category is a set ("exits, 3").
+        public const string WorldScanEverything = "everything";
+        public const string WorldScanNpcs = "people";
+        public const string WorldScanInteractables = "interactables";
+        public const string WorldScanContainers = "containers";
+        public const string WorldScanOrbs = "orbs";
+        public const string WorldScanExits = "exits";
+
+        /// <summary>A scan category's landing line: its label and how many things are in it ("exits, 3";
+        /// "orbs, none"). Label first, the distinguishing part.</summary>
+        public static string WorldScanCategoryCount(string label, int count)
+            => count == 0 ? label + ", none" : label + ", " + count;
+
+        /// <summary>Spoken when an act-on-scanned key fires with nothing scanned yet.</summary>
+        public const string WorldScanNothing = "nothing scanned";
 
         // Generic type words: the spoken name for a thing whose own name is a slug and has no spoiler-safe
         // title to fall back to (see EntityNaming). A door reads "door", a crate "container", and so on, so

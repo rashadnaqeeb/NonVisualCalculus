@@ -16,6 +16,14 @@ namespace DiscoAccess.Module.World
         public const string Interact = "world.interact";
         public const string Stop = "world.stop";
 
+        // The scanner (review cursor): cycle its selection and act on it.
+        public const string ScanNext = "world.scan.next";
+        public const string ScanPrev = "world.scan.prev";
+        public const string ScanNextCategory = "world.scan.category.next";
+        public const string ScanPrevCategory = "world.scan.category.prev";
+        public const string ScanCursorTo = "world.scan.cursorto";
+        public const string ScanInteract = "world.scan.interact";
+
         // Information screens, pause, help.
         public const string OpenInventory = "world.inventory";
         public const string OpenCharacterSheet = "world.charsheet";
