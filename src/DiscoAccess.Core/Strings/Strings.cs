@@ -361,12 +361,12 @@ namespace DiscoAccess.Core.Strings
         public const string DistrictHarbourGate = "Harbour Gate";
         public const string DistrictHarbour = "Harbour";
         public const string DistrictPier = "Pier";
-        public const string DistrictCanal = "Canal";
+        public const string DistrictWaterlock = "Waterlock";
         public const string DistrictFishingVillage = "Fishing Village";
         public const string DistrictIce = "Ice";
         public const string DistrictFishMarket = "Fish Market";
         public const string DistrictLandsEnd = "Land's End";
-        public const string DistrictCoast = "Coast";
+        public const string DistrictBoardwalk = "Boardwalk";
         public const string DistrictSeaFortress = "Sea Fortress";
         public const string DistrictWhirlingBalcony = "Whirling Balcony";
         public const string DistrictApartmentBalcony = "Apartment Balcony";
