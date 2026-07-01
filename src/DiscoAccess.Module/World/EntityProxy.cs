@@ -31,9 +31,9 @@ namespace DiscoAccess.Module.World
         public EntityProxy(BasicEntity e) { _e = e; }
 
         // The spoken name, composed by Core from the raw fields plus the game's authored display name for this
-        // thing (see AuthoredName): the destination area for an exit, else the conversant actor. Core combines
-        // it with GameObject.name fallbacks. A Character is treated as a named thing so a title is never spoken
-        // in its place.
+        // thing (see AuthoredName): the destination area for an exit, else the actor that voices its examine
+        // description. Core combines it with GameObject.name fallbacks. A Character is treated as a named thing
+        // so a title is never spoken in its place.
         public string Name => EntityNaming.Resolve(_e.name, AuthoredName(), _e.conversation,
             _e.TryCast<Character>() != null, Category, SceneAreaTokens());
         public Vector3 Position => WorldConvert.ToSnv(_e.transform.position);
@@ -87,10 +87,11 @@ namespace DiscoAccess.Module.World
 
         // The game's authored display name for this thing, resolved live per type: an exit reads the localized
         // DESTINATION it leads to (so the player hears where a door goes, "Whirling-in-Rags"); everything else
-        // reads its examine conversant. An exit never uses its conversant - that can be the character on the
-        // far side (a tent flap whose conversant is Andre), which would misname the door.
+        // reads the actor that voices its own examine description (see SelfDescribedActorName). An exit uses the
+        // destination, not that description actor - an exit's examine can be narrated from the far side (a tent
+        // flap whose description speaks as Andre), which would misname the door.
         private string AuthoredName()
-            => Category == WorldTaxonomy.Exit ? ExitDestination() : ConversantName();
+            => Category == WorldTaxonomy.Exit ? ExitDestination() : SelfDescribedActorName();
 
         // What an exit's destination is called: its distinct localized area name when that differs from where
         // you are (another building, or a floor with its own name like "Bookstore"), else the floor/level word
@@ -111,19 +112,60 @@ namespace DiscoAccess.Module.World
             return EntityNaming.ExitDestinationLabel(area, destName, curName);
         }
 
-        // The examine conversation's CONVERSANT actor, localized - the same name a sighted player reads on
-        // examining it ("Cuno", "Pile of Eternite"). Read live through the dialogue database each call (never
-        // cached); low-frequency, only on a stop/interact, not the per-frame hover path. Null when the thing
-        // has no conversation, so Core falls back to the name noun.
-        private string ConversantName()
+        // The actor that voices this thing's own examine description, localized - the same name a sighted
+        // player reads on examining it ("Cuno", "Pile of Eternite", "Coupris Kineema"). This is the first
+        // spoken line the examine conversation reaches from its start, whose speaker IS the object; the
+        // conversation's ConversantID is not reliable here - it can hold a narrative owner instead (the
+        // Kineema's conversant is Alice, the woman who owns it, while its self-description speaks as "Coupris
+        // Kineema"). Read live through the dialogue database each call (never cached). Null when the thing has
+        // no conversation or no reachable description line, so Core falls back to the name noun.
+        private string SelfDescribedActorName()
         {
             string conv = _e.conversation;
             if (string.IsNullOrEmpty(conv)) return null;
             DialogueDatabase db = DialogueManager.masterDatabase;
             Conversation c = db?.GetConversation(conv);
             if (c == null) return null;
-            Actor a = db.GetActor(c.ConversantID);
+            int actorId = FirstDescriptionActor(c);
+            if (actorId < 0) return null;
+            Actor a = db.GetActor(actorId);
             return a == null ? null : LocalizationUtils.GetActorLocalizedField(a, "Name");
+        }
+
+        // The actor id of the first entry carrying dialogue text reachable from the conversation's start node,
+        // following outgoing links in author order (depth-first, so the first branch is walked before its
+        // siblings). A DE examine conversation opens on the object narrating itself, so that first spoken
+        // line's speaker is the object. Visited-set guarded against cycles; a link that leaves this
+        // conversation is skipped (its target id is not in this entry table). -1 when no text entry is reached.
+        private static int FirstDescriptionActor(Conversation c)
+        {
+            var entries = c.dialogueEntries;
+            if (entries == null || entries.Count == 0) return -1;
+
+            var byId = new System.Collections.Generic.Dictionary<int, DialogueEntry>(entries.Count);
+            DialogueEntry root = null;
+            for (int i = 0; i < entries.Count; i++)
+            {
+                DialogueEntry e = entries[i];
+                byId[e.id] = e;
+                if (root == null && e.isRoot) root = e;
+            }
+            if (root == null && !byId.TryGetValue(0, out root)) root = entries[0];
+
+            var stack = new System.Collections.Generic.Stack<int>();
+            var seen = new System.Collections.Generic.HashSet<int>();
+            stack.Push(root.id);
+            while (stack.Count > 0)
+            {
+                int id = stack.Pop();
+                if (!seen.Add(id)) continue;
+                if (!byId.TryGetValue(id, out DialogueEntry e)) continue;
+                if (e.id != root.id && !string.IsNullOrEmpty(e.DialogueText)) return e.ActorID;
+                var links = e.outgoingLinks;
+                for (int i = links.Count - 1; i >= 0; i--)
+                    stack.Push(links[i].destinationDialogueID);
+            }
+            return -1;
         }
 
         // The current scene's location stems, for Core to strip off the front of a slug-named container
