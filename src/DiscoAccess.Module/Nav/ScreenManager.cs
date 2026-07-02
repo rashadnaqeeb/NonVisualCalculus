@@ -102,6 +102,9 @@ namespace DiscoAccess.Module.Nav
             Register(new ArchetypeScreen());
             Register(new AdjustAbilitiesScreen());
             Register(new SignatureSkillScreen());
+            // The begin prompt a new game (and the ledger dream) waits on. SPECIAL is otherwise a
+            // transition state no screen matches; this one applies only while its button is live.
+            Register(new BeginScreen());
             Register(new CharacterSheetScreen());
             Register(new ThoughtCabinetScreen());
             Register(new JournalScreen());

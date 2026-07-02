@@ -223,6 +223,11 @@ namespace DiscoAccess.Core.Strings
         // The world's loot panel (opened by interacting with an unlocked container). It has no ViewType of
         // its own (the view stays CLEAR) and no game title, so its name is authored.
         public const string ScreenContainer = "container";
+        // The full-screen begin prompt (a black screen with one BEGIN button) a new game or a dream
+        // sequence waits on before its opening dialogue. The game's caption is baked into a localized
+        // sprite (its I2 term resolves to the sprite name, not text), so the prompt is authored; it is
+        // the screen's whole announcement, with the button itself silent (see BeginScreen).
+        public const string ScreenBeginPrompt = "Press Enter to begin";
 
         // The mod's own settings menu, opened with F12. It maps to no game view, so its name is authored.
         public const string ScreenModMenu = "mod menu";
