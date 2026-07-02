@@ -19,7 +19,9 @@ namespace DiscoAccess.Core.World
     ///   else a clean <c>GameObject.name</c>; else "person", never a raw conversation title (which would leak).
     /// - An exit prefers its authored name too, which the proxy resolves as the localized DESTINATION it leads
     ///   to ("Whirling-in-Rags", "Cuno's shack"), so the player hears where a door goes; else its clean name,
-    ///   else the category word "exit". A plain door keeps its own clean name, else "door".
+    ///   else the category word "exit". A plain door prefers its authored examine header ("Door, Room #1"),
+    ///   then the mod's authored name for the known dev-named doors (the fallback table, shared with locked
+    ///   exit-doors that lead nowhere), then its own clean name, else "door".
     /// - A container prefers the authored name; failing that it is named from the <c>GameObject.name</c> by
     ///   its object TYPE when a generic container word is present ("box", "crate", "money", "trash can"),
     ///   position-independent so the designer's word order and location decoration stop mattering ("Box
@@ -51,10 +53,13 @@ namespace DiscoAccess.Core.World
             if (isNamedCharacter)
                 return authored ?? (name.Length > 0 && !IsSlug(name) ? name : WorldThingPerson);
 
-            // A plain door: its own clean name, else the category word. No authored name (a door leads nowhere
-            // the proxy resolves).
+            // A plain door: the game's authored examine header when one resolves ("Door, Room #1", "Blue
+            // door", "Padlocked Door"), else the mod's authored name for the known dev-named doors (the
+            // fallback table), else its own clean name, else the category word.
             if (category == WorldTaxonomy.Door)
-                return name.Length > 0 && !IsSlug(name) ? name : TypeWord(category);
+                return authored
+                       ?? AuthoredDoorFallback(name)
+                       ?? (name.Length > 0 && !IsSlug(name) ? name : TypeWord(category));
 
             // An exit: the destination it leads to when the proxy resolved one, plus the portal type read from
             // the GameObject.name ("courtyard-door-..." to "door", "...stairs..." to "stairs"), so the player
@@ -66,6 +71,8 @@ namespace DiscoAccess.Core.World
             {
                 string? typeKw = ExitTypeKeyword(name);
                 if (authored != null) return authored + " " + (typeKw ?? WorldThingExit);
+                string? fallback = AuthoredDoorFallback(name);
+                if (fallback != null) return fallback;
                 string? spot = SpotFromDoorName(name);
                 if (spot != null) return spot + " " + (typeKw ?? WorldThingDoor);
                 return name.Length > 0 && !IsSlug(name) ? name : (typeKw ?? WorldThingExit);
@@ -217,6 +224,30 @@ namespace DiscoAccess.Core.World
             return list.ToArray();
         }
 
+        // The mod's own authored names for specific doors, keyed by the normalized GameObject.name. Only for
+        // doors the game gives NEITHER an examine actor NOR a readable object name: the Whirling floor-2
+        // bathroom doors and the Capeside locked doors are raw dev names that leak cast names ("Whirling
+        // Door Bathroom Klaasje") or reduce to a bare "door" among many. Values come from the Strings table
+        // so they localize with the rest of the authored set; a door with any game string keeps it (the
+        // authored examine header is checked first).
+        private static readonly Dictionary<string, string> AuthoredDoorFallbacks =
+            new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            // Kitsuragi's is the door joining the shared bathroom to his room - spoken as the connection
+            // it is, so the bathroom's two doors are distinguishable by ear.
+            ["Whirling Door Bathroom Kitsuragi"] = WorldThingConnectingDoor,
+            ["Whirling Door Bathroom Klaasje"] = WorldThingBathroomDoor,
+            ["Door Apartment no dialogue(bathroom)"] = WorldThingBathroomDoor,
+            ["Door Apartment no dialogue(empty room)"] = WorldThingLockedDoor,
+            ["Door Apartment 10 Locked"] = WorldThingLockedDoor,
+            ["Locked-door_capeside-1"] = WorldThingLockedDoor,
+            ["Locked-door_capeside-2"] = WorldThingLockedDoor,
+            ["Locked-door_capeside-3"] = WorldThingLockedDoor,
+        };
+
+        private static string? AuthoredDoorFallback(string normalizedName)
+            => AuthoredDoorFallbacks.TryGetValue(normalizedName, out string? spoken) ? spoken : null;
+
         // The game's authored display name (a conversant actor, or an exit's destination area), rejected only
         // when unusable: empty, a machine id (an underscore), the player ("You"/"Player"), or a
         // mechanical/conditional token. There is no length cap: every long actor name in the dialogue
@@ -224,15 +255,19 @@ namespace DiscoAccess.Core.World
         // Speakers"), and rejecting one falls back to a noun pulled from a machine slug, which can read as
         // garbage ("clickable_humanitarian_sneakers" would speak as "clickable"). Hyphens are display
         // punctuation in a curated name ("Whirling-in-Rags"), spoken as a space, so they are converted, not
-        // treated as the slug marker they are in a raw GameObject.name. A "Name, the Title" actor name keeps
-        // just the name before the comma ("Garte, the Cafeteria Manager" to "Garte").
+        // treated as the slug marker they are in a raw GameObject.name. A "Name, the Title" appositive keeps
+        // just the name before the comma ("Garte, the Cafeteria Manager" to "Garte") - recognized by the
+        // "the" that opens the title - while a comma QUALIFIER is kept whole ("Door, Room #1", "Key, Room
+        // #1"): there the part after the comma is the distinguishing half, and cutting it leaves a generic
+        // word.
         private static string? CleanAuthored(string? raw)
         {
             if (string.IsNullOrWhiteSpace(raw)) return null;
             if (raw!.IndexOf('_') >= 0) return null;              // a machine id (actor_5), not a display name
             string s = Regex.Replace(raw.Replace('-', ' ').Trim(), @"\s+", " ");
             int comma = s.IndexOf(',');
-            if (comma >= 0) s = s.Substring(0, comma).Trim();     // "Garte, the Cafeteria Manager" -> "Garte"
+            if (comma >= 0 && s.Substring(comma + 1).TrimStart().StartsWith("the ", StringComparison.OrdinalIgnoreCase))
+                s = s.Substring(0, comma).Trim();                 // "Garte, the Cafeteria Manager" -> "Garte"
             if (s.Length == 0) return null;
             if (string.Equals(s, "You", StringComparison.OrdinalIgnoreCase)
                 || string.Equals(s, "Player", StringComparison.OrdinalIgnoreCase)) return null;
@@ -363,6 +398,8 @@ namespace DiscoAccess.Core.World
             if (lo.Contains("elevator") || lo.Contains("lift")) return WorldThingElevator;
             if (lo.Contains("door")) return WorldThingDoor;
             if (lo.Contains("gate")) return WorldThingGate;
+            if (lo.Contains("ladder")) return WorldThingLadder;
+            if (lo.Contains("boat")) return WorldThingBoat;
             return null;
         }
 

@@ -114,9 +114,52 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
-        public void Door_IgnoresAuthored()
+        public void Door_PrefersAuthoredExamineHeader()
         {
-            Assert.Equal("Whirling Door", Resolve("Whirling Door", authored: "Someone", cat: WorldTaxonomy.Door));
+            // A door with an examine actor speaks it: "Door, Room #1", not the dev name "Whirling Door
+            // Tequila" (which also leaks a cast name).
+            Assert.Equal("Door, Room #1",
+                Resolve("Whirling Door Tequila", authored: "Door, Room #1", cat: WorldTaxonomy.Door));
+            Assert.Equal("Blue door",
+                Resolve("int-door-whirling-kitchen-backdoor", authored: "Blue door", cat: WorldTaxonomy.Door));
+        }
+
+        [Fact]
+        public void CommaQualifier_IsKeptWhole_AppositiveIsNot()
+        {
+            // "Door, Room #1" qualifies after the comma - cutting it leaves a generic "Door" - while
+            // "Name, the Title" is an appositive whose title is dropped.
+            Assert.Equal("Door, Room #1",
+                Resolve("whatever", authored: "Door, Room #1", cat: WorldTaxonomy.Interactable));
+            Assert.Equal("Garte",
+                Resolve("garte", authored: "Garte, the Cafeteria Manager", named: true, cat: WorldTaxonomy.Npc));
+        }
+
+        [Fact]
+        public void Door_AuthoredFallback_NamesTheDevNamedDoors()
+        {
+            // The Whirling floor-2 bathroom doors have no conversation and raw dev names that leak cast
+            // names; the mod's fallback table names them from the Strings set. Kitsuragi's joins the shared
+            // bathroom to his room, so it reads as the connection rather than a second "bathroom door".
+            Assert.Equal("connecting door",
+                Resolve("Whirling Door Bathroom Kitsuragi", cat: WorldTaxonomy.Door));
+            Assert.Equal("bathroom door",
+                Resolve("Whirling Door Bathroom Klaasje", cat: WorldTaxonomy.Door));
+            Assert.Equal("bathroom door",
+                Resolve("Door Apartment no dialogue(bathroom)", cat: WorldTaxonomy.Door));
+            // A locked no-destination exit-door shares the table (the Capeside scenery doors).
+            Assert.Equal("locked door", Resolve("Locked-door_capeside-1", cat: WorldTaxonomy.Exit));
+            // An authored examine header still beats the table.
+            Assert.Equal("Door, Room #1",
+                Resolve("Whirling Door Bathroom Kitsuragi", authored: "Door, Room #1", cat: WorldTaxonomy.Door));
+        }
+
+        [Fact]
+        public void Exit_LadderAndBoat_ReadTheirPortalType()
+        {
+            Assert.Equal("ladder", Resolve("boardwalk-ladder-roof", cat: WorldTaxonomy.Exit));
+            Assert.Equal("Sea Fortress boat",
+                Resolve("fishing-boat", authored: "Sea Fortress", cat: WorldTaxonomy.Exit));
         }
 
         [Fact]

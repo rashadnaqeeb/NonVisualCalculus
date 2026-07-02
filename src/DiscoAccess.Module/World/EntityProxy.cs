@@ -180,10 +180,16 @@ namespace DiscoAccess.Module.World
         // no conversation, so Core falls back to the name noun.
         private string ExamineHeaderActor()
         {
+            DialogueDatabase db = DialogueManager.masterDatabase;
+            if (db == null) return null;
+            if (ExamineActorOverrides.TryGetValue(_e.name, out string overrideActor))
+            {
+                Actor named = db.GetActor(overrideActor);
+                if (named != null) return LocalizationUtils.GetActorLocalizedField(named, "Name");
+            }
             string conv = _e.conversation;
             if (string.IsNullOrEmpty(conv)) return null;
-            DialogueDatabase db = DialogueManager.masterDatabase;
-            Conversation c = db?.GetConversation(conv);
+            Conversation c = db.GetConversation(conv);
             if (c == null) return null;
             Actor conversant = db.GetActor(c.ConversantID);
             if (conversant != null && !IsPerson(conversant) && !IsInnerVoice(conversant))
@@ -192,6 +198,17 @@ namespace DiscoAccess.Module.World
             if (speaker == null || IsInnerVoice(speaker)) speaker = conversant;
             return speaker == null ? null : LocalizationUtils.GetActorLocalizedField(speaker, "Name");
         }
+
+        // The dialogue actor whose localized name IS a thing's examine header, for the few objects the
+        // two-step above cannot reach: Klaasje's door has no conversant and opens on the player's inner
+        // voices, yet the game names it - "Door, Room #3" speaks its lines deeper in the conversation.
+        // Curated per object (keyed by GameObject.name) so the name still comes from the game's own
+        // localized actor table, never authored by the mod.
+        private static readonly System.Collections.Generic.Dictionary<string, string> ExamineActorOverrides =
+            new System.Collections.Generic.Dictionary<string, string>
+        {
+            ["Whirling Door Klaasje"] = "Door, Room #3",
+        };
 
         // A person in the dialogue data: the player, or an actor the game marks IsNPC (people carry it,
         // object-actors lack it; the talking Kineema is marked IsNPC but never reaches the checks that

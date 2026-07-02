@@ -369,7 +369,18 @@ namespace DiscoAccess.Core.Strings
         public const string WorldThingGate = "gate";
         public const string WorldThingStairs = "stairs";
         public const string WorldThingElevator = "elevator";
+        public const string WorldThingLadder = "ladder";
+        public const string WorldThingBoat = "boat";
         public const string WorldThingExit = "exit";
+        // Authored names for specific dev-named doors the game gives no examine actor and no readable
+        // object name (see EntityNaming's door fallback table): the raw names leak cast names ("Whirling
+        // Door Bathroom Klaasje") or read as slugs, and no game string exists to reuse.
+        public const string WorldThingBathroomDoor = "bathroom door";
+        // The door joining the Whirling's shared bathroom to Kitsuragi's room: two doors on one bathroom
+        // both reading "bathroom door" are indistinguishable by ear, so the one that crosses into the
+        // neighbouring room reads as the connection it is.
+        public const string WorldThingConnectingDoor = "connecting door";
+        public const string WorldThingLockedDoor = "locked door";
         // Level words for an exit whose destination floor shares its building's name (see
         // EntityNaming.ExitDestinationLabel): "floor 2 stairs", "basement stairs".
         public const string WorldFloor = "floor";
