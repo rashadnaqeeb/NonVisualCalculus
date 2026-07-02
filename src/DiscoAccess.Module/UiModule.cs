@@ -47,6 +47,9 @@ namespace DiscoAccess.Module
         // Speaks the container events the game marks with sound alone (a locked refusal, the loot panel
         // closing) via Harmony feeders drained from the pump. Owns no native handle; its patches ride _harmony.
         private ContainerReader _containers;
+        // Speaks the literary quote the game shows as a baked full-screen image (new game start and the
+        // intro) via Harmony feeders drained from the pump. Owns no native handle; its patches ride _harmony.
+        private QuoteReader _quotes;
         private static readonly InputCategory[] UiCategory = { InputCategory.UI };
         // Status precedes UI ON PURPOSE: in a screen that wants the status keys (dialogue) the heal arrows
         // (Status, Left/Right) shadow the inert UI Left/Right; the rest of UI (Up/Down/Tab/Enter/Escape/
@@ -88,6 +91,9 @@ namespace DiscoAccess.Module
             // Speak the locked-container refusal and the loot panel's close; likewise on this load's Harmony.
             _containers = new ContainerReader(_host);
             _containers.Apply(_harmony);
+            // Speak the baked-image quote when the game displays it; likewise on this load's Harmony.
+            _quotes = new QuoteReader(_host);
+            _quotes.Apply(_harmony);
 
             // UI navigation keys: live only while our navigator owns the keyboard, and routed into it by
             // the dispatcher below. Directions and Tab auto-repeat while held.
@@ -275,6 +281,10 @@ namespace DiscoAccess.Module
             // Speak any container cues (locked refusal, panel close), after the notifications so a take
             // reads "received ..." before "container closed".
             _containers.Drain();
+
+            // Speak the quote if the game displayed it since last frame (queued, so the begin-prompt
+            // announcement it accompanies reads first).
+            _quotes.Drain();
         }
 
         // Dev seam (IDevDriver): drive our navigator from the dev server's /input, the headless counterpart
@@ -320,6 +330,7 @@ namespace DiscoAccess.Module
             _notifications?.Dispose(); // drop the static back-reference before the patches are removed
             _barks?.Dispose(); // likewise drop the bark feeder's back-reference before unpatching
             _containers?.Dispose(); // and the container feeder's
+            _quotes?.Dispose(); // and the quote feeder's
             _harmony?.UnpatchSelf();
             _harmony = null;
             _input = null; // owns no native handle; the registration list goes with the dropped context
@@ -329,6 +340,7 @@ namespace DiscoAccess.Module
             _notifications = null;
             _barks = null;
             _containers = null;
+            _quotes = null;
             _host = null;
         }
     }
