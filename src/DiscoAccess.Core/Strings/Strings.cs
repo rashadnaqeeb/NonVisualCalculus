@@ -553,6 +553,11 @@ namespace DiscoAccess.Core.Strings
         public const string WorldNoQuickSave = "no quick save";
         public const string WorldLanguageChanged = "language changed";
 
+        // ---- Loading screen tip: the game shows one random gameplay tip per image loading screen
+        // (black-splash loads show none). The tip itself is the game's own localized string; only the
+        // label is authored, because the game has no header string for it. ----
+        public static string LoadingTip(string text) => "tip, " + text;
+
         // ---- Existential crisis: a bar (Health or Morale) hit zero and the game paused for a heal-or-die
         // window (a 10-second grace), so this is the one notification spoken with interrupt. The bar name and
         // gameMessage are the game's own localized strings; the heal-key hint is authored, because the heal
