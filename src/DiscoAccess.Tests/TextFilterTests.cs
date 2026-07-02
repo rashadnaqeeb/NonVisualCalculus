@@ -106,5 +106,14 @@ namespace DiscoAccess.Tests
         {
             Assert.Equal(expected, TextFilter.Clean(input));
         }
+
+        // Decorative divider ornament used in game text (e.g. the endgame newspaper).
+        [Theory]
+        [InlineData("✤", "")]
+        [InlineData("THE END ✤ REVACHOL", "THE END REVACHOL")]
+        public void Clean_StripsDividerOrnament(string input, string expected)
+        {
+            Assert.Equal(expected, TextFilter.Clean(input));
+        }
     }
 }
