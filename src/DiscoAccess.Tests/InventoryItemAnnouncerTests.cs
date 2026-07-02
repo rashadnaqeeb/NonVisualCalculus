@@ -29,12 +29,24 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
-        public void Value_SpokenOnlyWhenPositive()
+        public void Value_SpokenOnlyWhenPositive_AsReal()
         {
-            Assert.Equal("Mug, value 5",
+            Assert.Equal("Mug, value 0.05 réal",
                 InventoryItemAnnouncer.Compose(new InventoryItemState { Name = "Mug", Value = 5 }));
             Assert.Equal("Mug",
                 InventoryItemAnnouncer.Compose(new InventoryItemState { Name = "Mug", Value = 0 }));
+        }
+
+        [Fact]
+        public void PawnLabel_ReplacesTheValueMarker()
+        {
+            Assert.Equal("Shift Card, Pawn for 13.13 réal",
+                InventoryItemAnnouncer.Compose(new InventoryItemState
+                {
+                    Name = "Shift Card",
+                    Value = 1313,
+                    PawnLabel = "Pawn for",
+                }));
         }
 
         [Fact]
@@ -52,7 +64,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void FullOrder_NameFreshUsesValueEffectsDescription()
         {
-            Assert.Equal("Sneakers, new, value 2, +1 Reaction Speed, Fast shoes.",
+            Assert.Equal("Sneakers, new, value 0.02 réal, +1 Reaction Speed, Fast shoes.",
                 InventoryItemAnnouncer.Compose(new InventoryItemState
                 {
                     Name = "Sneakers",

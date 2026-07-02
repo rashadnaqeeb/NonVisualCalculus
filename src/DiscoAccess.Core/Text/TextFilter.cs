@@ -31,6 +31,8 @@ namespace DiscoAccess.Core.Text
             string s = RichTags.Replace(raw, string.Empty);
             s = s.Replace("*", string.Empty); // DE marks emphasis as *word*; drop the markers for speech
             s = s.Replace("✤", string.Empty); // decorative divider ornament in game text
+            s = s.Replace("▼?", string.Empty); // baked-in button-prompt suffix (the pawnshop Close caption)
+            s = s.Replace("▼", string.Empty);  // the same arrow decoration standing alone
             s = s.Replace(' ', ' ');   // non-breaking space
             s = s.Replace('​', ' ');   // zero-width space TMP sometimes injects
             s = FoldPunctuation(s);

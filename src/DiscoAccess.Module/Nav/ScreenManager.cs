@@ -105,6 +105,7 @@ namespace DiscoAccess.Module.Nav
             Register(new ThoughtSplashScreen());
             Register(new JournalScreen());
             Register(new InventoryScreen());
+            Register(new PawnshopScreen());
             Register(new DialogueScreen());
             Register(new HelpOverlayScreen());
             // The world's loot panel: CLEAR (free-roam) has no screen of its own, so this applies only

@@ -75,12 +75,14 @@ namespace DiscoAccess.Core.UI.Nav
         /// <summary>Move focus to a specific element (e.g. restoring the grid position after a screen rebuilt
         /// its content under the cursor). Rebuilds the path to it and syncs the platform cursor; speaks the
         /// landing only when <paramref name="announce"/> is set (a caller that returns "refocused" to the
-        /// ScreenManager leaves the announce to it, to avoid double-speaking).</summary>
-        public void Focus(UIElement target, bool announce)
+        /// ScreenManager leaves the announce to it, to avoid double-speaking). The landing supersedes current
+        /// speech by default; pass <paramref name="interrupt"/> false to queue it when the move rides an
+        /// action whose own feedback is still speaking (the pawnshop's money-gained line).</summary>
+        public void Focus(UIElement target, bool announce, bool interrupt = true)
         {
             var snapshot = new List<UIElement>(Path);
             BuildPathTo(target);
-            if (announce) AnnounceDelta(snapshot, interrupt: true);
+            if (announce) AnnounceDelta(snapshot, interrupt);
             else Current?.OnFocused();
         }
 

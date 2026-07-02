@@ -88,6 +88,15 @@ namespace DiscoAccess.Module
             };
         }
 
+        // An item read as a pawnable (the pawnshop sell view): the regular readout plus the shop's own
+        // "Pawn for" label, so the value is spoken as the offer the priced PAWN button shows.
+        public static InventoryItemState ReadPawnable(InventoryItem item)
+        {
+            InventoryItemState s = ReadItem(item);
+            s.PawnLabel = GameLocalization.Term("INVENTORY_TOOLTIP_PAWN_FOR", Strings.ItemPawnFor);
+            return s;
+        }
+
         // An item read as loot (the world's container panel): the library prototype looked up by internal
         // name, not an owned instance, so the ownership markers are left out - the prototype's "fresh" flag
         // and use count describe a thing the player does not hold yet and would read as noise. Name, pawn

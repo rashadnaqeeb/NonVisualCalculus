@@ -115,5 +115,16 @@ namespace DiscoAccess.Tests
         {
             Assert.Equal(expected, TextFilter.Clean(input));
         }
+
+        // The arrow button-prompt decoration some button terms bake into their caption (the pawnshop's
+        // Close resolves to "Close ▼?"), stripped whether the trailing question mark rides along or not.
+        [Theory]
+        [InlineData("Close ▼?", "Close")]
+        [InlineData("Close ▼", "Close")]
+        [InlineData("Really close?", "Really close?")]
+        public void Clean_StripsArrowPromptSuffix(string input, string expected)
+        {
+            Assert.Equal(expected, TextFilter.Clean(input));
+        }
     }
 }
