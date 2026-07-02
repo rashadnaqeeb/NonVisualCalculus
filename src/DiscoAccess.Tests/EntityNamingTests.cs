@@ -37,6 +37,18 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
+        public void NameMatchesActor_WholeNameModuloCaseAndSeparators()
+        {
+            // The plaza pair shares one conversation: the GameObject "fuckTheWorld" IS the actor
+            // "Fuck the World", while "pissflaubert" is not the censored actor name "Pissf****t".
+            Assert.True(EntityNaming.NameMatchesActor("fuckTheWorld", "Fuck the World"));
+            Assert.False(EntityNaming.NameMatchesActor("pissflaubert", "Pissf****t"));
+            // A location-prefixed name is not an identity, and empty never matches anything.
+            Assert.False(EntityNaming.NameMatchesActor("Yard Cuno", "Cuno"));
+            Assert.False(EntityNaming.NameMatchesActor("", ""));
+        }
+
+        [Fact]
         public void Exit_NamedByDestination_WithPortalType_HyphensBecomeSpaces()
         {
             // An exit reads the place it leads to (localized, hyphens spoken as spaces) plus the portal type

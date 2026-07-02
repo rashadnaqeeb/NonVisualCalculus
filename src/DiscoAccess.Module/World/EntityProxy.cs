@@ -162,7 +162,11 @@ namespace DiscoAccess.Module.World
         }
 
         // The localized name a sighted player reads as this thing's examine header ("Cuno", "Pile of
-        // Eternite", "Coupris Kineema"). Two-step, keyed on what the conversation's ConversantID holds:
+        // Eternite", "Coupris Kineema"). An entity whose GameObject name IS a participant's internal actor
+        // name names itself by that identity first: two people can share one examine conversation (the
+        // plaza's "fuckTheWorld" and "pissflaubert" both open PLAZA / PISSFLAUBERT AND FTW), where any walk
+        // of the shared lines names both entities after the same speaker. Otherwise two-step, keyed on what
+        // the conversation's ConversantID holds:
         //
         // A NON-PERSON conversant (no IsNPC field on the actor, the DE data's person marker) IS the examined
         // object by construction ("Pile of Clothes", "Set of Tracks", "Shack Door"), so it names the thing
@@ -192,6 +196,11 @@ namespace DiscoAccess.Module.World
             Conversation c = db.GetConversation(conv);
             if (c == null) return null;
             Actor conversant = db.GetActor(c.ConversantID);
+            if (conversant != null && EntityNaming.NameMatchesActor(_e.name, conversant.Name))
+                return LocalizationUtils.GetActorLocalizedField(conversant, "Name");
+            Actor cast = db.GetActor(c.ActorID);
+            if (cast != null && EntityNaming.NameMatchesActor(_e.name, cast.Name))
+                return LocalizationUtils.GetActorLocalizedField(cast, "Name");
             if (conversant != null && !IsPerson(conversant) && !IsInnerVoice(conversant))
                 return LocalizationUtils.GetActorLocalizedField(conversant, "Name");
             Actor speaker = db.GetActor(FirstDescriptionActor(c));
@@ -290,7 +299,11 @@ namespace DiscoAccess.Module.World
             return true;
         }
 
-        public string Category => Classify(_e);
+        // Classified once per proxy: the category is structural (an entity never changes class or grows a
+        // skinned body), and the sonar reads it per ping across every tracked item, which the body test's
+        // child-renderer sweep is too costly for (the same trade the footprint cache makes).
+        public string Category => _category ??= Classify(_e);
+        private string _category;
         public bool IsAccessible => _e.IsAccessible;
 
         // Whether a sighted player can currently see this thing. Interiors hide unentered rooms behind
@@ -375,15 +388,14 @@ namespace DiscoAccess.Module.World
 
         public bool IsActionable(Vector3 from) => _e.CheckIfCanCreatePathToHavePath(LocationAt(from));
 
-        // The discovery gates' cross-level test (see IWorldItem.ReachableFrom).
+        // The discovery gates' reachability test (see IWorldItem.ReachableFrom).
         //
-        // A PERSON is always reachable: the game's click flow (GameEntity.Interact is just
-        // GameController.MoveToTarget) walks the character as close as the navmesh allows and starts the
-        // conversation wherever the walk ends - proven live on the Smoker on the Balcony, whose conversation
-        // opens from the yard four metres below him with no complete path, no radius met, and the path
-        // oracle saying no (it is how the sighted player interrogates him, per the Logic orb's "Talk to
-        // him"). So a visible person can never be offered-but-unactable, while hiding one hides authored
-        // gameplay - the failure a blind player cannot see.
+        // A PERSON is offered exactly when the game's own click would act (see ClickWouldAct): people are
+        // conversed with across levels and radii the geometric tests below cannot judge (the Smoker on the
+        // Balcony is interrogated from the yard four metres under him - authored gameplay, per the Logic
+        // orb's "Talk to him"), so a person is priced by the click flow's own verdict instead, which keeps
+        // the smoker and drops a person every path is walled off from (Cuno behind the yard fence) exactly
+        // while the game's click refuses him too.
         //
         // Everything else asks for standing ground: the nearest walkable mesh the body stands on,
         // walk-connected to the reference by a COMPLETE navmesh path - the stairs triggers connect via their
@@ -396,12 +408,34 @@ namespace DiscoAccess.Module.World
         // then paths two metres to the balcony edge and calls the ground-floor door reachable).
         public bool ReachableFrom(Vector3 from)
         {
-            if (Category == WorldTaxonomy.Npc) return true;
+            if (Category == WorldTaxonomy.Npc) return ClickWouldAct();
             if (!StandingGround(out UnityEngine.Vector3 ground) && !MooredGround(from, out ground))
                 return false;
             var path = new UnityEngine.AI.NavMeshPath();
             return UnityEngine.AI.NavMesh.CalculatePath(WorldConvert.ToUnity(from), ground, -1, path)
                    && path.status == UnityEngine.AI.NavMeshPathStatus.PathComplete;
+        }
+
+        // The game's click verdict for a person, priced without acting. Clicking a person runs
+        // GameController.MoveToTarget, which prices a MovementCommand to the person's authored
+        // FormationMarker stand-spots (the cheapest INTERACTION-purpose marker; the interaction location
+        // when it has none) and refuses while the cheapest price stays infinite - that refusal is the
+        // "can't reach" a walk-interact would otherwise discover only after walking. Pricing a fresh
+        // command writes nothing but the command's own fields, so asking is side-effect free. The verdict
+        // sees what the geometric tests cannot: the balcony Smoker's authored spot prices finite from the
+        // yard below him (the radius oracle IsActionable never reads markers and wrongly says no), while
+        // Cuno prices infinite from beyond the yard fence and finite once the player rounds it. Priced
+        // from the party's live formation, which is also the reference position every discovery gate
+        // passes as from.
+        private bool ClickWouldAct()
+        {
+            Party party = Party.Player;
+            GameController gc = GameController.Singleton;
+            if (party == null || gc == null) return false;
+            var command = new MovementCommand(party, false);
+            command.purpose = Formation.Purpose.INTERACTION;
+            command.Process(_e, gc.isNarrowEnvironment ? Sector.behind : Sector.left);
+            return !float.IsPositiveInfinity(command.cost);
         }
 
         // The walkable mesh this thing is MOORED AGAINST, for a body with no standing ground of its own: a
@@ -488,18 +522,22 @@ namespace DiscoAccess.Module.World
         // derives from Door). TravelDestination/Teleporter exits derive from NavMeshClickHandler, not
         // BasicEntity, so they are not in sceneEntitySet and not seen here; TransitionEntity is.
         //
-        // A Character is only a person when it has a walking body - a NavMeshAgent or the capsule collider
-        // every character prefab carries (either alone suffices: a permanently seated person could lack the
-        // agent). The game also builds talking props - the Coupris Kineema, a mailbox, the waiting bench -
-        // as Character so they can hold a conversation, but those are static meshes with mesh/box colliders
-        // and no agent, and to the player they are things in the world, not people. (CharacterAnimator is
-        // NOT the body test: the gardener and Tommy Lhomme are people without one.)
+        // A Character is only a person when its body is a skinned mesh: every person is an animated
+        // skinned-mesh rig, including the agentless, animatorless ones (the gardener, Tommy Lhomme). The
+        // game also builds talking props - the Coupris Kineema, a mailbox, the waiting bench, the yard's
+        // trash container - as Character so they can hold a conversation, but those render as static
+        // meshes on the entity root with no skinned renderer anywhere under them, and to the player they
+        // are things in the world, not people. Components are NOT the body test: CharacterAnimator misses
+        // the gardener and Tommy, and a walking-body collider check (NavMeshAgent or CapsuleCollider)
+        // claimed the trash container, whose click collider is authored as a capsule.
         private static string Classify(BasicEntity e)
         {
             if (e.TryCast<Character>() != null)
-                return e.GetComponent<UnityEngine.AI.NavMeshAgent>() != null
-                       || e.GetComponent<UnityEngine.CapsuleCollider>() != null
+            {
+                var skinned = e.GetComponentsInChildren<UnityEngine.SkinnedMeshRenderer>();
+                return skinned != null && skinned.Count > 0
                     ? WorldTaxonomy.Npc : WorldTaxonomy.Interactable;
+            }
             if (e.TryCast<Door>() != null) return WorldTaxonomy.Door;
             if (e.TryCast<TransitionEntity>() != null) return WorldTaxonomy.Exit;
             if (e.TryCast<ContainerSource>() != null) return WorldTaxonomy.Container;

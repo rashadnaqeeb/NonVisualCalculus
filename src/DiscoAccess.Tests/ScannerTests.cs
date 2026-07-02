@@ -85,6 +85,24 @@ namespace DiscoAccess.Tests
             => new FakeItem { Position = new Vector3(x, 0f, z), Name = name, Cat = cat };
 
         [Fact]
+        public void SameLevelPerson_GatedByClickVerdict_ThingsAreNot()
+        {
+            var env = new FakeEnv();
+            // A person on the player's own level is offered only while the click verdict says reachable
+            // (Cuno beyond the yard fence is filtered until a path opens)...
+            var person = At(2f, 0f, "cuno", WorldTaxonomy.Npc);
+            person.Reachable = false;
+            Assert.False(ScanScope.Offered(person, Vector3.Zero, env));
+            person.Reachable = true;
+            Assert.True(ScanScope.Offered(person, Vector3.Zero, env));
+            // ...while a same-level thing is offered regardless: the walled-off woodpile still pings, and
+            // only its walk-interact reports the wall.
+            var thing = At(2f, 0f, "woodpile");
+            thing.Reachable = false;
+            Assert.True(ScanScope.Offered(thing, Vector3.Zero, env));
+        }
+
+        [Fact]
         public void FirstPress_LandsOnNearest_WithoutStepping()
         {
             var (scanner, model, speech, _, _) = Build();

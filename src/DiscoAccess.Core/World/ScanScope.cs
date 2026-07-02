@@ -18,11 +18,13 @@ namespace DiscoAccess.Core.World
     ///
     /// The height-reachability pair is the cursor's own gate (<see cref="Overlays.Systems.ObjectCueSystem"/>):
     /// a thing past the same-level pivot slack is offered only when it belongs to ground walk-connected from
-    /// here or is a person the game converses with across levels (ReachableFrom) - so the crate up on the
-    /// harbour gate (connected via its stairs) and the balcony smoker (spoken to from the street) stay
-    /// offered, while the ground-floor door and the tracks on the plaza below the balcony, reachable only by
-    /// going elsewhere, never land in the set to fail a walk-interact later. The path test runs only for the
-    /// few off-slack candidates in frame.
+    /// here (ReachableFrom) - so the crate up on the harbour gate (connected via its stairs) stays offered,
+    /// while the ground-floor door and the tracks on the plaza below the balcony, reachable only by going
+    /// elsewhere, never land in the set to fail a walk-interact later. A PERSON is gated by ReachableFrom at
+    /// ANY height: their verdict is the game's own click pricing, which sees talkability the geometry
+    /// cannot - the balcony smoker (spoken to from the street four metres below) stays offered, while a
+    /// person the click refuses on the player's own level (Cuno beyond the yard fence) drops out until a
+    /// path opens. The path tests run only for the few off-slack candidates and people in frame.
     ///
     /// A same-level CROSSING (door, exit) must additionally have a complete walk to its stand-point: a
     /// closed door carves the walkable mesh, so the corridor doors beyond the player's own shut door are
@@ -39,7 +41,8 @@ namespace DiscoAccess.Core.World
             if (!it.IsAccessible || !it.IsVisible) return false;
             Vector3 nearest = it.Bounds.NearestPoint(from);
             if (!env.InView(nearest)) return false;
-            if (Math.Abs(nearest.Y - from.Y) > Overlays.Systems.ObjectCueSystem.SameLevelSlack)
+            if (it.Category == WorldTaxonomy.Npc
+                || Math.Abs(nearest.Y - from.Y) > Overlays.Systems.ObjectCueSystem.SameLevelSlack)
                 return it.ReachableFrom(from);
             if (it.Category != WorldTaxonomy.Door && it.Category != WorldTaxonomy.Exit) return true;
             return env.WalkExists(from, it.InteractionPoint(from));

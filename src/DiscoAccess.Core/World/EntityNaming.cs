@@ -415,6 +415,25 @@ namespace DiscoAccess.Core.World
             return n.ToLowerInvariant();
         }
 
+        // Whether an entity's GameObject.name IS this actor: the designer names the object after the actor's
+        // internal name modulo casing and separators ("fuckTheWorld" carries the actor "Fuck the World").
+        // Compared on letters and digits alone, and only whole - a partial overlap ("Yard Cuno" vs "Cuno")
+        // or an empty name is no identity.
+        public static bool NameMatchesActor(string? entityName, string? actorName)
+        {
+            string a = LettersAndDigits(entityName);
+            return a.Length > 0 && string.Equals(a, LettersAndDigits(actorName), StringComparison.Ordinal);
+        }
+
+        private static string LettersAndDigits(string? s)
+        {
+            if (string.IsNullOrEmpty(s)) return "";
+            var sb = new StringBuilder(s!.Length);
+            foreach (char c in s!)
+                if (char.IsLetterOrDigit(c)) sb.Append(char.ToLowerInvariant(c));
+            return sb.ToString();
+        }
+
         private static string TypeWord(string category)
         {
             switch (category)
