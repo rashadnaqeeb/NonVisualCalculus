@@ -129,10 +129,12 @@ namespace DiscoAccess.Module
             _input.Register(WorldActions.Walk, Strings.InputWorldWalk, InputCategory.World, () => _world.Walk()).AddBinding(new KeyboardBinding(KeyCode.Backspace));
             _input.Register(WorldActions.Stop, Strings.InputWorldStop, InputCategory.World, () => _world.Cancel()).AddBinding(new KeyboardBinding(KeyCode.Space));
 
-            // The scanner: every landing plants the movement cursor on the thing, so Enter acts on what was
-            // just announced. PageDown/PageUp cycle the current browse category nearest-first, Ctrl steps
-            // the category, and the punctuation row quick-navs a fixed group (comma people and interactables,
-            // period items, slash exits; Shift reverses - the screen-reader quick-nav idiom).
+            // The scanner (review cursor): a second point of attention that never moves the cursor.
+            // PageDown/PageUp cycle the current browse category nearest-first, Ctrl steps the category, the
+            // punctuation row quick-navs a fixed group (comma people and interactables, period items, slash
+            // exits; Shift reverses - the screen-reader quick-nav idiom), and I walks-and-interacts with the
+            // selection (bare I; Ctrl+I is the inventory, distinct by modifier - the same split as T time /
+            // Ctrl+T thought cabinet).
             _input.Register(WorldActions.ScanNext, Strings.InputWorldScanNext, InputCategory.World, () => _world.ScanNext()).AddBinding(new KeyboardBinding(KeyCode.PageDown));
             _input.Register(WorldActions.ScanPrev, Strings.InputWorldScanPrev, InputCategory.World, () => _world.ScanPrev()).AddBinding(new KeyboardBinding(KeyCode.PageUp));
             _input.Register(WorldActions.ScanNextCategory, Strings.InputWorldScanNextCategory, InputCategory.World, () => _world.ScanNextCategory()).AddBinding(new KeyboardBinding(KeyCode.PageDown, ctrl: true));
@@ -143,6 +145,7 @@ namespace DiscoAccess.Module
             _input.Register(WorldActions.ScanItemsPrev, Strings.InputWorldScanItemsPrev, InputCategory.World, () => _world.ScanItems(-1)).AddBinding(new KeyboardBinding(KeyCode.Period, shift: true));
             _input.Register(WorldActions.ScanExitsNext, Strings.InputWorldScanExitsNext, InputCategory.World, () => _world.ScanExits(1)).AddBinding(new KeyboardBinding(KeyCode.Slash));
             _input.Register(WorldActions.ScanExitsPrev, Strings.InputWorldScanExitsPrev, InputCategory.World, () => _world.ScanExits(-1)).AddBinding(new KeyboardBinding(KeyCode.Slash, shift: true));
+            _input.Register(WorldActions.ScanInteract, Strings.InputWorldScanInteract, InputCategory.World, () => _world.ScanInteract()).AddBinding(new KeyboardBinding(KeyCode.I));
 
             // Information screens: the game's own hotkey letter under Ctrl, so the bare letters stay free for
             // the cursor/status keys (C recenters, T/M read time/money). They open the game's view; our screen

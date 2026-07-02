@@ -32,7 +32,7 @@ I haven't made a learn-game-sounds menu yet, but you can find the sounds under `
 
 The scanner lets you press Page Up and Page Down to cycle through things. Ctrl+Page Up and Ctrl+Page Down filter it, though it starts in everything mode. There are also keyboard buttons that do basically the same thing: comma does NPCs and interactables, period handles containers and orbs (things you only ever click once), and slash handles exits. Hold Shift to cycle backwards.
 
-The scanner moves the cursor directly on top of the thing you cycled to, so press Enter to interact with it. The scanner is anchored to the player character and only picks up what the player sees, so for more stuff, move the player by clicking somewhere.
+The scanner is its own point of attention, separate from the cursor: cycling it tells you what's there and how far without moving the cursor or your character. To act on the thing it just read, press I and your character walks over and interacts. The scanner is anchored to the player character and only picks up what the player sees, so for more stuff, move the player by clicking somewhere.
 
 I will eventually add bookmarks to the big city map.
 
@@ -42,7 +42,7 @@ Tell me what you think of the cursor regions. I had Claude wing it, so they're n
 
 ## Keys
 
-Cursor keys: WASD moves the cursor, Enter interacts with whatever it's on, C recenters the cursor on your character, Space stops walking.
+Cursor keys: WASD moves the cursor, Enter interacts with whatever it's on, Backspace walks to the cursor without interacting, C recenters the cursor on your character, Space stops walking. I interacts with the thing the scanner last read.
 
 Status keys: M for money, H for health, T for time, R for the region you're in.
 

@@ -33,11 +33,12 @@ namespace DiscoAccess.Core.Strings
         public const string InputWorldInteract = "Walk and interact";
         public const string InputWorldWalk = "Walk to cursor without interacting";
         public const string InputWorldStop = "Stop";
-        // The scanner keys: each landing moves the cursor onto the thing, so Enter acts on it directly.
+        // The scanner (review cursor) keys: cycle its selection and act on it without moving the cursor.
         public const string InputWorldScanNext = "Scanner next thing";
         public const string InputWorldScanPrev = "Scanner previous thing";
         public const string InputWorldScanNextCategory = "Scanner next category";
         public const string InputWorldScanPrevCategory = "Scanner previous category";
+        public const string InputWorldScanInteract = "Walk and interact with scanned thing";
         public const string InputWorldScanPeopleNext = "Scanner next person or interactable";
         public const string InputWorldScanPeoplePrev = "Scanner previous person or interactable";
         public const string InputWorldScanItemsNext = "Scanner next item";
@@ -227,6 +228,9 @@ namespace DiscoAccess.Core.Strings
         // The endgame newspaper, the full-screen article shown after a death or a game ending. The game
         // titles it only with the article's own headline, so its name is authored.
         public const string ScreenNewspaper = "newspaper";
+        // The pawnshop sell view (opened from the pawnbroker's dialogue). Its game title term (PAWNSHOP)
+        // resolves empty, so its name is authored.
+        public const string ScreenPawnshop = "pawnshop";
         // The finished-thought splash, shown when a thought completes internalization. Its only game
         // text is the thought itself (the view has no title term), so its name is authored.
         public const string ScreenThoughtComplete = "thought complete";
@@ -329,6 +333,13 @@ namespace DiscoAccess.Core.Strings
         // effects-when-used, used only when the term fails to resolve; the game's word is preferred.
         public const string ItemUseEffects = "effects when used";
 
+        // Fallback for the game's INVENTORY_TOOLTIP_PAWN_FOR label ("Pawn for") heading an item's pawn
+        // price in the pawnshop, used only when the term fails to resolve; the game's word is preferred.
+        public const string ItemPawnFor = "pawn for";
+
+        /// <summary>The pawnshop's wallet readout: the player's current money, labelled for what it is.</summary>
+        public static string PawnshopMoney(int centims) => "money " + WorldMoney(centims);
+
         // Fallback equipment-slot captions, keyed off the dock name, used only when the game's own "<slot>Tag"
         // label is missing.
         public static string EquipmentSlotName(string dockName)
@@ -349,8 +360,9 @@ namespace DiscoAccess.Core.Strings
             }
         }
 
-        /// <summary>An item's pawn value, spoken in the pawnables tab.</summary>
-        public static string ItemValue(int value) => "value " + value;
+        /// <summary>An item's pawn value, spoken in the pawnables tab. The game stores it in centims and
+        /// displays réal (its "0.50" for a stored 50), so the spoken figure matches the screen.</summary>
+        public static string ItemValue(int centims) => "value " + WorldMoney(centims);
 
         /// <summary>A consumable's remaining uses.</summary>
         public static string ItemUses(int uses) => uses + (uses == 1 ? " use" : " uses");
@@ -410,6 +422,9 @@ namespace DiscoAccess.Core.Strings
         /// "orbs, none"). Label first, the distinguishing part.</summary>
         public static string WorldScanCategoryCount(string label, int count)
             => count == 0 ? label + ", none" : label + ", " + count;
+
+        /// <summary>Spoken when the act-on-scanned key fires with nothing scanned yet.</summary>
+        public const string WorldScanNothing = "nothing scanned";
 
         // Generic type words: the spoken name for a thing whose own name is a slug and has no spoiler-safe
         // title to fall back to (see EntityNaming). A door reads "door", a crate "container", and so on, so

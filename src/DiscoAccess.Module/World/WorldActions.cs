@@ -17,7 +17,7 @@ namespace DiscoAccess.Module.World
         public const string Walk = "world.walk";
         public const string Stop = "world.stop";
 
-        // The scanner: cycle the browse category or a quick-nav group; every landing plants the cursor.
+        // The scanner (review cursor): cycle its selection by category or quick-nav group, and act on it.
         public const string ScanNext = "world.scan.next";
         public const string ScanPrev = "world.scan.prev";
         public const string ScanNextCategory = "world.scan.category.next";
@@ -28,6 +28,7 @@ namespace DiscoAccess.Module.World
         public const string ScanItemsPrev = "world.scan.items.prev";
         public const string ScanExitsNext = "world.scan.exits.next";
         public const string ScanExitsPrev = "world.scan.exits.prev";
+        public const string ScanInteract = "world.scan.interact";
 
         // Information screens, pause, help.
         public const string OpenInventory = "world.inventory";

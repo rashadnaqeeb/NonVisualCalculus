@@ -23,7 +23,7 @@ namespace DiscoAccess.Dev
     ///                          secondary) drive our navigator when it owns the keyboard, else fall back
     ///                          to DE's focus system. World verbs (interact|stop|recenter|scan-next|
     ///                          scan-prev|scan-category-next|scan-category-prev|scan-people[-prev]|
-    ///                          scan-items[-prev]|scan-exits[-prev],
+    ///                          scan-items[-prev]|scan-exits[-prev]|scan-interact,
     ///                          or any raw "world.*"/"status" action key) fire the world reader's own
     ///                          handlers while it owns the keyboard. Enter/Escape on a focused text
     ///                          field commit/cancel the edit first.
@@ -450,6 +450,7 @@ namespace DiscoAccess.Dev
                 case "scan-items-prev": return "world.scan.items.prev";
                 case "scan-exits": case "scan-exits-next": return "world.scan.exits.next";
                 case "scan-exits-prev": return "world.scan.exits.prev";
+                case "scan-interact": return "world.scan.interact";
                 default: return null;
             }
         }
