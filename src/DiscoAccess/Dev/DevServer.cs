@@ -422,7 +422,7 @@ namespace DiscoAccess.Dev
                 case "prev": case "shifttab": case "shift-tab": return UiActions.Prev;
                 case "home": return UiActions.Home;
                 case "end": return UiActions.End;
-                case "secondary": case "backslash": return UiActions.Secondary;
+                case "secondary": case "backspace": return UiActions.Secondary;
                 default: return null;
             }
         }

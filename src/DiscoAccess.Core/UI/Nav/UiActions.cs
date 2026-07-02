@@ -15,7 +15,7 @@ namespace DiscoAccess.Core.UI.Nav
         public const string Next = "ui.next";     // Tab
         public const string Prev = "ui.prev";     // Shift+Tab
         public const string Activate = "ui.activate";
-        public const string Secondary = "ui.secondary"; // Backslash: a focused element's context action
+        public const string Secondary = "ui.secondary"; // Backspace: a focused element's context action
         public const string Back = "ui.back";
         public const string Home = "ui.home";
         public const string End = "ui.end";

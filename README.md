@@ -48,6 +48,6 @@ Status keys: M for money, H for health, T for time, R for the region you're in.
 
 Game keys: Ctrl+C character sheet, Ctrl+I inventory, Ctrl+T thoughts, Ctrl+J journal, F1 game help. Left arrow heals health, right arrow heals morale. 1 and 2 use the items in your left and right hands. F5 quicksaves, F8 quickloads. Escape opens the pause menu. Ctrl+L cycles the game language.
 
-In inv: backslash interacts with the focused item instead of equipping.
+In inv: backspace interacts with the focused item instead of equipping.
 
 Mod settings: F12.

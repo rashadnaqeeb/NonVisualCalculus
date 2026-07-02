@@ -14,7 +14,7 @@ namespace DiscoAccess.Module.Nav
     /// <see cref="UIDragDock"/>. Reads the slot's caption from the game's own label and the docked item's
     /// name live (never cached), announcing "caption, item" or "caption, empty". On focus it makes the dock
     /// the game's selection so the doll highlights. Enter unequips or uses the slot (the game's submit);
-    /// Backslash runs the item's interact action when the game offers one.
+    /// Backspace runs the item's interact action when the game offers one.
     /// </summary>
     internal sealed class EquipmentSlotCell : UIElement
     {

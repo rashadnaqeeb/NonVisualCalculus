@@ -111,6 +111,9 @@ namespace DiscoAccess.Core.UI.Nav
                         case UiActions.Home: _search.JumpToFirstResult(); return true;
                         case UiActions.End: _search.JumpToLastResult(); return true;
                         case UiActions.Back: ClearSearch(announce: true); return true;
+                        // Backspace during a live search is the buffer's delete (fed by the module's raw
+                        // reader as '\b'), never the context action - consume so both cannot fire at once.
+                        case UiActions.Secondary: return true;
                         default: ClearSearch(announce: false); break; // fall through to normal handling
                     }
             }
@@ -137,7 +140,7 @@ namespace DiscoAccess.Core.UI.Nav
                 }
                 case UiActions.Secondary:
                 {
-                    // The focused element's secondary/context action (Backslash). Consume only when something
+                    // The focused element's secondary/context action (Backspace). Consume only when something
                     // ran, like Activate.
                     if (Current == null) return false;
                     return Current.InvokeAction(ActionIds.Secondary);

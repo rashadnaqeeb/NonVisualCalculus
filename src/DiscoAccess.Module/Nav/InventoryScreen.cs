@@ -24,7 +24,7 @@ namespace DiscoAccess.Module.Nav
     ///
     /// Equipment and storage slots are both <see cref="UIDragDock"/>s told apart by <see cref="SlotNature"/>;
     /// a filled dock parents the item. The primary action (Enter) is the game's submit on a dock - equip,
-    /// unequip, or use; the secondary (Backslash) is the item's interact action where the game offers one.
+    /// unequip, or use; the secondary (Backspace) is the item's interact action where the game offers one.
     /// </summary>
     public sealed class InventoryScreen : Screen
     {

@@ -53,7 +53,7 @@ namespace DiscoAccess.Module
         private static readonly InputCategory[] UiCategory = { InputCategory.UI };
         // Status precedes UI ON PURPOSE: in a screen that wants the status keys (dialogue) the heal arrows
         // (Status, Left/Right) shadow the inert UI Left/Right; the rest of UI (Up/Down/Tab/Enter/Escape/
-        // Home/End/Backslash) binds no key Status binds, so it is unaffected.
+        // Home/End/Backspace) binds no key Status binds, so it is unaffected.
         private static readonly InputCategory[] UiWithStatus = { InputCategory.Status, InputCategory.UI };
         private static readonly InputCategory[] WorldCategory = { InputCategory.World, InputCategory.Status };
         // The global mod-menu hotkey's action key (internal id, never spoken).
@@ -106,10 +106,11 @@ namespace DiscoAccess.Module
             _input.Register(UiActions.Activate, Strings.InputActivate, InputCategory.UI)
                 .AddBinding(new KeyboardBinding(KeyCode.Return)).AddBinding(new KeyboardBinding(KeyCode.KeypadEnter));
             _input.Register(UiActions.Back, Strings.InputBack, InputCategory.UI).AddBinding(new KeyboardBinding(KeyCode.Escape));
-            // Backslash: a focused element's secondary/context action (e.g. an item's interact). Kept off
-            // Backspace so it never competes with type-ahead's delete. Not repeating, so a held key does not
+            // Backspace: a focused element's secondary/context action (e.g. an item's interact). It never
+            // competes with type-ahead's delete: while a search buffer is live the navigator consumes this
+            // action and the raw reader's '\b' does the deleting. Not repeating, so a held key does not
             // fire the context action repeatedly.
-            _input.Register(UiActions.Secondary, Strings.InputSecondary, InputCategory.UI).AddBinding(new KeyboardBinding(KeyCode.Backslash));
+            _input.Register(UiActions.Secondary, Strings.InputSecondary, InputCategory.UI).AddBinding(new KeyboardBinding(KeyCode.Backspace));
             _input.Register(UiActions.Home, Strings.InputJumpFirst, InputCategory.UI).AddBinding(new KeyboardBinding(KeyCode.Home));
             _input.Register(UiActions.End, Strings.InputJumpLast, InputCategory.UI).AddBinding(new KeyboardBinding(KeyCode.End));
 

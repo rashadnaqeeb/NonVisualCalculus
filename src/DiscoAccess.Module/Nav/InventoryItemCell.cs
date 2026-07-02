@@ -11,7 +11,7 @@ namespace DiscoAccess.Module.Nav
     /// item's name and brief status (new, uses, value) live through <see cref="InventoryAdapter"/> and the
     /// Core <see cref="InventoryItemAnnouncer"/>; the long description and equip effects are read on the
     /// detail tab-stop, not here. On focus it makes the dock the game's selection so the grid highlights and
-    /// the tooltip primes to this item. Enter equips or uses it (the game's submit); Backslash runs its
+    /// the tooltip primes to this item. Enter equips or uses it (the game's submit); Backspace runs its
     /// interact action when the game offers one.
     /// </summary>
     internal sealed class InventoryItemCell : UIElement

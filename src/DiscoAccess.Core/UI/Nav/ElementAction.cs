@@ -25,7 +25,7 @@ namespace DiscoAccess.Core.UI.Nav
     public static class ActionIds
     {
         public const string Activate = "activate"; // primary action (Enter)
-        public const string Secondary = "secondary"; // secondary/context action (Backslash)
+        public const string Secondary = "secondary"; // secondary/context action (Backspace)
         public const string Back = "back";          // screen-level back/close (Escape)
         public const string Increase = "increase";  // arrow-right on a slider/stepper
         public const string Decrease = "decrease";  // arrow-left on a slider/stepper
