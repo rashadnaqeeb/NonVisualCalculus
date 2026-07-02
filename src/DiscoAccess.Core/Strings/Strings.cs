@@ -31,6 +31,7 @@ namespace DiscoAccess.Core.Strings
         public const string InputWorldMoveWest = "Move cursor west";
         public const string InputWorldRecenter = "Recenter cursor on character";
         public const string InputWorldInteract = "Walk and interact";
+        public const string InputWorldWalk = "Walk to cursor without interacting";
         public const string InputWorldStop = "Stop";
         // The scanner keys: each landing moves the cursor onto the thing, so Enter acts on it directly.
         public const string InputWorldScanNext = "Scanner next thing";

@@ -106,7 +106,14 @@ namespace DiscoAccess.Module.World
                 _host.Speech.Speak(Strings.WorldOrbHolds, interrupt: true);
                 return false;
             }
-            if (!Drive(point)) return false;
+            // The game priced the spot unwalkable (off-mesh, or inside something's footprint - likelier for
+            // the Walk verb, which aims at occupied ground on purpose). Refusing silently would leave the
+            // player waiting on a walk that never started.
+            if (!Drive(point))
+            {
+                _host.Speech.Speak(Strings.WorldUnreachable(null), interrupt: true);
+                return false;
+            }
             _target = null;
             _label = "ground";
             _host.Speech.Speak(announcement, interrupt: true);

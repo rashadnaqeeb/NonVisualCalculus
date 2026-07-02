@@ -14,6 +14,7 @@ namespace DiscoAccess.Module.World
         public const string MoveWest = "world.move.west";
         public const string Recenter = "world.recenter";
         public const string Interact = "world.interact";
+        public const string Walk = "world.walk";
         public const string Stop = "world.stop";
 
         // The scanner: cycle the browse category or a quick-nav group; every landing plants the cursor.

@@ -242,6 +242,15 @@ namespace DiscoAccess.Module.World
                 _walk.BeginWalk(cursor, Strings.WorldMoving);
         }
 
+        /// <summary>Walk to the cursor's spot without interacting, whatever stands there (the Walk verb):
+        /// the same bare-ground move Enter makes on empty ground, for moving next to a thing - or through
+        /// its neighbourhood - without triggering it.</summary>
+        public void Walk()
+        {
+            if (!_engaged) return;
+            _walk.BeginWalk(_overlay.Cursor.Position, Strings.WorldMoving);
+        }
+
         // ---- the scanner verbs, fired by the world keys; every landing plants the cursor ----
 
         /// <summary>Cycle the scanner through the current browse category (PageDown / PageUp).</summary>

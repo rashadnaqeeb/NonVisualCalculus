@@ -124,6 +124,8 @@ namespace DiscoAccess.Module
             _input.Register(WorldActions.Recenter, Strings.InputWorldRecenter, InputCategory.World, () => _world.Recenter()).AddBinding(new KeyboardBinding(KeyCode.C));
             _input.Register(WorldActions.Interact, Strings.InputWorldInteract, InputCategory.World, () => _world.Interact())
                 .AddBinding(new KeyboardBinding(KeyCode.Return)).AddBinding(new KeyboardBinding(KeyCode.KeypadEnter));
+            // Backspace is free here: type-ahead's delete lives in the UI category, never the world's.
+            _input.Register(WorldActions.Walk, Strings.InputWorldWalk, InputCategory.World, () => _world.Walk()).AddBinding(new KeyboardBinding(KeyCode.Backspace));
             _input.Register(WorldActions.Stop, Strings.InputWorldStop, InputCategory.World, () => _world.Cancel()).AddBinding(new KeyboardBinding(KeyCode.Space));
 
             // The scanner: every landing plants the movement cursor on the thing, so Enter acts on what was
