@@ -126,9 +126,33 @@ namespace DiscoAccess.Module.World
         // never pre-judged here - the same way the cursor never pre-rejects an entity on its own oracle.
         public bool IsActionable(Vector3 from) => true;
 
-        // An orb overhead is always triggerable from under it (the walk verb stops within its interaction
-        // circle measured flat), so the discovery gates never pre-judge one by ground connectivity either.
-        public bool ReachableFrom(Vector3 from) => true;
+        // Whether the walk can put the character inside this orb's trigger sphere. The game's trigger test
+        // is a full 3D sphere (GameEntity.IsWithinInteractionRadius compares squared 3D distance), so height
+        // counts: a wide sphere reaches the ground below a balcony (the window-curtains orb, radius 9 at
+        // 5.7 m up, is read from the yard - the authored from-below reads keep working), while a tight
+        // sphere overhead meets no reachable ground at all (the smoker apartment door orb, radius 2.5 at
+        // 7.3 m up, is a balcony read; offering it from the yard promised a trigger the game refuses, and
+        // the flat arrival test would even let Open fire it through the floor). Reachable, then: a complete
+        // walk to the spot the trigger snaps to, or a partial walk whose endpoint still falls inside the
+        // sphere - an offered orb is thereby always flat-arrivable too (flat distance never exceeds 3D).
+        // A thought-family orb rides the character and needs no walk.
+        public bool ReachableFrom(Vector3 from)
+        {
+            if (IsThoughtFamily) return true;
+            UnityEngine.Vector3 body = WorldConvert.ToUnity(Position);
+            float radius = _orb.InteractionRadius;
+            UnityEngine.Vector3 target = body;
+            // Same snap the walk verb drives at (Approach), so the gate judges the walk it would take.
+            if (UnityEngine.AI.NavMesh.SamplePosition(body, out var snap, System.Math.Max(radius, 1f), -1))
+                target = snap.position;
+            var path = new UnityEngine.AI.NavMeshPath();
+            if (!UnityEngine.AI.NavMesh.CalculatePath(WorldConvert.ToUnity(from), target, -1, path))
+                return false;
+            if (path.status == UnityEngine.AI.NavMeshPathStatus.PathComplete) return true;
+            var corners = path.corners;
+            return corners.Length > 0
+                   && (corners[corners.Length - 1] - body).sqrMagnitude <= radius * radius;
+        }
 
         // Walk to a walkable spot at the orb body's footprint. An orb can float above the mesh, so snap its
         // position onto the navmesh within its interaction radius; failing that, drive at the body itself and
