@@ -122,10 +122,6 @@ namespace DiscoAccess.Module.World
         // walk verb stops within its interaction circle.
         public Vector3 InteractionPoint(Vector3 from) => Position;
 
-        // Orbs are not GameEntity, so they carry no path oracle; reachability is decided by the walk attempt,
-        // never pre-judged here - the same way the cursor never pre-rejects an entity on its own oracle.
-        public bool IsActionable(Vector3 from) => true;
-
         // Whether the walk can put the character inside this orb's trigger sphere. The game's trigger test
         // is a full 3D sphere (GameEntity.IsWithinInteractionRadius compares squared 3D distance), so height
         // counts: a wide sphere reaches the ground below a balcony (the window-curtains orb, radius 9 at
@@ -139,6 +135,10 @@ namespace DiscoAccess.Module.World
         public bool ReachableFrom(Vector3 from)
         {
             if (IsThoughtFamily) return true;
+            // A DRAWN orb is actable from anywhere: the sighted click (OrbUiElement.OnPointerClicked) fires
+            // Open in place with no walk and no range test, and Interact below does the same, so pathability
+            // is moot while its UI is live.
+            if (_orb.orbUI != null) return true;
             UnityEngine.Vector3 body = WorldConvert.ToUnity(Position);
             float radius = _orb.InteractionRadius;
             UnityEngine.Vector3 target = body;
@@ -183,29 +183,30 @@ namespace DiscoAccess.Module.World
             return dx * dx + dz * dz <= _orb.InteractionRadius * _orb.InteractionRadius;
         }
 
-        // An orb triggers only in place (Open runs the removal/shown bookkeeping, never a walk), so the walk
-        // verb owns the approach; the pace flag has nothing to steer.
-        public bool InteractWalks => false;
+        // A DRAWN orb acts in place from any distance - the sighted click is OrbUiElement.OnPointerClicked,
+        // which fires Open directly with no walk and no range test - so the walk verb fires Interact and
+        // speaks the in-place result instead of driving a walk. An UNDRAWN world orb has no click target
+        // for a sighted player either; walking into its trigger sphere is the blind affordance for the same
+        // gather mechanic, so the verb's watched walk stays for it. The pace flag has nothing to steer.
+        public bool InteractWalks => _orb.orbUI != null;
         public bool Interact(bool run) => Interact();
 
-        // Trigger the orb once the character is in range, through the game's own orb click (OrbUiElement.Open):
-        // a simple orb floats its text (spoken by PostInteractLine), a dialogue orb opens its conversation (read
-        // by the dialogue screen), and both mark it shown and update visuals - which a bare StartConversation
-        // would skip, leaving a simple orb's float text unshown. In range an orb is drawn and carries its UI; if
-        // it somehow has not (undrawn), fall back to starting the conversation directly so a dialogue orb still
-        // reads. Out of range: refuse, so the walk verb reports can't-reach rather than acting from afar.
+        // Trigger the orb through the game's own orb click (OrbUiElement.Open): a simple orb floats its text
+        // (spoken by PostInteractLine), a dialogue orb opens its conversation (read by the dialogue screen),
+        // and both mark it shown and update visuals - which a bare StartConversation would skip, leaving a
+        // simple orb's float text unshown. Drawn: fire from wherever the character stands, the sighted
+        // click's own behaviour. Undrawn: only in range (the walk verb has walked the character into the
+        // trigger sphere), where a world orb falls back to its conversation so an undrawn dialogue orb still
+        // reads; a thought-cabinet orb can only be triggered through Open (which alone runs the
+        // thought/paralyzer removal), so it refuses and the caller logs the miss rather than mis-trigger.
         public bool Interact()
         {
+            var ui = _orb.orbUI;
+            if (ui != null) { ui.Open(); return true; }
             Party party = Party.Player;
             Character main = party != null ? party.Main : null;
             if (main == null) return false;
             if (!WithinInteractionRadius(WorldConvert.ToSnv(main.transform.position))) return false;
-            var ui = _orb.orbUI;
-            if (ui != null) { ui.Open(); return true; }
-            // No live orbUI. A thought-cabinet orb can only be triggered through Open (which alone runs the
-            // thought/paralyzer removal and marks it shown); a bare StartConversation would fire the wrong
-            // thing or nothing, so refuse and let the caller log the miss rather than mis-trigger. A world
-            // orb still falls back to its conversation so an undrawn dialogue orb reads from across the map.
             if (IsThoughtFamily) return false;
             DialogueManager.StartConversation(_orb.conversation);
             return true;
