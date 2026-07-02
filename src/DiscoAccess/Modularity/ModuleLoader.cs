@@ -34,6 +34,14 @@ namespace DiscoAccess.Modularity
         /// <summary>The live module instance, or null if no load has succeeded. Read fresh each frame.</summary>
         public IModModule Module { get; private set; }
 
+        /// <summary>How many loads have succeeded this process (1 = the boot load; each successful
+        /// reload increments). Dev introspection, so a driver can tell a reload actually swapped.</summary>
+        public int Generation { get; private set; }
+
+        /// <summary>The module DLL path loads read from, for dev introspection (its write time tells a
+        /// driver whether the bytes a reload picked up are the build it just made).</summary>
+        public string ModulePath => _modulePath;
+
         /// <summary>Load the module from its current bytes. Returns false (and logs) on any failure.</summary>
         public bool Load()
         {
@@ -69,7 +77,8 @@ namespace DiscoAccess.Modularity
                 DisposeCurrent();
                 _alc = candidateAlc;
                 Module = module;
-                _log.LogInfo("ModuleLoader: loaded " + type.FullName);
+                Generation++;
+                _log.LogInfo("ModuleLoader: loaded " + type.FullName + " (generation " + Generation + ")");
                 return true;
             }
             catch (Exception ex)

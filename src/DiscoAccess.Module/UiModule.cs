@@ -293,6 +293,20 @@ namespace DiscoAccess.Module
         // Dev seam (IDevDriver): our navigator's live state for the dev server's /nav.
         public string DescribeNav() => _screens != null ? _screens.DescribeNav() : "(no screen manager)\n";
 
+        // Dev seam (IDevDriver): fire a world verb through its registered handler, the headless
+        // counterpart to a real world key. Gated exactly like the live keys: only while the world reader
+        // owns the keyboard (null hands the caller a "not driving" verdict rather than firing a world
+        // verb under a menu). Status-category actions (the readouts, quick-heals) fire here too - they
+        // are live in the world category set.
+        public string DriveWorld(string actionKey)
+        {
+            if (_input == null || _world == null || !_world.OwnsKeyboard || _editGate.Active)
+                return null;
+            return _input.FireAction(actionKey)
+                ? "fired " + actionKey
+                : "unknown action " + actionKey;
+        }
+
         public void Dispose()
         {
             // Hand the keyboard back to the game before tearing down, so a reload never leaves InControl

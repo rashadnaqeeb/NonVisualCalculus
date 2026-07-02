@@ -28,7 +28,7 @@ namespace DiscoAccess.Tests
         {
             var pipeline = new SpeechPipeline(new FakeBackend());
             var tapped = new List<string>();
-            SpeechPipeline.Spoken = (text, interrupt) => tapped.Add(text);
+            SpeechPipeline.Spoken = (text, interrupt, source) => tapped.Add(text);
 
             // Rich-text markup is cleaned before the tap sees it.
             pipeline.Speak("<b>Detective</b>", interrupt: true);
@@ -41,7 +41,7 @@ namespace DiscoAccess.Tests
         {
             var pipeline = new SpeechPipeline(new FakeBackend());
             var tapped = new List<string>();
-            SpeechPipeline.Spoken = (text, interrupt) => tapped.Add(text);
+            SpeechPipeline.Spoken = (text, interrupt, source) => tapped.Add(text);
 
             pipeline.Speak("minimum");
             pipeline.Speak("minimum");

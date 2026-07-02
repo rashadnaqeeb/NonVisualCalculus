@@ -20,5 +20,11 @@ namespace DiscoAccess.Core.Modularity
         /// up, the focus path with labels and roles, and the focused leaf. Independent of the game's own
         /// selection (which the /focus endpoint reports).</summary>
         string DescribeNav();
+
+        /// <summary>Fire one world-layer action (a <c>WorldActions</c> key, e.g. "world.interact") through
+        /// its registered handler - the same code path a real key press runs. Returns a status line, or
+        /// null when the world reader does not own the keyboard (a menu or text edit has it), so the
+        /// caller reports why nothing fired rather than firing into the wrong layer.</summary>
+        string DriveWorld(string actionKey);
     }
 }

@@ -14,11 +14,13 @@ namespace DiscoAccess.Core.Speech
         public static SpeechPipeline? Instance { get; set; }
 
         /// <summary>
-        /// Optional tap invoked with (text, interrupt) for every line that clears the clean gate,
-        /// so it sees exactly what was voiced. The dev server sets this to read spoken text back (it
-        /// can't hear the TTS). Null in normal play and in unit tests.
+        /// Optional tap invoked with (text, interrupt, source) for every line that clears the clean
+        /// gate, so it sees exactly what was voiced. The dev server sets this to read spoken text back
+        /// (it can't hear the TTS). Source is the speaking class's name (the first stack frame outside
+        /// this pipeline), so the dev driver can attribute a line to its reader; it is computed only
+        /// while the tap is attached. Null in normal play and in unit tests.
         /// </summary>
-        public static Action<string, bool>? Spoken;
+        public static Action<string, bool, string?>? Spoken;
 
         private readonly ISpeechBackend _backend;
 
@@ -48,7 +50,25 @@ namespace DiscoAccess.Core.Speech
 
             if (!Muted)
                 _backend.Speak(clean, interrupt);
-            Spoken?.Invoke(clean, interrupt);
+            Spoken?.Invoke(clean, interrupt, Spoken != null ? CallerName() : null);
+        }
+
+        // The speaking class, for the dev tap's attribution: the first stack frame whose type is not
+        // this pipeline, with compiler-generated closure types (a lambda handed to a walk verb) resolved
+        // to the class that declared them. Dev-only cost: computed only while the tap is attached, and
+        // speech is low-frequency. Null when the walk finds nothing readable.
+        private static string? CallerName()
+        {
+            var trace = new System.Diagnostics.StackTrace(2, false);
+            for (int i = 0; i < trace.FrameCount; i++)
+            {
+                Type? type = trace.GetFrame(i)?.GetMethod()?.DeclaringType;
+                while (type != null && type.Name.StartsWith("<", StringComparison.Ordinal))
+                    type = type.DeclaringType; // a closure/state-machine; name its declaring class
+                if (type == null || type == typeof(SpeechPipeline)) continue;
+                return type.Name;
+            }
+            return null;
         }
 
         public void Stop()

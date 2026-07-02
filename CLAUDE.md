@@ -102,15 +102,39 @@ and you can drive it with your terminal focused.
 
 Endpoints (loopback; drive with `curl`):
 - `POST /eval` - body is C# source, compiled by **Roslyn** and run on the Unity main thread against the
-  live game. REPL **state persists across calls**. Returns captured output, compile diagnostics, and
-  exceptions (caught - eval errors never crash the game).
-- `POST /input` - body is a verb (`up|down|left|right|confirm|back|tab|prev|home|end|secondary`). Drives
-  **our own navigator** when it owns the keyboard (a migrated screen or the popup overlay, where DE's
-  `NavigationManager` is muted), else falls back to DE's focus system for not-yet-migrated screens - both
-  via the game's **own logical handlers**, never OS synthetic keys (a backgrounded window can't take
-  those). Enter/Escape on a focused text field commit/cancel the edit first. Read results via `/speech`.
+  live game. REPL **state persists across calls** - define session helpers (a find-entity-by-name, a
+  player-position shorthand) once and reuse them. References every interop proxy up front, so any game
+  type resolves. Returns captured output, compile diagnostics, and exceptions (caught - eval errors
+  never crash the game), then a `speech:` section with whatever the mod SPOKE as a consequence (it
+  waits for a quiet window; `?speech=0` skips it, `?settle=MS` tunes it, default 250) - so act-then-
+  listen is one request, no cursor bookkeeping.
+- `POST /input` - body is a verb. UI verbs (`up|down|left|right|confirm|back|tab|prev|home|end|secondary`)
+  drive **our own navigator** when it owns the keyboard (a migrated screen or the popup overlay, where
+  DE's `NavigationManager` is muted), else fall back to DE's focus system for not-yet-migrated screens -
+  both via the game's **own logical handlers**, never OS synthetic keys (a backgrounded window can't take
+  those). World verbs (`interact|stop|recenter|scan-next|scan-prev|scan-category-next|scan-category-prev|
+  cursor-to|scan-interact`, or any raw registered key like `world.read.time`) fire the world reader's own
+  handlers while it owns the keyboard - the real player path, so use these rather than `/eval`-calling
+  game internals when testing world flows. Enter/Escape on a focused text field commit/cancel the edit
+  first. Read results via `/speech` (or just use `/eval`'s speech capture).
 - `POST /type` - body is text appended to the focused input field (e.g. a save name).
-- `POST /reload` - rebuild the feature module from its freshly built DLL, no restart (same path as **F6**).
+- `POST /wait?timeout=MS` - body is a C# bool expression, compiled in the /eval session (it can use
+  variables earlier evals defined) and evaluated **every frame** on the main thread; returns when true
+  or on timeout (default 10s). Use this instead of curl sleep-loops: per-frame sampling never misses a
+  transient (e.g. `movementStatus` reads IDLE for frames before a walk engages, which external polling
+  mistakes for arrival).
+- `POST /reload` - rebuild the feature module from its freshly built DLL, no restart (same path as
+  **F6**). Responds with the full `/module` readout - check the DLL write time (stale deploy?) and the
+  patch table (all patches should be live).
+- `GET /module` - the loaded module type + **load generation**, the module DLL's write time and age, and
+  the process-wide **Harmony patch table with live counts**. A method listed "0 live" was patched then
+  stripped - if a Harmony-driven feature (a notification, a bark, a container cue) goes silent, look
+  here first.
+- `GET /typeinfo?name=X` - find a type by simple name across everything loaded plus the interop
+  proxies, returning full name, assembly, and (single match) its public members; enums list their
+  values. Use this instead of guessing namespaces in the REPL (`MovementMode` is in `Sunshine`,
+  `ViewsPagesBridge` is global); the decompiled tree also answers it (`decompiled/src` directories
+  mirror namespaces) but slower.
 - `GET /focus` - the current uGUI selection (EventSystem + `NavigationManager`, with the path and text),
   independent of speech, works even if the module failed to load or its `Tick` threw.
 - `GET /nav` - our navigator's **interpreted** state (ownership, popup, focus path) that the game-level
@@ -120,10 +144,19 @@ Endpoints (loopback; drive with `curl`):
   label exposes, e.g. DE's Pages/SubPage wrapping); **diff against `/nav`** to find where the mod loses
   information, then `/eval` into what it reveals. Lists active objects only; `/screenshot` is the
   visibility truth for alpha-hidden ones.
-- `GET /speech?since=N` - lines the mod has spoken since cursor N (we can't hear the TTS). The tap is
-  upstream of the Prism backend, so it works even with speech muted.
+- `GET /speech?since=N` - lines the mod has spoken since cursor N (we can't hear the TTS). Response is
+  `cursor: <next>` then one line per entry: `<index>: [queue|interrupt] [SpeakingClass] text` - the
+  class tag attributes a stray line to its reader. `&wait=MS` long-polls until a new line lands. The
+  tap is upstream of the Prism backend, so it works even with speech muted.
+- `GET /log?since=N` - the BepInEx log in-band (same cursor protocol; `&grep=S` filters), so nothing
+  greps `LogOutput.log` on disk.
 - `GET /screenshot` - capture a PNG of the current frame; returns the file path to `Read`.
 - `GET /health` - liveness.
+
+**REPL calls exercise Harmony patches.** A proxy method called from `/eval` hits the same detour the
+game's own call does, so a patch can be smoke-tested without gameplay: call the patched method, expect
+the announcement. If it does not fire from the REPL, the patch is **not applied** - check `/module`,
+don't theorize about native-vs-managed call paths.
 
 **Headless / overnight runs:** set `DISCOACCESS_NO_SPEECH=1` to skip Prism init so an unattended session
 doesn't depend on a running screen reader (NVDA). Spoken text is still captured for `/speech`.

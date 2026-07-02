@@ -49,6 +49,21 @@ namespace DiscoAccess.Core.Input
             return action;
         }
 
+        /// <summary>Fire a registered action's handler by key, as if its chord was just pressed - the
+        /// dev driver's headless counterpart to a real key. The CALLER gates on ownership (the module
+        /// checks the world reader owns the keyboard before firing a world verb); this only finds and
+        /// invokes. Returns false when no action carries the key.</summary>
+        public bool FireAction(string key)
+        {
+            for (int i = 0; i < _actions.Count; i++)
+                if (_actions[i].Key == key)
+                {
+                    _actions[i].InvokePerformed();
+                    return true;
+                }
+            return false;
+        }
+
         // The frame's live state, rebuilt at the top of Tick (cheap: a handful of actions x ~1 binding).
         private readonly List<InputCategory> _activeCats = new List<InputCategory>();
         private readonly HashSet<InputBinding> _live = new HashSet<InputBinding>();
