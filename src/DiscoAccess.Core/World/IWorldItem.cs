@@ -52,6 +52,18 @@ namespace DiscoAccess.Core.World
         /// reachable once the character has moved.</summary>
         bool IsActionable(Vector3 from);
 
+        /// <summary>Whether this thing genuinely belongs to the ground reachable from <paramref name="from"/>,
+        /// for the discovery gates (cursor hover, scanner offer) when it sits off the reference's level: the
+        /// walkable ground its body stands on - or, for a body over unwalkable surface, the ground its
+        /// clickable edge meets (a boat moored on water against a walkway) - is walk-connected to
+        /// <paramref name="from"/> (the crate up on the harbour gate connects via its stairs; the plaza below
+        /// the Whirling balcony is another island), or it is a person the game paths a conversation to across
+        /// levels (the smoker on the balcony, spoken to from the street below). Deliberately NOT
+        /// <see cref="IsActionable"/>: the game's
+        /// stand-point search is a 3D radius that can hand back a spot on an unrelated level over a thing's
+        /// head, calling a ground-floor door "reachable" from the balcony above it.</summary>
+        bool ReachableFrom(Vector3 from);
+
         /// <summary>Trigger the game's interaction for this thing (auto-path and act). Returns whether
         /// something was triggered.</summary>
         bool Interact();

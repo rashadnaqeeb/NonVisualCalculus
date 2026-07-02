@@ -33,11 +33,15 @@ namespace DiscoAccess.Core.World.Overlays.Systems
         // A thing this close to the player IS the player (the player's own entity, if it is in the registry);
         // never hover-announce the character you are standing on when the cursor is centred.
         private const float PlayerEpsilon = 0.5f;
-        // How far above or below the cursor's ground level a thing may sit and still count as "under" it.
-        // Beyond this it is on a different level - a balcony door overhanging the plaza, something down a pit -
-        // reachable only by going elsewhere. Paired with the reachability oracle (see Under), so only genuinely
-        // unreachable off-level things are dropped, never a staircase or step-exit the cursor glides beneath.
-        private const float VerticalReach = 2.5f;
+        // How far above or below the cursor's ground level a thing's body may sit and still count as on the
+        // cursor's own level, no questions asked - pivot slack for things standing right here (a door's
+        // mid-panel pivot, a lever above waist height), NOT a cross-level allowance: Martinaise stacks its
+        // levels as tight as 2 m (the Whirling balcony floats just over the front door's head), so anything
+        // past this slack must instead prove it belongs to reachable ground (IWorldItem.ReachableFrom) - a
+        // staircase or step-exit connects and is kept; the balcony door over the plaza does not and is
+        // dropped. Public because the scanner applies the same paired gate (Scanner.Offered), so the two
+        // senses agree on what counts as another level.
+        public const float SameLevelSlack = 1f;
         // Crossover distance for the blip pan: close in the pan tracks the lateral offset, far out it
         // saturates toward the bearing.
         private const float PanWidth = 3f;
@@ -184,13 +188,13 @@ namespace DiscoAccess.Core.World.Overlays.Systems
                 // Height-reachability gate. XZ-only detection would also put the cursor "on" a thing hanging
                 // well above (or below) the ground it is clamped to - the Whirling balcony door overhanging the
                 // plaza reads as under the cursor though its body sits metres overhead. Drop such a candidate
-                // only when it is BOTH off the cursor's level AND the game cannot path to it from here: a
-                // staircase or step-exit stays pathable and is kept, a same-level thing the oracle over-rejects
-                // (an NPC behind a bar counter) has no height gap and is kept, and an orb overhead is always
-                // actionable and is kept. Only the unreachable off-level case is dropped, so the cursor never
-                // names something the player cannot get to. The oracle call is reached only for an off-level
-                // nearest candidate, so it runs rarely, not for every item every frame.
-                if (System.Math.Abs(np.Y - cursor.Y) > VerticalReach && !it.IsActionable(player)) continue;
+                // only when it is BOTH past the same-level slack AND off reachable ground (ReachableFrom): a
+                // staircase or step-exit stands on connected ground and is kept, a same-level thing within the
+                // slack (an NPC behind a bar counter, whom every oracle over-rejects) is kept without any
+                // path test, an orb overhead is always reachable and is kept, and a cross-level conversation
+                // (the balcony smoker spoken to from below) is kept through the person fallback. The path test
+                // runs only for an off-slack candidate, so it is rare, not per item per frame.
+                if (System.Math.Abs(np.Y - cursor.Y) > SameLevelSlack && !it.ReachableFrom(player)) continue;
                 bestDist = d; bestBody = body; best = it;
             }
             return best;

@@ -38,7 +38,10 @@ namespace DiscoAccess.Tests
             public bool IsVisible => Visible;
             public bool RidesPlayer => false;
             public Vector3 InteractionPoint(Vector3 from) => Position;
-            public bool IsActionable(Vector3 from) => true;
+            public bool Actionable { get; set; } = true;
+            public bool IsActionable(Vector3 from) => Actionable;
+            public bool Reachable { get; set; } = true;
+            public bool ReachableFrom(Vector3 from) => Reachable;
             public bool Interact() => false;
         }
 
@@ -203,6 +206,60 @@ namespace DiscoAccess.Tests
             Assert.StartsWith("revealed; ", speech.Spoken[^1]);
             scanner.StepItem(1); // wraps, never landing on the fogged thing
             Assert.StartsWith("revealed; ", speech.Spoken[^1]);
+        }
+
+        [Fact]
+        public void OffLevelUnreachableThing_IsNotOffered()
+        {
+            var (scanner, model, speech, _, _) = Build();
+            // The balcony door seen from the plaza: hanging well above the scan reference's level, standing
+            // on a disconnected island - reachable only by going elsewhere, so never offered.
+            model.List.Add(new FakeItem { Position = new Vector3(1f, 5f, 0f), Name = "balcony door", Reachable = false });
+            model.List.Add(At(2f, 0f, "crate"));
+
+            scanner.StepItem(1);
+            Assert.StartsWith("crate; ", speech.Spoken[^1]);
+            scanner.StepItem(1); // wraps, never landing on the balcony door
+            Assert.StartsWith("crate; ", speech.Spoken[^1]);
+        }
+
+        [Fact]
+        public void JustOffLevelUnreachableThing_IsNotOffered()
+        {
+            var (scanner, model, speech, _, _) = Build();
+            // The ground below a low balcony (Martinaise stacks levels as tight as 2 m): past the pivot
+            // slack, off reachable ground, so hidden even though the height gap is small.
+            model.List.Add(new FakeItem { Position = new Vector3(1f, -2f, 0f), Name = "tracks", Reachable = false });
+            model.List.Add(At(2f, 0f, "crate"));
+
+            scanner.StepItem(1);
+            Assert.StartsWith("crate; ", speech.Spoken[^1]);
+            scanner.StepItem(1); // wraps, never landing on the tracks below
+            Assert.StartsWith("crate; ", speech.Spoken[^1]);
+        }
+
+        [Fact]
+        public void OffLevelReachableThing_StaysOffered()
+        {
+            var (scanner, model, speech, _, _) = Build();
+            // The crate up on the harbour gate (its platform connects via stairs) or the balcony smoker
+            // (a conversation authored from the ground): off-level but ReachableFrom, so still findable.
+            model.List.Add(new FakeItem { Position = new Vector3(1f, 5f, 0f), Name = "smoker", Reachable = true });
+
+            scanner.StepItem(1);
+            Assert.StartsWith("smoker; ", speech.Spoken[^1]);
+        }
+
+        [Fact]
+        public void OnLevelThing_IsOfferedWithoutAPathTest()
+        {
+            var (scanner, model, speech, _, _) = Build();
+            // The NPC behind the bar counter: on the scan reference's level but standing on a navmesh pocket
+            // no path test accepts; within the pivot slack the gate never asks, so they stay offered.
+            model.List.Add(new FakeItem { Position = new Vector3(1f, 0.8f, 0f), Name = "bartender", Reachable = false });
+
+            scanner.StepItem(1);
+            Assert.StartsWith("bartender; ", speech.Spoken[^1]);
         }
 
         [Fact]

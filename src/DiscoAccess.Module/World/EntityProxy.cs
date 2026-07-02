@@ -162,15 +162,22 @@ namespace DiscoAccess.Module.World
         }
 
         // The localized name a sighted player reads as this thing's examine header ("Cuno", "Pile of
-        // Eternite", "Coupris Kineema"). The preferred source is the actor that voices the object's own first
-        // examine-description line: for most examinables that speaker IS the object, which stays right even
-        // when the conversation's ConversantID holds a narrative owner rather than the object (the Kineema's
-        // conversant is Alice, the woman who owns it, while its self-description speaks as "Coupris Kineema").
-        // But some examines open on one of the player's inner voices narrating the object instead of the
-        // object speaking (the tire tracks open on a Visual Calculus passive); an inner voice is never the
-        // object's name, so there we fall back to the ConversantID, which for those cases holds the object
-        // itself ("Set of Tracks"). Read live through the dialogue database each call (never cached). Null
-        // when the thing has no conversation, so Core falls back to the name noun.
+        // Eternite", "Coupris Kineema"). Two-step, keyed on what the conversation's ConversantID holds:
+        //
+        // A NON-PERSON conversant (no IsNPC field on the actor, the DE data's person marker) IS the examined
+        // object by construction ("Pile of Clothes", "Set of Tracks", "Shack Door"), so it names the thing
+        // directly. The first examine line is NOT trusted here: a person can voice an object's opening line
+        // (Siileng pitching the wares on his stall, Kim remarking on the yard footprints), and even another
+        // object-actor can ("A Pedestal of Speakers" opening for the FALN sneakers displayed on it), all of
+        // which would misname the thing.
+        //
+        // A PERSON conversant means the conversation belongs to a character (named by whoever voices its
+        // first description line, normally themselves) or to an object with a narrative owner (the Kineema's
+        // conversant is Alice, the woman who owns it, while its self-description speaks as "Coupris
+        // Kineema") - so there the first-line speaker names the thing, falling back to the conversant when
+        // that speaker is one of the player's inner voices narrating (an inner voice is never the object's
+        // name). Read live through the dialogue database each call (never cached). Null when the thing has
+        // no conversation, so Core falls back to the name noun.
         private string ExamineHeaderActor()
         {
             string conv = _e.conversation;
@@ -178,10 +185,19 @@ namespace DiscoAccess.Module.World
             DialogueDatabase db = DialogueManager.masterDatabase;
             Conversation c = db?.GetConversation(conv);
             if (c == null) return null;
+            Actor conversant = db.GetActor(c.ConversantID);
+            if (conversant != null && !IsPerson(conversant) && !IsInnerVoice(conversant))
+                return LocalizationUtils.GetActorLocalizedField(conversant, "Name");
             Actor speaker = db.GetActor(FirstDescriptionActor(c));
-            if (speaker == null || IsInnerVoice(speaker)) speaker = db.GetActor(c.ConversantID);
+            if (speaker == null || IsInnerVoice(speaker)) speaker = conversant;
             return speaker == null ? null : LocalizationUtils.GetActorLocalizedField(speaker, "Name");
         }
+
+        // A person in the dialogue data: the player, or an actor the game marks IsNPC (people carry it,
+        // object-actors lack it; the talking Kineema is marked IsNPC but never reaches the checks that
+        // need this distinction, since it is a conversant only through Alice).
+        private static bool IsPerson(Actor a)
+            => a.IsPlayer || string.Equals(a.LookupValue("IsNPC"), "true", System.StringComparison.OrdinalIgnoreCase);
 
         // One of the player's inner voices - the four attributes, their skills, the Perception sub-senses, or
         // the player himself - rather than a world actor. DE renders each in an attribute palette colour (the
@@ -312,6 +328,93 @@ namespace DiscoAccess.Module.World
 
         public bool IsActionable(Vector3 from) => _e.CheckIfCanCreatePathToHavePath(LocationAt(from));
 
+        // The discovery gates' cross-level test (see IWorldItem.ReachableFrom).
+        //
+        // A PERSON is always reachable: the game's click flow (GameEntity.Interact is just
+        // GameController.MoveToTarget) walks the character as close as the navmesh allows and starts the
+        // conversation wherever the walk ends - proven live on the Smoker on the Balcony, whose conversation
+        // opens from the yard four metres below him with no complete path, no radius met, and the path
+        // oracle saying no (it is how the sighted player interrogates him, per the Logic orb's "Talk to
+        // him"). So a visible person can never be offered-but-unactable, while hiding one hides authored
+        // gameplay - the failure a blind player cannot see.
+        //
+        // Everything else asks for standing ground: the nearest walkable mesh the body stands on,
+        // walk-connected to the reference by a COMPLETE navmesh path - the stairs triggers connect via their
+        // own steps, the plaza below the Whirling balcony is a separate island. A body with no walkable mesh
+        // under it at all is grounded at its edge instead (MooredGround): the fishing village's Motorboat
+        // floats on water, which carries no navmesh, but its gunwale meets the walkway a sighted player
+        // clicks it from. The game's click oracle (IsActionable) is deliberately not consulted: its
+        // stand-point search is a 3D radius that can grab a spot on an unrelated level over the thing's
+        // head (the Whirling front door's 3 m radius reaches the balcony floor above it, and the oracle
+        // then paths two metres to the balcony edge and calls the ground-floor door reachable).
+        public bool ReachableFrom(Vector3 from)
+        {
+            if (Category == WorldTaxonomy.Npc) return true;
+            if (!StandingGround(out UnityEngine.Vector3 ground) && !MooredGround(from, out ground))
+                return false;
+            var path = new UnityEngine.AI.NavMeshPath();
+            return UnityEngine.AI.NavMesh.CalculatePath(WorldConvert.ToUnity(from), ground, -1, path)
+                   && path.status == UnityEngine.AI.NavMeshPathStatus.PathComplete;
+        }
+
+        // The walkable mesh this thing is MOORED AGAINST, for a body with no standing ground of its own: a
+        // thing over unwalkable surface (the Motorboat on the water off the fishing village walkway) belongs
+        // to the ground its clickable edge meets, sampled at the footprint point nearest the reference - the
+        // same widening OrbProxy applies to an orb over water. Bounded by the one sample radius, so only
+        // ground within arm's reach of the edge is adopted; whether that ground is the player's own is the
+        // connectivity test's call, not repeated here. StandingGround's floor band does not apply: relative
+        // to a waterline pivot the walkway IS overhead (the boat reads 1.4 m below the pier), which is
+        // exactly the geometry this fallback exists to accept.
+        private bool MooredGround(Vector3 from, out UnityEngine.Vector3 ground)
+        {
+            UnityEngine.Vector3 edge = WorldConvert.ToUnity(Bounds.NearestPoint(from));
+            if (UnityEngine.AI.NavMesh.SamplePosition(edge, out var hit, GroundSampleRadius, -1))
+            {
+                ground = hit.position;
+                return true;
+            }
+            ground = default;
+            return false;
+        }
+
+        // The walkable mesh this thing STANDS ON: sampled from the body downward in steps, accepting only a
+        // hit inside the body's own floor band - a nearest-mesh sample alone grabs the platform overhead
+        // where levels stack tight (the Whirling front door sits in a wall the street mesh is cut back from,
+        // so its nearest mesh is the balcony floor 2 m over its head), and an uncapped descent adopts the
+        // storey below (Tequila's bedroom door on the Whirling's meshless mezzanine would ground on the bar
+        // floor 3.6 m under it). Descending restarts shift the search below an overhead platform to the real
+        // floor (the street under the door, the steps under a floating exit trigger). False when no mesh
+        // lands in the band - a display-only landing or a thing hanging over void has no standing ground.
+        private bool StandingGround(out UnityEngine.Vector3 ground)
+        {
+            UnityEngine.Vector3 body = _e.transform.position;
+            for (float drop = 0f; drop <= GroundMaxDrop; drop += 1f)
+            {
+                var probe = new UnityEngine.Vector3(body.x, body.y - drop, body.z);
+                if (UnityEngine.AI.NavMesh.SamplePosition(probe, out var hit, GroundSampleRadius, -1)
+                    && hit.position.y <= body.y + GroundHeadroom
+                    && body.y - hit.position.y <= GroundMaxDrop)
+                {
+                    ground = hit.position;
+                    return true;
+                }
+            }
+            ground = default;
+            return false;
+        }
+
+        // Per-step sample radius: wide enough to reach the floor beside a wall-mounted thing, narrow enough
+        // that the descent (not the radius) does the work of skipping an overhead platform.
+        private const float GroundSampleRadius = 2f;
+        // The floor band below the body that can be its own standing ground: a door's threshold sits up to
+        // ~1.8 m under its mid-panel pivot and a floating exit trigger up to ~2 m over its steps (the
+        // Whirling courtyard and stairs triggers), while the next storey down starts ~3.5 m (the bar floor
+        // under the mezzanine bedroom door). Also bounds the probe descent - deeper hits are all rejected.
+        private const float GroundMaxDrop = 2.5f;
+        // A hit this little above the body is its own floor plane (a pivot sunk into a hatch or rug); more is
+        // a platform overhead, never standing ground.
+        private const float GroundHeadroom = 0.5f;
+
         // The IWalkTarget facts the Enter walk-then-interact verb needs beyond the sensing contract: the
         // stand-point's facing (so the character ends up looking the right way) and the game's own
         // arrival-range test. Kept here so the game-call and Unity<->Numerics conversion stay in the proxy.
@@ -337,9 +440,19 @@ namespace DiscoAccess.Module.World
         // Map the entity's runtime type onto a taxonomy category. Order matters where types nest (Curtains
         // derives from Door). TravelDestination/Teleporter exits derive from NavMeshClickHandler, not
         // BasicEntity, so they are not in sceneEntitySet and not seen here; TransitionEntity is.
+        //
+        // A Character is only a person when it has a walking body - a NavMeshAgent or the capsule collider
+        // every character prefab carries (either alone suffices: a permanently seated person could lack the
+        // agent). The game also builds talking props - the Coupris Kineema, a mailbox, the waiting bench -
+        // as Character so they can hold a conversation, but those are static meshes with mesh/box colliders
+        // and no agent, and to the player they are things in the world, not people. (CharacterAnimator is
+        // NOT the body test: the gardener and Tommy Lhomme are people without one.)
         private static string Classify(BasicEntity e)
         {
-            if (e.TryCast<Character>() != null) return WorldTaxonomy.Npc;
+            if (e.TryCast<Character>() != null)
+                return e.GetComponent<UnityEngine.AI.NavMeshAgent>() != null
+                       || e.GetComponent<UnityEngine.CapsuleCollider>() != null
+                    ? WorldTaxonomy.Npc : WorldTaxonomy.Interactable;
             if (e.TryCast<Door>() != null) return WorldTaxonomy.Door;
             if (e.TryCast<TransitionEntity>() != null) return WorldTaxonomy.Exit;
             if (e.TryCast<ContainerSource>() != null) return WorldTaxonomy.Container;

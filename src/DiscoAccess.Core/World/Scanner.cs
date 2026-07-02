@@ -167,10 +167,22 @@ namespace DiscoAccess.Core.World
         // list. In-frame is tested at the thing's part nearest the scan reference, so a wide thing that pokes
         // into the frame (a doorway half in view) still counts; the fog test is belt-and-braces on top of the
         // game deactivating fogged interactables itself, making the contract explicit rather than inherited.
+        //
+        // The height-reachability pair is the cursor's own gate (ObjectCueSystem.Under): a thing past the
+        // same-level pivot slack is offered only when it belongs to ground walk-connected from here or is a
+        // person the game converses with across levels (ReachableFrom) - so the crate up on the harbour gate
+        // (connected via its stairs) and the balcony smoker (spoken to from the street) stay offered, while
+        // the ground-floor door and the tracks on the plaza below the balcony, reachable only by going
+        // elsewhere, never land in the list to fail a walk-interact later. The path test runs only for the
+        // few off-slack candidates in frame.
         private bool Offered(IWorldItem it, Vector3 from)
-            => it.IsAccessible && it.IsVisible
-               && _env.InView(it.Bounds.NearestPoint(from))
-               && !_env.IsFogged(it.Position);
+        {
+            if (!it.IsAccessible || !it.IsVisible) return false;
+            Vector3 nearest = it.Bounds.NearestPoint(from);
+            if (!_env.InView(nearest) || _env.IsFogged(it.Position)) return false;
+            return Math.Abs(nearest.Y - from.Y) <= Overlays.Systems.ObjectCueSystem.SameLevelSlack
+                   || it.ReachableFrom(from);
+        }
 
         // The next category index with things in it, walking dir-wise with wrap-around; Everything (index 0)
         // always qualifies, so the walk terminates. Counted against the same live filter the list uses.

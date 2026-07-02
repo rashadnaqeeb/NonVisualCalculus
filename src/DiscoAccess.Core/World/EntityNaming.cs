@@ -217,13 +217,15 @@ namespace DiscoAccess.Core.World
             return list.ToArray();
         }
 
-        // The game's authored display name (a conversant actor, or an exit's destination area), accepted when
-        // it is a plain short name and rejected when unusable: empty, a machine id (an underscore), the player
-        // ("You"/"Player"), or a mechanical/conditional token. Hyphens are display punctuation in a curated
-        // name ("Whirling-in-Rags"), spoken as a space, so they are converted, not treated as the slug marker
-        // they are in a raw GameObject.name. A "Name, the Title" actor name keeps just the name before the
-        // comma ("Garte, the Cafeteria Manager" to "Garte"). Conservative because the noun extractor is always
-        // a safe fallback, so over-rejecting only loses a nicer name, never speaks a worse one.
+        // The game's authored display name (a conversant actor, or an exit's destination area), rejected only
+        // when unusable: empty, a machine id (an underscore), the player ("You"/"Player"), or a
+        // mechanical/conditional token. There is no length cap: every long actor name in the dialogue
+        // database is a genuine display title (a paperback's full title, "FALN Sneakers on a Pedestal of
+        // Speakers"), and rejecting one falls back to a noun pulled from a machine slug, which can read as
+        // garbage ("clickable_humanitarian_sneakers" would speak as "clickable"). Hyphens are display
+        // punctuation in a curated name ("Whirling-in-Rags"), spoken as a space, so they are converted, not
+        // treated as the slug marker they are in a raw GameObject.name. A "Name, the Title" actor name keeps
+        // just the name before the comma ("Garte, the Cafeteria Manager" to "Garte").
         private static string? CleanAuthored(string? raw)
         {
             if (string.IsNullOrWhiteSpace(raw)) return null;
@@ -235,7 +237,6 @@ namespace DiscoAccess.Core.World
             if (string.Equals(s, "You", StringComparison.OrdinalIgnoreCase)
                 || string.Equals(s, "Player", StringComparison.OrdinalIgnoreCase)) return null;
             string[] words = Regex.Split(s, @"\s+");
-            if (words.Length > 5) return null;                    // a description, not a name (allow "Whirling in Rags")
             foreach (string w in words)
                 foreach (string meta in MetaTokens)
                     if (string.Equals(w, meta, StringComparison.OrdinalIgnoreCase))

@@ -122,6 +122,10 @@ namespace DiscoAccess.Module.World
         // never pre-judged here - the same way the cursor never pre-rejects an entity on its own oracle.
         public bool IsActionable(Vector3 from) => true;
 
+        // An orb overhead is always triggerable from under it (the walk verb stops within its interaction
+        // circle measured flat), so the discovery gates never pre-judge one by ground connectivity either.
+        public bool ReachableFrom(Vector3 from) => true;
+
         // Walk to a walkable spot at the orb body's footprint. An orb can float above the mesh, so snap its
         // position onto the navmesh within its interaction radius; failing that, drive at the body itself and
         // let the walk stall into a can't-reach. The heading faces the orb from the stand-point.

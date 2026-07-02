@@ -54,6 +54,11 @@ namespace DiscoAccess.Module.World
                 {
                     BasicEntity e = entities[i];
                     if (e == null) continue;
+                    // An OrbUiElement is the canvas element the game draws for an active SenseOrb, and it
+                    // registers in sceneEntitySet like any BasicEntity. The orb itself is already tracked
+                    // below through its OrbProxy (named, gated, and cleared on trigger), so its UI twin
+                    // would only duplicate it as a junk-named interactable.
+                    if (e.TryCast<OrbUiElement>() != null) continue;
                     Track(e, () => new EntityProxy(e));
                 }
 

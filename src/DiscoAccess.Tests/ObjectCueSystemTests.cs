@@ -58,6 +58,8 @@ namespace DiscoAccess.Tests
             // hanging out of reach (a balcony door over the plaza).
             public bool Actionable { get; set; } = true;
             public bool IsActionable(Vector3 from) => Actionable;
+            public bool Reachable { get; set; } = true;
+            public bool ReachableFrom(Vector3 from) => Reachable;
             public bool Interact() => false;
         }
 
@@ -243,10 +245,10 @@ namespace DiscoAccess.Tests
             // A reachable thing whose geometry sits well above the ground (a staircase, an exit whose trigger
             // origin floats above the steps) at the cursor's own XZ: the hit test is XZ-only, so the cursor is
             // on it despite the height. A 3D distance would have put it 3 m off and named bare ground instead.
-            // The height gate keeps it because the game can still path to it (Actionable).
+            // The height gate keeps it because it stands on connected ground (ReachableFrom).
             var backend = new FakeBackend();
             var (overlay, _, model, _, _) = Build(backend);
-            model.List.Add(new FakeItem { Name = "stairs", Position = new Vector3(5f, 3f, 0f), Actionable = true });
+            model.List.Add(new FakeItem { Name = "stairs", Position = new Vector3(5f, 3f, 0f), Reachable = true });
 
             overlay.Cursor.Position = new Vector3(5f, 0f, 0f); // directly under it, 3 m below
             overlay.AnnounceCurrent();
@@ -256,13 +258,13 @@ namespace DiscoAccess.Tests
         [Fact]
         public void ElevatedUnreachableThing_AtTheCursorsXZ_IsNotSelected()
         {
-            // The Whirling balcony door: its body hangs metres above the plaza the cursor is clamped to, and
-            // the game cannot path to it from here (it is reached from up on the balcony). XZ-only detection
-            // would otherwise name it as under the cursor and Enter would say "can't reach". Off the cursor's
-            // level AND not actionable, so the height gate drops it and the cursor names bare ground instead.
+            // The Whirling balcony door: its body hangs metres above the plaza the cursor is clamped to, on
+            // an island reached only from inside the Whirling. XZ-only detection would otherwise name it as
+            // under the cursor and Enter would say "can't reach". Off the cursor's level AND off reachable
+            // ground, so the height gate drops it and the cursor names bare ground instead.
             var backend = new FakeBackend();
             var (overlay, _, model, _, _) = Build(backend);
-            model.List.Add(new FakeItem { Name = "balcony door", Position = new Vector3(5f, 3f, 0f), Actionable = false });
+            model.List.Add(new FakeItem { Name = "balcony door", Position = new Vector3(5f, 3f, 0f), Reachable = false });
 
             overlay.Cursor.Position = new Vector3(5f, 0f, 0f); // directly under it, 3 m below
             overlay.AnnounceCurrent();
@@ -272,14 +274,14 @@ namespace DiscoAccess.Tests
         [Fact]
         public void ElevatedUnreachableThing_WithinReach_IsStillSelected()
         {
-            // The gate only fires past the vertical reach: a thing just above the cursor (a lever a bit over
-            // head height) that the oracle happens to reject is still named, so the gate never hides
-            // same-level things the oracle over-rejects (an NPC behind a bar counter).
+            // The gate only fires past the same-level slack: a thing just above the cursor (a lever above
+            // waist height) that every path test rejects is still named, so the gate never hides same-level
+            // things standing on a navmesh pocket (an NPC behind a bar counter).
             var backend = new FakeBackend();
             var (overlay, _, model, _, _) = Build(backend);
-            model.List.Add(new FakeItem { Name = "lever", Position = new Vector3(5f, 1.5f, 0f), Actionable = false });
+            model.List.Add(new FakeItem { Name = "lever", Position = new Vector3(5f, 0.8f, 0f), Reachable = false });
 
-            overlay.Cursor.Position = new Vector3(5f, 0f, 0f); // 1.5 m below, within reach
+            overlay.Cursor.Position = new Vector3(5f, 0f, 0f); // just below it, within the slack
             overlay.AnnounceCurrent();
             Assert.Equal(new[] { "lever" }, backend.Spoken);
         }
