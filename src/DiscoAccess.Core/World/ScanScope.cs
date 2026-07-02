@@ -16,23 +16,23 @@ namespace DiscoAccess.Core.World
     /// side - and this gate takes no second fog opinion: a body-position fog test here would re-hide exactly
     /// those boundary things.
     ///
-    /// The height-reachability pair is the cursor's own gate (<see cref="Overlays.Systems.ObjectCueSystem"/>):
-    /// a thing past the same-level pivot slack is offered only when it belongs to ground walk-connected from
-    /// here (ReachableFrom) - so the crate up on the harbour gate (connected via its stairs) stays offered,
-    /// while the ground-floor door and the tracks on the plaza below the balcony, reachable only by going
-    /// elsewhere, never land in the set to fail a walk-interact later. A PERSON is gated by ReachableFrom at
-    /// ANY height: their verdict is the game's own click pricing, which sees talkability the geometry
-    /// cannot - the balcony smoker (spoken to from the street four metres below) stays offered, while a
-    /// person the click refuses on the player's own level (Cuno beyond the yard fence) drops out until a
-    /// path opens. The path tests run only for the few off-slack candidates and people in frame.
+    /// The reference position is the PLAYER, never the cursor: the only act a scanned thing supports is a
+    /// walk-interact, and that walk starts at the character, so membership judged from a planted cursor
+    /// would offer things the player's own click refuses (move the cursor, press Enter, and the character
+    /// walking over is what reveals more). The sonar keeps the cursor only as its listening ear - ping
+    /// placement and sweep radius - while reading this same player-anchored set.
     ///
-    /// A same-level CROSSING (door, exit) must additionally have a complete walk to its stand-point: a
-    /// closed door carves the walkable mesh, so the corridor doors beyond the player's own shut door are
-    /// severed and a walk-interact at them would stall against it - they return the moment it opens (the
-    /// set rebuilds per press/sweep). Only crossings, because doors are the things that systematically sit
-    /// behind other doors; a blanket walk requirement is the known over-rejection trap (the bartender
-    /// behind his counter island, the container on a mesh-carving table) and was dropped for cost - a
-    /// few doors per query keep the stand-point and path calls negligible at any sonar cadence.
+    /// Reachability is asked per kind. A PERSON, a CROSSING (door, exit - the things that systematically
+    /// sit severed behind other closed doors, which carve the walkable mesh), and anything past the
+    /// same-level pivot slack (<see cref="Overlays.Systems.ObjectCueSystem"/>) must pass ReachableFrom -
+    /// the game's own click verdict for marker-bearing things and people (pricing to the authored
+    /// stand-spots: the balcony smoker, spoken to from the street four metres below, stays offered; Cuno
+    /// beyond the yard fence drops until a path opens; the corridor doors return the moment the player's
+    /// own door opens), and the standing-ground walk-connectivity geometry for the markerless rest (the
+    /// crate up the harbour gate connects via its stairs; the mezzanine door over the bar floor does not).
+    /// A same-level non-crossing thing is offered without a path test: a walled-off woodpile still pings,
+    /// and its walk-interact reports the wall - the known over-rejection traps live here, so the gate
+    /// stays permissive.
     /// </summary>
     public static class ScanScope
     {
@@ -42,10 +42,10 @@ namespace DiscoAccess.Core.World
             Vector3 nearest = it.Bounds.NearestPoint(from);
             if (!env.InView(nearest)) return false;
             if (it.Category == WorldTaxonomy.Npc
+                || it.Category == WorldTaxonomy.Door || it.Category == WorldTaxonomy.Exit
                 || Math.Abs(nearest.Y - from.Y) > Overlays.Systems.ObjectCueSystem.SameLevelSlack)
                 return it.ReachableFrom(from);
-            if (it.Category != WorldTaxonomy.Door && it.Category != WorldTaxonomy.Exit) return true;
-            return env.WalkExists(from, it.InteractionPoint(from));
+            return true;
         }
     }
 }

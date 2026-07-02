@@ -36,32 +36,23 @@ namespace DiscoAccess.Core.World
         /// must not drop it. False for everything world-anchored.</summary>
         bool RidesPlayer { get; }
 
-        /// <summary>The on-navmesh stand-point to approach this thing from <paramref name="from"/> in order
-        /// to act on it (the game's interaction location). The point the sonar pings, the scanner targets,
-        /// and the go-here distance measures to: it sits on reachable ground, so following it leads to a
-        /// successful interaction, and it dissolves the across-a-barrier case (a fenced NPC's talk-spot, not
-        /// its unreachable body). Approach-relative, so it is recomputed from the querying position rather
-        /// than a fixed landmark. A thing with no interaction stand-point (an orb, whose interaction is
-        /// deferred until camera-follow) returns its body <see cref="Position"/>.</summary>
+        /// <summary>The spot the game's click would walk the player to in order to act on this thing: the
+        /// authored FormationMarker stand-spot when the thing carries one, else the game's radius-searched
+        /// interaction location computed from <paramref name="from"/>. The point the sonar pings, the
+        /// scanner's readout measures to, and the cursor names distance against. An orb, whose sighted
+        /// click acts in place, returns its body <see cref="Position"/>.</summary>
         Vector3 InteractionPoint(Vector3 from);
 
-        /// <summary>Whether the game can currently path to this thing's interaction stand-point from
-        /// <paramref name="from"/> (the game's own reachability oracle). The live per-position verdict on
-        /// whether acting on it would succeed; never cached and never inferred from <see cref="IsAccessible"/>,
-        /// which a walled-off thing can pass while being unreachable. A thing unreachable from here can become
-        /// reachable once the character has moved.</summary>
-        bool IsActionable(Vector3 from);
-
-        /// <summary>Whether this thing genuinely belongs to the ground reachable from <paramref name="from"/>,
-        /// for the discovery gates (cursor hover, scanner offer) when it sits off the reference's level: the
-        /// walkable ground its body stands on - or, for a body over unwalkable surface, the ground its
-        /// clickable edge meets (a boat moored on water against a walkway) - is walk-connected to
-        /// <paramref name="from"/> (the crate up on the harbour gate connects via its stairs; the plaza below
-        /// the Whirling balcony is another island), or it is a person the game paths a conversation to across
-        /// levels (the smoker on the balcony, spoken to from the street below). Deliberately NOT
-        /// <see cref="IsActionable"/>: the game's
-        /// stand-point search is a 3D radius that can hand back a spot on an unrelated level over a thing's
-        /// head, calling a ground-floor door "reachable" from the balcony above it.</summary>
+        /// <summary>Whether acting on this thing from <paramref name="from"/> would succeed, for the
+        /// discovery gates (cursor hover, scanner offer). For a person or a marker-bearing thing this is
+        /// the game's own click verdict - a MovementCommand priced to the authored stand-spots, refused
+        /// while every path is severed - which is anchored to the party's live position (the walk can only
+        /// start at the character), so gates must pass the player as <paramref name="from"/>. A markerless
+        /// thing falls back to standing-ground walk-connectivity: the ground its body stands on - or, for a
+        /// body over unwalkable surface, the ground its clickable edge meets (a boat moored against a
+        /// walkway) - is walk-connected to <paramref name="from"/>. Never cached and never inferred from
+        /// <see cref="IsAccessible"/>, which a walled-off thing passes while unreachable; a thing
+        /// unreachable from here can become reachable once the character moves.</summary>
         bool ReachableFrom(Vector3 from);
 
         /// <summary>Trigger the game's interaction for this thing (auto-path and act). Returns whether

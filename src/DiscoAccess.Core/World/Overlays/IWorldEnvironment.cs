@@ -46,11 +46,5 @@ namespace DiscoAccess.Core.World.Overlays
         /// zone volumes, the game's own point-to-zone idiom; zones only exist in physics while their area
         /// is loaded, which is the only time such ground can be in frame.</summary>
         bool IsFogged(Vector3 point);
-
-        /// <summary>Whether a complete walk exists from <paramref name="from"/> to <paramref name="to"/>
-        /// on the walkable mesh. A closed door carves the mesh, so this is how "behind a closed door" reads
-        /// without any door-state logic: the walk to a thing's stand-point severs exactly while the door
-        /// blocking it is shut, and mends the moment it opens. The Module backs this with a navmesh path.</summary>
-        bool WalkExists(Vector3 from, Vector3 to);
     }
 }

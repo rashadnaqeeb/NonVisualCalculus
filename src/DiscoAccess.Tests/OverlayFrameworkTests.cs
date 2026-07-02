@@ -32,7 +32,6 @@ namespace DiscoAccess.Tests
             public bool InView(Vector3 point) => ViewFn(point);
             public Vector3 ClampToView(Vector3 point) => ClampFn(point);
             public bool IsFogged(Vector3 point) => FogFn(point);
-            public bool WalkExists(Vector3 from, Vector3 to) => true;
         }
 
         private sealed class FakeBackend : ISpeechBackend

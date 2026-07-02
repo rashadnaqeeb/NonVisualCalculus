@@ -71,15 +71,17 @@ namespace DiscoAccess.Module.World
             if (target.InteractWalks)
             {
                 // The click prices the approach itself and refuses when nothing walkable reaches an authored
-                // stand-spot - speak that as can't-reach. In range it acts this same frame and the reaction's
-                // own readers speak, so "walking" is announced only when an actual walk begins.
-                bool inRange = target.WithinInteractionRadius(from);
+                // stand-spot - speak that as can't-reach. Otherwise it either started a party walk (the
+                // interaction fires on arrival, where the reaction's own readers speak) or acted in place
+                // this same frame (an in-range entity, a drawn orb's Open from any distance) - announce the
+                // walk, or speak the in-place result (an orb's float text; an entity has none).
                 if (!target.Interact(_host.Settings.RunToDestinations.Value))
                 {
                     _host.Speech.Speak(Strings.WorldUnreachable(target.Name), interrupt: true);
                     return false;
                 }
-                if (!inRange) _host.Speech.Speak(Strings.WorldWalkingTo(target.Name), interrupt: true);
+                if (GameMoving()) _host.Speech.Speak(Strings.WorldWalkingTo(target.Name), interrupt: true);
+                else SpeakPostInteract(target);
                 return true;
             }
 
@@ -173,30 +175,26 @@ namespace DiscoAccess.Module.World
 
         // End a stalled walk (orb targets only; a self-driving target never enters the watch). The character
         // may have halted close enough anyway - just inside the orb's interaction circle without a COMPLETED
-        // status - so try the trigger first. If it refuses (out of range), ask the target's reachability from
-        // where the character actually stopped: when it still says actionable, the stall was transient (a
+        // status - so try the trigger first. If it refuses (out of range), the stall may be transient (a
         // wandering NPC briefly blocking a crowded doorway, or a degenerate path the game handed back), so
-        // recompute the stand-point from here and walk again rather than falsely reporting can't-reach. Only
-        // when that says no, or the retries are spent, is it genuinely unreachable, and we say so rather than
-        // leave the player in silence. A bare-ground walk (no target) just stops being watched.
+        // recompute the stand-point from where the character actually stopped and walk again, bounded by the
+        // retry budget; once spent, say can't-reach rather than leave the player in silence. A bare-ground
+        // walk (no target) just stops being watched.
         private void Stall()
         {
             if (_target == null) { _active = false; return; }
-            if (_target.Interact()) { _active = false; SpeakPostInteract(); return; }
+            if (_target.Interact()) { _active = false; SpeakPostInteract(_target); return; }
 
             Character main = Main;
             if (main != null && _retries < MaxStallRetries)
             {
+                _retries++;
                 Snv here = WorldConvert.ToSnv(main.transform.position);
-                if (_target.IsActionable(here))
+                Snv stand = _target.Approach(here, out float heading);
+                if (Drive(stand, heading))
                 {
-                    _retries++;
-                    Snv stand = _target.Approach(here, out float heading);
-                    if (Drive(stand, heading))
-                    {
-                        _host.LogWarning($"WalkInteract: walk to {_label} stalled but still actionable; retry {_retries}/{MaxStallRetries}.");
-                        return;
-                    }
+                    _host.LogWarning($"WalkInteract: walk to {_label} stalled; retry {_retries}/{MaxStallRetries}.");
+                    return;
                 }
             }
 
@@ -225,14 +223,14 @@ namespace DiscoAccess.Module.World
             if (!_target.Interact())
                 _host.LogWarning($"WalkInteract: Interact on {_label} returned false at the stand-point.");
             else
-                SpeakPostInteract();
+                SpeakPostInteract(_target);
         }
 
         // Speak whatever the target says after a successful interact (a simple orb's floated clue text); most
         // targets say nothing. Queued so it follows the interaction without cutting off the walk feedback.
-        private void SpeakPostInteract()
+        private void SpeakPostInteract(IWalkTarget target)
         {
-            string line = _target.PostInteractLine();
+            string line = target.PostInteractLine();
             if (!string.IsNullOrEmpty(line))
                 _host.Speech.Speak(line, interrupt: false);
         }

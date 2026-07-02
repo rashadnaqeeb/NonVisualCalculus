@@ -161,15 +161,6 @@ namespace DiscoAccess.Module.World
         public bool IsFogged(Snv point)
             => FogSense.At(WorldConvert.ToUnity(point)) == FogSense.ZoneState.Unseen;
 
-        /// <summary>Whether a complete navmesh path joins the two points. Backs the scanner's crossing gate
-        /// (a door beyond a closed door is severed from the player until it opens).</summary>
-        public bool WalkExists(Snv from, Snv to)
-        {
-            var path = new NavMeshPath();
-            return NavMesh.CalculatePath(WorldConvert.ToUnity(from), WorldConvert.ToUnity(to), AllAreas, path)
-                   && path.status == NavMeshPathStatus.PathComplete;
-        }
-
         /// <summary>Assert the camera's zoom at the area's own maximum (the widest a sighted player can see
         /// here), so the cursor's roam window is as large and as consistent as the game allows and a stray
         /// scroll-wheel tick can't shrink the senses. The limits are the game's per-area values (interior,

@@ -24,7 +24,6 @@ namespace DiscoAccess.Tests
             public bool InView(Vector3 point) => true;
             public Vector3 ClampToView(Vector3 point) => point;
             public bool IsFogged(Vector3 point) => false;
-            public bool WalkExists(Vector3 from, Vector3 to) => true;
         }
 
         private sealed class FakeBackend : ISpeechBackend
@@ -57,8 +56,6 @@ namespace DiscoAccess.Tests
             // Whether the game can path to it from here. Defaults true (an accessible thing is usually
             // reachable); only the off-level cursor gate consults it, so a test sets it false to model a thing
             // hanging out of reach (a balcony door over the plaza).
-            public bool Actionable { get; set; } = true;
-            public bool IsActionable(Vector3 from) => Actionable;
             public bool Reachable { get; set; } = true;
             public bool ReachableFrom(Vector3 from) => Reachable;
             public bool Interact() => false;

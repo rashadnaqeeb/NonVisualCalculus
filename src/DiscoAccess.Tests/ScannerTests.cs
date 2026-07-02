@@ -38,8 +38,6 @@ namespace DiscoAccess.Tests
             public bool IsVisible => Visible;
             public bool RidesPlayer => false;
             public Vector3 InteractionPoint(Vector3 from) => Position;
-            public bool Actionable { get; set; } = true;
-            public bool IsActionable(Vector3 from) => Actionable;
             public bool Reachable { get; set; } = true;
             public bool ReachableFrom(Vector3 from) => Reachable;
             public bool Interact() => false;
@@ -65,8 +63,6 @@ namespace DiscoAccess.Tests
             public bool InView(Vector3 point) => ViewFn(point);
             public Vector3 ClampToView(Vector3 point) => point;
             public bool IsFogged(Vector3 point) => FogFn(point);
-            public Func<Vector3, Vector3, bool> WalkFn = (_, _) => true;
-            public bool WalkExists(Vector3 from, Vector3 to) => WalkFn(from, to);
         }
 
         private static (Scanner scanner, FakeModel model, FakeBackend speech, FakeAudioEngine audio, FakeEnv env) Build()
@@ -230,18 +226,24 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
-        public void SameLevelCrossingWithSeveredWalk_IsNotOffered()
+        public void SameLevelSeveredCrossing_IsNotOffered()
         {
-            var (scanner, model, speech, _, env) = Build();
+            var (scanner, model, speech, _, _) = Build();
             // The corridor doors beyond the player's own shut door: same level, in frame, visible over the
-            // walls - but the closed door carves the walkable mesh, so no complete walk reaches their
-            // stand-points and a walk-interact would stall. Only crossings take the walk test: the container
-            // on a mesh-carving table behind the same severance stays offered (the over-rejection trap).
-            env.WalkFn = (_, to) => to.X < 3f;
+            // walls - but the closed door severs every path, so their reachability verdict (the click
+            // pricing) refuses and a walk-interact would too. Only crossings and people take the test: the
+            // container on a mesh-carving table behind the same severance stays offered (the over-rejection
+            // trap).
             model.List.Add(At(2f, 0f, "own door", WorldTaxonomy.Door));
-            model.List.Add(At(5f, 0f, "corridor door", WorldTaxonomy.Door));
-            model.List.Add(At(6f, 0f, "corridor stairs", WorldTaxonomy.Exit));
-            model.List.Add(At(7f, 0f, "corridor crate", WorldTaxonomy.Container));
+            var corridorDoor = At(5f, 0f, "corridor door", WorldTaxonomy.Door);
+            corridorDoor.Reachable = false;
+            model.List.Add(corridorDoor);
+            var corridorStairs = At(6f, 0f, "corridor stairs", WorldTaxonomy.Exit);
+            corridorStairs.Reachable = false;
+            model.List.Add(corridorStairs);
+            var crate = At(7f, 0f, "corridor crate", WorldTaxonomy.Container);
+            crate.Reachable = false;
+            model.List.Add(crate);
 
             scanner.StepItem(1);
             Assert.StartsWith("own door; ", speech.Spoken[^1]);

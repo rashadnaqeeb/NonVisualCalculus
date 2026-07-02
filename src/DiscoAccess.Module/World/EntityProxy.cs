@@ -380,13 +380,18 @@ namespace DiscoAccess.Module.World
         private const float StandpointEpsilon = 0.05f;
         public bool RidesPlayer => false; // an entity is world-anchored, never carried by the character
 
-        // The interaction stand-point and the reachability oracle, both approach-relative (computed from the
-        // querying position). GameEntity, which BasicEntity derives from, supplies both; the from-position
-        // becomes the Formation.Location the game measures the approach from.
+        // The spot the game's click would walk the player to: the nearest authored INTERACTION marker when
+        // the entity carries one - the destination MoveToTarget actually prices - else the radius-searched
+        // interaction location computed from the querying position. Marker-first because the radius search
+        // can hand back a spot on the wrong level (a balcony point for the street door under it), which
+        // would misstate the spoken distance and bearing.
         public Vector3 InteractionPoint(Vector3 from)
-            => WorldConvert.ToSnv(_e.GetInteractionLocation(LocationAt(from)).position);
-
-        public bool IsActionable(Vector3 from) => _e.CheckIfCanCreatePathToHavePath(LocationAt(from));
+        {
+            FormationMarker marker = NearestInteractionMarker(from);
+            return marker != null
+                ? WorldConvert.ToSnv(marker.transform.position)
+                : WorldConvert.ToSnv(_e.GetInteractionLocation(LocationAt(from)).position);
+        }
 
         // The discovery gates' reachability test (see IWorldItem.ReachableFrom).
         //
@@ -411,7 +416,7 @@ namespace DiscoAccess.Module.World
         // then paths two metres to the balcony edge and calls the ground-floor door reachable).
         public bool ReachableFrom(Vector3 from)
         {
-            if (Category == WorldTaxonomy.Npc || HasInteractionMarkers) return ClickWouldAct();
+            if (Category == WorldTaxonomy.Npc || InteractionMarkers.Length > 0) return ClickWouldAct();
             if (!StandingGround(out UnityEngine.Vector3 ground) && !MooredGround(from, out ground))
                 return false;
             var path = new UnityEngine.AI.NavMeshPath();
@@ -441,27 +446,40 @@ namespace DiscoAccess.Module.World
             return !float.IsPositiveInfinity(command.cost);
         }
 
-        // Whether the entity carries an authored INTERACTION stand-spot, checked the way the click's
-        // pricing gathers them (FormationMarkers on the entity or a parent, filtered by purpose). Resolved
-        // once per proxy: markers are authored scene structure, and this is read per discovery query (the
-        // same trade the footprint and category caches make).
-        private bool HasInteractionMarkers
+        // The entity's authored INTERACTION stand-spots, gathered the way the click's pricing does
+        // (FormationMarkers on the entity or a parent, filtered by purpose). The component set is authored
+        // scene structure, resolved once per proxy (the footprint and category trade); each is a live
+        // component whose position is read at query time.
+        private FormationMarker[] InteractionMarkers
         {
             get
             {
-                if (_hasMarkers == null)
+                if (_interactionMarkers == null)
                 {
-                    _hasMarkers = false;
+                    var found = new System.Collections.Generic.List<FormationMarker>();
                     var markers = _e.GetComponentsInParent<FormationMarker>();
                     if (markers != null)
                         foreach (FormationMarker m in markers)
                             if (m != null && m.HasPurpose(new[] { Formation.Purpose.INTERACTION }))
-                            { _hasMarkers = true; break; }
+                                found.Add(m);
+                    _interactionMarkers = found.ToArray();
                 }
-                return _hasMarkers.Value;
+                return _interactionMarkers;
             }
         }
-        private bool? _hasMarkers;
+        private FormationMarker[] _interactionMarkers;
+
+        private FormationMarker NearestInteractionMarker(Vector3 from)
+        {
+            FormationMarker best = null;
+            float bestD = float.MaxValue;
+            foreach (FormationMarker m in InteractionMarkers)
+            {
+                float d = Vector3.DistanceSquared(WorldConvert.ToSnv(m.transform.position), from);
+                if (d < bestD) { bestD = d; best = m; }
+            }
+            return best;
+        }
 
         // The walkable mesh this thing is MOORED AGAINST, for a body with no standing ground of its own: a
         // thing over unwalkable surface (the Motorboat on the water off the fishing village walkway) belongs

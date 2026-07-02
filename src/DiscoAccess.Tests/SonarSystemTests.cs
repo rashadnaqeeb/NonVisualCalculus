@@ -33,7 +33,6 @@ namespace DiscoAccess.Tests
             public bool IsVisible => Live(Visible);
             public bool RidesPlayer => false;
             public Vector3 InteractionPoint(Vector3 from) => Position;
-            public bool IsActionable(Vector3 from) => true;
             public bool ReachableFrom(Vector3 from) => true;
             public bool Interact() => false;
         }
@@ -60,7 +59,6 @@ namespace DiscoAccess.Tests
             public bool InView(Vector3 point) => true;
             public Vector3 ClampToView(Vector3 point) => point;
             public bool IsFogged(Vector3 point) => false;
-            public bool WalkExists(Vector3 from, Vector3 to) => true;
         }
 
         private sealed class FakeBackend : ISpeechBackend
