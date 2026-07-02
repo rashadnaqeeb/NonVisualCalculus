@@ -183,6 +183,11 @@ namespace DiscoAccess.Module.World
             return dx * dx + dz * dz <= _orb.InteractionRadius * _orb.InteractionRadius;
         }
 
+        // An orb triggers only in place (Open runs the removal/shown bookkeeping, never a walk), so the walk
+        // verb owns the approach; the pace flag has nothing to steer.
+        public bool InteractWalks => false;
+        public bool Interact(bool run) => Interact();
+
         // Trigger the orb once the character is in range, through the game's own orb click (OrbUiElement.Open):
         // a simple orb floats its text (spoken by PostInteractLine), a dialogue orb opens its conversation (read
         // by the dialogue screen), and both mark it shown and update visuals - which a bare StartConversation

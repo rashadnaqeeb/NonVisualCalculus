@@ -222,13 +222,10 @@ namespace DiscoAccess.Module.World
             // Enter acts on precisely what was announced, never a different thing. Under() returns accessible
             // interactables and orbs, every one of which is an IWalkTarget, so this always takes when non-null.
             IWalkTarget target = _objects.Under(cursor, player) as IWalkTarget;
-            // A thing under the cursor: walk to it and interact. We do NOT pre-reject on the reachability
-            // oracle - it reports unreachable for interactables the game can still act on by walking the last
-            // leg itself (an NPC behind a bar counter, whose stand-point sits on a navmesh pocket the player
-            // cannot path to directly). The walk verb attempts the target's own Interact on arrival, and on a
-            // stall retries a still-reachable target (a transient block at a crowded doorway), reporting "can't
-            // reach" only once the oracle agrees it cannot be pathed and the retries are spent (a genuinely
-            // walled-off thing like the Yard Woodpile, or an orb still out of range). No target: a plain walk.
+            // A thing under the cursor: walk to it and interact. Reachability is not pre-judged here - an
+            // entity's Interact is the game's own click, which prices the approach itself and refuses with a
+            // spoken can't-reach; an orb goes through the verb's watched walk, which reports its own outcome.
+            // No target: a plain walk.
             if (target != null)
                 _walk.BeginInteract(target, player);
             else

@@ -7,20 +7,18 @@ using Snv = System.Numerics.Vector3;
 namespace DiscoAccess.Module.World
 {
     /// <summary>
-    /// The Enter verb: walk the character to a target's interaction stand-point, then interact once in
-    /// range. The game fuses walking and interacting in its click handler, but <c>Interact()</c> itself does
-    /// not walk - it acts in place and refuses (returns false, plays a fail animation) when out of range -
-    /// so this orchestrates the two: target the stand-point, drive <c>SetDestination</c>, watch
-    /// <c>movementStatus</c>, and <c>Interact</c> on arrival. A small arrival-watching state machine ticked
-    /// each frame by the <see cref="WorldReader"/>, cancellable mid-path.
+    /// The Enter verb. An entity's <c>Interact()</c> IS the game's whole click - it prices the approach to
+    /// the entity's authored FormationMarker stand-spots, walks the whole party there (re-pathing live
+    /// toward a moving target), and fires the interaction on arrival; false means the pricing refused
+    /// (unreachable from here), never "too far". So for a self-driving target
+    /// (<see cref="IWalkTarget.InteractWalks"/>) this verb just fires the click and speaks the outcome:
+    /// "walking" when a walk is due, "can't reach" on refusal, nothing when in range (the game acts
+    /// instantly and its own readers speak).
     ///
-    /// The target is any <see cref="IWalkTarget"/> - an entity (stand-point from the game's interaction
-    /// location) or an orb (the orb body, snapped to the navmesh) alike - so this one verb walks the character
-    /// up to and triggers both. Reachability is never pre-judged here; the walk drives toward the stand-point
-    /// and, on arrival or a stall, calls the target's own <c>Interact</c>, which acts when in range and refuses
-    /// (yielding a spoken can't-reach) when not - so a thing the game can still reach by walking its last leg
-    /// is never wrongly refused, and an orb only triggers once the character stands under it. A no-target
-    /// Enter is a plain walk to bare ground handled by <see cref="BeginWalk"/>.
+    /// An orb triggers only in place, so there the verb still owns the walk: target the stand-point, drive
+    /// <c>SetDestination</c>, watch <c>movementStatus</c>, and <c>Interact</c> on arrival - a small
+    /// arrival-watching state machine ticked each frame by the <see cref="WorldReader"/>, cancellable
+    /// mid-path. A no-target Enter is a plain walk to bare ground handled by <see cref="BeginWalk"/>.
     /// </summary>
     internal sealed class WalkInteract
     {
@@ -54,21 +52,37 @@ namespace DiscoAccess.Module.World
         /// <summary>Whether a committed walk is in flight (being watched for arrival).</summary>
         public bool Active => _active;
 
-        /// <summary>Commit to walking to <paramref name="target"/>'s interaction stand-point and interacting
-        /// on arrival, approaching from <paramref name="from"/> (the character's current position). The caller
-        /// has already confirmed the target is reachable (it would otherwise route to <see cref="BeginWalk"/>),
-        /// so the stand-point is computed and driven directly.</summary>
+        /// <summary>Walk to <paramref name="target"/> and interact, approaching from <paramref name="from"/>
+        /// (the character's current position). A self-driving target is the game's own click, fired directly;
+        /// an orb is walked to by this verb and triggered on arrival.</summary>
         public bool BeginInteract(IWalkTarget target, Snv from)
         {
             // A paralyzer or unresolved thought orb freezes the character where they stand (the game's own
-            // HasOrbsBlockingTequilaMovement gate, which its click-to-move path honours but our direct
+            // HasOrbsBlockingTequilaMovement gate, which its click flow honours silently and our direct
             // SetDestination bypasses). Refuse to walk away while held - except an in-place interact with the
             // holding orb itself (a player-anchored orb travels nowhere), which is how the block is released.
+            // Checked for self-driving targets too, so the hold is SPOKEN rather than the game's mute refusal.
             if (MovementBlocked() && !target.RidesPlayer)
             {
                 _host.Speech.Speak(Strings.WorldOrbHolds, interrupt: true);
                 return false;
             }
+
+            if (target.InteractWalks)
+            {
+                // The click prices the approach itself and refuses when nothing walkable reaches an authored
+                // stand-spot - speak that as can't-reach. In range it acts this same frame and the reaction's
+                // own readers speak, so "walking" is announced only when an actual walk begins.
+                bool inRange = target.WithinInteractionRadius(from);
+                if (!target.Interact(_host.Settings.RunToDestinations.Value))
+                {
+                    _host.Speech.Speak(Strings.WorldUnreachable(target.Name), interrupt: true);
+                    return false;
+                }
+                if (!inRange) _host.Speech.Speak(Strings.WorldWalkingTo(target.Name), interrupt: true);
+                return true;
+            }
+
             Snv stand = target.Approach(from, out float heading);
             if (!Drive(stand, heading)) return false;
             _target = target;
@@ -98,13 +112,21 @@ namespace DiscoAccess.Module.World
             return true;
         }
 
-        /// <summary>Player-initiated cancel (the Stop key): halt the character and say so.</summary>
+        /// <summary>Player-initiated cancel (the Stop key): halt the character and say so. Covers both this
+        /// verb's own watched walks and a click-driven walk the game is running (a self-driving interact),
+        /// which this verb does not track - the controller's isMoving is its live state.</summary>
         public void Cancel()
         {
-            if (!_active) return;
+            if (!_active && !GameMoving()) return;
             StopCharacter();
             _active = false;
             _host.Speech.Speak(Strings.WorldStopped, interrupt: true);
+        }
+
+        private static bool GameMoving()
+        {
+            GameController gc = GameController.Singleton;
+            return gc != null && gc.isMoving;
         }
 
         /// <summary>Silent abandon when the world reader loses control (a script grabbed the character, the
@@ -149,16 +171,14 @@ namespace DiscoAccess.Module.World
             }
         }
 
-        // End a stalled walk. Our SetDestination could not reach the stand-point, but the game's own Interact
-        // may still walk the character the final leg and act - an NPC behind a bar counter, whose stand-point
-        // sits on a navmesh pocket we cannot path to, is reached and talked to this way (proven live with
-        // Garte). So try Interact first. If it too refuses, ask the game's own reachability oracle from where
-        // the character actually stopped: when it still says the target is actionable, the stall was transient
-        // (a wandering NPC briefly blocking a crowded doorway, or a degenerate path the game handed back), so
+        // End a stalled walk (orb targets only; a self-driving target never enters the watch). The character
+        // may have halted close enough anyway - just inside the orb's interaction circle without a COMPLETED
+        // status - so try the trigger first. If it refuses (out of range), ask the target's reachability from
+        // where the character actually stopped: when it still says actionable, the stall was transient (a
+        // wandering NPC briefly blocking a crowded doorway, or a degenerate path the game handed back), so
         // recompute the stand-point from here and walk again rather than falsely reporting can't-reach. Only
-        // when the oracle says the target cannot be pathed, or the retries are spent, is it genuinely
-        // unreachable (the walled-off Yard Woodpile) and we say so rather than leave the player in silence. A
-        // bare-ground walk (no target) just stops being watched.
+        // when that says no, or the retries are spent, is it genuinely unreachable, and we say so rather than
+        // leave the player in silence. A bare-ground walk (no target) just stops being watched.
         private void Stall()
         {
             if (_target == null) { _active = false; return; }

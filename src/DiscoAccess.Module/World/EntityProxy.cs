@@ -390,14 +390,17 @@ namespace DiscoAccess.Module.World
 
         // The discovery gates' reachability test (see IWorldItem.ReachableFrom).
         //
-        // A PERSON is offered exactly when the game's own click would act (see ClickWouldAct): people are
-        // conversed with across levels and radii the geometric tests below cannot judge (the Smoker on the
-        // Balcony is interrogated from the yard four metres under him - authored gameplay, per the Logic
-        // orb's "Talk to him"), so a person is priced by the click flow's own verdict instead, which keeps
-        // the smoker and drops a person every path is walled off from (Cuno behind the yard fence) exactly
-        // while the game's click refuses him too.
+        // A PERSON, and any thing with authored INTERACTION FormationMarkers, is offered exactly when the
+        // game's own click would act (see ClickWouldAct): the click prices the walk to those authored
+        // stand-spots, which the geometric tests below cannot judge - the Smoker on the Balcony is
+        // interrogated from the yard four metres under him (authored gameplay, per the Logic orb's "Talk to
+        // him"), and Garte behind his counter island is walked to from the customer side. The verdict keeps
+        // both and drops what every path is walled off from (Cuno behind the yard fence) exactly while the
+        // game's click refuses it too. A markerless thing is NOT priced: the pricing then falls back to the
+        // same radius-grabbed interaction location that makes IsActionable lie (see below), so geometry
+        // stays its truth.
         //
-        // Everything else asks for standing ground: the nearest walkable mesh the body stands on,
+        // A markerless thing asks for standing ground: the nearest walkable mesh the body stands on,
         // walk-connected to the reference by a COMPLETE navmesh path - the stairs triggers connect via their
         // own steps, the plaza below the Whirling balcony is a separate island. A body with no walkable mesh
         // under it at all is grounded at its edge instead (MooredGround): the fishing village's Motorboat
@@ -408,7 +411,7 @@ namespace DiscoAccess.Module.World
         // then paths two metres to the balcony edge and calls the ground-floor door reachable).
         public bool ReachableFrom(Vector3 from)
         {
-            if (Category == WorldTaxonomy.Npc) return ClickWouldAct();
+            if (Category == WorldTaxonomy.Npc || HasInteractionMarkers) return ClickWouldAct();
             if (!StandingGround(out UnityEngine.Vector3 ground) && !MooredGround(from, out ground))
                 return false;
             var path = new UnityEngine.AI.NavMeshPath();
@@ -416,8 +419,8 @@ namespace DiscoAccess.Module.World
                    && path.status == UnityEngine.AI.NavMeshPathStatus.PathComplete;
         }
 
-        // The game's click verdict for a person, priced without acting. Clicking a person runs
-        // GameController.MoveToTarget, which prices a MovementCommand to the person's authored
+        // The game's click verdict, priced without acting. Clicking any entity runs
+        // GameController.MoveToTarget, which prices a MovementCommand to the entity's authored
         // FormationMarker stand-spots (the cheapest INTERACTION-purpose marker; the interaction location
         // when it has none) and refuses while the cheapest price stays infinite - that refusal is the
         // "can't reach" a walk-interact would otherwise discover only after walking. Pricing a fresh
@@ -437,6 +440,28 @@ namespace DiscoAccess.Module.World
             command.Process(_e, gc.isNarrowEnvironment ? Sector.behind : Sector.left);
             return !float.IsPositiveInfinity(command.cost);
         }
+
+        // Whether the entity carries an authored INTERACTION stand-spot, checked the way the click's
+        // pricing gathers them (FormationMarkers on the entity or a parent, filtered by purpose). Resolved
+        // once per proxy: markers are authored scene structure, and this is read per discovery query (the
+        // same trade the footprint and category caches make).
+        private bool HasInteractionMarkers
+        {
+            get
+            {
+                if (_hasMarkers == null)
+                {
+                    _hasMarkers = false;
+                    var markers = _e.GetComponentsInParent<FormationMarker>();
+                    if (markers != null)
+                        foreach (FormationMarker m in markers)
+                            if (m != null && m.HasPurpose(new[] { Formation.Purpose.INTERACTION }))
+                            { _hasMarkers = true; break; }
+                }
+                return _hasMarkers.Value;
+            }
+        }
+        private bool? _hasMarkers;
 
         // The walkable mesh this thing is MOORED AGAINST, for a body with no standing ground of its own: a
         // thing over unwalkable surface (the Motorboat on the water off the fishing village walkway) belongs
@@ -516,7 +541,17 @@ namespace DiscoAccess.Module.World
         private static Formation.Location LocationAt(Vector3 from)
             => new Formation.Location(WorldConvert.ToUnity(from), 0f);
 
-        public bool Interact() => _e.Interact(new Interactable.ClickEventData());
+        // An entity's Interact IS the game's click: it prices the approach, walks the whole party
+        // (re-pathing live toward a moving target), and fires the interaction on arrival, so the walk verb
+        // fires it and stands back. The run flag is the click flow's own double-click.
+        public bool InteractWalks => true;
+        public bool Interact() => Interact(run: false);
+
+        public bool Interact(bool run)
+        {
+            var data = new Interactable.ClickEventData { isDoubleClick = run };
+            return _e.Interact(data);
+        }
 
         // Map the entity's runtime type onto a taxonomy category. Order matters where types nest (Curtains
         // derives from Door). TravelDestination/Teleporter exits derive from NavMeshClickHandler, not
