@@ -47,6 +47,9 @@ namespace DiscoAccess.Module
         // Speaks the container events the game marks with sound alone (a locked refusal, the loot panel
         // closing) via Harmony feeders drained from the pump. Owns no native handle; its patches ride _harmony.
         private ContainerReader _containers;
+        // Speaks the locked-door refusal, likewise marked with sound alone, via a Harmony feeder drained
+        // from the pump. Owns no native handle; its patch rides _harmony.
+        private DoorReader _doors;
         // Speaks the literary quote the game shows as a baked full-screen image (new game start and the
         // intro) via Harmony feeders drained from the pump. Owns no native handle; its patches ride _harmony.
         private QuoteReader _quotes;
@@ -94,6 +97,9 @@ namespace DiscoAccess.Module
             // Speak the locked-container refusal and the loot panel's close; likewise on this load's Harmony.
             _containers = new ContainerReader(_host);
             _containers.Apply(_harmony);
+            // Speak the locked-door refusal; likewise on this load's Harmony.
+            _doors = new DoorReader(_host);
+            _doors.Apply(_harmony);
             // Speak the baked-image quote when the game displays it; likewise on this load's Harmony.
             _quotes = new QuoteReader(_host);
             _quotes.Apply(_harmony);
@@ -294,6 +300,9 @@ namespace DiscoAccess.Module
             // reads "received ..." before "container closed".
             _containers.Drain();
 
+            // Speak a locked-door refusal caught since last frame.
+            _doors.Drain();
+
             // Speak the quote if the game displayed it since last frame (queued, so the begin-prompt
             // announcement it accompanies reads first).
             _quotes.Drain();
@@ -345,6 +354,7 @@ namespace DiscoAccess.Module
             _notifications?.Dispose(); // drop the static back-reference before the patches are removed
             _barks?.Dispose(); // likewise drop the bark feeder's back-reference before unpatching
             _containers?.Dispose(); // and the container feeder's
+            _doors?.Dispose(); // and the door feeder's
             _quotes?.Dispose(); // and the quote feeder's
             _loadingTips?.Dispose(); // and the tip feeder's
             _harmony?.UnpatchSelf();
@@ -356,6 +366,7 @@ namespace DiscoAccess.Module
             _notifications = null;
             _barks = null;
             _containers = null;
+            _doors = null;
             _quotes = null;
             _loadingTips = null;
             _host = null;

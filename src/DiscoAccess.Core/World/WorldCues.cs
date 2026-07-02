@@ -35,6 +35,11 @@ namespace DiscoAccess.Core.World
             }
         }
 
+        /// <summary>The category cue with the thing's open state folded in: a door standing open sounds
+        /// its own cue, so the sweep and the review ping tell it from a closed one by ear.</summary>
+        public static AudioCue CueFor(string category, bool isOpen)
+            => isOpen && category == WorldTaxonomy.Door ? AudioCue.ThingDoorOpen : CueFor(category);
+
         /// <summary>Fire the thing's cue as a tracked one-shot placed at the nearest part of its shape
         /// relative to the live <paramref name="listener"/> - pan + ear delay east/west, muffled when it
         /// sits behind (south of) the listener - re-placed while it sounds, so a glide during the ping
@@ -43,7 +48,7 @@ namespace DiscoAccess.Core.World
         public static void Ping(SpatialSources cues, IWorldItem item, Func<Vector3> listener,
                                 Func<float> volume)
         {
-            cues.Play(CueFor(item.Category),
+            cues.Play(CueFor(item.Category, item.IsOpen),
                       listener,
                       from => item.Bounds.NearestPoint(from),
                       dist => volume() * Spatial.DistanceVolume(dist, RefDistance, VolumeFloor),

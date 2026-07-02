@@ -151,8 +151,10 @@ namespace DiscoAccess.Core.World.Overlays.Systems
             // would act on. Recomputed here (not read off the blip's confirmed state) so it is fresh after a
             // recenter, where the cursor jumps without a glide Tick.
             IWorldItem? under = Under(ctx.Cursor, ctx.Reference);
+            // The name carries its state via the shared composition (ItemLabel), so the cursor and the
+            // scanner can never disagree about a door standing open.
             if (under != null && !string.IsNullOrEmpty(under.Name))
-                yield return new OverlayAnnouncement(AnnouncementContext.Point, under.Name);
+                yield return new OverlayAnnouncement(AnnouncementContext.Point, ItemLabel.For(under, under.Name));
         }
 
         // The one thing under the cursor: the nearest actionable thing whose footprint the cursor is within

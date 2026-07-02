@@ -37,6 +37,8 @@ namespace DiscoAccess.Tests
             public bool IsAccessible => Accessible;
             public bool IsVisible => Visible;
             public bool RidesPlayer => false;
+            public bool Open { get; set; }
+            public bool IsOpen => Open;
             public Vector3 InteractionPoint(Vector3 from) => Position;
             public bool Reachable { get; set; } = true;
             public bool ReachableFrom(Vector3 from) => Reachable;
@@ -108,6 +110,23 @@ namespace DiscoAccess.Tests
             scanner.StepItem(1);
             Assert.StartsWith("near; ", speech.Spoken[^1]);
             Assert.Same(model.List[1], scanner.Selected);
+        }
+
+        [Fact]
+        public void OpenDoor_ReadsItsState_ClosedStaysSilent()
+        {
+            var (scanner, model, speech, _, _) = Build();
+            var door = At(1f, 0f, "bathroom door", WorldTaxonomy.Door);
+            door.Open = true;
+            model.List.Add(door);
+
+            scanner.StepItem(1);
+            Assert.StartsWith("bathroom door, open; ", speech.Spoken[^1]);
+
+            // Closed is the default a blind player assumes, so no state word.
+            door.Open = false;
+            scanner.StepItem(1);
+            Assert.StartsWith("bathroom door; ", speech.Spoken[^1]);
         }
 
         [Fact]

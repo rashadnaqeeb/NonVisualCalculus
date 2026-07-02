@@ -517,10 +517,15 @@ namespace DiscoAccess.Core.Strings
         /// player must hear that the list they were arrowing through is gone.</summary>
         public const string WorldContainerClosed = "container closed";
 
-        /// <summary>Spoken when interacting with a locked container the game refuses to open (it plays
-        /// only a rattle sound). Fallback for when the game's own "Locked" tooltip term fails to
+        /// <summary>Spoken when interacting with a locked container or door the game refuses to open (it
+        /// plays only a rattle sound). Fallback for when the game's own "Locked" tooltip term fails to
         /// resolve; the term is preferred so the word localizes.</summary>
         public const string StatusLocked = "locked";
+
+        /// <summary>A door standing open, appended to its scanner readout. Closed is the default a blind
+        /// player assumes, so only open is spoken. The game marks the state only by the door mesh's
+        /// rotation, with no string to reuse.</summary>
+        public const string StatusOpen = "open";
 
         // ---- World status readouts (mod-authored; the game has no spoken equivalent) ----
 

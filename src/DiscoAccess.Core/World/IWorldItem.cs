@@ -30,6 +30,11 @@ namespace DiscoAccess.Core.World
         /// <summary>Whether the player could currently know about this thing (revealed, streamed in).</summary>
         bool IsVisible { get; }
 
+        /// <summary>Whether this thing is a door standing open - visible on screen as the rotated-open
+        /// panel, so it is announced and sounded distinctly. False for a closed door (the state a blind
+        /// player assumes, never announced) and for anything with no open/closed state at all.</summary>
+        bool IsOpen { get; }
+
         /// <summary>Whether this thing rides the player character rather than sitting at a fixed world spot
         /// (a thought-cabinet orb orbiting the character). Such a thing sits on top of the character, so the
         /// cursor's near-player skip - which drops the character's own entity so it is never hover-announced -

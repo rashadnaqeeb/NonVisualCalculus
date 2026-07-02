@@ -23,5 +23,13 @@ namespace DiscoAccess.Tests
         {
             Assert.Equal(AudioCue.ThingInteractable, WorldCues.CueFor("something-new"));
         }
+
+        [Fact]
+        public void OpenDoor_SoundsItsOwnCue_ClosedTheDefault()
+        {
+            Assert.Equal(AudioCue.ThingDoorOpen, WorldCues.CueFor(WorldTaxonomy.Door, isOpen: true));
+            Assert.Equal(AudioCue.ThingDoor, WorldCues.CueFor(WorldTaxonomy.Door, isOpen: false));
+            Assert.Equal(AudioCue.ThingDoor, WorldCues.CueFor(WorldTaxonomy.Exit, isOpen: false));
+        }
     }
 }

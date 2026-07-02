@@ -123,6 +123,7 @@ namespace DiscoAccess.Audio
                 case AudioCue.ThingContainer: return Path.Combine(ThingDir, "container.wav");
                 case AudioCue.ThingOrb: return Path.Combine(ThingDir, "orb.wav");
                 case AudioCue.ThingDoor: return Path.Combine(ThingDir, "door.wav");
+                case AudioCue.ThingDoorOpen: return Path.Combine(ThingDir, "door_open.wav");
                 default: return Path.Combine(ThingDir, "interactable.wav");
             }
         }

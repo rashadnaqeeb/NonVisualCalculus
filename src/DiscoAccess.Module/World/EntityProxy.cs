@@ -306,6 +306,18 @@ namespace DiscoAccess.Module.World
         private string _category;
         public bool IsAccessible => _e.IsAccessible;
 
+        // A door standing open, read live from the game's own door state - the same field its OnUse
+        // toggles and its scene-load persistence restores, so it is exactly what a sighted player sees
+        // as the rotated-open panel. False for anything without an open/closed state.
+        public bool IsOpen
+        {
+            get
+            {
+                Door door = _e.TryCast<Door>();
+                return door != null && door.IsOpen;
+            }
+        }
+
         // Whether a sighted player can currently see this thing. Interiors hide unentered rooms behind
         // fog-of-war volumes rendered as black void; FogSense reads what the volume over a point says.
         // The volumes' meshes cover rooms' open interiors but stop at walls, so a wall-recessed body (the

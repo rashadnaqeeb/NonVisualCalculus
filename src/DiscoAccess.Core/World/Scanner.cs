@@ -140,7 +140,9 @@ namespace DiscoAccess.Core.World
             _selected = item;
             Ping(item);
             string spatial = SpatialReadout.Describe(from, item.InteractionPoint(from));
-            string name = string.IsNullOrEmpty(item.Name) ? WorldThingObject : item.Name;
+            // The shared name-plus-state composition (ItemLabel), so the scanner and the cursor readout
+            // can never disagree about a door standing open.
+            string name = ItemLabel.For(item, string.IsNullOrEmpty(item.Name) ? WorldThingObject : item.Name);
             _speech.Speak(prefix + name + "; " + spatial, interrupt: true);
         }
 

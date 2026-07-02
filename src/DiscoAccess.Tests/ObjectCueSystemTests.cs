@@ -52,6 +52,8 @@ namespace DiscoAccess.Tests
             public bool IsVisible => Visible;
             public bool Rides { get; set; }
             public bool RidesPlayer => Rides;
+            public bool Open { get; set; }
+            public bool IsOpen => Open;
             public Vector3 InteractionPoint(Vector3 from) => Position;
             // Whether the game can path to it from here. Defaults true (an accessible thing is usually
             // reachable); only the off-level cursor gate consults it, so a test sets it false to model a thing
@@ -193,6 +195,24 @@ namespace DiscoAccess.Tests
             overlay.Cursor.Position = Vector3.Zero; // 2 m off a point footprint: outside the margin
             overlay.AnnounceCurrent();
             Assert.Empty(backend.Spoken);
+        }
+
+        [Fact]
+        public void OpenDoor_NamesItsState_LikeTheScanner()
+        {
+            // The cursor's stop readout folds in the open state through the same ItemLabel composition the
+            // scanner uses, so the two senses can never disagree about a door standing open.
+            var backend = new FakeBackend();
+            var (overlay, _, model, _, _) = Build(backend);
+            model.List.Add(new FakeItem
+            {
+                Name = "bathroom door", Cat = WorldTaxonomy.Door,
+                Position = new Vector3(2f, 0f, 0f), Open = true,
+            });
+
+            overlay.Cursor.Position = new Vector3(2f, 0f, 0f);
+            overlay.AnnounceCurrent();
+            Assert.Equal(new[] { "bathroom door, open" }, backend.Spoken);
         }
 
         [Fact]

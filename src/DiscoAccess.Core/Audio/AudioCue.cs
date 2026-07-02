@@ -35,5 +35,9 @@ namespace DiscoAccess.Core.Audio
 
         /// <summary>A way through - an in-place door or a destination exit.</summary>
         ThingDoor,
+
+        /// <summary>A door standing open. Closed is the state a blind player assumes, so only open
+        /// sounds different.</summary>
+        ThingDoorOpen,
     }
 }
