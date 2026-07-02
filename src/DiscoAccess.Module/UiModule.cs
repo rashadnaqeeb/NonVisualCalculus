@@ -63,9 +63,12 @@ namespace DiscoAccess.Module
         public void Load(IModHost host)
         {
             _host = host;
-            // A per-load id so a reload's Dispose unpatches exactly this load's patches. No patches yet;
-            // future readers register them through this instance.
-            _harmony = new Harmony("com.rashad.discoaccess.module");
+            // A per-load UNIQUE id so a reload's Dispose unpatches exactly this load's patches. The host
+            // loads the new module (which patches) before disposing the old one (so a failed reload keeps
+            // the old module running), and UnpatchSelf removes by owner id - with a fixed id the old
+            // module's teardown stripped the fresh load's patches, silently killing every Harmony feature
+            // (notifications, barks) until the next full restart.
+            _harmony = new Harmony("com.rashad.discoaccess.module." + System.Guid.NewGuid().ToString("N"));
 
             // Stand up the keyboard input substrate and our UI navigation.
             _input = new InputManager();

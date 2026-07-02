@@ -166,7 +166,10 @@ into a permanent host and a reloadable module so feature code can hot-reload (se
 Only entry, native (Prism/P-Invoke), socket-owning, or IL2CPP-type-injecting code goes in the host.
 A module must never call `ClassInjector.RegisterTypeInIl2Cpp` (permanent for the process) and must
 own no native handle, or it can't be torn down on reload. Module-owned Harmony uses a per-load
-`new Harmony(id)` and `UnpatchSelf()` in `Dispose` so a reload cleanly unpatches.
+`new Harmony(id)` with a per-load UNIQUE id and `UnpatchSelf()` in `Dispose` so a reload cleanly
+unpatches: the host loads the new module (which patches) before disposing the old (failed-reload
+safety), and `UnpatchSelf` removes by owner id, so a fixed id lets the old teardown strip the fresh
+load's patches.
 
 **Adapter / composition split.** Reading live game state touches Unity and lives in a thin adapter in
 the module that extracts raw state into plain data (no Unity types past the boundary) and does no
