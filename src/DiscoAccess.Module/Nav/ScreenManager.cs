@@ -102,6 +102,7 @@ namespace DiscoAccess.Module.Nav
             Register(new BeginScreen());
             Register(new CharacterSheetScreen());
             Register(new ThoughtCabinetScreen());
+            Register(new ThoughtSplashScreen());
             Register(new JournalScreen());
             Register(new InventoryScreen());
             Register(new DialogueScreen());

@@ -226,6 +226,9 @@ namespace DiscoAccess.Core.Strings
         // The endgame newspaper, the full-screen article shown after a death or a game ending. The game
         // titles it only with the article's own headline, so its name is authored.
         public const string ScreenNewspaper = "newspaper";
+        // The finished-thought splash, shown when a thought completes internalization. Its only game
+        // text is the thought itself (the view has no title term), so its name is authored.
+        public const string ScreenThoughtComplete = "thought complete";
         // The full-screen begin prompt (a black screen with one BEGIN button) a new game or a dream
         // sequence waits on before its opening dialogue. The game's caption is baked into a localized
         // sprite (its I2 term resolves to the sprite name, not text), so the prompt is authored; it is
