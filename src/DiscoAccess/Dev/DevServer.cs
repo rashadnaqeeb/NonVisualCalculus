@@ -22,7 +22,8 @@ namespace DiscoAccess.Dev
     ///   POST /input            body = verb. UI verbs (up|down|left|right|confirm|back|tab|prev|home|end|
     ///                          secondary) drive our navigator when it owns the keyboard, else fall back
     ///                          to DE's focus system. World verbs (interact|stop|recenter|scan-next|
-    ///                          scan-prev|scan-category-next|scan-category-prev|cursor-to|scan-interact,
+    ///                          scan-prev|scan-category-next|scan-category-prev|scan-people[-prev]|
+    ///                          scan-items[-prev]|scan-exits[-prev],
     ///                          or any raw "world.*"/"status" action key) fire the world reader's own
     ///                          handlers while it owns the keyboard. Enter/Escape on a focused text
     ///                          field commit/cancel the edit first.
@@ -443,8 +444,12 @@ namespace DiscoAccess.Dev
                 case "scan-prev": case "scanprev": return "world.scan.prev";
                 case "scan-category-next": case "scan-cat-next": return "world.scan.category.next";
                 case "scan-category-prev": case "scan-cat-prev": return "world.scan.category.prev";
-                case "cursor-to": case "scan-cursorto": return "world.scan.cursorto";
-                case "scan-interact": return "world.scan.interact";
+                case "scan-people": case "scan-people-next": return "world.scan.people.next";
+                case "scan-people-prev": return "world.scan.people.prev";
+                case "scan-items": case "scan-items-next": return "world.scan.items.next";
+                case "scan-items-prev": return "world.scan.items.prev";
+                case "scan-exits": case "scan-exits-next": return "world.scan.exits.next";
+                case "scan-exits-prev": return "world.scan.exits.prev";
                 default: return null;
             }
         }

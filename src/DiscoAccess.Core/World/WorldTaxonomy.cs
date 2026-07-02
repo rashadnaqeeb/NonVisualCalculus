@@ -30,5 +30,30 @@ namespace DiscoAccess.Core.World
         /// <summary>The browse category a thing lists under: its own classification, except a door, which
         /// lists as an exit.</summary>
         public static string ScanCategory(string category) => category == Door ? Exit : category;
+
+        /// <summary>The browse categories a quick-nav group (<see cref="ScanGroup"/>) spans.</summary>
+        public static IReadOnlyList<string> GroupCategories(ScanGroup group)
+        {
+            switch (group)
+            {
+                case ScanGroup.People: return PeopleCategories;
+                case ScanGroup.Items: return ItemCategories;
+                default: return ExitCategories;
+            }
+        }
+
+        private static readonly IReadOnlyList<string> PeopleCategories = new[] { Npc, Interactable };
+        private static readonly IReadOnlyList<string> ItemCategories = new[] { Container, Orb };
+        private static readonly IReadOnlyList<string> ExitCategories = new[] { Exit };
+    }
+
+    /// <summary>The scanner's quick-nav groups, each cycled by its own key regardless of the browse
+    /// category: the animate things you talk to or use (people and interactables), the things you take
+    /// or read (containers and orbs), and the ways out (exits, doors folded in).</summary>
+    public enum ScanGroup
+    {
+        People,
+        Items,
+        Exits,
     }
 }

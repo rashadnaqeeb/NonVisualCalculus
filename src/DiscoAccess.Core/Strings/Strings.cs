@@ -32,13 +32,17 @@ namespace DiscoAccess.Core.Strings
         public const string InputWorldRecenter = "Recenter cursor on character";
         public const string InputWorldInteract = "Walk and interact";
         public const string InputWorldStop = "Stop";
-        // The scanner (review cursor) keys: cycle its selection and act on it without moving the cursor.
-        public const string InputWorldScanNext = "Scanner next item";
-        public const string InputWorldScanPrev = "Scanner previous item";
+        // The scanner keys: each landing moves the cursor onto the thing, so Enter acts on it directly.
+        public const string InputWorldScanNext = "Scanner next thing";
+        public const string InputWorldScanPrev = "Scanner previous thing";
         public const string InputWorldScanNextCategory = "Scanner next category";
         public const string InputWorldScanPrevCategory = "Scanner previous category";
-        public const string InputWorldScanCursorTo = "Move cursor to scanned item";
-        public const string InputWorldScanInteract = "Walk and interact with scanned item";
+        public const string InputWorldScanPeopleNext = "Scanner next person or interactable";
+        public const string InputWorldScanPeoplePrev = "Scanner previous person or interactable";
+        public const string InputWorldScanItemsNext = "Scanner next item";
+        public const string InputWorldScanItemsPrev = "Scanner previous item";
+        public const string InputWorldScanExitsNext = "Scanner next exit";
+        public const string InputWorldScanExitsPrev = "Scanner previous exit";
         // The world's information-screen, pause, and help keys.
         public const string InputWorldInventory = "Open inventory";
         public const string InputWorldCharacterSheet = "Open character sheet";
@@ -367,14 +371,15 @@ namespace DiscoAccess.Core.Strings
         public const string WorldScanContainers = "containers";
         public const string WorldScanOrbs = "orbs";
         public const string WorldScanExits = "exits";
+        // The quick-nav groups' labels, spoken only when a group key finds nothing ("items, none"); exits
+        // reuse the category word.
+        public const string WorldScanPeopleGroup = "people and interactables";
+        public const string WorldScanItemsGroup = "items";
 
         /// <summary>A scan category's landing line: its label and how many things are in it ("exits, 3";
         /// "orbs, none"). Label first, the distinguishing part.</summary>
         public static string WorldScanCategoryCount(string label, int count)
             => count == 0 ? label + ", none" : label + ", " + count;
-
-        /// <summary>Spoken when an act-on-scanned key fires with nothing scanned yet.</summary>
-        public const string WorldScanNothing = "nothing scanned";
 
         // Generic type words: the spoken name for a thing whose own name is a slug and has no spoiler-safe
         // title to fall back to (see EntityNaming). A door reads "door", a crate "container", and so on, so

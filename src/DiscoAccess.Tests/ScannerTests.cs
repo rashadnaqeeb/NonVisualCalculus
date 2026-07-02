@@ -65,15 +65,16 @@ namespace DiscoAccess.Tests
             public bool IsFogged(Vector3 point) => FogFn(point);
         }
 
-        private static (Scanner scanner, FakeModel model, FakeBackend speech, FakeAudioEngine audio, FakeEnv env) Build()
+        private static (Scanner scanner, FakeModel model, FakeBackend speech, FakeAudioEngine audio, FakeEnv env, List<Vector3> planted) Build()
         {
             var model = new FakeModel();
             var speech = new FakeBackend();
             var audio = new FakeAudioEngine();
             var env = new FakeEnv();
-            var scanner = new Scanner(model, env, () => Vector3.Zero, new SpeechPipeline(speech),
-                                      new SpatialSources(audio, _ => { }));
-            return (scanner, model, speech, audio, env);
+            var planted = new List<Vector3>();
+            var scanner = new Scanner(model, env, () => Vector3.Zero, p => planted.Add(p),
+                                      new SpeechPipeline(speech), new SpatialSources(audio, _ => { }));
+            return (scanner, model, speech, audio, env, planted);
         }
 
         private static FakeItem At(float x, float z, string name = "thing",
@@ -99,21 +100,21 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
-        public void FirstPress_LandsOnNearest_WithoutStepping()
+        public void FirstPress_LandsOnNearest_WithoutStepping_AndPlantsTheCursor()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, planted) = Build();
             model.List.Add(At(5f, 0f, "far"));
             model.List.Add(At(1f, 0f, "near"));
 
             scanner.StepItem(1);
             Assert.StartsWith("near; ", speech.Spoken[^1]);
-            Assert.Same(model.List[1], scanner.Selected);
+            Assert.Equal(model.List[1].Position, planted[^1]);
         }
 
         [Fact]
         public void SecondPress_StepsOutward_AndWraps()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, _) = Build();
             model.List.Add(At(1f, 0f, "near"));
             model.List.Add(At(5f, 0f, "far"));
 
@@ -127,7 +128,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void SteppingBackward_FromFresh_LandsOnFarthest()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, _) = Build();
             model.List.Add(At(1f, 0f, "near"));
             model.List.Add(At(5f, 0f, "far"));
 
@@ -138,7 +139,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void SelectionContinues_AcrossARebuild()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, _) = Build();
             var near = At(2f, 0f, "near");
             var far = At(5f, 0f, "far");
             model.List.Add(near);
@@ -153,7 +154,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void VanishedSelection_ReentersAtNearest()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, _) = Build();
             var near = At(1f, 0f, "near");
             model.List.Add(near);
             model.List.Add(At(5f, 0f, "far"));
@@ -167,7 +168,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void InaccessibleAndInvisible_AreNeverOffered()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, _) = Build();
             model.List.Add(new FakeItem { Position = new Vector3(1f, 0f, 0f), Name = "litter", Accessible = false });
             model.List.Add(new FakeItem { Position = new Vector3(2f, 0f, 0f), Name = "hidden", Visible = false });
             model.List.Add(At(5f, 0f, "real"));
@@ -181,7 +182,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void OutOfView_IsNeverOffered_AndCountsAgree()
         {
-            var (scanner, model, speech, _, env) = Build();
+            var (scanner, model, speech, _, env, _) = Build();
             env.ViewFn = p => p.X <= 10f; // the frame ends at 10 m east
             model.List.Add(At(2f, 0f, "near crate", WorldTaxonomy.Container));
             model.List.Add(At(80f, 0f, "distant crate", WorldTaxonomy.Container));
@@ -195,7 +196,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void WideThing_PokingIntoTheFrame_StillOffered()
         {
-            var (scanner, model, speech, _, env) = Build();
+            var (scanner, model, speech, _, env, _) = Build();
             env.ViewFn = p => p.X <= 10f;
             var wide = new FakeItem
             {
@@ -213,7 +214,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void EnvFogDoesNotSecondGuessItemVisibility()
         {
-            var (scanner, model, speech, _, env) = Build();
+            var (scanner, model, speech, _, env, _) = Build();
             // The bathroom-door shape: the environment reads the thing's spot as fogged (its body hangs
             // inside the unrevealed room), but the item reports visible - the boundary rule, judged at its
             // approach stand-point. Fog is IWorldItem.IsVisible's contract; the scanner takes no second
@@ -228,7 +229,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void SameLevelSeveredCrossing_IsNotOffered()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, _) = Build();
             // The corridor doors beyond the player's own shut door: same level, in frame, visible over the
             // walls - but the closed door severs every path, so their reachability verdict (the click
             // pricing) refuses and a walk-interact would too. Only crossings and people take the test: the
@@ -256,7 +257,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void OffLevelUnreachableThing_IsNotOffered()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, _) = Build();
             // The balcony door seen from the plaza: hanging well above the scan reference's level, standing
             // on a disconnected island - reachable only by going elsewhere, so never offered.
             model.List.Add(new FakeItem { Position = new Vector3(1f, 5f, 0f), Name = "balcony door", Reachable = false });
@@ -271,7 +272,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void JustOffLevelUnreachableThing_IsNotOffered()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, _) = Build();
             // The ground below a low balcony (Martinaise stacks levels as tight as 2 m): past the pivot
             // slack, off reachable ground, so hidden even though the height gap is small.
             model.List.Add(new FakeItem { Position = new Vector3(1f, -2f, 0f), Name = "tracks", Reachable = false });
@@ -286,7 +287,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void OffLevelReachableThing_StaysOffered()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, _) = Build();
             // The crate up on the harbour gate (its platform connects via stairs) or the balcony smoker
             // (a conversation authored from the ground): off-level but ReachableFrom, so still findable.
             model.List.Add(new FakeItem { Position = new Vector3(1f, 5f, 0f), Name = "smoker", Reachable = true });
@@ -298,7 +299,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void OnLevelThing_IsOfferedWithoutAPathTest()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, _) = Build();
             // The NPC behind the bar counter: on the scan reference's level but standing on a navmesh pocket
             // no path test accepts; within the pivot slack the gate never asks, so they stay offered.
             model.List.Add(new FakeItem { Position = new Vector3(1f, 0.8f, 0f), Name = "bartender", Reachable = false });
@@ -308,18 +309,18 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
-        public void EmptyWorld_SpeaksNone()
+        public void EmptyWorld_SpeaksNone_AndLeavesTheCursor()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, planted) = Build();
             scanner.StepItem(1);
             Assert.Equal("everything, none", speech.Spoken[^1]);
-            Assert.Null(scanner.Selected);
+            Assert.Empty(planted);
         }
 
         [Fact]
         public void FirstCategoryPress_AnnouncesCurrentWithoutStepping()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, _) = Build();
             model.List.Add(At(1f, 0f, "near"));
 
             scanner.StepCategory(1);
@@ -329,7 +330,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void CategoryStep_SkipsEmptyCategories()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, _) = Build();
             model.List.Add(At(1f, 0f, "crate", WorldTaxonomy.Container));
             model.List.Add(At(2f, 0f, "stairs", WorldTaxonomy.Exit));
 
@@ -345,7 +346,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void DoorsListUnderExits()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, _) = Build();
             model.List.Add(At(1f, 0f, "kitchen door", WorldTaxonomy.Door));
             model.List.Add(At(3f, 0f, "courtyard door", WorldTaxonomy.Exit));
 
@@ -357,7 +358,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void ItemStep_StaysInsideTheCategory()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, _) = Build();
             model.List.Add(At(1f, 0f, "cuno", WorldTaxonomy.Npc));
             model.List.Add(At(2f, 0f, "crate", WorldTaxonomy.Container));
             model.List.Add(At(5f, 0f, "kim", WorldTaxonomy.Npc));
@@ -374,7 +375,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void Landing_PingsInStereo_WithTheCategorySound()
         {
-            var (scanner, model, _, audio, _) = Build();
+            var (scanner, model, _, audio, _, _) = Build();
             model.List.Add(At(3f, 0f, "east thing")); // due east of the reference
 
             scanner.StepItem(1);
@@ -389,7 +390,7 @@ namespace DiscoAccess.Tests
         [Fact]
         public void Landing_PingsTheDoorSound_ForADoor()
         {
-            var (scanner, model, _, audio, _) = Build();
+            var (scanner, model, _, audio, _, _) = Build();
             model.List.Add(At(2f, 0f, "kitchen door", WorldTaxonomy.Door));
 
             scanner.StepCategory(1); // Everything; lands on the door
@@ -399,22 +400,21 @@ namespace DiscoAccess.Tests
         [Fact]
         public void EmptyLanding_DoesNotPing()
         {
-            var (scanner, model, _, audio, _) = Build();
+            var (scanner, model, _, audio, _, _) = Build();
             scanner.StepItem(1);
             Assert.Empty(audio.Cues);
         }
 
         [Fact]
-        public void Reset_DropsSelection_KeepsCategory()
+        public void Reset_DropsTheBrowsePosition_KeepsCategory()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, _) = Build();
             model.List.Add(At(1f, 0f, "cuno", WorldTaxonomy.Npc));
             model.List.Add(At(2f, 0f, "crate", WorldTaxonomy.Container));
 
             scanner.StepCategory(1); // Everything
             scanner.StepCategory(1); // people
             scanner.Reset();
-            Assert.Null(scanner.Selected);
             scanner.StepItem(1); // first press again: lands nearest in the kept category
             Assert.StartsWith("cuno; ", speech.Spoken[^1]);
         }
@@ -422,11 +422,108 @@ namespace DiscoAccess.Tests
         [Fact]
         public void SpokenLine_CarriesBearingAndDistance()
         {
-            var (scanner, model, speech, _, _) = Build();
+            var (scanner, model, speech, _, _, _) = Build();
             model.List.Add(At(0f, 4f, "crate")); // 4 m due north
 
             scanner.StepItem(1);
             Assert.Equal("crate; north, 4 meters", speech.Spoken[^1]);
+        }
+
+        [Fact]
+        public void CategoryLanding_PlantsTheCursor()
+        {
+            var (scanner, model, _, _, _, planted) = Build();
+            var crate = At(1f, 0f, "crate", WorldTaxonomy.Container);
+            model.List.Add(crate);
+
+            scanner.StepCategory(1);
+            Assert.Equal(crate.Position, planted[^1]);
+        }
+
+        [Fact]
+        public void PeopleGroup_CyclesNpcsAndInteractables_Only()
+        {
+            var (scanner, model, speech, _, _, _) = Build();
+            model.List.Add(At(1f, 0f, "cuno", WorldTaxonomy.Npc));
+            model.List.Add(At(2f, 0f, "crate", WorldTaxonomy.Container));
+            model.List.Add(At(3f, 0f, "lever", WorldTaxonomy.Interactable));
+
+            scanner.StepGroup(1, ScanGroup.People);
+            Assert.StartsWith("cuno; ", speech.Spoken[^1]);
+            scanner.StepGroup(1, ScanGroup.People);
+            Assert.StartsWith("lever; ", speech.Spoken[^1]);
+            scanner.StepGroup(1, ScanGroup.People); // wraps, never landing on the crate
+            Assert.StartsWith("cuno; ", speech.Spoken[^1]);
+        }
+
+        [Fact]
+        public void ItemsGroup_CyclesContainersAndOrbs()
+        {
+            var (scanner, model, speech, _, _, _) = Build();
+            model.List.Add(At(1f, 0f, "crate", WorldTaxonomy.Container));
+            model.List.Add(At(2f, 0f, "cuno", WorldTaxonomy.Npc));
+            model.List.Add(At(3f, 0f, "perception orb", WorldTaxonomy.Orb));
+
+            scanner.StepGroup(1, ScanGroup.Items);
+            Assert.StartsWith("crate; ", speech.Spoken[^1]);
+            scanner.StepGroup(1, ScanGroup.Items);
+            Assert.StartsWith("perception orb; ", speech.Spoken[^1]);
+            scanner.StepGroup(1, ScanGroup.Items); // wraps, never landing on cuno
+            Assert.StartsWith("crate; ", speech.Spoken[^1]);
+        }
+
+        [Fact]
+        public void ExitsGroup_TakesDoorsAndExits()
+        {
+            var (scanner, model, speech, _, _, _) = Build();
+            model.List.Add(At(1f, 0f, "kitchen door", WorldTaxonomy.Door));
+            model.List.Add(At(2f, 0f, "crate", WorldTaxonomy.Container));
+            model.List.Add(At(3f, 0f, "courtyard stairs", WorldTaxonomy.Exit));
+
+            scanner.StepGroup(1, ScanGroup.Exits);
+            Assert.StartsWith("kitchen door; ", speech.Spoken[^1]);
+            scanner.StepGroup(1, ScanGroup.Exits);
+            Assert.StartsWith("courtyard stairs; ", speech.Spoken[^1]);
+        }
+
+        [Fact]
+        public void GroupKey_ContinuesInsideTheGroup_EntersAtNearestFromOutside()
+        {
+            var (scanner, model, speech, _, _, _) = Build();
+            model.List.Add(At(1f, 0f, "cuno", WorldTaxonomy.Npc));
+            model.List.Add(At(2f, 0f, "crate", WorldTaxonomy.Container));
+            model.List.Add(At(5f, 0f, "kim", WorldTaxonomy.Npc));
+
+            scanner.StepItem(1); // everything: lands on cuno
+            scanner.StepGroup(1, ScanGroup.People); // cuno is in the group, so this steps: kim
+            Assert.StartsWith("kim; ", speech.Spoken[^1]);
+            scanner.StepGroup(1, ScanGroup.Items); // kim is outside this group: enters at the nearest item
+            Assert.StartsWith("crate; ", speech.Spoken[^1]);
+        }
+
+        [Fact]
+        public void EmptyGroup_SpeaksNone_AndLeavesTheCursor()
+        {
+            var (scanner, model, speech, _, _, planted) = Build();
+            model.List.Add(At(1f, 0f, "crate", WorldTaxonomy.Container));
+
+            scanner.StepGroup(1, ScanGroup.People);
+            Assert.Equal("people and interactables, none", speech.Spoken[^1]);
+            Assert.Empty(planted);
+        }
+
+        [Fact]
+        public void GroupStep_LeavesTheBrowseCategoryUntouched()
+        {
+            var (scanner, model, speech, _, _, _) = Build();
+            model.List.Add(At(1f, 0f, "cuno", WorldTaxonomy.Npc));
+            model.List.Add(At(2f, 0f, "crate", WorldTaxonomy.Container));
+
+            scanner.StepCategory(1); // Everything, first press
+            scanner.StepCategory(1); // people
+            scanner.StepGroup(1, ScanGroup.Items); // crate, category untouched
+            scanner.StepItem(1); // still browsing people: the crate never lands here
+            Assert.StartsWith("cuno; ", speech.Spoken[^1]);
         }
     }
 }

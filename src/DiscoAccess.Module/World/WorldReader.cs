@@ -98,10 +98,14 @@ namespace DiscoAccess.Module.World
             _overlay.With(_sonar);
             _walk = new WalkInteract(host);
             _districts = new DistrictReader(host);
-            // The review cursor: browses the same live registry the cursor senses, scoped by the same env
+            // The scanner: browses the same live registry the cursor senses, scoped by the same env
             // (in-frame, unfogged), anchored to the PLAYER - membership, sort, and spoken distances all
             // measure from where the character stands, since the walk a scanned thing supports starts there.
-            _scanner = new Scanner(_model, _env, () => _env.PlayerPosition, host.Speech, _sources);
+            // Every landing plants the movement cursor on the thing (the scanner only offers in-frame
+            // things, so the landing is always inside the cursor's roam window), so Enter acts on exactly
+            // what was announced.
+            _scanner = new Scanner(_model, _env, () => _env.PlayerPosition,
+                                   p => _overlay.Cursor.Position = p, host.Speech, _sources);
             _scanner.BindVolume(() => host.Settings.SonarVolume.Fraction);
             Active = this;
         }
@@ -231,9 +235,9 @@ namespace DiscoAccess.Module.World
                 _walk.BeginWalk(cursor, Strings.WorldWalking);
         }
 
-        // ---- the scanner (review cursor) verbs, fired by the world keys ----
+        // ---- the scanner verbs, fired by the world keys; every landing plants the cursor ----
 
-        /// <summary>Cycle the scanner selection through the current category (PageDown / PageUp).</summary>
+        /// <summary>Cycle the scanner through the current browse category (PageDown / PageUp).</summary>
         public void ScanNext() { if (_engaged) _scanner.StepItem(1); }
         public void ScanPrev() { if (_engaged) _scanner.StepItem(-1); }
 
@@ -241,27 +245,11 @@ namespace DiscoAccess.Module.World
         public void ScanNextCategory() { if (_engaged) _scanner.StepCategory(1); }
         public void ScanPrevCategory() { if (_engaged) _scanner.StepCategory(-1); }
 
-        /// <summary>Plant the movement cursor on the scanned thing (Home) - the explicit opt-in bridge from
-        /// reviewing to being there. The scanner only offers in-frame things, so the landing is always inside
-        /// the cursor's roam window, and the point readout names it exactly as a glide arrival would.</summary>
-        public void ScanCursorTo()
-        {
-            if (!_engaged) return;
-            IWorldItem target = _scanner.Selected;
-            if (target == null) { _host.Speech.Speak(Strings.WorldScanNothing, interrupt: true); return; }
-            _overlay.Cursor.Position = target.Position;
-            _overlay.AnnounceCurrent();
-        }
-
-        /// <summary>Walk to the scanned thing and interact (I) - the review counterpart of Enter, through the
-        /// same walk-then-interact verb, so reachability is attempted and reported, never pre-judged.</summary>
-        public void ScanInteract()
-        {
-            if (!_engaged) return;
-            IWalkTarget target = _scanner.Selected as IWalkTarget;
-            if (target == null) { _host.Speech.Speak(Strings.WorldScanNothing, interrupt: true); return; }
-            _walk.BeginInteract(target, _overlay.Cursor.PlayerPosition);
-        }
+        /// <summary>Cycle a quick-nav group (comma people and interactables, period items, slash exits;
+        /// Shift reverses), independent of the browse category.</summary>
+        public void ScanPeople(int dir) { if (_engaged) _scanner.StepGroup(dir, ScanGroup.People); }
+        public void ScanItems(int dir) { if (_engaged) _scanner.StepGroup(dir, ScanGroup.Items); }
+        public void ScanExits(int dir) { if (_engaged) _scanner.StepGroup(dir, ScanGroup.Exits); }
 
         // The plain in-game world is the CLEAR view. Confirmed live: during free-roam ViewsPagesBridge.Current
         // reads CLEAR steadily, and DevScan sees the full entity set; a menu, dialogue, or cutscene is its own

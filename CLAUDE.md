@@ -113,7 +113,8 @@ Endpoints (loopback; drive with `curl`):
   DE's `NavigationManager` is muted), else fall back to DE's focus system for not-yet-migrated screens -
   both via the game's **own logical handlers**, never OS synthetic keys (a backgrounded window can't take
   those). World verbs (`interact|stop|recenter|scan-next|scan-prev|scan-category-next|scan-category-prev|
-  cursor-to|scan-interact`, or any raw registered key like `world.read.time`) fire the world reader's own
+  scan-people[-prev]|scan-items[-prev]|scan-exits[-prev]`, or any raw registered key like `world.read.time`)
+  fire the world reader's own
   handlers while it owns the keyboard - the real player path, so use these rather than `/eval`-calling
   game internals when testing world flows. Enter/Escape on a focused text field commit/cancel the edit
   first. Read results via `/speech` (or just use `/eval`'s speech capture).
