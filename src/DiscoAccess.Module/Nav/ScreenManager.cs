@@ -109,6 +109,9 @@ namespace DiscoAccess.Module.Nav
             // The world's loot panel: CLEAR (free-roam) has no screen of its own, so this applies only
             // while the panel is up and the world reader keeps the keyboard the rest of the time.
             Register(new ContainerPanelScreen());
+            // The endgame newspaper (a death or a game ending) floats in the lobby scene: LOBBY otherwise
+            // matches no screen, so this applies only while the article is up.
+            Register(new NewspaperScreen());
         }
 
         private void Register(Screen screen) => _screens.Add(screen);

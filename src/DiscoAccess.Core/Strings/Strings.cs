@@ -223,6 +223,9 @@ namespace DiscoAccess.Core.Strings
         // The world's loot panel (opened by interacting with an unlocked container). It has no ViewType of
         // its own (the view stays CLEAR) and no game title, so its name is authored.
         public const string ScreenContainer = "container";
+        // The endgame newspaper, the full-screen article shown after a death or a game ending. The game
+        // titles it only with the article's own headline, so its name is authored.
+        public const string ScreenNewspaper = "newspaper";
         // The full-screen begin prompt (a black screen with one BEGIN button) a new game or a dream
         // sequence waits on before its opening dialogue. The game's caption is baked into a localized
         // sprite (its I2 term resolves to the sprite name, not text), so the prompt is authored; it is
@@ -256,6 +259,10 @@ namespace DiscoAccess.Core.Strings
         // continue control is an image with no clean text label, so the word is authored; the player reaches
         // it by pressing Down past the current line.
         public const string DialogueContinue = "continue";
+
+        // The endgame newspaper's article-paging arrows, image-only buttons with no caption term to read.
+        public const string NewspaperNextArticle = "next article";
+        public const string NewspaperPreviousArticle = "previous article";
 
         // A response that carries a skill check reads its breakdown inline after the option text: the skill
         // name and difficulty come from the game, these name the check colour (white = retryable, red =
