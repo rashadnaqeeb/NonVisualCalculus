@@ -42,6 +42,10 @@ namespace DiscoAccess.Core.World
         private IWorldItem? _selected;
         private bool _entered;
 
+        // The review ping's volume, read live from the sonar-volume setting (one knob for both senses'
+        // pings); the WOTR level until bound.
+        private Func<float> _volume = () => WorldCues.DefaultVolume;
+
         public Scanner(IWorldModel model, Overlays.IWorldEnvironment env, Func<Vector3> scanFrom,
                        SpeechPipeline speech, SpatialSources cues)
         {
@@ -56,6 +60,12 @@ namespace DiscoAccess.Core.World
         /// scanner has landed on something. Read live by the caller at act time; a despawned selection is the
         /// act verb's attempt-and-report problem, never pre-judged here.</summary>
         public IWorldItem? Selected => _selected;
+
+        /// <summary>Bind the live 0..1 ping volume (the sonar-volume setting, shared with the sweep).</summary>
+        public void BindVolume(Func<float> provider)
+        {
+            if (provider != null) _volume = provider;
+        }
 
         /// <summary>Step the selection through the current category (+1 next, -1 previous), nearest-first
         /// from the scan reference. The first press lands on the nearest thing without stepping.</summary>
@@ -126,7 +136,7 @@ namespace DiscoAccess.Core.World
         // The review ping: the thing's own category sound placed at its nearest part relative to the scan
         // reference, so the ear hears where the readout says it is. The one shared WorldCues.Ping the
         // sonar sweep also plays, so review and sweep speak one sound language with one falloff.
-        private void Ping(IWorldItem item) => WorldCues.Ping(_cues, item, _scanFrom);
+        private void Ping(IWorldItem item) => WorldCues.Ping(_cues, item, _scanFrom, _volume);
 
         // The current category's live list: the accessible-and-visible things inside the visible frame
         // (what a sighted player could see and act on right now), category-filtered through the

@@ -67,11 +67,8 @@ namespace DiscoAccess.Module.World
             _host = host;
             _audio = host.Audio;
             // The tracked positional one-shots (the blips and pings, the sonar when it lands): fired here,
-            // re-placed each frame in Tick so they follow a moving listener. Owns the spatial-cue toggles,
-            // so every cue gates through the same settings.
+            // re-placed each frame in Tick so they follow a moving listener.
             _sources = new SpatialSources(_audio, host.LogWarning);
-            _sources.BindSpatialCues(() => host.Settings.AudioItd.Value,
-                                     () => host.Settings.AudioFrontBackFilter.Value);
             _env = new WorldEnvironment();
             _overlay = new Overlay(_env, host.Speech, _sources);
             // The cursor's object sense: the enter/exit blips while gliding and the name of the thing under
@@ -97,6 +94,7 @@ namespace DiscoAccess.Module.World
             _sonar.BindMode(() => host.Settings.SonarContinuous.Value ? PlayMode.Continuous : PlayMode.WhenMoving);
             _sonar.BindCategories(host.Settings.SonarCategoryEnabled);
             _sonar.BindRest(() => host.Settings.SonarRest.Value / 1000f);
+            _sonar.BindVolume(() => host.Settings.SonarVolume.Fraction);
             _overlay.With(_sonar);
             _walk = new WalkInteract(host);
             _districts = new DistrictReader(host);
@@ -104,6 +102,7 @@ namespace DiscoAccess.Module.World
             // (in-frame, unfogged), sorted from the movement cursor (the "look around from here" reference),
             // speaking and pinging through the same pipes.
             _scanner = new Scanner(_model, _env, () => _overlay.Cursor.Position, host.Speech, _sources);
+            _scanner.BindVolume(() => host.Settings.SonarVolume.Fraction);
             Active = this;
         }
 

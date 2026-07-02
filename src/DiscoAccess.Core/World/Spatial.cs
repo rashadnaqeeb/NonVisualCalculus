@@ -15,13 +15,13 @@ namespace DiscoAccess.Core.World
         // Max interaural delay ~ head width / speed of sound ~ 0.22 m / 343 m/s ~ 0.66 ms.
         private const float MaxItdSeconds = 0.00066f;
 
-        // Front/back cue. The wet path is a lowpass closing from open (due-side) to muffled (due-south);
-        // the wet MIX rises in step. Because the cue sounds are bright and narrowband, a pure lowpass would
-        // silence them behind the listener - so the dry remainder (1 - WetMix) is always kept: broadband
-        // sounds darken, bright sounds simply get quieter, and nothing ever disappears.
-        private const float OpenHz = 20000f;  // due-side: wet path effectively transparent (and WetMix ~ 0)
-        private const float MuffledHz = 500f; // due-south: the wet path is heavily muffled
-        private const float MaxWet = 0.5f;    // due-south: 50% filtered / 50% dry (a bright cue ~ -6 dB)
+        // Front/back cue: a high-shelf CUT deepening from transparent (due-side) to MaxShelfCutDb
+        // (due-south). A shelf rather than a lowpass because the cue sounds are bright and narrowband -
+        // a lowpass would silence them outright behind the listener, where a shelf makes broadband
+        // sounds darker and bright sounds quieter by the same dB, so nothing ever disappears. Ramped in
+        // dB (log-perceptual), which the ear hears as an even slide.
+        public const float ShelfHz = 1500f;      // corner: above it sits the cue sounds' brightness
+        public const float MaxShelfCutDb = -15f; // due-south: the deepest cut
 
         /// <summary>Stereo pan in [-1, 1] for a thing whose nearest point is <paramref name="dx"/> metres to
         /// the side (east positive) at planar distance <paramref name="dist"/>. Close in, pan tracks the
@@ -35,37 +35,33 @@ namespace DiscoAccess.Core.World
         /// XZ plane the compass readout uses). East/west becomes the constant-power <see cref="Pan"/> plus
         /// an interaural time difference sharing the pan's lateral fraction, so the time and level cues
         /// move together; north/south becomes timbre - stereo cannot pan front/back, so sources behind the
-        /// listener (south) are progressively low-passed, ramping on a log curve from open at the due-side
-        /// line to muffled-and-mixed-in at due-south (muffled = behind, bright = ahead, the audiogame
-        /// convention). Distance stays the caller's volume job. <paramref name="itd"/> and
-        /// <paramref name="frontBack"/> gate the two extra cues (the mod menu toggles) so each can be
-        /// A/B'd by ear.</summary>
-        public static SpatialCue Cue(float dx, float dz, float panWidth, bool itd = true, bool frontBack = true)
+        /// listener (south) get a progressively deeper high-shelf cut, ramping from transparent at the
+        /// due-side line to <see cref="MaxShelfCutDb"/> at due-south (muffled = behind, bright = ahead,
+        /// the audiogame convention). Distance stays the caller's volume job.</summary>
+        public static SpatialCue Cue(float dx, float dz, float panWidth)
         {
             float dist = (float)Math.Sqrt(dx * dx + dz * dz);
             float lat = Pan(dx, dist, panWidth);
-            var cue = new SpatialCue { Pan = lat, LowpassHz = OpenHz };
+            var cue = new SpatialCue
+            {
+                Pan = lat,
+                ItdSeconds = MaxItdSeconds * lat,
+                RearShelfHz = ShelfHz,
+            };
 
-            if (itd) cue.ItdSeconds = MaxItdSeconds * lat;
-
-            // Only the rear hemisphere is processed (south of the listener exactly), ramping from dry at
-            // the due-side line to muffled at due-south.
-            if (frontBack && dist > 1e-3f)
+            // Only the rear hemisphere is processed (south of the listener exactly), ramping from
+            // transparent at the due-side line to the full cut at due-south.
+            if (dist > 1e-3f)
             {
                 float northFrac = WorldMath.Clamp(dz / dist, -1f, 1f); // +1 ahead .. -1 behind
-                if (northFrac < 0f)
-                {
-                    float back = -northFrac; // 0 at the side line .. 1 at due-south
-                    cue.LowpassHz = OpenHz * (float)Math.Pow(MuffledHz / OpenHz, back); // log interp
-                    cue.WetMix = back * MaxWet;
-                }
+                if (northFrac < 0f) cue.RearShelfDb = MaxShelfCutDb * -northFrac;
             }
             return cue;
         }
 
         /// <summary>Volume in [<paramref name="floor"/>, 1] falling with distance on the curve
         /// refDist / (refDist + dist): full at the thing, half a reference-distance away, never below the
-        /// floor so a far-but-revealed thing stays faintly audible. The per-system and master volumes scale
+        /// floor so a far-but-revealed thing stays faintly audible. The caller's own volume setting scales
         /// this on top.</summary>
         public static float DistanceVolume(float dist, float refDist, float floor)
             => WorldMath.Clamp(refDist / (refDist + dist), floor, 1f);

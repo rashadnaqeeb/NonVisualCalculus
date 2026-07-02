@@ -18,9 +18,6 @@ namespace DiscoAccess.Core.Audio
     /// centre), and <c>gain</c> (distance to volume, including the caller's own falloff and volume
     /// setting). Self-cleaning: a voice that reports Finished is dropped, and a source whose functions
     /// throw (its proxy despawned mid-ping) is dropped with a warning, letting the voice drain on its own.
-    ///
-    /// Owns the spatial-cue toggles (bound once to the mod menu's audio settings), so every tracked cue
-    /// places through the same <see cref="Spatial.Cue"/> gates.
     /// </summary>
     public sealed class SpatialSources
     {
@@ -38,32 +35,28 @@ namespace DiscoAccess.Core.Audio
         // Main-thread only (Play from the sensing systems' tick, Tick from the frame loop) - no lock needed.
         private readonly List<Src> _live = new List<Src>();
 
-        // The spatial-cue toggles (bound to the mod menu's audio settings): the interaural delay sharpening
-        // left/right and the rear lowpass giving front/back. On until bound.
-        private Func<bool> _itd = () => true;
-        private Func<bool> _frontBack = () => true;
-
         public SpatialSources(IAudioEngine audio, Action<string> warn)
         {
             _audio = audio;
             _warn = warn;
         }
 
-        /// <summary>Bind the live spatial-cue toggles (the host wires them to the audio settings), so each
-        /// extra cue can be A/B'd by ear from the mod menu without a reload.</summary>
-        public void BindSpatialCues(Func<bool> itd, Func<bool> frontBack)
-        {
-            _itd = itd;
-            _frontBack = frontBack;
-        }
-
         /// <summary>Fire a tracked positional one-shot. Plays immediately at its current placement and is
-        /// then re-placed each frame until it finishes. No-op if the engine couldn't start the voice.</summary>
+        /// then re-placed each frame until it finishes. No-op if the engine couldn't start the voice, or
+        /// if the source's functions throw at fire time (its proxy despawned since the caller chose it) -
+        /// the same skip a source dying mid-cue gets in <see cref="Tick"/>.</summary>
         public void Play(AudioCue cue, Func<Vector3> listener, Func<Vector3, Vector3> sourceAt,
                          Func<float, float> gain, float panWidth)
         {
             var src = new Src { Listener = listener, SourceAt = sourceAt, Gain = gain, PanWidth = panWidth };
-            (SpatialCue placement, float volume) = Placement(src);
+            SpatialCue placement;
+            float volume;
+            try { (placement, volume) = Placement(src); }
+            catch (Exception e)
+            {
+                _warn("[spatial-src] source dropped at fire time: " + e.Message);
+                return;
+            }
             ISpatialVoice? voice = _audio.PlayCue(cue, volume, placement);
             if (voice == null) return;
             src.Voice = voice;
@@ -108,14 +101,16 @@ namespace DiscoAccess.Core.Audio
         }
 
         // The one placement computation both the fire (Play) and every re-place (Tick) go through, so the
-        // initial and tracked placements can never disagree.
+        // initial and tracked placements can never disagree. Direction (pan, ITD, rear shelf) is planar -
+        // a flat-map question - but the gain distance is 3D, matching the spoken readout's Geo.Distance:
+        // a thing up a ledge must SOUND as far as speech says it is, or the two senses contradict.
         private (SpatialCue placement, float volume) Placement(Src src)
         {
             Vector3 c = src.Listener();
             Vector3 s = src.SourceAt(c);
-            float dx = s.X - c.X, dz = s.Z - c.Z;
-            float dist = (float)Math.Sqrt(dx * dx + dz * dz);
-            return (Spatial.Cue(dx, dz, src.PanWidth, _itd(), _frontBack()), src.Gain(dist));
+            float dx = s.X - c.X, dy = s.Y - c.Y, dz = s.Z - c.Z;
+            float dist = (float)Math.Sqrt(dx * dx + dy * dy + dz * dz);
+            return (Spatial.Cue(dx, dz, src.PanWidth), src.Gain(dist));
         }
     }
 }

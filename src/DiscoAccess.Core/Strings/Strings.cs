@@ -229,6 +229,9 @@ namespace DiscoAccess.Core.Strings
         public const string SettingReadAmbientDialogue = "Read ambient dialogue";
         public const string SettingWallToneVolume = "Wall tone volume";
         public const string SettingWallTonesContinuous = "Continuous wall tones";
+        // One volume for the sonar sweep's pings and the scanner's review ping - the same sounds through
+        // the same falloff, so one knob.
+        public const string SettingSonarVolume = "Sonar volume";
         public const string SettingSonarContinuous = "Continuous sonar";
         public const string SettingSonarRest = "Time between sonar sweeps";
         // The sonar's per-category toggles, built from the scanner's spoken browse-group words (WorldScan*)
@@ -239,8 +242,6 @@ namespace DiscoAccess.Core.Strings
         public const string SettingSonarOrbs = "Sonar " + WorldScanOrbs;
         public const string SettingSonarExits = "Sonar " + WorldScanExits;
         public const string SettingRunToDestinations = "Run to destinations";
-        public const string SettingAudioItd = "Ear delay stereo cue";
-        public const string SettingAudioFrontBackFilter = "Muffle cues from behind";
 
         // The navigable affordance that advances a conversation when there are no response choices. DE's own
         // continue control is an image with no clean text label, so the word is authored; the player reaches

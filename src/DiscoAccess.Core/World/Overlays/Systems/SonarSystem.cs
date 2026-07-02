@@ -47,10 +47,12 @@ namespace DiscoAccess.Core.World.Overlays.Systems
         private int _index;   // next thing in _sweep to ping
         private float _timer; // seconds until the next ping / until the end-of-sweep rest elapses
 
-        // What to sonify (keyed by browse category) and the rest between sweeps, read live from the mod
-        // settings so a menu change takes effect mid-sweep. Everything sounds until bound.
+        // What to sonify (keyed by browse category), the rest between sweeps, and the ping volume, read
+        // live from the mod settings so a menu change takes effect mid-sweep. Everything sounds, at the
+        // WOTR level, until bound.
         private Func<string, bool> _categories = _ => true;
         private Func<float> _rest = () => DefaultRestSec;
+        private Func<float> _volume = () => WorldCues.DefaultVolume;
 
         public SonarSystem(IWorldModel model, IWorldEnvironment env, SpatialSources cues, Action<string> warn)
         {
@@ -74,6 +76,13 @@ namespace DiscoAccess.Core.World.Overlays.Systems
         public void BindRest(Func<float> provider)
         {
             if (provider != null) _rest = provider;
+        }
+
+        /// <summary>Bind the live 0..1 ping volume (the sonar-volume setting, shared with the scanner's
+        /// review ping).</summary>
+        public void BindVolume(Func<float> provider)
+        {
+            if (provider != null) _volume = provider;
         }
 
         public override void OnExit(Overlay overlay) => Reset();
@@ -151,7 +160,7 @@ namespace DiscoAccess.Core.World.Overlays.Systems
                 if (!item.IsVisible || !item.IsAccessible) return;
                 Vector3 cursor = overlay.Cursor.Position;
                 if (Geo.DistanceXZ(item.Bounds.NearestPoint(cursor), cursor) > SweepRadius) return;
-                WorldCues.Ping(_cues, item, () => overlay.Cursor.Position);
+                WorldCues.Ping(_cues, item, () => overlay.Cursor.Position, _volume);
             }
             catch (Exception e)
             {

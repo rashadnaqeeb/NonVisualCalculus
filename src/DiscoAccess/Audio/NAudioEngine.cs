@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using BepInEx.Logging;
 using DiscoAccess.Core.Audio;
-using NAudio.Dsp;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 
@@ -17,7 +16,7 @@ namespace DiscoAccess.Audio
     /// <c>IModHost.Audio</c>. The device opens lazily on first use and self-disables on failure, so a machine
     /// with no audio device never crashes the mod. Ported from the WOTR exploration mod's NAudio engine; the
     /// wall tones loop WOTR's set-1 WAV assets, and the positional cues carry its full spatial model
-    /// (constant-power pan + interaural time difference + the rear lowpass - see <see cref="SpatialCue"/>).
+    /// (constant-power pan + interaural time difference + the rear shelf - see <see cref="SpatialCue"/>).
     /// </summary>
     internal sealed class NAudioEngine : IAudioEngine, IDisposable
     {
@@ -56,6 +55,7 @@ namespace DiscoAccess.Audio
             try
             {
                 _mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(Rate, 2)) { ReadFully = true };
+                var limiter = new SoftLimiter(_mixer);
                 _out = new WaveOutEvent { DesiredLatency = 100, NumberOfBuffers = 4 };
                 // A device dying mid-session (unplugged headphones, driver error) stops playback with an
                 // exception; flag it so Available turns false - consumers (the tracked-source list) stand
@@ -67,7 +67,7 @@ namespace DiscoAccess.Audio
                     _failed = true;
                     _log?.LogWarning("[audio] output stopped (" + e.Exception.Message + "); spatial cues disabled");
                 };
-                _out.Init(_mixer);
+                _out.Init(limiter);
                 _out.Play();
                 return true;
             }
@@ -196,6 +196,39 @@ namespace DiscoAccess.Audio
             _mixer = null;
         }
 
+        // The one overload guard on the whole soundscape, between the shared mixer and the device: below
+        // the knee it is bit-transparent, above it the overshoot folds smoothly into the remaining
+        // headroom (asymptote 1.0), so a loud moment (several wall tones plus a ping) rounds off instead
+        // of hard-clipping into distortion at the float output. Per-voice clamps would distort each voice
+        // alone and still let their SUM clip; one limiter at the output catches everything.
+        private sealed class SoftLimiter : ISampleProvider
+        {
+            private const float Knee = 0.8f;
+            private readonly ISampleProvider _source;
+
+            public SoftLimiter(ISampleProvider source)
+            {
+                _source = source;
+                WaveFormat = source.WaveFormat;
+            }
+
+            public WaveFormat WaveFormat { get; }
+
+            public int Read(float[] buffer, int offset, int count)
+            {
+                int read = _source.Read(buffer, offset, count);
+                for (int i = 0; i < read; i++)
+                {
+                    float s = buffer[offset + i];
+                    float mag = s < 0f ? -s : s;
+                    if (mag <= Knee) continue;
+                    float soft = Knee + (1f - Knee) * (float)Math.Tanh((mag - Knee) / (1f - Knee));
+                    buffer[offset + i] = s < 0f ? -soft : soft;
+                }
+                return read;
+            }
+        }
+
         // A generated sine one-shot with a short attack/release (so it doesn't click) and a constant-power
         // pan. Returns fewer than `count` samples once finished, so the shared mixer auto-removes it.
         private sealed class ToneShot : ISampleProvider
@@ -237,32 +270,31 @@ namespace DiscoAccess.Audio
             }
         }
 
-        // A spatialised, LIVE sampled one-shot, the WOTR PositionalEmitter. The decoded mono clip is
-        // low-passed for the front/back cue and blended with the dry signal by the rear wet-mix (dry
-        // ahead/at the side; behind, the filtered copy fades in, keeping bright narrowband cues audible),
-        // then split L/R with a constant-power pan and a fractional interaural delay on the FAR channel,
-        // read from a tiny ring of recent FILTERED samples. Crucially the placement is re-settable while
-        // it plays: SetPlacement (main thread, via SpatialSources) writes target gains/ITD/cutoff and Read
-        // (audio thread) ramps the current values toward them across each block, so a source tracks a
-        // moving listener without clicks. Goes silent past the clip end, draining the delay tail, then
-        // returns fewer than `count` samples so the shared mixer auto-removes it (like ToneShot).
+        // A spatialised, LIVE sampled one-shot, the WOTR PositionalEmitter. The decoded mono clip runs
+        // through a high-shelf cut for the front/back cue (transparent ahead/at the side, darkening and
+        // quietening behind - a shelf, not a lowpass, so bright narrowband cues stay audible), then splits
+        // L/R with a constant-power pan and a fractional interaural delay on the FAR channel, read from a
+        // tiny ring of recent SHELVED samples. Crucially the placement is re-settable while it plays:
+        // SetPlacement (main thread, via SpatialSources) writes target gains/ITD/shelf and Read (audio
+        // thread) ramps the current values toward them across each block, so a source tracks a moving
+        // listener without clicks. Goes silent past the clip end, draining the delay tail, then returns
+        // fewer than `count` samples so the shared mixer auto-removes it (like ToneShot).
         private sealed class PositionalEmitter : ISampleProvider, ISpatialVoice
         {
             private const int RingSize = 64;         // >= max ITD (~29 frames @ 44.1 kHz) + margin; power of two
             private const int RingMask = RingSize - 1;
             private const int TailFrames = RingSize; // drain the delay line after the clip ends
-            private const float OpenHz = 20000f;     // "no filter" cutoff (effectively transparent)
-            private const float Q = 0.707f;
 
             private readonly float[] _buf;
             private readonly int _rate;
             private readonly float[] _ring = new float[RingSize];
-            private readonly BiQuadFilter _lp; // always present; cutoff ramped (OpenHz ~ bypass)
+            // Always in the signal path (identity at 0 dB), so a shelf ramping in never cold-starts.
+            private readonly HighShelf _shelf = new HighShelf();
 
             // Targets - written by SetPlacement (main thread), read by Read (audio thread).
-            private volatile float _tGainL, _tGainR, _tItd, _tCutoff, _tWet;
+            private volatile float _tGainL, _tGainR, _tItd, _tShelfHz, _tShelfDb;
             // Current smoothed values - audio thread only.
-            private float _cGainL, _cGainR, _cItd, _cCutoff, _cWet;
+            private float _cGainL, _cGainR, _cItd, _cShelfHz, _cShelfDb;
             private bool _primed;
             private int _frame;
             private volatile bool _finished;
@@ -271,8 +303,6 @@ namespace DiscoAccess.Audio
             {
                 _buf = buf;
                 _rate = rate;
-                _tCutoff = _cCutoff = OpenHz;
-                _lp = BiQuadFilter.LowPassFilter(rate, OpenHz, Q);
                 WaveFormat = WaveFormat.CreateIeeeFloatWaveFormat(rate, 2);
             }
 
@@ -287,10 +317,11 @@ namespace DiscoAccess.Audio
                 float itd = cue.ItdSeconds * _rate;
                 float maxItd = RingSize - 2; // the interpolated read needs two ring samples
                 _tItd = itd < -maxItd ? -maxItd : (itd > maxItd ? maxItd : itd);
-                float cutoff = cue.LowpassHz;
+                float hz = cue.RearShelfHz;
                 float maxHz = _rate * 0.49f;
-                _tCutoff = cutoff < 20f ? 20f : (cutoff > maxHz ? maxHz : cutoff);
-                _tWet = cue.WetMix < 0f ? 0f : (cue.WetMix > 1f ? 1f : cue.WetMix);
+                _tShelfHz = hz < 100f ? 100f : (hz > maxHz ? maxHz : hz);
+                float db = cue.RearShelfDb;
+                _tShelfDb = db < -24f ? -24f : (db > 0f ? 0f : db);
             }
 
             public int Read(float[] buffer, int offset, int count)
@@ -298,40 +329,42 @@ namespace DiscoAccess.Audio
                 int frames = count / 2;
                 if (frames == 0) return 0;
 
-                float tGainL = _tGainL, tGainR = _tGainR, tItd = _tItd, tCutoff = _tCutoff, tWet = _tWet;
+                float tGainL = _tGainL, tGainR = _tGainR, tItd = _tItd;
+                float tShelfHz = _tShelfHz, tShelfDb = _tShelfDb;
                 if (!_primed)
                 {
-                    _cGainL = tGainL; _cGainR = tGainR; _cItd = tItd; _cCutoff = tCutoff; _cWet = tWet;
-                    _lp.SetLowPassFilter(_rate, _cCutoff, Q);
+                    _cGainL = tGainL; _cGainR = tGainR; _cItd = tItd;
+                    _cShelfHz = tShelfHz; _cShelfDb = tShelfDb;
+                    _shelf.Set(_rate, _cShelfHz, _cShelfDb);
                     _primed = true;
                 }
 
-                // Cutoff lerps once per block (retuning per sample is too costly; filter state is preserved).
-                if (Math.Abs(tCutoff - _cCutoff) > 1f)
+                // The shelf lerps once per block (retuning per sample is too costly; filter state is
+                // preserved across retunes, so no click).
+                if (Math.Abs(tShelfDb - _cShelfDb) > 0.05f || Math.Abs(tShelfHz - _cShelfHz) > 1f)
                 {
-                    _cCutoff += (tCutoff - _cCutoff) * 0.5f;
-                    _lp.SetLowPassFilter(_rate, _cCutoff, Q);
+                    _cShelfDb += (tShelfDb - _cShelfDb) * 0.5f;
+                    _cShelfHz += (tShelfHz - _cShelfHz) * 0.5f;
+                    _shelf.Set(_rate, _cShelfHz, _cShelfDb);
                 }
 
-                // Gains + ITD + wet-mix ramp linearly to target across the block - click-free moving source.
+                // Gains + ITD ramp linearly to target across the block - click-free moving source.
                 float dGainL = (tGainL - _cGainL) / frames;
                 float dGainR = (tGainR - _cGainR) / frames;
                 float dItd = (tItd - _cItd) / frames;
-                float dWet = (tWet - _cWet) / frames;
 
                 int produced = 0;
                 int total = _buf.Length + TailFrames;
                 for (int f = 0; f < frames; f++)
                 {
                     if (_frame >= total) break;
-                    _cGainL += dGainL; _cGainR += dGainR; _cItd += dItd; _cWet += dWet;
+                    _cGainL += dGainL; _cGainR += dGainR; _cItd += dItd;
 
-                    // Blend the dry clip with its low-passed copy by the rear wet-mix, then feed the ring
-                    // the delayed far ear reads from. With the mix at zero and staying there (ahead/beside,
-                    // or the filter toggled off - the common case) the filter is skipped entirely; when the
-                    // source later moves behind, the mix ramps up from zero, masking the filter's cold start.
+                    // Shelf the dry clip for the rear cue, then feed the ring the delayed far ear reads
+                    // from. The shelf is identity at 0 dB (ahead/beside, the common case), so it stays in
+                    // the path and a source moving behind just deepens it - no cold start to mask.
                     float dry = _frame < _buf.Length ? _buf[_frame] : 0f;
-                    float m = _cWet > 0f || tWet > 0f ? dry + _cWet * (_lp.Transform(dry) - dry) : dry;
+                    float m = _shelf.Transform(dry);
                     _ring[_frame & RingMask] = m;
 
                     float mag = _cItd < 0f ? -_cItd : _cItd;
@@ -355,14 +388,20 @@ namespace DiscoAccess.Audio
 
         // Four looping mono WAV channels (WOTR's set-1 wall tones) summed to stereo at a fixed compass pan
         // (east hard right, west hard left, north/south centred), added as ONE mixer input. Volumes are set
-        // live each frame; each channel loops seamlessly so a voice coming back up is click-free.
+        // live each frame as targets and smoothed per sample toward them (~10 ms one-pole), so a frame-rate
+        // volume step - or the instant mute when control is lost - lands as a short fade, never a click;
+        // each channel loops seamlessly so a voice coming back up is click-free.
         private sealed class WallTones : ISampleProvider, IWallTones
         {
+            // Per-sample approach fraction for the ~10 ms volume smoothing at the mixer rate.
+            private static readonly float VolumeSmoothing = 1f - (float)Math.Exp(-1.0 / (0.010 * Rate));
+
             private sealed class Channel
             {
                 public float[] Buffer = Array.Empty<float>();
                 public int Pos;
-                public volatile float Volume;
+                public volatile float Volume; // target - written by Update (main thread)
+                public float Current;         // smoothed - audio thread only
                 public float L = 0.70710677f, R = 0.70710677f;
             }
 
@@ -411,14 +450,17 @@ namespace DiscoAccess.Audio
                         Channel c = _channels[i];
                         int len = c.Buffer.Length;
                         if (len == 0) continue;
-                        float s = c.Buffer[c.Pos] * c.Volume;
+                        c.Current += (c.Volume - c.Current) * VolumeSmoothing;
+                        float s = c.Buffer[c.Pos] * c.Current;
                         c.Pos++;
                         if (c.Pos >= len) c.Pos = 0; // seamless loop
                         l += s * c.L;
                         r += s * c.R;
                     }
-                    buffer[offset + f * 2] = l > 1f ? 1f : (l < -1f ? -1f : l);
-                    buffer[offset + f * 2 + 1] = r > 1f ? 1f : (r < -1f ? -1f : r);
+                    // No clamp: several loud tones may sum past 1.0, and the engine's output SoftLimiter
+                    // rounds the overload off once for the whole mix.
+                    buffer[offset + f * 2] = l;
+                    buffer[offset + f * 2 + 1] = r;
                 }
                 return count; // ReadFully mixer: always full (silence when all volumes are 0)
             }

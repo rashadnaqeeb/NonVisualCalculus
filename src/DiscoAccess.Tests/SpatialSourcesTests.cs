@@ -122,8 +122,37 @@ namespace DiscoAccess.Tests
             sources.Play(AudioCue.CursorEnter, () => listener, c => new Vector3(c.X, 0f, c.Z + 2f), _ => 1f, 3f);
 
             var (_, _, placement) = Assert.Single(audio.Played);
-            Assert.Equal(0f, placement.Pan, 3);    // straight ahead of wherever the listener is
-            Assert.Equal(0f, placement.WetMix, 3); // ahead: dry
+            Assert.Equal(0f, placement.Pan, 3);         // straight ahead of wherever the listener is
+            Assert.Equal(0f, placement.RearShelfDb, 3); // ahead: bright
+        }
+
+        [Fact]
+        public void Play_GainDistance_CountsElevation()
+        {
+            // A thing 4 m north and 3 m up: direction is planar (due north, centred) but the gain hears
+            // the full 3D distance (5 m), matching the spoken readout's Geo.Distance - the ear and the
+            // voice must agree on how far away it is.
+            var (sources, audio, _) = Build();
+            sources.Play(AudioCue.CursorEnter, () => Vector3.Zero, c => new Vector3(0f, 3f, 4f),
+                         dist => dist, panWidth: 3f);
+
+            var (_, volume, placement) = Assert.Single(audio.Played);
+            Assert.Equal(0f, placement.Pan, 3);
+            Assert.Equal(5f, volume, 3);
+        }
+
+        [Fact]
+        public void Play_ThrowingSource_IsSkippedWithAWarning()
+        {
+            // The proxy despawned between the caller choosing it and the fire: no cue, no crash, warned.
+            var (sources, audio, warnings) = Build();
+            sources.Play(AudioCue.CursorEnter, () => Vector3.Zero,
+                         c => throw new InvalidOperationException("despawned"), _ => 1f, 3f);
+
+            Assert.Single(warnings);
+            Assert.Empty(audio.Played);
+            sources.Tick(); // nothing was tracked
+            Assert.Empty(audio.NextVoice!.Placements);
         }
     }
 }

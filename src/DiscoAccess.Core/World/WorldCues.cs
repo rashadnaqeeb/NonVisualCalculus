@@ -14,12 +14,13 @@ namespace DiscoAccess.Core.World
     public static class WorldCues
     {
         // The thing-ping's spatialization, the WOTR review-cue values in metres: pan crosses over at
-        // PanWidth, volume halves every RefDistance and never falls below the floor, scaled by CueVolume
-        // so the ping sits at the cursor blip's level.
+        // PanWidth, volume halves every RefDistance and never falls below the floor, scaled by the
+        // caller's live sonar-volume setting. DefaultVolume is the unbound level (WOTR's, matching the
+        // cursor blip) and the sonar-volume setting's default.
         public const float PanWidth = 3f;
         public const float RefDistance = 3f;
         public const float VolumeFloor = 0.08f;
-        public const float CueVolume = 0.7f;
+        public const float DefaultVolume = 0.7f;
 
         public static AudioCue CueFor(string category)
         {
@@ -37,13 +38,15 @@ namespace DiscoAccess.Core.World
         /// <summary>Fire the thing's cue as a tracked one-shot placed at the nearest part of its shape
         /// relative to the live <paramref name="listener"/> - pan + ear delay east/west, muffled when it
         /// sits behind (south of) the listener - re-placed while it sounds, so a glide during the ping
-        /// keeps it truthful.</summary>
-        public static void Ping(SpatialSources cues, IWorldItem item, Func<Vector3> listener)
+        /// keeps it truthful. <paramref name="volume"/> is the live sonar-volume setting, read at every
+        /// re-place so a menu change lands mid-ping.</summary>
+        public static void Ping(SpatialSources cues, IWorldItem item, Func<Vector3> listener,
+                                Func<float> volume)
         {
             cues.Play(CueFor(item.Category),
                       listener,
                       from => item.Bounds.NearestPoint(from),
-                      dist => CueVolume * Spatial.DistanceVolume(dist, RefDistance, VolumeFloor),
+                      dist => volume() * Spatial.DistanceVolume(dist, RefDistance, VolumeFloor),
                       PanWidth);
         }
     }

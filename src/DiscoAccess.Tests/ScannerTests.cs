@@ -380,7 +380,7 @@ namespace DiscoAccess.Tests
             Assert.Equal(AudioCue.ThingInteractable, cue);
             Assert.True(placement.Pan > 0.5f);        // east pans right
             Assert.True(placement.ItdSeconds > 0f);   // east leads the right ear
-            Assert.Equal(0f, placement.WetMix, 3);    // not behind, so dry
+            Assert.Equal(0f, placement.RearShelfDb, 3); // not behind, so bright
             Assert.True(volume > 0f);
         }
 

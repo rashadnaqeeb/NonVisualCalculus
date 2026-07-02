@@ -33,6 +33,11 @@ namespace DiscoAccess.Core.Settings
         /// sound only while the cursor is gliding, lingering briefly after it stops.</summary>
         public ToggleSetting WallTonesContinuous { get; }
 
+        /// <summary>The loudness of the sonar sweep's pings and the scanner's review ping - one knob, since
+        /// they are the same sounds through the same falloff. A 0..100 percent, defaulting to the WOTR
+        /// review-cue level.</summary>
+        public RangeSetting SonarVolume { get; }
+
         /// <summary>When on, the sonar sweeps continuously while in the world; when off (the default) it
         /// sweeps only while the cursor is gliding, lingering briefly after it stops.</summary>
         public ToggleSetting SonarContinuous { get; }
@@ -53,16 +58,6 @@ namespace DiscoAccess.Core.Settings
         /// leaves the pace to the game's own policy, which walks, matching a vanilla single click.</summary>
         public ToggleSetting RunToDestinations { get; }
 
-        /// <summary>Interaural time difference on positional cues: the far ear hears a cue a fraction of a
-        /// millisecond later, sharpening left/right beyond what panning alone gives (especially on
-        /// headphones). Individually toggleable so it can be A/B'd by ear.</summary>
-        public ToggleSetting AudioItd { get; }
-
-        /// <summary>Front/back filter on positional cues: things behind (south of) the listener sound
-        /// progressively muffled and quieter, resolving the front/back ambiguity stereo pan leaves.
-        /// Individually toggleable so it can be A/B'd by ear.</summary>
-        public ToggleSetting AudioFrontBackFilter { get; }
-
         public ModSettings(ISettingsStore store)
         {
             AutoReadDialogue = Add(new ToggleSetting(
@@ -73,6 +68,8 @@ namespace DiscoAccess.Core.Settings
                 "wall_tone_volume", SettingWallToneVolume, defaultValue: 5, step: 5, store));
             WallTonesContinuous = Add(new ToggleSetting(
                 "wall_tones_continuous", SettingWallTonesContinuous, defaultValue: false, store));
+            SonarVolume = Add(new RangeSetting(
+                "sonar_volume", SettingSonarVolume, defaultValue: 70, step: 5, store));
             SonarContinuous = Add(new ToggleSetting(
                 "sonar_continuous", SettingSonarContinuous, defaultValue: false, store));
             SonarRest = Add(new RangeSetting(
@@ -90,10 +87,6 @@ namespace DiscoAccess.Core.Settings
                 "sonar_exit", SettingSonarExits, defaultValue: true, store));
             RunToDestinations = Add(new ToggleSetting(
                 "run_to_destinations", SettingRunToDestinations, defaultValue: false, store));
-            AudioItd = Add(new ToggleSetting(
-                "audio_itd", SettingAudioItd, defaultValue: true, store));
-            AudioFrontBackFilter = Add(new ToggleSetting(
-                "audio_front_back_filter", SettingAudioFrontBackFilter, defaultValue: true, store));
         }
 
         /// <summary>Whether the sonar should sound the given <see cref="World.WorldTaxonomy.Scan"/> browse
