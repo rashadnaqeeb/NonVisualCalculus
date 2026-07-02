@@ -187,11 +187,60 @@ namespace DiscoAccess.Tests
         public void MotionTracker_LingersThenClears()
         {
             var m = new MotionTracker();
-            m.Update(new Vector3(0f, 0f, 0f), 0.1f);
-            m.Update(new Vector3(1f, 0f, 0f), 0.1f); // moved
+            m.Update(0.1f, moving: true); // keys held
             Assert.True(m.MovingRecently);
-            m.Update(new Vector3(1f, 0f, 0f), MotionTracker.LingerSec + 0.01f); // sat still past the linger
+            m.Update(0.1f, moving: false); // released: the linger holds it
+            Assert.True(m.MovingRecently);
+            m.Update(MotionTracker.LingerSec, moving: false); // released past the linger
             Assert.False(m.MovingRecently);
+        }
+
+        [Fact]
+        public void KeylessCursorMoves_DoNotCountAsMoving()
+        {
+            // The cursor repositioned with no keys held - a recenter, a scanner landing, the frame-drag -
+            // must not wake the WhenMoving systems.
+            var env = new FakeEnv();
+            var overlay = NewOverlay(env);
+            var sys = new FakeSystem("x");
+            overlay.With(sys);
+            sys.BindMode(() => PlayMode.WhenMoving);
+
+            overlay.Cursor.Position = new Vector3(5f, 0f, 0f); // planted, not glided
+            overlay.Tick(0.1f, 0f, 0f, speed: 4f);
+            Assert.False(sys.LastShouldPlay);
+
+            env.ViewFn = p => p.X <= 3f; // the character walked: the frame-drag pulls the cursor
+            env.ClampFn = p => new Vector3(3f, p.Y, p.Z);
+            overlay.Tick(0.1f, 0f, 0f, speed: 4f);
+            Assert.Equal(new Vector3(3f, 0f, 0f), overlay.Cursor.Position); // dragged
+            Assert.False(sys.LastShouldPlay);                               // still silent
+        }
+
+        [Fact]
+        public void HeldKeysAgainstAWall_StillCountAsMoving()
+        {
+            var env = new FakeEnv { Wall = Vector3.Zero }; // every step clamps back to the origin
+            var overlay = NewOverlay(env);
+            var sys = new FakeSystem("x");
+            overlay.With(sys);
+            sys.BindMode(() => PlayMode.WhenMoving);
+
+            overlay.Tick(0.1f, 1f, 0f, speed: 4f); // holding east into the wall: no motion, still driving
+            Assert.True(sys.LastShouldPlay);
+        }
+
+        [Fact]
+        public void FrameDrag_LeavesAnUnpinnedCursorAlone()
+        {
+            // An unpinned cursor rides the player; clamping it against a camera that hasn't caught up to a
+            // just-repositioned character would pin it somewhere stale.
+            var env = new FakeEnv { ViewFn = _ => false, ClampFn = _ => new Vector3(99f, 0f, 0f) };
+            var overlay = NewOverlay(env);
+
+            overlay.Tick(0.1f, 0f, 0f, speed: 4f);
+            Assert.False(overlay.Cursor.IsPinned);
+            Assert.Equal(env.Player, overlay.Cursor.Position);
         }
 
         // ---- play-mode gating ----

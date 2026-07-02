@@ -53,6 +53,7 @@ namespace DiscoAccess.Module.World
         private readonly Scanner _scanner;
         private bool _engaged;
         private Snv _lastPlayer; // character position last in-world frame, to catch a reposition (load/teleport)
+        private string _lastScene; // scene last in-world frame - a change is a reposition regardless of distance
         private bool _hasLastPlayer;
         private bool _ownsKeyboard;
         private bool _wasOwning;
@@ -151,23 +152,29 @@ namespace DiscoAccess.Module.World
 
             bool inWorld = _inWorld; // resolved this frame by ResolveOwnership, which always runs first
             if (inWorld && !_engaged) { _overlay.OnEnter(); _engaged = true; }
-            else if (!inWorld && _engaged) { _overlay.OnExit(); _engaged = false; _walk.Abandon(); _scanner.Reset(); _sources.Clear(); _hasLastPlayer = false; }
+            else if (!inWorld && _engaged) { _overlay.OnExit(); _engaged = false; _walk.Abandon(); _scanner.Reset(); _sources.Clear(); }
             if (!inWorld) { _wasGliding = false; return; }
 
-            // A save load or scene transition repositions the character out from under the cursor, which keeps
-            // its old spot and is left stranded far from the player. The pause overlay a load runs behind keeps
-            // the CLEAR world view, so there is no world enter/exit to hang the recenter on - watch the
-            // character's own position instead. A one-step jump past a walk stride is a load or teleport, so
-            // unpin the cursor back onto the character (silent: the district readout speaks the new location).
+            // A save load, door transition, or fast travel repositions the character out from under the
+            // cursor, which keeps its old spot and is left stranded far from the player. Watch the
+            // character's own position between consecutive IN-WORLD frames: the baseline survives the
+            // non-CLEAR views a reposition typically happens behind (a loading fade, the journal's travel
+            // map, the pause overlay of a save load), so the first frame back in the world sees the jump. A
+            // one-step jump past a walk stride is a load or teleport - a cutscene can walk the character,
+            // but never metres in one frame - and a scene change is a reposition outright (its coordinates
+            // are a different map's). Unpin the cursor back onto the character (silent: the district
+            // readout speaks the new location).
             Snv player = _overlay.Cursor.PlayerPosition;
+            string scene = SceneName();
             // The jump also invalidates any still-playing cue tails (their listener just moved across the
             // map, or reads as the origin while the character is despawned mid-load) - stop tracking them.
-            if (_hasLastPlayer && Snv.Distance(player, _lastPlayer) > RepositionJump)
+            if (_hasLastPlayer && (scene != _lastScene || Snv.Distance(player, _lastPlayer) > RepositionJump))
             {
                 _overlay.Cursor.Reset();
                 _sources.Clear();
             }
             _lastPlayer = player;
+            _lastScene = scene;
             _hasLastPlayer = true;
 
             float dt = Time.unscaledDeltaTime;

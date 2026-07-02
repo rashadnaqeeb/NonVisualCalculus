@@ -59,6 +59,11 @@ namespace DiscoAccess.Core.World.Overlays
             set { _pos = value; _has = true; }
         }
 
+        /// <summary>Whether the cursor holds its own spot (false = unpinned, riding the player). The
+        /// frame-drag clamp applies only to a pinned cursor: an unpinned one is wherever the player is,
+        /// and clamping it against a mid-transition camera would pin it somewhere stale.</summary>
+        public bool IsPinned => _has;
+
         /// <summary>The player's live position (the readout origin).</summary>
         public Vector3 PlayerPosition => _env.PlayerPosition;
 

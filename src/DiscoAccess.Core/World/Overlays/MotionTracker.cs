@@ -1,39 +1,31 @@
-using System.Numerics;
-
 namespace DiscoAccess.Core.World.Overlays
 {
     /// <summary>
-    /// Tracks whether the cursor has moved recently, with a short linger so it reads as "moving" smoothly
-    /// across key-repeat gaps instead of flickering. Fed the cursor position each frame;
-    /// <see cref="MovingRecently"/> stays true for <see cref="LingerSec"/> after the last real move. Drives
-    /// the systems' <see cref="PlayMode.WhenMoving"/> gate. Ported from the WOTR exploration mod.
+    /// Tracks whether the player is actively driving the cursor - the movement keys held - with a short
+    /// linger so the signal reads as "moving" smoothly across brief releases instead of flickering. Held
+    /// keys count even when the cursor cannot advance (pinned against a wall or the frame edge); a cursor
+    /// position change with no keys held (a recenter, a reposition reset, the frame-drag as the character
+    /// walks) never counts, so the <see cref="PlayMode.WhenMoving"/> systems sound only for deliberate
+    /// movement. Ported from the WOTR exploration mod.
     /// </summary>
     public sealed class MotionTracker
     {
         public const float LingerSec = 0.25f;
 
-        private Vector3 _last;
-        private bool _has;
         private float _linger;
 
         public bool MovingRecently { get; private set; }
 
-        /// <summary><paramref name="intentMoving"/> = the player is actively holding the movement keys even
-        /// when the position can't change (the cursor is against a wall), which counts as moving alongside a
-        /// real position change.</summary>
-        public void Update(Vector3 pos, float dt, bool intentMoving = false)
+        /// <summary><paramref name="moving"/> = the player is holding the movement keys this frame.</summary>
+        public void Update(float dt, bool moving)
         {
-            bool moved = intentMoving || (_has && (pos - _last).LengthSquared() > 1e-6f);
-            if (moved) _linger = LingerSec;
+            if (moving) _linger = LingerSec;
             else _linger -= dt;
-            _last = pos;
-            _has = true;
             MovingRecently = _linger > 0f;
         }
 
         public void Reset()
         {
-            _has = false;
             _linger = 0f;
             MovingRecently = false;
         }

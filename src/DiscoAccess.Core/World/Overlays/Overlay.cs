@@ -32,8 +32,9 @@ namespace DiscoAccess.Core.World.Overlays
 
         public Cursor Cursor { get; }
 
-        /// <summary>Whether the cursor moved recently — drives the systems' <see cref="PlayMode.WhenMoving"/>
-        /// gate.</summary>
+        /// <summary>Whether the player held the cursor movement keys recently — drives the systems'
+        /// <see cref="PlayMode.WhenMoving"/> gate. Deliberate gliding only: a recenter, a reposition
+        /// reset, or the frame-drag moving the cursor does not count.</summary>
         public bool CursorMovingRecently => _motion.MovingRecently;
 
         /// <summary>Whether the player controls the character right now (cursor can move, scripted scene is
@@ -79,16 +80,17 @@ namespace DiscoAccess.Core.World.Overlays
         }
 
         /// <summary>One frame: glide the cursor by the held direction (only while in control, so it can't
-        /// drift in a cutscene), keep it inside the visible frame, refresh the moving signal from the fresh
-        /// position, then tick every system so they read the up-to-date cursor. A stroke pinned at the frame
+        /// drift in a cutscene), keep it inside the visible frame, refresh the moving signal from the held
+        /// keys, then tick every system so they read the up-to-date cursor. A stroke pinned at the frame
         /// edge or against fogged ground bumps once on the transition (re-armed by releasing the keys), so
         /// holding into the boundary doesn't drone. <paramref name="dirX"/>/<paramref name="dirZ"/> are the
         /// held movement vector (east/north positive); <paramref name="speed"/> is metres/second.</summary>
         public void Tick(float dt, float dirX, float dirZ, float speed)
         {
-            // Holding the movement keys counts as moving even when the cursor can't advance (blocked against
-            // a wall), so the WhenMoving systems don't stutter; an audio system that should fall silent
-            // without control gates on HasControl itself rather than on this signal.
+            // The moving signal is the held keys, not the cursor's position: holding counts even when the
+            // cursor can't advance (blocked against a wall) so the WhenMoving systems don't stutter, and a
+            // keyless position change (recenter, reposition reset, frame-drag) never counts, so those
+            // systems sound only for deliberate movement.
             bool intent = dirX != 0f || dirZ != 0f;
             bool driven = InputActive && _env.HasControl;
             GlideOutcome outcome = default;
@@ -96,11 +98,13 @@ namespace DiscoAccess.Core.World.Overlays
 
             // The frame invariant: a walking character slides the window, so a pinned cursor rides its edge
             // rather than falling out of the senses. Silent - the glide-stop and recenter readouts answer
-            // "where am I". Only while driven, so a dialogue or menu camera never drags the cursor around.
-            if (driven && !_env.InView(Cursor.Position))
+            // "where am I". Only while driven, so a dialogue or menu camera never drags the cursor around;
+            // only while pinned, so an unpinned cursor (riding the player) is never re-pinned against a
+            // camera that hasn't caught up to a just-repositioned character.
+            if (driven && Cursor.IsPinned && !_env.InView(Cursor.Position))
                 Cursor.Position = _env.ClampToView(Cursor.Position);
 
-            _motion.Update(Cursor.Position, dt, intent);
+            _motion.Update(dt, intent);
             for (int i = 0; i < _systems.Count; i++) _systems[i].Tick(dt, this);
 
             bool blocked = intent && outcome.Block != GlideBlock.None;
