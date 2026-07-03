@@ -280,10 +280,12 @@ namespace DiscoAccess.Core.Strings
         public const string CheckRed = "red check";
         public const string CheckModifiers = "modifiers";
 
-        // Leads the player's effective total on an unrolled check (skill plus bonuses, modifiers folded
-        // in), read after the odds: "your 3". The target it is measured against is game text - the
-        // label's own check tag, or the difficulty-and-target pair when the tag is hidden.
-        public const string CheckYours = "your";
+        // Leads the player's skill level on an unrolled check (ability plus learned points plus item and
+        // thought bonuses, the character sheet's total), read after the odds: "skill level 3". Modifiers
+        // are spoken separately in the trailing list, so every number is a raw input; the odds carry the
+        // combined arithmetic. The target is game text - the label's own check tag, or the
+        // difficulty-and-target pair when the tag is hidden.
+        public const string CheckSkillLevel = "skill level";
 
         // Fallbacks for the game's cost-option tooltip terms (TOOLTIP_COST / TOOLTIP_YOU_HAVE), used
         // only when a term fails to resolve; the game's words are preferred so they localize.

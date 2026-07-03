@@ -59,10 +59,11 @@ namespace DiscoAccess.Module.Nav
         }
 
         // The skill-check breakdown for this response, read live from the game's own check computation, or
-        // null when the response carries no check. Reads "<colour> check, <odds>%, your <total>" then
-        // "modifiers: <condition> <signed bonus>, ..." - the odds, the player's effective total (skill plus
-        // bonuses, modifiers folded in, the same value the check tooltip's Roll line shows pre-roll), and
-        // the conditions that raise or lower the check. DE's answer label already opens with a check tag
+        // null when the response carries no check. Reads "<colour> check, <odds>%, skill level <n>" then
+        // "modifiers: <condition> <signed bonus>, ..." - the odds, the player's skill level (the character
+        // sheet's total: ability plus learned points plus item and thought bonuses), and the conditions
+        // that raise or lower the check. The skill level and modifiers are raw inputs, spoken unfolded;
+        // the odds carry the combined arithmetic. DE's answer label already opens with a check tag
         // naming the skill, difficulty tier, and target number (e.g. "[Interfacing - Medium 10] ..."); when
         // that tag is present we read only what it omits so nothing is spoken twice. When the tag is absent
         // (its display is gated by dialogue settings) the skill, then the difficulty with its target
@@ -97,16 +98,7 @@ namespace DiscoAccess.Module.Nav
             // unearned modifiers, so a locked check with nothing met reads no modifier list at all.
             var mods = check.applicableTargetModifiers;
 
-            // The player's effective total, modifiers folded onto the player side against the base target
-            // (the roll line's convention, and the game's own: its tooltip nets modifiers into the Roll
-            // value). The target it is measured against is already spoken - by the label's tag, or by the
-            // difficulty line above.
-            int modSum = 0;
-            if (mods != null)
-                for (int i = 0; i < mods.Count; i++)
-                    if (mods[i] != null)
-                        modSum += mods[i].bonus;
-            head += ", " + Strings.CheckYours + " " + (check.SkillValue() - modSum);
+            head += ", " + Strings.CheckSkillLevel + " " + check.SkillValue();
 
             var parts = new List<string> { head };
             if (mods != null && mods.Count > 0)
