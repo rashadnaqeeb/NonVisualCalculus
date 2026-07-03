@@ -202,10 +202,11 @@ namespace DiscoAccess.Module
             _input.Register(WorldActions.ReadHealth, Strings.InputWorldReadHealth, InputCategory.Status, () => _commands.ReadHealth()).AddBinding(new KeyboardBinding(KeyCode.H));
             _input.Register(WorldActions.ReadLocation, Strings.InputWorldReadLocation, InputCategory.Status, () => _world.ReadLocation()).AddBinding(new KeyboardBinding(KeyCode.R));
 
-            // Ctrl+L cycles the game language, global (the world and menus), since the game's bare-key binding
-            // is killed by type-ahead in our migrated screens. Not while a text field is editing.
+            // Ctrl+L is the game's language quick-switch (primary/secondary swap), global (the world and
+            // menus), since the game's bare-key bindings are killed by type-ahead in our migrated screens.
+            // Not while a text field is editing.
             _input.Register(WorldActions.Language, Strings.InputWorldLanguage, InputCategory.Global,
-                () => { if (!_editGate.Active) _commands.CycleLanguage(); })
+                () => { if (!_editGate.Active) _commands.SwitchLanguage(); })
                 .AddBinding(new KeyboardBinding(KeyCode.L, ctrl: true));
 
             // F12 opens/closes the mod's settings menu. Global, so it fires anywhere (the world, a game
@@ -248,7 +249,7 @@ namespace DiscoAccess.Module
 
         public void Tick()
         {
-            // Follow a game-language change (options menu or the Ctrl+L cycle) before anything speaks,
+            // Follow a game-language change (options menu or the Ctrl+L quick-switch) before anything speaks,
             // so this frame's announcements already use the right table.
             _language.Tick();
 

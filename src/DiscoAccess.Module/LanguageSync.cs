@@ -13,8 +13,8 @@ namespace DiscoAccess.Module
     /// the matching translation file from the plugin's lang folder into Core's <see cref="Translation"/>
     /// table; no file means the baked-in English. A file is found by the I2 language code ("fr.txt") or
     /// the lowercased language name with word runs hyphenated ("french.txt", "portuguese-brazil.txt").
-    /// Checked every frame (one string compare) because the player can cycle the game language in play
-    /// (Ctrl+L) as well as in the options menu; authored strings resolve through the table at speak
+    /// Checked every frame (one string compare) because the player can quick-switch the game language in
+    /// play (Ctrl+L) as well as in the options menu; authored strings resolve through the table at speak
     /// time, so speech after a switch is current with no reload.
     /// </summary>
     internal sealed class LanguageSync

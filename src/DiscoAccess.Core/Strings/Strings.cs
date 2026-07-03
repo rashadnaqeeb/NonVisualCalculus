@@ -87,8 +87,9 @@ namespace DiscoAccess.Core.Strings
             D("InputWorldRightHandItem", "Use right-hand item"),
             D("InputWorldQuickSave", "Quick save"),
             D("InputWorldQuickLoad", "Quick load"),
-            // Cycles the game's display language (the mod's speech and strings follow it).
-            D("InputWorldLanguage", "Cycle language"),
+            // The game's language quick-switch: swaps between the primary and secondary display
+            // language configured in options (the mod's speech and strings follow it).
+            D("InputWorldLanguage", "Switch language"),
             D("InputWorldReadTime", "Read time"),
             D("InputWorldReadMoney", "Read money"),
             D("InputWorldReadHealth", "Read health"),
@@ -546,8 +547,11 @@ namespace DiscoAccess.Core.Strings
             // Quick-load beginning / quick-save slot not created yet.
             D("WorldQuickLoading", "quick loading"),
             D("WorldNoQuickSave", "no quick save"),
-            // The language cycle key switched the game's language.
+            // The language quick-switch key switched the game's language.
             D("WorldLanguageChanged", "language changed"),
+            // The quick-switch refused: the game gates it (title menu, settings screen, photo mode,
+            // mid-save).
+            D("WorldNoLanguageSwitch", "language switch unavailable"),
             // The loading screen's gameplay tip, labelled for what it is; {0} = the game's own
             // localized tip sentence.
             D("LoadingTip", "tip, {0}"),
@@ -1131,6 +1135,7 @@ namespace DiscoAccess.Core.Strings
         public static string WorldQuickLoading => T("WorldQuickLoading");
         public static string WorldNoQuickSave => T("WorldNoQuickSave");
         public static string WorldLanguageChanged => T("WorldLanguageChanged");
+        public static string WorldNoLanguageSwitch => T("WorldNoLanguageSwitch");
 
         // ---- Cutscene descriptions: authored narration for the game's silent visual set pieces,
         // spoken when the scene starts (see the table entry). ----

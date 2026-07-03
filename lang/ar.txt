@@ -276,6 +276,7 @@ WorldRightHandEmpty = اليد اليمنى فارغة
 WorldQuickLoading = جار التحميل السريع
 WorldNoQuickSave = لا حفظ سريع
 WorldLanguageChanged = تغيرت اللغة
+WorldNoLanguageSwitch = تبديل اللغة غير متاح
 LoadingTip = نصيحة، {0}
 CrisisHealLeft = {0} حرجة، اضغط السهم الأيسر للعلاج
 CrisisHealRight = {0} حرجة، اضغط السهم الأيمن للعلاج

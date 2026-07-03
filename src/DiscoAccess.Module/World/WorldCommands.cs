@@ -112,10 +112,22 @@ namespace DiscoAccess.Module.World
             SunshinePersistence.Singleton.DoQuickLoad();
         }
 
-        // Cycle to the next game language (global), then speak the new language's own name as confirmation.
-        public void CycleLanguage()
+        // The game's language quick-switch: swap to the secondary language configured in options, then
+        // speak the new language's own name as confirmation. Goes through SmoothLanguageSwitch (the
+        // handler behind the game's own quick-switch keys), which also swaps the primary/secondary
+        // settings via OnLanguagesSwitched so the next press switches back. Snap rather than the smooth
+        // fade: the fade is visual-only and delays the actual language change past the confirmation
+        // speech. The game gates the switch (title menu, settings view, photo mode, mid-save); a
+        // refused press says so rather than going silent.
+        public void SwitchLanguage()
         {
-            LocalizationCustomSystem.LocalizationManager.ToggleLanguage();
+            var switcher = UnityEngine.Object.FindObjectOfType<LocalizationCustomSystem.SmoothLanguageSwitch>();
+            if (switcher == null || !switcher.CanSwitchLanguage())
+            {
+                _host.Speech.Speak(Strings.WorldNoLanguageSwitch, interrupt: true);
+                return;
+            }
+            switcher.ToggleLanguage(snapToggle: true);
             string lang = I2.Loc.LocalizationManager.CurrentLanguage;
             _host.Speech.Speak(string.IsNullOrEmpty(lang) ? Strings.WorldLanguageChanged : lang, interrupt: true);
         }
