@@ -33,7 +33,7 @@ namespace DiscoAccess.Module.Nav
 
         public override string GetFocusText()
         {
-            string caption = _caption != null ? TextFilter.Clean(_caption.text) : null;
+            string caption = _caption != null ? TextFilter.Clean(GameLocalization.Spoken(_caption)) : null;
             if (string.IsNullOrEmpty(caption)) caption = Strings.EquipmentSlotName(_dock.name);
             var item = InventoryAdapter.ItemInDock(_dock);
             // A filled slot reads the item and what it does (effects, description); an empty slot just says so.

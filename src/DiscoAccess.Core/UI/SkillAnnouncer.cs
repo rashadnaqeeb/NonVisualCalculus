@@ -1,4 +1,3 @@
-using System.Text;
 using static DiscoAccess.Core.Strings.Strings;
 
 namespace DiscoAccess.Core.UI
@@ -18,7 +17,7 @@ namespace DiscoAccess.Core.UI
     {
         public static string Compose(SkillState s)
         {
-            return Join(s.Name + " " + s.Value, SignatureWord(s), RaiseWord(s), s.Description);
+            return Text.SpokenLine.Join(s.Name + " " + s.Value, SignatureWord(s), RaiseWord(s), s.Description);
         }
 
         public static string ComposeSignature(SkillState s)
@@ -31,7 +30,7 @@ namespace DiscoAccess.Core.UI
         /// marker. The name was already spoken on focus, so it is omitted.</summary>
         public static string ComposeLeveled(SkillState s)
         {
-            return Join(s.Value.ToString(), RaiseWord(s), SignatureWord(s));
+            return Text.SpokenLine.Join(s.Value.ToString(), RaiseWord(s), SignatureWord(s));
         }
 
         private static string SignatureWord(SkillState s)
@@ -42,20 +41,6 @@ namespace DiscoAccess.Core.UI
         private static string RaiseWord(SkillState s)
         {
             return s.CanRaise ? StatusCanRaise : string.Empty;
-        }
-
-        private static string Join(params string?[] parts)
-        {
-            var sb = new StringBuilder();
-            foreach (string? part in parts)
-            {
-                if (string.IsNullOrEmpty(part))
-                    continue;
-                if (sb.Length > 0)
-                    sb.Append(", ");
-                sb.Append(part);
-            }
-            return sb.ToString();
         }
     }
 }

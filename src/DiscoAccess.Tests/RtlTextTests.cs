@@ -69,6 +69,80 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
+        public void Unfix_BoundsClusters_AtLineBreaks()
+        {
+            // The game's fixer reverses per LINE, so each line of a multi-line fixed string is its own
+            // unit; a cluster crossing the break would reverse both lines together and swap their order.
+            Assert.Equal("كيم\nكيم كيتسوراجي", RtlText.Unfix("ﻢﻴﻛ\nﻲﺟارﻮﺴﺘﻴﻛ ﻢﻴﻛ"));
+        }
+
+        [Fact]
+        public void UnfixLogical_RestoresAPreReversedLatinRun()
+        {
+            // An RTL-flagged TMP label captured live (a thought name): logical-order Arabic, but the
+            // Latin/digit run is stored pre-reversed to survive TMP's render reversal - including its
+            // hyphen, and sitting outside any Arabic-anchored span, which is why the flag-aware call
+            // exists instead of the vote.
+            Assert.Equal("فيرويذر T-500", RtlText.UnfixLogical("ﻓﻴﺮﻭﻳﺬﺭ 005-T"));
+            // A clock time reverses as one run, its colon a joiner ("people sleep at 21:00"): the
+            // digit pairs must not restore separately, which would speak 00:21.
+            Assert.Equal("الساعة 21:00", RtlText.UnfixLogical("اﻟﺴﺎﻋﺔ 00:12"));
+        }
+
+        [Fact]
+        public void UnfixLogical_SwapsPreMirroredPairs()
+        {
+            // The same storage pre-mirrors paired punctuation (a live thought name with a caliber
+            // parenthetical): the closing paren comes first in memory and must swap back.
+            Assert.Equal("مسدسات الأصابع (عيار 9 مم)",
+                RtlText.UnfixLogical("ﻣﺴﺪﺳﺎت اﻷﺻﺎﺑﻊ )ﻋﻴﺎر 9 ﻣﻢ("));
+        }
+
+        [Fact]
+        public void Unfix_PullsAnEdgeDigitRun_BackToItsLogicalEnd()
+        {
+            // A fixed name ending in a number ("Door, Room #1" style) carries the digits at its visual
+            // FRONT (the fixer keeps them upright); the reversal must include them so they return to
+            // the logical end rather than stay stranded before the name.
+            Assert.Equal("كيم كيتسوراجي 27", RtlText.Unfix("27 ﻲﺟارﻮﺴﺘﻴﻛ ﻢﻴﻛ"));
+            // Digits TRAILING the Arabic are a separately composed segment (the game's own day-plus-
+            // clock string, our floor readout) and must stay in place, outside the reversal.
+            Assert.Equal("كيم كيتسوراجي 08:06", RtlText.Unfix("ﻲﺟارﻮﺴﺘﻴﻛ ﻢﻴﻛ 08:06"));
+        }
+
+        [Fact]
+        public void Unfix_FoldsWithoutReversing_LogicalOrderShapedText()
+        {
+            // An RTL-flagged TMP label (captured from the live loading tip) carries presentation forms
+            // in LOGICAL order - TMP itself reverses at render time - so only the shaping folds to base
+            // letters; the visual-order reversal would garble it.
+            Assert.Equal("يمكن تجربة",
+                RtlText.Unfix("ﻳﻤﻜﻦ ﺗﺠﺮﺑﺔ"));
+            // Its paired punctuation is stored pre-mirrored to survive TMP's render reversal (a
+            // pronunciation tip brackets its words), so the fold swaps it back.
+            Assert.Equal("يمكن [تجربة] يمكن",
+                RtlText.Unfix("ﻳﻤﻜﻦ ]ﺗﺠﺮﺑﺔ[ ﻳﻤﻜﻦ"));
+        }
+
+        [Fact]
+        public void SpokenLine_UnfixesEachPart_BeforeTheJoin()
+        {
+            // A fixed game caption composed with the mod's own logical role word (the focus line
+            // "استمرار, زر"). After the join no character can mark the boundary - a whole-line unfix
+            // reverses the logical word and flips the order - so each part inverts within itself.
+            Assert.Equal("كيم كيتسوراجي, زر", SpokenLine.Join("ﻲﺟارﻮﺴﺘﻴﻛ ﻢﻴﻛ", "زر"));
+        }
+
+        [Fact]
+        public void StringsTemplates_UnfixAFixedArgument_InsideItsSlot()
+        {
+            // A fixed game name flows into an authored template's {0}; it must invert within the slot,
+            // before the template's own (possibly Arabic) words surround it.
+            Assert.Equal("moving to كيم كيتسوراجي",
+                DiscoAccess.Core.Strings.Strings.WorldMovingTo("ﻲﺟارﻮﺴﺘﻴﻛ ﻢﻴﻛ"));
+        }
+
+        [Fact]
         public void Clean_UnfixesFixedArabic_EndToEnd()
         {
             // The speech funnel: every reader's text passes TextFilter.Clean, so fixed Arabic from any

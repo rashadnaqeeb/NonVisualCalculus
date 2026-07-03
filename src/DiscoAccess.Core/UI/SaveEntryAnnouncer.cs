@@ -1,4 +1,3 @@
-using System.Text;
 using DiscoAccess.Core.Strings;
 
 namespace DiscoAccess.Core.UI
@@ -13,22 +12,6 @@ namespace DiscoAccess.Core.UI
     public static class SaveEntryAnnouncer
     {
         public static string Compose(SaveEntryState s)
-        {
-            var sb = new StringBuilder();
-            if (s.IsNew) Append(sb, Strings.Strings.StatusNewSave);
-            Append(sb, s.Name);
-            Append(sb, s.Date);
-            Append(sb, s.Time);
-            return sb.ToString();
-        }
-
-        private static void Append(StringBuilder sb, string? part)
-        {
-            if (string.IsNullOrEmpty(part))
-                return;
-            if (sb.Length > 0)
-                sb.Append(", ");
-            sb.Append(part);
-        }
+            => Text.SpokenLine.Join(s.IsNew ? Strings.Strings.StatusNewSave : null, s.Name, s.Date, s.Time);
     }
 }

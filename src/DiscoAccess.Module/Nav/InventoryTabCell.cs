@@ -27,7 +27,7 @@ namespace DiscoAccess.Module.Nav
             => _button != null && _button.TabButton != null && _button.TabButton.isActiveAndEnabled;
 
         public override string Label
-            => _button.ButtonText != null ? TextFilter.Clean(_button.ButtonText.text) : _group.ToString();
+            => _button.ButtonText != null ? TextFilter.Clean(GameLocalization.Spoken(_button.ButtonText)) : _group.ToString();
 
         public override string Role => Strings.RoleTab;
 

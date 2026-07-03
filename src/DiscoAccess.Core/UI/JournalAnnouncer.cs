@@ -1,4 +1,3 @@
-using System.Text;
 using static DiscoAccess.Core.Strings.Strings;
 
 namespace DiscoAccess.Core.UI
@@ -15,11 +14,11 @@ namespace DiscoAccess.Core.UI
     public static class JournalAnnouncer
     {
         public static string ComposeTask(JournalTaskSnapshot t)
-            => Join(t.Name, StatusWord(t.Status), t.Timed ? JournalTimed : null);
+            => Text.SpokenLine.Join(t.Name, StatusWord(t.Status), t.Timed ? JournalTimed : null);
 
         // One subtask line in the detail panel: its name, plus its state when resolved.
         public static string ComposeSubtask(JournalSubtaskSnapshot st)
-            => st.Status == JournalTaskStatus.Active ? st.Name : st.Name + ", " + StatusWord(st.Status);
+            => Text.SpokenLine.Join(st.Name, st.Status == JournalTaskStatus.Active ? null : StatusWord(st.Status));
 
         // The filed line: "filed {day} {clock}".
         public static string ComposeFiled(string day, int hour, int minute)
@@ -30,7 +29,7 @@ namespace DiscoAccess.Core.UI
             => ResolutionWord(status) + " " + Clock(day, hour, minute);
 
         public static string ComposeWhiteCheck(WhiteCheckSnapshot c)
-            => Join(c.Actor, c.Skill, c.Difficulty, CheckStatusWord(c.Status));
+            => Text.SpokenLine.Join(c.Actor, c.Skill, c.Difficulty, CheckStatusWord(c.Status));
 
         private static string CheckStatusWord(WhiteCheckStatus s)
         {
@@ -57,21 +56,9 @@ namespace DiscoAccess.Core.UI
         private static string ResolutionWord(JournalTaskStatus s)
             => s == JournalTaskStatus.Cancelled ? JournalForfeited : JournalCompleted;
 
+        // The day word is game text and can arrive display-shaped; it composes with authored labels,
+        // so it must invert here, within its own part.
         private static string Clock(string day, int hour, int minute)
-            => day + " " + hour + ":" + minute.ToString("00");
-
-        private static string Join(params string?[] parts)
-        {
-            var sb = new StringBuilder();
-            foreach (string? part in parts)
-            {
-                if (string.IsNullOrEmpty(part))
-                    continue;
-                if (sb.Length > 0)
-                    sb.Append(", ");
-                sb.Append(part);
-            }
-            return sb.ToString();
-        }
+            => Text.RtlText.Unfix(day) + " " + hour + ":" + minute.ToString("00");
     }
 }

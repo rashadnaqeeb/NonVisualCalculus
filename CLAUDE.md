@@ -249,10 +249,15 @@ below.)
   to `Strings.DumpTemplate()` (on failure, regenerate by writing that string to the file). Names
   rebuilt from English dev data (container flavor names, prop nouns, orb clues) do not translate: in
   a non-English game they fall back to the game's own localized text (a flavor container's single
-  item's name) or a generic type word. Spoken game text is un-RTL-fixed automatically
-  (`RtlText`, in `TextFilter.Clean`): the game returns Arabic pre-shaped in visual order for the
-  renderer, which a synthesizer cannot speak - so never fetch game strings with fixForRTL on
-  (see `GameLocalization.Translate`/`Term`).
+  item's name) or a generic type word. Spoken game text is un-RTL-fixed (`RtlText.Unfix`): the game
+  returns Arabic pre-shaped in visual order for the renderer, which a synthesizer cannot speak - so
+  never fetch game strings with fixForRTL on (see `GameLocalization.Translate`/`Term`). The
+  whole-line unfix in `TextFilter.Clean` handles only a line that is ONE fixed string: once parts
+  are joined, no character reliably marks where one string ends (the game's fixer repositions
+  punctuation inside a line, and a short logical word of non-joining letters is byte-identical to a
+  fixed fragment). So a composition that joins game text with other text must unfix per part: join
+  through `SpokenLine.Join` (which unfixes each part), or `RtlText.Unfix` each game string before
+  concatenating. `Strings.F` unfixes its string arguments, so templates are covered.
 
 **Announcements (mod-authored text only — never reword game text).** Users are expert screen-reader
 users; strip fluff, never information.

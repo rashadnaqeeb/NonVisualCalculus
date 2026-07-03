@@ -39,7 +39,7 @@ namespace DiscoAccess.Module.Nav
                 return null;
             foreach (var label in panel.GetComponentsInChildren<TMP_Text>(true))
                 if (label.gameObject.name == "Xp Text")
-                    return TextFilter.Clean(label.text);
+                    return TextFilter.Clean(GameLocalization.Spoken(label));
             return null;
         }
 

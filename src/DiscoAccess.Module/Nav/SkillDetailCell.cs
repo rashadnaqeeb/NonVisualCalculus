@@ -37,6 +37,6 @@ namespace DiscoAccess.Module.Nav
             return TextFilter.Clean(raw);
         }
 
-        private static string Raw(TMP_Text t) => t != null ? t.text : string.Empty;
+        private static string Raw(TMP_Text t) => t != null ? GameLocalization.Spoken(t) : string.Empty;
     }
 }

@@ -126,7 +126,7 @@ namespace DiscoAccess.Core.World.Overlays
             foreach (var s in _systems)
                 foreach (var a in s.Announce(ctx))
                     if (a != null && a.Context == want && !string.IsNullOrEmpty(a.Text)) parts.Add(a.Text);
-            if (parts.Count > 0) _speech.Speak(string.Join("; ", parts), interrupt: true);
+            if (parts.Count > 0) _speech.Speak(Text.SpokenLine.Join("; ", parts), interrupt: true);
         }
 
         public void AnnounceCurrent() => Announce(AnnouncementContext.Point);

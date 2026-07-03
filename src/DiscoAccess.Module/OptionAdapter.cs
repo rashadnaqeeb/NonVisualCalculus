@@ -35,7 +35,7 @@ namespace DiscoAccess.Module
             {
                 Transform label = RowLabelNode(go);
                 string labelText = LabelText(label, go);
-                string caption = dropdown.captionText != null ? dropdown.captionText.text : null;
+                string caption = dropdown.captionText != null ? GameLocalization.Spoken(dropdown.captionText) : null;
                 return OptionState.Dropdown(labelText, caption, Description(go, label, labelText, withTooltip));
             }
 
@@ -99,7 +99,7 @@ namespace DiscoAccess.Module
                     if (tmp == null)
                         tmp = swLang.GetComponentInChildren<TMP_Text>(true);
                     if (tmp != null && !string.IsNullOrEmpty(tmp.text))
-                        return tmp.text;
+                        return GameLocalization.Spoken(tmp);
                 }
             }
             return null;
@@ -191,7 +191,7 @@ namespace DiscoAccess.Module
             {
                 var tmp = labelNode.GetComponent<TMP_Text>();
                 if (tmp != null && !string.IsNullOrEmpty(tmp.text))
-                    return tmp.text;
+                    return GameLocalization.Spoken(tmp);
             }
 
             if (go.GetComponent<SwitchableLocalizationSettingsOption>() != null)

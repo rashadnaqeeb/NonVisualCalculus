@@ -25,12 +25,8 @@ namespace DiscoAccess.Module.Nav
             => _primary != null && _primary.gameObject.activeInHierarchy && !string.IsNullOrEmpty(_primary.text);
 
         public override string GetFocusText()
-        {
-            string a = _primary != null ? _primary.text : null;
-            string b = _secondary != null ? _secondary.text : null;
-            if (string.IsNullOrEmpty(b)) return a ?? string.Empty;
-            if (string.IsNullOrEmpty(a)) return b;
-            return a + ", " + b;
-        }
+            => DiscoAccess.Core.Text.SpokenLine.Join(
+                _primary != null ? GameLocalization.Spoken(_primary) : null,
+                _secondary != null ? GameLocalization.Spoken(_secondary) : null);
     }
 }

@@ -33,9 +33,9 @@ namespace DiscoAccess.Module.Nav
         public override string GetFocusText()
         {
             if (_button.CheckTequilaInActivationRadius())
-                return _name + ", " + Strings.JournalYouAreHere;
+                return DiscoAccess.Core.Text.SpokenLine.Join(_name, Strings.JournalYouAreHere);
             if (_button.wasVisited)
-                return _name + ", " + Strings.JournalVisited;
+                return DiscoAccess.Core.Text.SpokenLine.Join(_name, Strings.JournalVisited);
             return _name;
         }
 

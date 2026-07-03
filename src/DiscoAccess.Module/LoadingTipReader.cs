@@ -58,7 +58,7 @@ namespace DiscoAccess.Module
                     _host.LogWarning("LoadingTipReader: the loading screen's tip text is empty; nothing to speak.");
                     return;
                 }
-                _host.Speech.Speak(Strings.LoadingTip(text.text), interrupt: false);
+                _host.Speech.Speak(Strings.LoadingTip(GameLocalization.Spoken(text)), interrupt: false);
             }
             catch (Exception e)
             {

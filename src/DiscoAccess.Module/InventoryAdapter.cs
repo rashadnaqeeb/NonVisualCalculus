@@ -37,7 +37,7 @@ namespace DiscoAccess.Module
             InventoryTabButton button = null;
             if (tp.inventoryTabButtons != null && tp.inventoryTabButtons.TryGetValue(g, out button)
                 && button != null && button.ButtonText != null)
-                return TextFilter.Clean(button.ButtonText.text);
+                return TextFilter.Clean(GameLocalization.Spoken(button.ButtonText));
             return Strings.InventoryItemsLabel;
         }
 
@@ -263,7 +263,7 @@ namespace DiscoAccess.Module
         {
             Transform t = parent.Find(child);
             TMP_Text tmp = t != null ? t.GetComponent<TMP_Text>() : null;
-            return tmp != null ? TextFilter.Clean(tmp.text) : null;
+            return tmp != null ? TextFilter.Clean(GameLocalization.Spoken(tmp)) : null;
         }
 
         // First descendant with the given name (the stats values are nested under a scroll viewport, beyond a

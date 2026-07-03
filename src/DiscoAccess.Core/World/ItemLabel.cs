@@ -13,6 +13,6 @@ namespace DiscoAccess.Core.World
         /// <summary>The spoken label: <paramref name="name"/> (the caller's resolved display name,
         /// fallbacks already applied) with the thing's state folded in.</summary>
         public static string For(IWorldItem item, string name)
-            => item.IsOpen ? name + ", " + StatusOpen : name;
+            => item.IsOpen ? Text.SpokenLine.Join(name, StatusOpen) : name;
     }
 }

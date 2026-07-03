@@ -239,7 +239,7 @@ namespace DiscoAccess.Core.UI.Nav
                 var text = cell.GetFocusText();
                 if (!string.IsNullOrEmpty(text)) parts.Add(text);
             }
-            if (parts.Count > 0) Speak(string.Join(", ", parts), interrupt: true);
+            if (parts.Count > 0) Speak(Text.SpokenLine.Join(", ", parts), interrupt: true);
             cell.OnFocused();
         }
 

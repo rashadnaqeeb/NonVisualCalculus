@@ -49,6 +49,16 @@ namespace DiscoAccess.Module
         }
 
         /// <summary>
+        /// A TMP label's text in speakable logical order. DE shapes Arabic two ways, and the label's own
+        /// RTL flag says which: an <c>isRightToLeftText</c> label stores logical order with the
+        /// render-reversal compensations (TMP reverses at draw time), while an unflagged label may carry
+        /// the fixer's visual-order text, which the heuristic unfix inverts. Prefer this over reading
+        /// <c>.text</c> raw anywhere the text can be Arabic - the flag is certainty the heuristic lacks.
+        /// </summary>
+        public static string Spoken(TMP_Text label)
+            => label.isRightToLeftText ? RtlText.UnfixLogical(label.text) : RtlText.Unfix(label.text);
+
+        /// <summary>
         /// A label's natural-case reading. The DE button bracket frame ("[ LOAD ]") is dropped first so the
         /// caption can be recased and never reads as "left bracket". When the label then carries a Localize
         /// whose translation, uppercased, is exactly the displayed text, the display is just that source
@@ -56,13 +66,16 @@ namespace DiscoAccess.Module
         /// it is parameterized or dynamic) keep the de-bracketed display, so this can never corrupt a value
         /// or recase a genuine acronym.
         /// </summary>
-        public static string Cased(TMP_Text label) => Cased(label.text, label.GetComponent<Localize>());
+        public static string Cased(TMP_Text label) => Cased(Spoken(label), label.GetComponent<Localize>());
 
-        /// <summary>The same natural-case reading for a legacy uGUI <see cref="Text"/> label.</summary>
-        public static string Cased(Text label) => Cased(label.text, label.GetComponent<Localize>());
+        /// <summary>The same natural-case reading for a legacy uGUI <see cref="Text"/> label (legacy text
+        /// has no RTL flag; DE gives it the fixer's visual-order form, which the heuristic unfix inverts).</summary>
+        public static string Cased(Text label) => Cased(RtlText.Unfix(label.text), label.GetComponent<Localize>());
 
         private static string Cased(string display, Localize localize)
         {
+            // The display arrives in logical order (the callers unfix it), so the source comparison
+            // below can match for a caseless RTL language, where the term's value IS the unfixed display.
             display = UiLabel.StripBrackets(display);
             if (localize == null)
                 return display;

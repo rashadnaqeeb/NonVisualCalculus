@@ -37,18 +37,20 @@ namespace DiscoAccess.Core.UI
             sb.Append(Strings.Strings.CheckRolled).Append(' ')
               .Append(s.Die1).Append(' ').Append(Strings.Strings.CheckPlus).Append(' ').Append(s.Die2);
             sb.Append(", ").Append(Strings.Strings.CheckPlus).Append(' ').Append(s.SkillValue);
+            // The skill, modifier, and critical words are game text and can arrive display-shaped;
+            // each inverts within its own position before the authored connectives compose around it.
             if (!string.IsNullOrEmpty(s.SkillName))
-                sb.Append(' ').Append(s.SkillName);
+                sb.Append(' ').Append(Text.RtlText.Unfix(s.SkillName));
             for (int i = 0; i < s.Modifiers.Count; i++)
             {
                 CheckRollModifier m = s.Modifiers[i];
                 int effect = -m.Bonus;
                 string word = effect >= 0 ? Strings.Strings.CheckPlus : Strings.Strings.CheckMinus;
                 int magnitude = effect < 0 ? -effect : effect;
-                sb.Append(", ").Append(word).Append(' ').Append(magnitude).Append(' ').Append(m.Name);
+                sb.Append(", ").Append(word).Append(' ').Append(magnitude).Append(' ').Append(Text.RtlText.Unfix(m.Name));
             }
             if (!string.IsNullOrEmpty(s.Critical))
-                sb.Append(", ").Append(s.Critical);
+                sb.Append(", ").Append(Text.RtlText.Unfix(s.Critical!));
             return sb.ToString();
         }
     }

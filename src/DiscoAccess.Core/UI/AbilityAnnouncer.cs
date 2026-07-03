@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace DiscoAccess.Core.UI
 {
     /// <summary>
@@ -16,26 +14,12 @@ namespace DiscoAccess.Core.UI
     {
         public static string Compose(AbilityState s)
         {
-            return Join(s.Name + " " + s.Value, s.Grade, s.Description);
+            return Text.SpokenLine.Join(s.Name + " " + s.Value, s.Grade, s.Description);
         }
 
         public static string ComposeValue(AbilityState s)
         {
-            return Join(s.Value.ToString(), s.Grade);
-        }
-
-        private static string Join(params string?[] parts)
-        {
-            var sb = new StringBuilder();
-            foreach (string? part in parts)
-            {
-                if (string.IsNullOrEmpty(part))
-                    continue;
-                if (sb.Length > 0)
-                    sb.Append(", ");
-                sb.Append(part);
-            }
-            return sb.ToString();
+            return Text.SpokenLine.Join(s.Value.ToString(), s.Grade);
         }
     }
 }

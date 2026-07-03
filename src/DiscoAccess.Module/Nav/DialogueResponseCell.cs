@@ -47,6 +47,10 @@ namespace DiscoAccess.Module.Nav
             string label = _logger != null
                 ? _logger.FormatResponse(_number, _logger.ChooseResponseText(_response))
                 : _response?.formattedText?.text;
+            // The game's answer text can arrive display-shaped (RTL); restore logical order before the
+            // breakdowns compose around it and compare against it (the skill-tag and cost checks below
+            // match logical game strings).
+            label = RtlText.Unfix(label);
             // A check or money response reads its breakdown after the option text (the two node types are
             // disjoint, so at most one applies). Each breakdown is built against the label so it can drop
             // what the label already states (see CheckBreakdown / CostBreakdown). Join with a sentence
@@ -82,12 +86,12 @@ namespace DiscoAccess.Module.Nav
                 return null;
 
             string colour = check.checkType == CheckType.RED ? Strings.CheckRed : Strings.CheckWhite;
-            string skill = check.SkillName();
+            string skill = RtlText.Unfix(check.SkillName());
             bool tagInLabel = !string.IsNullOrEmpty(label) && !string.IsNullOrEmpty(skill) && label.Contains(skill);
             string head = tagInLabel ? colour : skill + " " + colour;
             if (!tagInLabel)
             {
-                string difficulty = check.difficulty;
+                string difficulty = RtlText.Unfix(check.difficulty);
                 if (!string.IsNullOrEmpty(difficulty))
                     head += ", " + difficulty + " " + check.baseTarget;
             }
@@ -112,7 +116,7 @@ namespace DiscoAccess.Module.Nav
                         continue;
                     // The game's explanation is a full phrase ending in a period; dropping it keeps the
                     // period from interrupting before the bonus, so the modifier reads "<condition> +N".
-                    explanation = explanation.TrimEnd().TrimEnd('.', ',', ';', ':');
+                    explanation = RtlText.Unfix(explanation).TrimEnd().TrimEnd('.', ',', ';', ':');
                     // These modify the target, so a positive bonus raises the bar (a hindrance) and a
                     // negative one lowers it (a help). Speak the effect on the player's check, not the raw
                     // target delta: negate so a help reads "+N" and a hindrance "-N", as DE colours them.

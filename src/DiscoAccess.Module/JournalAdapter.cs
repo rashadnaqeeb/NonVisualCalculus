@@ -62,8 +62,8 @@ namespace DiscoAccess.Module
             // localized and clean; the difficulty band is the game's word with its bracket framing stripped.
             // skillText and difficultyText are wired prefab fields, so they are read directly: a null would be
             // a wiring bug worth crashing on, not a state to paper over with a shortened announcement.
-            return new WhiteCheckSnapshot(w.ActorName, ui.skillText.text, CleanDifficulty(ui.difficultyText.text),
-                Status(ui, w));
+            return new WhiteCheckSnapshot(w.ActorName, GameLocalization.Spoken(ui.skillText),
+                CleanDifficulty(GameLocalization.Spoken(ui.difficultyText)), Status(ui, w));
         }
 
         // A locked check (precondition unmet, the game greys it out) cannot be tried, even if it has been

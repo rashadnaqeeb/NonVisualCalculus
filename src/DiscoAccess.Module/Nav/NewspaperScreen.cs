@@ -57,7 +57,7 @@ namespace DiscoAccess.Module.Nav
             root.Add(_headline);
             root.Add(new ReadonlyTextCell(() => TextFilter.Clean(GameLocalization.Cased(_paper.opener))));
             // "2/3" while several articles are queued; empty (and skipped) with one.
-            root.Add(new ReadonlyTextCell(() => TextFilter.Clean(_paper.pageNr.text)));
+            root.Add(new ReadonlyTextCell(() => TextFilter.Clean(GameLocalization.Spoken(_paper.pageNr))));
             root.Add(new ArrowButton(_paper.back, Strings.NewspaperPreviousArticle));
             root.Add(new ArrowButton(_paper.forward, Strings.NewspaperNextArticle));
             root.Add(new ClickButton(close));

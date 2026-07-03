@@ -80,7 +80,7 @@ namespace DiscoAccess.Module.Nav
         }
 
         private string Name() => TextFilter.Clean(_view.currentProject.GetDisplayName());
-        private string Bonuses() => TextFilter.Clean(_view.propertiesText.text);
+        private string Bonuses() => TextFilter.Clean(GameLocalization.Spoken(_view.propertiesText));
         private string Description() => TextFilter.Clean(_view.currentProject.completionDescription);
 
         /// <summary>The splash's stops. Back (Escape) accepts through the game's own button - the same

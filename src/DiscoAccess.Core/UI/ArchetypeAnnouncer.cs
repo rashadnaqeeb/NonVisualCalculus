@@ -1,4 +1,4 @@
-using System.Text;
+using System.Collections.Generic;
 
 namespace DiscoAccess.Core.UI
 {
@@ -14,22 +14,12 @@ namespace DiscoAccess.Core.UI
     {
         public static string Compose(ArchetypeState s)
         {
-            var sb = new StringBuilder();
-            Append(sb, s.Name);
+            var parts = new List<string?> { s.Name };
             foreach (ArchetypeAttribute a in s.Attributes)
-                Append(sb, a.Name + " " + a.Value);
-            Append(sb, s.SignatureSkill);
-            Append(sb, s.Description);
-            return sb.ToString();
-        }
-
-        private static void Append(StringBuilder sb, string? part)
-        {
-            if (string.IsNullOrEmpty(part))
-                return;
-            if (sb.Length > 0)
-                sb.Append(", ");
-            sb.Append(part);
+                parts.Add(a.Name + " " + a.Value);
+            parts.Add(s.SignatureSkill);
+            parts.Add(s.Description);
+            return Text.SpokenLine.Join(", ", parts);
         }
     }
 }

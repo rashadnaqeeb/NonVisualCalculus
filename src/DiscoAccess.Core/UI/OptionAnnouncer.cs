@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using static DiscoAccess.Core.Strings.Strings;
 
 namespace DiscoAccess.Core.UI
@@ -17,7 +16,7 @@ namespace DiscoAccess.Core.UI
     {
         public static string Compose(OptionState s)
         {
-            return Join(s.Label, TypeWord(s.Kind), ValueWord(s), s.Description);
+            return Text.SpokenLine.Join(s.Label, TypeWord(s.Kind), ValueWord(s), s.Description);
         }
 
         public static string ComposeValue(OptionState s)
@@ -71,20 +70,6 @@ namespace DiscoAccess.Core.UI
             if (words != null && s.StepIndex >= 0 && s.StepIndex < words.Length)
                 return words[s.StepIndex];
             return Step(s.StepIndex + 1, s.StepCount);
-        }
-
-        private static string Join(params string?[] parts)
-        {
-            var sb = new StringBuilder();
-            foreach (string? part in parts)
-            {
-                if (string.IsNullOrEmpty(part))
-                    continue;
-                if (sb.Length > 0)
-                    sb.Append(", ");
-                sb.Append(part);
-            }
-            return sb.ToString();
         }
     }
 }

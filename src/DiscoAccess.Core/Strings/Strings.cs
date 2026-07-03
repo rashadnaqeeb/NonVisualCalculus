@@ -613,8 +613,16 @@ namespace DiscoAccess.Core.Strings
             return Translation.Get(key, english);
         }
 
+        /// <summary>Format a template, un-RTL-fixing every string argument first: a game-text value can
+        /// arrive display-shaped (visual order), and it must invert within its own slot before the
+        /// authored template composes around it (see <see cref="Text.SpokenLine"/> for why the composed
+        /// line is too late).</summary>
         private static string F(string key, params object[] args)
-            => string.Format(CultureInfo.InvariantCulture, T(key), args);
+        {
+            for (int i = 0; i < args.Length; i++)
+                if (args[i] is string s) args[i] = Text.RtlText.Unfix(s);
+            return string.Format(CultureInfo.InvariantCulture, T(key), args);
+        }
 
         /// <summary>A counted phrase: the value's '|'-separated plural forms, picked by the loaded
         /// plural rule (the English rule for an untranslated key), then formatted with the count. A
@@ -1140,7 +1148,7 @@ namespace DiscoAccess.Core.Strings
         public static string CrisisHeal(string barName, bool healWithLeft, string? gameMessage)
         {
             string prompt = F(healWithLeft ? "CrisisHealLeft" : "CrisisHealRight", barName);
-            return string.IsNullOrEmpty(gameMessage) ? prompt : prompt + ". " + gameMessage;
+            return string.IsNullOrEmpty(gameMessage) ? prompt : prompt + ". " + Text.RtlText.Unfix(gameMessage!);
         }
     }
 }

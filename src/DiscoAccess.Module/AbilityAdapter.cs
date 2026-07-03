@@ -62,7 +62,7 @@ namespace DiscoAccess.Module
         {
             var label = panel.abilityGradeFlipClock.transform.parent.Find("AbilityDescriptionText");
             var text = label != null ? label.GetComponent<TMP_Text>() : null;
-            return text != null ? text.text : null;
+            return text != null ? GameLocalization.Spoken(text) : null;
         }
 
         // DE stores grade words ALL-CAPS for display ("GOOD"), which reads oddly; recase to natural case

@@ -73,12 +73,6 @@ namespace DiscoAccess.Core.UI.Nav
         public abstract string? RowText { get; }
 
         public override string GetFocusText()
-        {
-            var parts = new List<string>(3);
-            if (!string.IsNullOrEmpty(ColumnHeader)) parts.Add(ColumnHeader!);
-            if (!string.IsNullOrEmpty(RowText)) parts.Add(RowText!);
-            if (!string.IsNullOrEmpty(Value)) parts.Add(Value!);
-            return string.Join(", ", parts);
-        }
+            => Text.SpokenLine.Join(ColumnHeader, RowText, Value);
     }
 }

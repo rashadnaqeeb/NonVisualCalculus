@@ -161,7 +161,7 @@ namespace DiscoAccess.Core.UI.Nav
                     var d = Path[j].GetFocusText();
                     if (!string.IsNullOrEmpty(d)) parts.Add(d);
                 }
-                if (parts.Count > 0) Speak(string.Join(", ", parts), interrupt);
+                if (parts.Count > 0) Speak(Text.SpokenLine.Join(", ", parts), interrupt);
             }
             else if (Current != null)
             {

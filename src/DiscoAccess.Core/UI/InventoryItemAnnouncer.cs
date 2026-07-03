@@ -22,10 +22,10 @@ namespace DiscoAccess.Core.UI
             if (s.Value > 0)
                 parts.Add(string.IsNullOrEmpty(s.PawnLabel)
                     ? Strings.Strings.ItemValue(s.Value)
-                    : s.PawnLabel + " " + Strings.Strings.WorldMoney(s.Value));
+                    : Text.RtlText.Unfix(s.PawnLabel!) + " " + Strings.Strings.WorldMoney(s.Value));
             if (!string.IsNullOrEmpty(s.Effects)) parts.Add(s.Effects!);
             if (!string.IsNullOrEmpty(s.Description)) parts.Add(s.Description!);
-            return string.Join(", ", parts);
+            return Text.SpokenLine.Join(", ", parts);
         }
     }
 }

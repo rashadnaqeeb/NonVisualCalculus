@@ -1,4 +1,3 @@
-using System.Text;
 using static DiscoAccess.Core.Strings.Strings;
 
 namespace DiscoAccess.Core.UI
@@ -14,7 +13,7 @@ namespace DiscoAccess.Core.UI
     public static class ThoughtAnnouncer
     {
         public static string Compose(ThoughtSnapshot t)
-            => Join(t.Name, Status(t), t.Effects, t.Description);
+            => Text.SpokenLine.Join(t.Name, Status(t), t.Effects, t.Description);
 
         /// <summary>Just the status word (with research percent), for re-announcing after an Enter changes a
         /// slot or thought in place - the name was already spoken on focus.</summary>
@@ -43,19 +42,5 @@ namespace DiscoAccess.Core.UI
         // An unplaced thought appends how long it will take to research ("available, research time 3 hours").
         private static string WithTotalTime(string status, ThoughtSnapshot t)
             => t.ResearchMinutesTotal > 0 ? status + ", " + ThoughtResearchTime + " " + Duration(t.ResearchMinutesTotal) : status;
-
-        private static string Join(params string?[] parts)
-        {
-            var sb = new StringBuilder();
-            foreach (string? part in parts)
-            {
-                if (string.IsNullOrEmpty(part))
-                    continue;
-                if (sb.Length > 0)
-                    sb.Append(", ");
-                sb.Append(part);
-            }
-            return sb.ToString();
-        }
     }
 }
