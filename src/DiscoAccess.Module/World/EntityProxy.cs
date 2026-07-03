@@ -414,17 +414,26 @@ namespace DiscoAccess.Module.World
         private const float StandpointEpsilon = 0.05f;
         public bool RidesPlayer => false; // an entity is world-anchored, never carried by the character
 
-        // The spot the game's click would walk the player to: the nearest authored INTERACTION marker when
-        // the entity carries one - the destination MoveToTarget actually prices - else the radius-searched
-        // interaction location computed from the querying position. Marker-first because the radius search
-        // can hand back a spot on the wrong level (a balcony point for the street door under it), which
-        // would misstate the spoken distance and bearing.
+        // The spot the game's click would walk the player to, answered by the game's own pricing
+        // (PriceClick): the command's chosen destination formation holds the party's stand spots, slot 0
+        // the main character's. Only the pricing knows the true spot: a FormationMarker's stand positions
+        // are its authored formation SLOTS, not its own transform, which can ride the entity far off any
+        // walkable ground (the balcony Smoker's marker sits on him, four metres over the yard his slots
+        // put the player in - proven live: the marker transform reads y 8.1 on the meshless balcony while
+        // the priced formation stands in the yard at y 3.9), and the cheapest-reachable choice prices a
+        // severed spot out. When the pricing refuses (no party, or nothing reachable - the formation stays
+        // invalid or prices infinite), fall back to the radius-searched interaction location so the
+        // readout still has a point to measure to.
         public Vector3 InteractionPoint(Vector3 from)
         {
-            FormationMarker marker = NearestInteractionMarker(from);
-            return marker != null
-                ? WorldConvert.ToSnv(marker.transform.position)
-                : WorldConvert.ToSnv(_e.GetInteractionLocation(LocationAt(from)).position);
+            MovementCommand command = PriceClick();
+            if (command != null)
+            {
+                Formation to = command.to;
+                if (to.IsValid && to.Count > 0 && !float.IsPositiveInfinity(command.cost))
+                    return WorldConvert.ToSnv(to.GetPosition(0));
+            }
+            return WorldConvert.ToSnv(_e.GetInteractionLocation(LocationAt(from)).position);
         }
 
         // The discovery gates' reachability test (see IWorldItem.ReachableFrom).
@@ -471,13 +480,24 @@ namespace DiscoAccess.Module.World
         // passes as from.
         private bool ClickWouldAct()
         {
+            MovementCommand command = PriceClick();
+            return command != null && !float.IsPositiveInfinity(command.cost);
+        }
+
+        // The priced-but-unfired click: a fresh INTERACTION command Processed against this entity, whose
+        // cost and destination formation are then this thing's click verdict (ClickWouldAct) and stand
+        // spots (InteractionPoint). Null when there is no party or game controller to price with. For a
+        // markerless entity Process stores the radius-searched formation without pathing it; the cost
+        // read then prices that lazily, so an off-island radius grab still answers infinite.
+        private MovementCommand PriceClick()
+        {
             Party party = Party.Player;
             GameController gc = GameController.Singleton;
-            if (party == null || gc == null) return false;
+            if (party == null || gc == null) return null;
             var command = new MovementCommand(party, false);
             command.purpose = Formation.Purpose.INTERACTION;
             command.Process(_e, gc.isNarrowEnvironment ? Sector.behind : Sector.left);
-            return !float.IsPositiveInfinity(command.cost);
+            return command;
         }
 
         // The entity's authored INTERACTION stand-spots, gathered the way the click's pricing does
@@ -502,18 +522,6 @@ namespace DiscoAccess.Module.World
             }
         }
         private FormationMarker[] _interactionMarkers;
-
-        private FormationMarker NearestInteractionMarker(Vector3 from)
-        {
-            FormationMarker best = null;
-            float bestD = float.MaxValue;
-            foreach (FormationMarker m in InteractionMarkers)
-            {
-                float d = Vector3.DistanceSquared(WorldConvert.ToSnv(m.transform.position), from);
-                if (d < bestD) { bestD = d; best = m; }
-            }
-            return best;
-        }
 
         // The walkable mesh this thing is MOORED AGAINST, for a body with no standing ground of its own: a
         // thing over unwalkable surface (the Motorboat on the water off the fishing village walkway) belongs

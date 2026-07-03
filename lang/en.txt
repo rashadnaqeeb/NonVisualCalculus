@@ -39,6 +39,7 @@ InputWorldScanItemsNext = Scanner next item
 InputWorldScanItemsPrev = Scanner previous item
 InputWorldScanExitsNext = Scanner next exit
 InputWorldScanExitsPrev = Scanner previous exit
+InputWorldScanCursor = Move cursor to scanned thing
 InputWorldInventory = Open inventory
 InputWorldCharacterSheet = Open character sheet
 InputWorldJournal = Open journal

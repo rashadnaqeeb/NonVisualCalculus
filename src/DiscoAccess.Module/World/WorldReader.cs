@@ -285,6 +285,20 @@ namespace DiscoAccess.Module.World
             _walk.BeginInteract(target, _overlay.Cursor.PlayerPosition);
         }
 
+        /// <summary>Move the cursor to the scanned thing (J): onto its interaction point - the walkable
+        /// stand-spot the game's click would walk the player to, the same point the scanner's readout
+        /// measures - never the thing's own body, which can sit off-mesh (a wall fixture, a boat on
+        /// water) and would strand the navmesh-clamped cursor. Reads the new spot the way a glide-stop
+        /// or recenter does.</summary>
+        public void ScanCursor()
+        {
+            if (!_engaged) return;
+            IWorldItem target = _scanner.Selected;
+            if (target == null) { _host.Speech.Speak(Strings.WorldScanNothing, interrupt: true); return; }
+            _overlay.Cursor.Position = target.InteractionPoint(_overlay.Cursor.PlayerPosition);
+            _overlay.AnnounceCurrent();
+        }
+
         // The plain in-game world is the CLEAR view. Confirmed live: during free-roam ViewsPagesBridge.Current
         // reads CLEAR steadily, and DevScan sees the full entity set; a menu, dialogue, or cutscene is its own
         // ViewType. (The LOBBY value ScreenAdapter maps to the world-screen NAME is a different page state,

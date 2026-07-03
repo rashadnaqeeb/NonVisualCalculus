@@ -41,11 +41,13 @@ namespace DiscoAccess.Core.World
         /// must not drop it. False for everything world-anchored.</summary>
         bool RidesPlayer { get; }
 
-        /// <summary>The spot the game's click would walk the player to in order to act on this thing: the
-        /// authored FormationMarker stand-spot when the thing carries one, else the game's radius-searched
-        /// interaction location computed from <paramref name="from"/>. The point the sonar pings, the
-        /// scanner's readout measures to, and the cursor names distance against. An orb, whose sighted
-        /// click acts in place, returns its body <see cref="Position"/>.</summary>
+        /// <summary>The spot the game's click would walk the player to in order to act on this thing:
+        /// the main character's slot in the click's own priced destination formation (the cheapest
+        /// reachable authored stand formation, else the game's radius-searched interaction location
+        /// computed from <paramref name="from"/>). Always on the player's own walkable ground when the
+        /// click would act, so the cursor can be parked there. The point the cursor-to-scanned-thing
+        /// move lands on; readouts describe the thing itself (<see cref="Bounds"/>). An orb answers the
+        /// walkable ground its gather walk ends on, under a body that can float far off the mesh.</summary>
         Vector3 InteractionPoint(Vector3 from);
 
         /// <summary>Whether acting on this thing from <paramref name="from"/> would succeed, for the

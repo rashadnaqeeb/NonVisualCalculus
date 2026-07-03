@@ -133,13 +133,14 @@ namespace DiscoAccess.Core.World
         }
 
         // Land on a thing: select it, ping it in stereo at its nearest part, and announce its name and its
-        // bearing and distance - measured to the interaction point, the spot the player would navigate to in
-        // order to act (computed for the landed thing only; the sort uses cheap body positions).
+        // bearing and distance - measured to that same nearest part, so the words agree with the ear and
+        // describe where the THING is (the balcony smoker reads "above"), not where acting on it would
+        // stand the player; the stand spot is the cursor move's business (IWorldItem.InteractionPoint).
         private void Land(IWorldItem item, Vector3 from, string prefix = "")
         {
             _selected = item;
             Ping(item);
-            string spatial = SpatialReadout.Describe(from, item.InteractionPoint(from));
+            string spatial = SpatialReadout.Describe(from, item.Bounds.NearestPoint(from));
             // The shared name-plus-state composition (ItemLabel), so the scanner and the cursor readout
             // can never disagree about a door standing open.
             string name = ItemLabel.For(item, string.IsNullOrEmpty(item.Name) ? WorldThingObject : item.Name);

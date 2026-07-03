@@ -122,9 +122,25 @@ namespace DiscoAccess.Module.World
             => _orb.orbType == OrbType.AFTERTHOUGHT || _orb.orbType == OrbType.OBSESSION
                || _orb.orbType == OrbType.PARALYZER || _orb.orbType == OrbType.THOUGHT;
 
-        // The orb has no game-authored interaction stand-point; the cursor navigates to the orb body and the
-        // walk verb stops within its interaction circle.
-        public Vector3 InteractionPoint(Vector3 from) => Position;
+        // The ground the gather walk would END on, for parking the cursor. The walk drives at Approach's
+        // navmesh snap, but that snap is the 3D-nearest mesh to a floating body and can sit on a severed
+        // island the character can never stand on (the window-curtains orb's nearest mesh is the balcony
+        // over the yard it is authored to be read from). What the character actually reaches is the end
+        // of the path priced from the player toward the snap - complete (the snap itself) or partial (the
+        // player-island spot the walk stops on, inside the trigger sphere for an offered orb: the same
+        // partial-endpoint test ReachableFrom gates on). The snap stands as the fallback when no path
+        // prices at all.
+        public Vector3 InteractionPoint(Vector3 from)
+        {
+            Vector3 stand = Approach(from, out _);
+            var path = new UnityEngine.AI.NavMeshPath();
+            if (UnityEngine.AI.NavMesh.CalculatePath(WorldConvert.ToUnity(from), WorldConvert.ToUnity(stand), -1, path))
+            {
+                var corners = path.corners;
+                if (corners.Length > 0) return WorldConvert.ToSnv(corners[corners.Length - 1]);
+            }
+            return stand;
+        }
 
         // Whether the walk can put the character inside this orb's trigger sphere. The game's trigger test
         // is a full 3D sphere (GameEntity.IsWithinInteractionRadius compares squared 3D distance), so height

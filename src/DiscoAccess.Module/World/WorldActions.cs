@@ -29,6 +29,7 @@ namespace DiscoAccess.Module.World
         public const string ScanExitsNext = "world.scan.exits.next";
         public const string ScanExitsPrev = "world.scan.exits.prev";
         public const string ScanInteract = "world.scan.interact";
+        public const string ScanCursor = "world.scan.cursor";
 
         // Information screens, pause, help.
         public const string OpenInventory = "world.inventory";
