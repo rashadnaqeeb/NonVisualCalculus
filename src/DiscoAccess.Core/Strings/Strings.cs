@@ -495,44 +495,9 @@ namespace DiscoAccess.Core.Strings
             // Loose money lying in the world (coins/bills to pick up); uncountable, both forms alike.
             D("ContainerWord_money", "money|money"),
 
-            // The outdoor map's sub-districts, the mod's own partition of Martinaise; spoken as the
-            // player crosses into one. Where the game's dialogue names the place (search its dialogue
-            // text in the target language), match that; otherwise translate the meaning below.
-            // The town square in front of the Whirling-in-Rags hotel.
-            D("DistrictPlaza", "Plaza"),
-            // The muddy backyard area behind the Whirling, where the hanged body is found.
-            D("DistrictYard", "Yard"),
-            // The permanently gridlocked motorway of lorries north of town.
-            D("DistrictTrafficJam", "Traffic Jam"),
-            // The gate checkpoint into the harbour.
-            D("DistrictHarbourGate", "Harbour Gate"),
-            // The industrial harbour itself.
-            D("DistrictHarbour", "Harbour"),
-            // The pier along the water.
-            D("DistrictPier", "Pier"),
-            // The canal lock (the machinery that raises boats between water levels).
-            D("DistrictWaterlock", "Waterlock"),
-            // The run-down shack settlement on the coast; see JournalLocFishingVillage for the game's
-            // own name for the place.
-            D("DistrictFishingVillage", "Fishing Village"),
-            // The frozen sea ice off the coast.
-            D("DistrictIce", "Ice"),
-            // The abandoned fish market square.
-            D("DistrictFishMarket", "Fish Market"),
-            // The far coastal headland ("Land's End" as a place name: where the land runs out).
-            D("DistrictLandsEnd", "Land's End"),
-            // The wooden walkway along the shore.
-            D("DistrictBoardwalk", "Boardwalk"),
-            // The ruined island sea fort offshore.
-            D("DistrictSeaFortress", "Sea Fortress"),
-            // The Whirling-in-Rags hotel's upstairs balcony.
-            D("DistrictWhirlingBalcony", "Whirling Balcony"),
-            // The tenement building's balcony and roof.
-            D("DistrictApartmentBalcony", "Apartment Balcony"),
-            D("DistrictApartmentRoof", "Apartment Roof"),
-            // The location readout: {0} = the game's localized area name, {1} = the sub-district above
-            // ("Martinaise, Harbour").
-            D("WorldLocation", "{0}, {1}"),
+            // The location readout: {0} = the game's localized area name, {1} = the floor word above
+            // ("Whirling in Rags floor 2"); order the two as the language wants.
+            D("WorldLocation", "{0} {1}"),
 
             // The walk-then-interact verb's spoken feedback (the character walking somewhere on the
             // player's order).
@@ -1080,30 +1045,11 @@ namespace DiscoAccess.Core.Strings
             return forms[plural && forms.Length > 1 ? 1 : 0];
         }
 
-        // Authored names for the map's sub-districts (Martinaise-ext), spoken as the player crosses into
-        // one and appended to the map name by the location readout. The game has no runtime sub-district
-        // names - it names whole scenes only - so the mod authors the partition (see DistrictReader).
-        public static string DistrictPlaza => T("DistrictPlaza");
-        public static string DistrictYard => T("DistrictYard");
-        public static string DistrictTrafficJam => T("DistrictTrafficJam");
-        public static string DistrictHarbourGate => T("DistrictHarbourGate");
-        public static string DistrictHarbour => T("DistrictHarbour");
-        public static string DistrictPier => T("DistrictPier");
-        public static string DistrictWaterlock => T("DistrictWaterlock");
-        public static string DistrictFishingVillage => T("DistrictFishingVillage");
-        public static string DistrictIce => T("DistrictIce");
-        public static string DistrictFishMarket => T("DistrictFishMarket");
-        public static string DistrictLandsEnd => T("DistrictLandsEnd");
-        public static string DistrictBoardwalk => T("DistrictBoardwalk");
-        public static string DistrictSeaFortress => T("DistrictSeaFortress");
-        public static string DistrictWhirlingBalcony => T("DistrictWhirlingBalcony");
-        public static string DistrictApartmentBalcony => T("DistrictApartmentBalcony");
-        public static string DistrictApartmentRoof => T("DistrictApartmentRoof");
-
-        /// <summary>The location readout ('r'): the localized map name, then the sub-district when there
-        /// is one ("Martinaise, Harbour"). The map name is the game's own localized area name.</summary>
-        public static string WorldLocation(string map, string subregion)
-            => string.IsNullOrEmpty(subregion) ? map : F("WorldLocation", map, subregion);
+        /// <summary>The location readout ('r'): the localized map name, plus the floor word for a
+        /// numbered interior level ("Whirling in Rags floor 2"). The map name is the game's own
+        /// localized area name.</summary>
+        public static string WorldLocation(string map, string? floor)
+            => string.IsNullOrEmpty(floor) ? map : F("WorldLocation", map, floor!);
 
         // The walk-then-interact verb's spoken feedback (DE has no equivalent lines).
 

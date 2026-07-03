@@ -49,7 +49,6 @@ namespace DiscoAccess.Module.World
         private readonly SonarSystem _sonar;
         private readonly WorldModel _model = new WorldModel();
         private readonly WalkInteract _walk;
-        private readonly DistrictReader _districts;
         private readonly Scanner _scanner;
         private bool _engaged;
         private Snv _lastPlayer; // character position last in-world frame, to catch a reposition (load/teleport)
@@ -98,7 +97,6 @@ namespace DiscoAccess.Module.World
             _sonar.BindVolume(() => host.Settings.SonarVolume.Fraction);
             _overlay.With(_sonar);
             _walk = new WalkInteract(host);
-            _districts = new DistrictReader(host);
             // The review cursor: browses the same live registry the cursor senses, scoped by the same env
             // (in-frame, unfogged), anchored to the PLAYER - membership, sort, and spoken distances all
             // measure from where the character stands, since the walk a scanned thing supports starts there.
@@ -160,8 +158,7 @@ namespace DiscoAccess.Module.World
             // map, the pause overlay of a save load), so the first frame back in the world sees the jump. A
             // one-step jump past a walk stride is a load or teleport - a cutscene can walk the character,
             // but never metres in one frame - and a scene change is a reposition outright (its coordinates
-            // are a different map's). Unpin the cursor back onto the character (silent: the district
-            // readout speaks the new location).
+            // are a different map's). Unpin the cursor back onto the character.
             Snv player = _overlay.Cursor.PlayerPosition;
             string scene = SceneName();
             // The jump also invalidates any still-playing cue tails (their listener just moved across the
@@ -170,6 +167,10 @@ namespace DiscoAccess.Module.World
             {
                 _overlay.Cursor.Reset();
                 _sources.Clear();
+                // The map changed under the player (a door, stairs, quicktravel): speak the new location,
+                // the same words the read-location key gives, so arrival orients without a keypress.
+                // Queued - it follows whatever the transition itself is saying.
+                if (scene != _lastScene) SpeakLocation(interrupt: false);
             }
             _lastPlayer = player;
             _lastScene = scene;
@@ -202,17 +203,26 @@ namespace DiscoAccess.Module.World
             if (_wasGliding && !gliding) _overlay.AnnounceCurrent();
             _wasGliding = gliding;
 
-            // Announce the sub-district as the cursor (else the player) crosses into a new one.
-            _districts.Tick(_overlay.Cursor.Position, SceneName());
-
             _walk.Tick();
         }
 
         /// <summary>Snap the cursor back onto the character and read the new spot (the recenter key).</summary>
         public void Recenter() => _overlay.Recenter();
 
-        /// <summary>Read the current location - the map name and the sub-district (the Read-location key).</summary>
-        public void ReadLocation() => _districts.ReadLocation(_overlay.Cursor.Position, SceneName());
+        /// <summary>Read the current location (the Read-location key). An explicit request, so it
+        /// interrupts; the same words also speak automatically on a map change (see Tick).</summary>
+        public void ReadLocation() => SpeakLocation(interrupt: true);
+
+        // Speak the current location: the map's spoken name, the game's own localized area name with
+        // hyphens read as spaces ("Whirling in Rags"), plus the floor word for a numbered interior level
+        // so stacked scenes are distinguishable.
+        private void SpeakLocation(bool interrupt)
+        {
+            string scene = SceneName();
+            string localized = GameLocalization.Translate("Area Names/" + scene);
+            string map = (string.IsNullOrEmpty(localized) ? scene : localized).Replace('-', ' ');
+            _host.Speech.Speak(Strings.WorldLocation(map, EntityNaming.LevelLabel(scene)), interrupt: interrupt);
+        }
 
         private static string SceneName() => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 

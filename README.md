@@ -36,15 +36,11 @@ The scanner is its own point of attention, separate from the cursor: cycling it 
 
 I will eventually add bookmarks to the big city map.
 
-## Cursor regions
-
-Tell me what you think of the cursor regions. I had Claude wing it, so they're not at all perfect, but I haven't decided if I should remove them yet, as they're actually not terrible for orientation. This is what R reads, for example "plaza", "yard", etc.
-
 ## Keys
 
 Cursor keys: WASD moves the cursor, Enter interacts with whatever it's on, Backspace walks to the cursor without interacting, C recenters the cursor on your character, Space stops walking. I interacts with the thing the scanner last read.
 
-Status keys: M for money, H for health, T for time, R for the region you're in.
+Status keys: M for money, H for health, T for time, R for the map you're on (also announced automatically when it changes).
 
 Game keys: Ctrl+C character sheet, Ctrl+I inventory, Ctrl+T thoughts, Ctrl+J journal, F1 game help. Left arrow heals health, right arrow heals morale. 1 and 2 use the items in your left and right hands. F5 quicksaves, F8 quickloads. Escape opens the pause menu. Ctrl+L cycles the game language.
 

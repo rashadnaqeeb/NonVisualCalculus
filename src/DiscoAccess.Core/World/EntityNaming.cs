@@ -402,9 +402,10 @@ namespace DiscoAccess.Core.World
             return LevelLabel(destAreaId);
         }
 
-        // The floor/level word from a scene id's suffix: "-f<n>" is a numbered floor ("floor 2"), "-s<n>" a
-        // basement/sublevel ("basement"). Null when the id carries no level suffix.
-        private static string? LevelLabel(string? areaId)
+        /// <summary>The floor/level word from a scene id's suffix: "-f&lt;n&gt;" is a numbered floor
+        /// ("floor 2"), "-s&lt;n&gt;" a basement/sublevel ("basement"). Null when the id carries no level
+        /// suffix (the exterior, a flat interior). Names exit destinations above and the location readout.</summary>
+        public static string? LevelLabel(string? areaId)
         {
             if (string.IsNullOrEmpty(areaId)) return null;
             Match f = Regex.Match(areaId!, @"-f(\d+)", RegexOptions.IgnoreCase);
