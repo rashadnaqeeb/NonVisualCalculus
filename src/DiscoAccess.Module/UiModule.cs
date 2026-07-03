@@ -56,6 +56,9 @@ namespace DiscoAccess.Module
         // Speaks the gameplay tip on the loading screen via a Harmony feeder drained from the pump.
         // Owns no native handle; its patch rides _harmony.
         private LoadingTipReader _loadingTips;
+        // Speaks authored descriptions of the game's silent cinematic scenes (the new-game wake-up) via a
+        // Harmony feeder drained from the pump. Owns no native handle; its patch rides _harmony.
+        private CutsceneReader _cutscenes;
         private static readonly InputCategory[] UiCategory = { InputCategory.UI };
         // Status precedes UI ON PURPOSE: in a screen that wants the status keys (dialogue) the heal arrows
         // (Status, Left/Right) shadow the inert UI Left/Right; the rest of UI (Up/Down/Tab/Enter/Escape/
@@ -106,6 +109,9 @@ namespace DiscoAccess.Module
             // Speak the loading screen's gameplay tip; likewise on this load's Harmony.
             _loadingTips = new LoadingTipReader(_host);
             _loadingTips.Apply(_harmony);
+            // Speak the silent cinematic scenes' descriptions; likewise on this load's Harmony.
+            _cutscenes = new CutsceneReader(_host);
+            _cutscenes.Apply(_harmony);
 
             // UI navigation keys: live only while our navigator owns the keyboard, and routed into it by
             // the dispatcher below. Directions and Tab auto-repeat while held.
@@ -309,6 +315,10 @@ namespace DiscoAccess.Module
 
             // Speak the loading screen's tip if one came up since last frame (queued).
             _loadingTips.Drain();
+
+            // Speak a cinematic scene's description if one started since last frame (queued, so the
+            // dialogue line that triggered it finishes first).
+            _cutscenes.Drain();
         }
 
         // Dev seam (IDevDriver): drive our navigator from the dev server's /input, the headless counterpart
@@ -357,6 +367,7 @@ namespace DiscoAccess.Module
             _doors?.Dispose(); // and the door feeder's
             _quotes?.Dispose(); // and the quote feeder's
             _loadingTips?.Dispose(); // and the tip feeder's
+            _cutscenes?.Dispose(); // and the cutscene feeder's
             _harmony?.UnpatchSelf();
             _harmony = null;
             _input = null; // owns no native handle; the registration list goes with the dropped context

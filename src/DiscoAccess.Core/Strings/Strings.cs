@@ -560,6 +560,21 @@ namespace DiscoAccess.Core.Strings
         public const string WorldNoQuickSave = "no quick save";
         public const string WorldLanguageChanged = "language changed";
 
+        // ---- Cutscene descriptions: authored narration for the game's silent visual set pieces, spoken
+        // when the scene starts. The scenes are staged camera-and-animation sequences with no game text at
+        // all, so the descriptions are authored from watching the scenes frame by frame. Written to be
+        // unambiguous by ear (no words that collapse into a different meaning through a synthesizer). ----
+
+        // The new-game wake-up: the room reveal after the opening dream dialogue's "open your eyes".
+        public const string CutsceneNewGameWakeUp =
+            "A room slowly fades in, seen from above. It is wrecked. A bed with rumpled white sheets sits "
+            + "against the left wall. On the right, dark wallpaper patterned with hexagons, a dresser, and a "
+            + "mirror. Papers, clothes and bottles are strewn across the tile floor. In the middle of the room "
+            + "a man lies flat on the floor, face down, wearing nothing but his underwear and one sock. The "
+            + "light swells like morning flooding in, then settles. The man stirs. He rolls over, pushes up "
+            + "onto his hands and knees, and hangs there a moment, head down. Then he hauls himself to his "
+            + "feet and stands swaying in the middle of the room.";
+
         // ---- Loading screen tip: the game shows one random gameplay tip per image loading screen
         // (black-splash loads show none). The tip itself is the game's own localized string; only the
         // label is authored, because the game has no header string for it. ----
