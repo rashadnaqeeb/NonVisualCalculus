@@ -11,7 +11,8 @@ namespace DiscoAccess.Module
     /// <see cref="ThoughtSnapshot"/> for Core to compose. A slot maps its occupancy state directly; a slot
     /// holding a thought, and every list entry, is read from the <see cref="ThoughtCabinetProject"/> model -
     /// its localized name, the effects that apply in its current stage (research bonuses while cooking,
-    /// completion bonuses once fixed) via <see cref="CharacterEffect.EffectName"/>, and the matching
+    /// completion bonuses once fixed) via <see cref="CharacterEffect.EffectName"/> plus each effect's
+    /// flavour quip where the data carries one, and the matching
     /// description (the completion text once researched). Read straight from the model, so it never depends
     /// on the selection-driven tooltip being primed; extraction only, nothing cached past the live read.
     /// </summary>
@@ -77,17 +78,32 @@ namespace DiscoAccess.Module
             return Math.Max(0, Math.Min(100, v));
         }
 
-        // The bonuses an effect set grants, joined into one phrase. EffectName is the game's own localized,
-        // color-free rendering ("Learning cap for Logic raised to 4"); any residual markup is stripped by
-        // the Core text filter at speech time. Null when the thought has no effects in this stage.
+        // The bonuses an effect set grants, joined into one phrase. Each effect reads as the game's own
+        // tooltip line; any residual markup is stripped by the Core text filter at speech time. Null when
+        // the thought has no effects in this stage.
         private static string Effects(CharacterEffect[] effects)
         {
             if (effects == null || effects.Length == 0)
                 return null;
             string joined = string.Join(", ", effects
-                .Select(e => e.EffectName(false, false, false, true))
+                .Select(EffectLine)
                 .Where(s => !string.IsNullOrEmpty(s)));
             return string.IsNullOrEmpty(joined) ? null : joined;
+        }
+
+        // One effect as the game's tooltip composes it: EffectName, the localized, color-free wording
+        // ("Learning cap for Logic raised to 4"), then the flavour quip when the effect carries one
+        // ("-1 Logic: Head in the clouds" - the same line items speak), joined with the game's own colon.
+        // The quip is resolved through the unfixed term path, not TranslationString.GetTranslatedString,
+        // so an RTL language stays speakable.
+        private static string EffectLine(CharacterEffect e)
+        {
+            string name = e.EffectName(false, false, false, true);
+            string term = e.quipLineTerm.Term;
+            string quip = string.IsNullOrEmpty(term) ? null : GameLocalization.Term(term, null);
+            if (string.IsNullOrEmpty(quip))
+                return name;
+            return string.IsNullOrEmpty(name) ? quip : name + TextUtils.Colon + " " + quip;
         }
     }
 }
