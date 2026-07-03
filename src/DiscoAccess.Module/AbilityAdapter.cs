@@ -34,25 +34,27 @@ namespace DiscoAccess.Module
             if (panel.abilityGradeFlipClock != null && panel.abilityGradeFlipClock.gameObject.activeInHierarchy)
             {
                 int value = panel.abilityGradeFlipClock.targetValue;
-                return new AbilityState(name, value, Grade(value), Description(panel));
+                return new AbilityState(name, value, Grade(panel, value), Description(panel));
             }
 
-            // In-game character sheet: the grade clock is dormant; the settled score is the plain statNumber
-            // label, and the per-ability description text is absent there, so it is left null.
+            // In-game character sheet: the grade clock is dormant but present; the settled score is the
+            // plain statNumber label, and the per-ability description text is absent there, so it is left null.
             if (panel.statNumber != null && int.TryParse(panel.statNumber.text, out int score))
-                return new AbilityState(name, score, Grade(score), null);
+                return new AbilityState(name, score, Grade(panel, score), null);
 
             return null;
         }
 
-        // The grade word for a score, from the game's grade table indexed by the score itself. Index 0 is
-        // an empty placeholder (no ability scores zero), so an out-of-range or empty entry yields no grade.
-        private static string Grade(int value)
+        // The localized grade word for a score. The clock builds it from a per-value localized term
+        // (RetrieveStringForValue), so read it through the clock rather than the static GradeStrings table,
+        // which the game keeps only in English. Scores run 1..6 (the six grade words); anything else has no
+        // grade. The clock is present on both the creation screens and the in-game sheet.
+        private static string Grade(StatPanel panel, int value)
         {
-            var grades = AbilityGradeFlipClock.GradeStrings;
-            if (grades == null || value < 0 || value >= grades.Length)
+            var clock = panel.abilityGradeFlipClock;
+            if (clock == null || value < 1 || value > 6)
                 return null;
-            string word = grades[value];
+            string word = clock.RetrieveStringForValue(value);
             return string.IsNullOrEmpty(word) ? null : TitleCase(word);
         }
 

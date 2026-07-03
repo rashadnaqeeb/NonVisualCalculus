@@ -62,13 +62,17 @@ namespace DiscoAccess.Module
         }
 
         // Each skill is a dialogue actor; its short tagline ("Wield raw intellectual power...") is the
-        // actor's short_description field, localized to the current language. Null when the actor or
-        // database is not found, leaving the description unspoken rather than failing the whole read.
+        // actor's short_description field. DE localizes actor fields through its own custom system, the way
+        // its skill panel does; the dialogue database keeps short_description only in English, so Pixel
+        // Crushers' LookupLocalizedValue would speak the English dev string in every language. Null when the
+        // actor or database is not found, leaving the description unspoken rather than failing the whole read.
         private static string Description(SkillType skill)
         {
             DialogueDatabase database = DialogueManager.MasterDatabase;
             Actor actor = database != null ? database.GetActor(Skill.GetActorSkillName(skill)) : null;
-            return actor != null ? actor.LookupLocalizedValue("short_description") : null;
+            return actor != null
+                ? LocalizationCustomSystem.LocalizationUtils.GetActorLocalizedField(actor, "short_description")
+                : null;
         }
     }
 }
