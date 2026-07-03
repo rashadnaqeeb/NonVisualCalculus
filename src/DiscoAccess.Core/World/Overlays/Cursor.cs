@@ -86,8 +86,8 @@ namespace DiscoAccess.Core.World.Overlays
         }
 
         /// <summary>Unpin the cursor so it rides the player's live position again, as on a cold read. Used
-        /// when the character is repositioned out from under the cursor (a scene load, a save load) and the
-        /// remembered spot is stale; the next glide re-pins it.</summary>
+        /// on every world exit (a conversation, a menu) and when the character is repositioned out from
+        /// under the cursor (a scene load, a save load); the next glide re-pins it.</summary>
         public void Reset()
         {
             _has = false;

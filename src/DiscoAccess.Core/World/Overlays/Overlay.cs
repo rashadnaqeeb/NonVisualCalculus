@@ -77,6 +77,9 @@ namespace DiscoAccess.Core.World.Overlays
             foreach (var s in _systems) s.OnExit(this);
             _motion.Reset();
             _wasBlocked = false;
+            // Leaving the world drops the remembered spot: when the view reopens (a conversation ends, a
+            // menu closes), the cursor is back on the character, where the next action starts from.
+            Cursor.Reset();
         }
 
         /// <summary>One frame: glide the cursor by the held direction (only while in control, so it can't

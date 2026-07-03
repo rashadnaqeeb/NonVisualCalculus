@@ -97,6 +97,21 @@ namespace DiscoAccess.Tests
             Assert.Equal(new Vector3(1f, 0f, 0f), cursor.Position);
         }
 
+        [Fact]
+        public void OnExit_UnpinsCursor_BackOntoPlayer()
+        {
+            var env = new FakeEnv();
+            var overlay = NewOverlay(env);
+            overlay.Tick(1f, 1f, 0f, speed: 4f); // glide east: the cursor pins away from the player
+            Assert.True(overlay.Cursor.IsPinned);
+
+            overlay.OnExit(); // the world view closed (a conversation, a menu)
+
+            env.Player = new Vector3(3f, 0f, 3f);
+            Assert.False(overlay.Cursor.IsPinned);
+            Assert.Equal(env.Player, overlay.Cursor.Position); // reopens riding the character
+        }
+
         // ---- the senses' bounds: view edge, fog, and the impassable bump ----
 
         [Fact]
