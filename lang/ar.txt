@@ -145,6 +145,7 @@ SettingSonarRest = الوقت بين مسحات السونار
 SettingSonarCategory = سونار {0}
 SettingRunToDestinations = الركض إلى الوجهات
 DialogueContinue = استمرار
+DialogueAlreadyChosen = سبق اختياره
 NewspaperNextArticle = المقال التالي
 NewspaperPreviousArticle = المقال السابق
 CheckWhite = اختبار أبيض

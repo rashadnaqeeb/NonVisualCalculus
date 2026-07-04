@@ -146,6 +146,7 @@ SettingSonarRest = Время между импульсами сонара
 SettingSonarCategory = Сонар: {0}
 SettingRunToDestinations = Бежать к целям
 DialogueContinue = продолжить
+DialogueAlreadyChosen = уже выбрано
 NewspaperNextArticle = следующая статья
 NewspaperPreviousArticle = предыдущая статья
 CheckWhite = белая проверка
