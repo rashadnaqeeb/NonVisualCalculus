@@ -29,7 +29,10 @@ namespace DiscoAccess.Module.World
         private readonly Dictionary<int, IWorldItem> _items = new Dictionary<int, IWorldItem>();
         private readonly HashSet<int> _present = new HashSet<int>();
         private readonly List<int> _gone = new List<int>();
+        private readonly Action<string> _log; // handed to each entity proxy for its self-diagnostics
         private float _sincePoll = PollInterval; // poll on the first tick
+
+        public WorldModel(Action<string> log) { _log = log; }
 
         public IReadOnlyCollection<IWorldItem> Items => _items.Values;
 
@@ -59,7 +62,7 @@ namespace DiscoAccess.Module.World
                     // below through its OrbProxy (named, gated, and cleared on trigger), so its UI twin
                     // would only duplicate it as a junk-named interactable.
                     if (e.TryCast<OrbUiElement>() != null) continue;
-                    Track(e, () => new EntityProxy(e));
+                    Track(e, () => new EntityProxy(e, _log));
                 }
 
             foreach (SenseOrb orb in Object.FindObjectsOfType<SenseOrb>())

@@ -47,7 +47,7 @@ namespace DiscoAccess.Module.World
         private readonly SpatialSystem _spatial;
         private readonly WallToneSystem _wallTones;
         private readonly SonarSystem _sonar;
-        private readonly WorldModel _model = new WorldModel();
+        private readonly WorldModel _model;
         private readonly WalkInteract _walk;
         private readonly Scanner _scanner;
         private bool _engaged;
@@ -70,6 +70,10 @@ namespace DiscoAccess.Module.World
             // re-placed each frame in Tick so they follow a moving listener.
             _sources = new SpatialSources(_audio, host.LogWarning);
             _env = new WorldEnvironment();
+            // The data layer every world sense reads. The logger is threaded to each entity proxy so a
+            // silent reachability over-reject (an accessible interactable dropped by the standing-ground
+            // geometry) can surface itself to the log at the point it happens - see EntityProxy.WarnIfNearMiss.
+            _model = new WorldModel(host.LogWarning);
             _overlay = new Overlay(_env, host.Speech, _sources);
             // The cursor's object sense: the enter/exit blips while gliding and the name of the thing under
             // the cursor on stop. Registered before the spatial system so its name leads the joined readout
@@ -396,6 +400,37 @@ namespace DiscoAccess.Module.World
                 sb.Append("  ").Append(cat).Append(": ").Append(c).Append(" (").Append(a).Append(" accessible)\n");
             }
             return sb.ToString();
+        }
+
+        // Reachability audit: the things a sighted player could see and click that the scanner nonetheless
+        // drops. An item that clears accessibility, fog, and the camera frame but fails ScanScope.Offered was
+        // dropped by the reachability gate alone (the same predicate the scanner offers by, so this is exactly
+        // what that gate hides). Each such row is cross-checked against the game's own click oracle
+        // (EntityProxy.ClickOracleWouldAct): a SUSPECT row is one the game itself would walk over and act on,
+        // so the mod is hiding something clickable - the class the Whirling dress shirt fell into. The oracle
+        // over-accepts by design (its stand-point radius can grab an overhead or adjacent-level floor), so a
+        // few suspects each visit are correct drops (the same structural cases); a genuinely new over-reject
+        // shows up as a new suspect. Anchored to the player, like the scanner. Run after walking into an area
+        // to sweep what that scene hides. On-demand only (heavy: it prices a click per hidden item).
+        public string DevReach()
+        {
+            Snv from = _env.PlayerPosition;
+            var sb = new System.Text.StringBuilder();
+            int hidden = 0, suspects = 0;
+            foreach (var it in _model.Items)
+            {
+                if (!it.IsAccessible || !it.IsVisible) continue;
+                if (!_env.InView(it.Bounds.NearestPoint(from))) continue;
+                if (ScanScope.Offered(it, from, _env)) continue;
+                hidden++;
+                bool oracle = it is EntityProxy ep && ep.ClickOracleWouldAct();
+                if (oracle) suspects++;
+                sb.Append(oracle ? "  SUSPECT  " : "  ok       ")
+                  .Append(it.Category).Append("  '").Append(it.Name).Append("'  ")
+                  .Append((it.Position - from).Length().ToString("F1")).Append(" m")
+                  .Append(oracle ? "  (game would click it)" : "").Append('\n');
+            }
+            return $"in-frame, hidden by reachability: {hidden}; oracle-clickable suspects: {suspects}\n" + sb;
         }
     }
 }

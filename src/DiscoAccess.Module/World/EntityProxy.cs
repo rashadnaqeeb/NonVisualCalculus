@@ -25,6 +25,7 @@ namespace DiscoAccess.Module.World
         private const float DegenerateHalf = 0.01f;
 
         private readonly BasicEntity _e;
+        private readonly System.Action<string> _log; // for the reachability self-diagnostic (WarnIfNearMiss)
         // The footprint's half-widths, computed once from the entity's click colliders or renderer bounds. Size is
         // structural (an object's physical extent does not change), so it is measured once and cached, while
         // the box centre is read live from the transform each frame - a moving NPC's footprint still follows
@@ -34,7 +35,7 @@ namespace DiscoAccess.Module.World
         private float _halfX, _halfZ;
         private bool _footprintResolved;
 
-        public EntityProxy(BasicEntity e) { _e = e; }
+        public EntityProxy(BasicEntity e, System.Action<string> log) { _e = e; _log = log; }
 
         // The spoken name, composed by Core from the raw fields plus the game's authored display name for this
         // thing (see AuthoredName): the destination area for an exit, else the actor that voices its examine
@@ -561,6 +562,13 @@ namespace DiscoAccess.Module.World
             return command != null && !float.IsPositiveInfinity(command.cost);
         }
 
+        // Diagnostic accessor for the reachability audit (WorldReader.DevReach): the game's own click
+        // verdict for this thing, which for a markerless entity ReachableFrom deliberately does NOT trust
+        // as the offer decision (the oracle over-accepts through its stand-point radius). A disagreement -
+        // the oracle would act while ReachableFrom refused and the scanner dropped the thing - is the audit's
+        // false-negative signal (a clickable thing the mod is hiding).
+        internal bool ClickOracleWouldAct() => ClickWouldAct();
+
         // The priced-but-unfired click: a fresh INTERACTION command Processed against this entity, whose
         // cost and destination formation are then this thing's click verdict (ClickWouldAct) and stand
         // spots (InteractionPoint). Null when there is no party or game controller to price with. For a
@@ -643,17 +651,48 @@ namespace DiscoAccess.Module.World
                 }
             }
             ground = default;
+            WarnIfNearMiss(body);
             return false;
         }
+
+        // Surface a silent over-reject to the log: a markerless interactable that fails StandingGround yet
+        // hangs a hair above real floor was dropped as unreachable though a sighted player still uses it (the
+        // Whirling dress shirt hung 2.52 m over its floor, 0.02 m past the old 2.5 m cap). This runs on the
+        // same scan/cursor path a sighted player's own review drives, so the NEXT such item announces itself
+        // to the log during ordinary play - the class is defined by no one knowing the item is there to look
+        // for. Deduped per proxy (the geometry is static), so the per-scan path probes and logs at most once
+        // per area. Only a floor within the near-miss band trips it: a genuine floating-over-void body finds
+        // no floor and a correct storey-down reject (the mezzanine door over the bar floor ~3.5 m below) sits
+        // past the band, so neither is flagged. The caller has already established this body is accessible,
+        // visible, and in-frame (ScanScope/ObjectCueSystem gate on those before ReachableFrom), so a hit here
+        // is exactly a thing that should be offered and is not.
+        private void WarnIfNearMiss(UnityEngine.Vector3 body)
+        {
+            if (_nearMissChecked) return;
+            _nearMissChecked = true;
+            var probe = new UnityEngine.Vector3(body.x, body.y - GroundMaxDrop, body.z);
+            if (!UnityEngine.AI.NavMesh.SamplePosition(probe, out var hit, GroundSampleRadius, -1)) return;
+            float depth = body.y - hit.position.y;
+            if (depth > GroundMaxDrop && depth <= GroundMaxDrop + NearMissMargin)
+                _log($"[reach] '{_e.name}' dropped as unreachable, but walkable floor sits {depth:F2} m below it, " +
+                     $"just past the {GroundMaxDrop} m GroundMaxDrop cap. If it is a usable interactable, the cap may be too tight.");
+        }
+        private bool _nearMissChecked;
+
+        // How far past GroundMaxDrop the near-miss probe still counts a floor as a too-tight-cap suspect:
+        // wide enough to catch a cap set a little short, short of the ~3.5 m gap to the storey below so a
+        // correct storey-down reject is never flagged.
+        private const float NearMissMargin = 0.6f;
 
         // Per-step sample radius: wide enough to reach the floor beside a wall-mounted thing, narrow enough
         // that the descent (not the radius) does the work of skipping an overhead platform.
         private const float GroundSampleRadius = 2f;
         // The floor band below the body that can be its own standing ground: a door's threshold sits up to
-        // ~1.8 m under its mid-panel pivot and a floating exit trigger up to ~2 m over its steps (the
-        // Whirling courtyard and stairs triggers), while the next storey down starts ~3.5 m (the bar floor
-        // under the mezzanine bedroom door). Also bounds the probe descent - deeper hits are all rejected.
-        private const float GroundMaxDrop = 2.5f;
+        // ~1.8 m under its mid-panel pivot, a floating exit trigger up to ~2 m over its steps (the Whirling
+        // courtyard and stairs triggers), and a wall-hung container up to ~2.5 m over the floor it is used
+        // from (the Whirling dress shirt), while the next storey down starts ~3.5 m (the bar floor under the
+        // mezzanine bedroom door). Also bounds the probe descent - deeper hits are all rejected.
+        private const float GroundMaxDrop = 2.7f;
         // A hit this little above the body is its own floor plane (a pivot sunk into a hatch or rug); more is
         // a platform overhead, never standing ground.
         private const float GroundHeadroom = 0.5f;
