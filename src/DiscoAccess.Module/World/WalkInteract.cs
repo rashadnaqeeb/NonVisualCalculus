@@ -79,8 +79,14 @@ namespace DiscoAccess.Module.World
                     _host.Speech.Speak(Strings.WorldUnreachable(target.Name), interrupt: true);
                     return false;
                 }
-                if (GameMoving()) _host.Speech.Speak(Strings.WorldMovingTo(target.Name), interrupt: true);
-                else SpeakPostInteract(target);
+                // A drawn orb's click acts in place - Open floats its clue this same frame, and nothing but
+                // PostInteractLine carries that text - so speak it whenever there is one, even while the party
+                // is mid-walk: a residual move must not swallow the float (and the orb was opened where the
+                // character stands, so "moving to it" would be a lie). Only a target silent in place (an
+                // entity, whose reaction its own readers speak on arrival) falls back to announcing the walk.
+                string inPlace = target.PostInteractLine();
+                if (!string.IsNullOrEmpty(inPlace)) _host.Speech.Speak(inPlace, interrupt: false);
+                else if (GameMoving()) _host.Speech.Speak(Strings.WorldMovingTo(target.Name), interrupt: true);
                 return true;
             }
 
