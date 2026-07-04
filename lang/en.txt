@@ -269,7 +269,6 @@ StatusOpen = open
 WorldMoney = {0}.{1} réal
 WorldHealth = {0} {1}/{2}, {3}; {4} {5}/{6}, {7}
 HealCharges = {0} healing charge|{0} healing charges
-WorldBarHealed = {0} healed
 WorldBarFull = {0} full
 WorldNoBarHeal = no {0} items
 WorldUsedLeftHand = used left hand item

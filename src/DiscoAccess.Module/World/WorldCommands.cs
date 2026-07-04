@@ -63,9 +63,12 @@ namespace DiscoAccess.Module.World
 
         // ---- Quick-actions ----
 
-        // Use a healing charge on a bar (matching the controller dpad: left heals Health, right heals Morale).
-        // Refuses when no charge is assigned, and when the bar is already full (so a charge is never wasted),
-        // each with spoken feedback named by the game's own bar term.
+        // Heal a bar by clicking its HUD healing button, the same call the controller dpad makes (left heals
+        // Health, right heals Morale). The button's own click both spends the charge and applies the heal, and
+        // raises the game's health/morale notification that NotificationReader speaks - so this adds no line of
+        // its own. It refuses first, with spoken feedback, when no charge is assigned or the bar is already
+        // full (the button alone only plays an unspoken failure sound), so a blind player hears why nothing
+        // happened.
         public void HealEndurance() => Heal(SkillType.ENDURANCE, HealthTerm);
         public void HealVolition() => Heal(SkillType.VOLITION, MoraleTerm);
 
@@ -75,33 +78,41 @@ namespace DiscoAccess.Module.World
             var pools = PlayerCharacter.Singleton.healingPools;
             if (pools.GetHealingChargetsForSkill(skill) <= 0) { _host.Speech.Speak(Strings.WorldNoBarHeal(bar), interrupt: true); return; }
             if (!BarHasDamage(skill)) { _host.Speech.Speak(Strings.WorldBarFull(bar), interrupt: true); return; }
-            pools.UseHealingCharge(skill);
-            _host.Speech.Speak(Strings.WorldBarHealed(bar), interrupt: true);
+            FindHealingButton(skill).OnPointerClick(null);
         }
 
         // The game's localization terms for the two bars (the skills set their values; the bars carry these names).
         private const string HealthTerm = "HEALTH";
         private const string MoraleTerm = "MORALE";
 
-        // A bar carries damage the player can heal when its damageValue is NEGATIVE (the current value is
-        // maximumValue + damageValue); a zero means the bar is full. This is the game's own gate for the
-        // heal button (Sunshine.Dialogue CharacterLuaFunctions.HasEnduranceDamage/HasVolitionDamage).
-        private static bool BarHasDamage(SkillType skill)
+        // The HUD healing button for a bar, matched by the pool it heals (Endurance = Health, Volition =
+        // Morale). Re-found each press rather than held, since the HUD is rebuilt across scene loads.
+        private static HealingButton FindHealingButton(SkillType skill)
         {
-            var you = global::World.Singleton.you;
-            return (skill == SkillType.ENDURANCE ? you.endurance : you.volition).damageValue < 0;
+            foreach (var button in UnityEngine.Object.FindObjectsOfType<HealingButton>())
+                if (button.HealingPoolType == skill) return button;
+            return null;
         }
 
-        // Use the item equipped to a hand. Empty hand reads as such rather than a misleading "used".
-        public void UseLeftHand()
-            => UseHand(EquipmentSlotType.HELDLEFT, "left", Strings.WorldUsedLeftHand, Strings.WorldLeftHandEmpty);
-        public void UseRightHand()
-            => UseHand(EquipmentSlotType.HELDRIGHT, "right", Strings.WorldUsedRightHand, Strings.WorldRightHandEmpty);
+        // The game's own heal-eligibility gate (a bar can be healed only while it carries damage), reused so
+        // the mod's refusal stays in lockstep with the button's.
+        private static bool BarHasDamage(SkillType skill)
+            => skill == SkillType.ENDURANCE
+                ? Sunshine.Dialogue.CharacterLuaFunctions.HasEnduranceDamage()
+                : Sunshine.Dialogue.CharacterLuaFunctions.HasVolitionDamage();
 
-        private void UseHand(EquipmentSlotType slot, string side, string used, string empty)
+        // Use the item held in a hand by clicking its HUD held-item button, the same call the controller stick
+        // clicks make (left stick = left hand, right stick = right hand): the button's own click runs the real
+        // substance-use (or equips the orb). Empty hand reads as such rather than a misleading "used".
+        public void UseLeftHand()
+            => UseHand(EquipmentSlotType.HELDLEFT, HudHeldPanelController.Current.leftHandHeldButton, Strings.WorldUsedLeftHand, Strings.WorldLeftHandEmpty);
+        public void UseRightHand()
+            => UseHand(EquipmentSlotType.HELDRIGHT, HudHeldPanelController.Current.rightHandHeldButton, Strings.WorldUsedRightHand, Strings.WorldRightHandEmpty);
+
+        private void UseHand(EquipmentSlotType slot, HudHeldButton button, string used, string empty)
         {
             if (InventoryViewData.Singleton.GetItemInSlot(slot) == null) { _host.Speech.Speak(empty, interrupt: true); return; }
-            Sunshine.Dialogue.InventoryLuaFunctions.UseSubstanceInHand(side);
+            button.OnHeldButtonClicked();
             _host.Speech.Speak(used, interrupt: true);
         }
 

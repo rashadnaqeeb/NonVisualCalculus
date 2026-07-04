@@ -269,7 +269,6 @@ StatusOpen = открыто
 WorldMoney = {0},{1} реал
 WorldHealth = {0} {1}/{2}, {3}; {4} {5}/{6}, {7}
 HealCharges = {0} заряд лечения|{0} заряда лечения|{0} зарядов лечения
-WorldBarHealed = {0}: восстановлено
 WorldBarFull = {0}: максимум
 WorldNoBarHeal = {0}: нет предметов для восстановления
 WorldUsedLeftHand = использован предмет в левой руке

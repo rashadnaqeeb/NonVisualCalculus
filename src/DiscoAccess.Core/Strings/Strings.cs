@@ -541,7 +541,6 @@ namespace DiscoAccess.Core.Strings
             D("HealCharges", "{0} healing charge|{0} healing charges"),
             // Heal-key feedback; {0} = the game's localized bar name (I2 HEALTH / MORALE value), so
             // inflect around a noun of that gender. Healed / already full / no healing items carried.
-            D("WorldBarHealed", "{0} healed"),
             D("WorldBarFull", "{0} full"),
             D("WorldNoBarHeal", "no {0} items"),
             // Use-held-item feedback: the item in that hand was used, or the hand carries nothing.
@@ -1138,7 +1137,6 @@ namespace DiscoAccess.Core.Strings
 
         // ---- World quick-action feedback (mod-authored; the game speaks none of these). The heal
         // feedback is composed around the game's bar name (Health/Morale) so it localizes. ----
-        public static string WorldBarHealed(string barName) => F("WorldBarHealed", barName);
         public static string WorldBarFull(string barName) => F("WorldBarFull", barName);
         public static string WorldNoBarHeal(string barName) => F("WorldNoBarHeal", barName);
         public static string WorldUsedLeftHand => T("WorldUsedLeftHand");

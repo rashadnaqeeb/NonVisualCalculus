@@ -35,7 +35,6 @@ namespace DiscoAccess.Tests
         [Fact]
         public void HealFeedback_WrapsBarName()
         {
-            Assert.Equal("Health healed", Strings.WorldBarHealed("Health"));
             Assert.Equal("Morale full", Strings.WorldBarFull("Morale"));
             Assert.Equal("no Health items", Strings.WorldNoBarHeal("Health"));
         }

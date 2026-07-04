@@ -268,7 +268,6 @@ StatusOpen = مفتوح
 WorldMoney = {0}.{1} ريال
 WorldHealth = {0} {1} من {2}، {3}. {4} {5} من {6}، {7}
 HealCharges = لا شحنات علاج|شحنة علاج واحدة|شحنتا علاج|{0} شحنات علاج|{0} شحنة علاج|{0} شحنة علاج
-WorldBarHealed = {0} عولجت
 WorldBarFull = {0} ممتلئة
 WorldNoBarHeal = لا أغراض لعلاج {0}
 WorldUsedLeftHand = تم استخدام غرض اليد اليسرى
