@@ -119,6 +119,9 @@ namespace DiscoAccess.Module
             // Speak the silent cinematic scenes' descriptions; likewise on this load's Harmony.
             _cutscenes = new CutsceneReader(_host);
             _cutscenes.Apply(_harmony);
+            // Mute DE's raw-input number-key response-select while our navigator owns the keyboard, so a
+            // digit only moves the dialogue cursor (jump-to-choice) instead of auto-committing the option.
+            ButtonKeyTriggerGuard.Apply(_harmony, () => _screens.OwnsKeyboard);
 
             // UI navigation keys: live only while our navigator owns the keyboard, and routed into it by
             // the dispatcher below. Directions and Tab auto-repeat while held.
