@@ -55,13 +55,12 @@ namespace DiscoAccess.Tests
             public bool Open { get; set; }
             public bool IsOpen => Open;
             public Vector3 InteractionPoint(Vector3 from) => Position;
-            // Whether the game can path to it from here. Defaults true (an accessible thing is usually
-            // reachable); only the off-level cursor gate consults it, so a test sets it false to model a thing
-            // hanging out of reach (a balcony door over the plaza).
-            public bool Reachable { get; set; } = true;
-            public bool ReachableFrom(Vector3 from) => Reachable;
-            // Whether the reach verdict is the game's own click pricing (trustworthy on the same level).
-            // Default false: a same-level thing is kept without a path test unless a test opts in.
+            // The reach verdict from here. Defaults Reachable; a test sets Severed to model a proven refusal
+            // (a balcony door over the plaza, the sealed backroom box) or Unproven to model a refusal the
+            // gates must not trust (the standing-ground finder missing a floor).
+            public ReachState Reach { get; set; } = ReachState.Reachable;
+            public ReachState ReachableFrom(Vector3 from) => Reach;
+            // Whether the reach verdict is the game's own click pricing. Default false (markerless geometry).
             public bool ClickPriced { get; set; }
             public bool ReachIsClickPriced => ClickPriced;
             public bool Interact() => false;
@@ -270,7 +269,7 @@ namespace DiscoAccess.Tests
             // The height gate keeps it because it stands on connected ground (ReachableFrom).
             var backend = new FakeBackend();
             var (overlay, _, model, _, _) = Build(backend);
-            model.List.Add(new FakeItem { Name = "stairs", Position = new Vector3(5f, 3f, 0f), Reachable = true });
+            model.List.Add(new FakeItem { Name = "stairs", Position = new Vector3(5f, 3f, 0f), Reach = ReachState.Reachable });
 
             overlay.Cursor.Position = new Vector3(5f, 0f, 0f); // directly under it, 3 m below
             overlay.AnnounceCurrent();
@@ -286,7 +285,7 @@ namespace DiscoAccess.Tests
             // ground, so the height gate drops it and the cursor names bare ground instead.
             var backend = new FakeBackend();
             var (overlay, _, model, _, _) = Build(backend);
-            model.List.Add(new FakeItem { Name = "balcony door", Position = new Vector3(5f, 3f, 0f), Reachable = false });
+            model.List.Add(new FakeItem { Name = "balcony door", Position = new Vector3(5f, 3f, 0f), Reach = ReachState.Severed });
 
             overlay.Cursor.Position = new Vector3(5f, 0f, 0f); // directly under it, 3 m below
             overlay.AnnounceCurrent();
@@ -294,18 +293,34 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
-        public void ElevatedUnreachableThing_WithinReach_IsStillSelected()
+        public void ElevatedUnprovenThing_WithinReach_IsStillSelected()
         {
-            // The gate only fires past the same-level slack: a thing just above the cursor (a lever above
-            // waist height) that every path test rejects is still named, so the gate never hides same-level
-            // things standing on a navmesh pocket (an NPC behind a bar counter).
+            // Within the same-level slack the gate trusts only a proven Severed refusal: a thing just above the
+            // cursor (a lever above waist height) whose standing-ground finder cannot locate its floor is only
+            // Unproven, so it is still named - the gate never hides a same-level thing on a mere ground-finder
+            // miss.
             var backend = new FakeBackend();
             var (overlay, _, model, _, _) = Build(backend);
-            model.List.Add(new FakeItem { Name = "lever", Position = new Vector3(5f, 0.8f, 0f), Reachable = false });
+            model.List.Add(new FakeItem { Name = "lever", Position = new Vector3(5f, 0.8f, 0f), Reach = ReachState.Unproven });
 
             overlay.Cursor.Position = new Vector3(5f, 0f, 0f); // just below it, within the slack
             overlay.AnnounceCurrent();
             Assert.Equal(new[] { "lever" }, backend.Spoken);
+        }
+
+        [Fact]
+        public void OnLevelSeveredThing_UnderTheCursor_IsNotSelected()
+        {
+            // The sealed backroom box under the cursor: on the cursor's own level, but its ground is found and
+            // the path to it cut - a trustworthy Severed refusal. The gate drops it even within the slack, so
+            // the cursor names bare ground rather than a box the player cannot reach.
+            var backend = new FakeBackend();
+            var (overlay, _, model, _, _) = Build(backend);
+            model.List.Add(new FakeItem { Name = "box", Position = new Vector3(5f, 0.4f, 0f), Reach = ReachState.Severed });
+
+            overlay.Cursor.Position = new Vector3(5f, 0f, 0f); // directly under it, within the slack
+            overlay.AnnounceCurrent();
+            Assert.Empty(backend.Spoken);
         }
 
         [Fact]

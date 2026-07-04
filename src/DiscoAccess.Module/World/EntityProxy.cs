@@ -531,18 +531,26 @@ namespace DiscoAccess.Module.World
         // head (the Whirling front door's 3 m radius reaches the balcony floor above it, and the oracle
         // then paths two metres to the balcony edge and calls the ground-floor door reachable).
         // Whether ReachableFrom prices the game's own click (a person, or a thing with authored interaction
-        // stand-spots) rather than falling back to the markerless standing-ground geometry - the reliable
-        // verdict the same-level scanner and cursor gates trust to say "no" (see IWorldItem.ReachIsClickPriced).
+        // stand-spots) rather than falling back to the markerless standing-ground geometry. The click pricing
+        // never returns Unproven - its "no" is always a proven Severed the same-level gates trust; the
+        // geometry's "no" is Severed (ground found, path cut - trusted) or Unproven (floor not found - not
+        // trusted, so the same-level thing stays offered). See IWorldItem.ReachIsClickPriced.
         public bool ReachIsClickPriced => Category == WorldTaxonomy.Npc || InteractionMarkers.Length > 0;
 
-        public bool ReachableFrom(Vector3 from)
+        public ReachState ReachableFrom(Vector3 from)
         {
-            if (ReachIsClickPriced) return ClickWouldAct();
+            // A click-priced thing's refusal is the game's own pricing, always trustworthy: finite is
+            // Reachable, infinite is a proven Severed (never Unproven).
+            if (ReachIsClickPriced) return ClickWouldAct() ? ReachState.Reachable : ReachState.Severed;
+            // Markerless: no standing ground located at all (past the drop cap, floating over its surface) is
+            // an Unproven refusal the same-level gate must not trust - the finder missed, the thing may still
+            // be reachable. Ground found but the path to it cut is a proven Severed refusal.
             if (!StandingGround(out UnityEngine.Vector3 ground) && !MooredGround(from, out ground))
-                return false;
+                return ReachState.Unproven;
             var path = new UnityEngine.AI.NavMeshPath();
-            return UnityEngine.AI.NavMesh.CalculatePath(WorldConvert.ToUnity(from), ground, -1, path)
-                   && path.status == UnityEngine.AI.NavMeshPathStatus.PathComplete;
+            bool complete = UnityEngine.AI.NavMesh.CalculatePath(WorldConvert.ToUnity(from), ground, -1, path)
+                            && path.status == UnityEngine.AI.NavMeshPathStatus.PathComplete;
+            return complete ? ReachState.Reachable : ReachState.Severed;
         }
 
         // The game's click verdict, priced without acting. Clicking any entity runs

@@ -157,13 +157,13 @@ namespace DiscoAccess.Module.World
         // world orb sits overhead and is already judged off-level, a thought orb rides the character.
         public bool ReachIsClickPriced => false;
 
-        public bool ReachableFrom(Vector3 from)
+        public ReachState ReachableFrom(Vector3 from)
         {
-            if (IsThoughtFamily) return true;
+            if (IsThoughtFamily) return ReachState.Reachable;
             // A DRAWN orb is actable from anywhere: the sighted click (OrbUiElement.OnPointerClicked) fires
             // Open in place with no walk and no range test, and Interact below does the same, so pathability
             // is moot while its UI is live.
-            if (_orb.orbUI != null) return true;
+            if (_orb.orbUI != null) return ReachState.Reachable;
             UnityEngine.Vector3 body = WorldConvert.ToUnity(Position);
             float radius = _orb.InteractionRadius;
             UnityEngine.Vector3 target = body;
@@ -171,12 +171,22 @@ namespace DiscoAccess.Module.World
             if (UnityEngine.AI.NavMesh.SamplePosition(body, out var snap, System.Math.Max(radius, 1f), -1))
                 target = snap.position;
             var path = new UnityEngine.AI.NavMeshPath();
+            bool reachable;
             if (!UnityEngine.AI.NavMesh.CalculatePath(WorldConvert.ToUnity(from), target, -1, path))
-                return false;
-            if (path.status == UnityEngine.AI.NavMeshPathStatus.PathComplete) return true;
-            var corners = path.corners;
-            return corners.Length > 0
-                   && (corners[corners.Length - 1] - body).sqrMagnitude <= radius * radius;
+                reachable = false;
+            else if (path.status == UnityEngine.AI.NavMeshPathStatus.PathComplete)
+                reachable = true;
+            else
+            {
+                var corners = path.corners;
+                reachable = corners.Length > 0
+                            && (corners[corners.Length - 1] - body).sqrMagnitude <= radius * radius;
+            }
+            // An orb's reach is its own trigger-sphere path test, not the markerless standing-ground finder,
+            // so a refusal here is not the trustworthy Severed the same-level gate drops on: report Unproven so
+            // a same-level orb stays on the permissive path exactly as before (an off-level orb is dropped by
+            // the strict gate all the same, since Unproven is not Reachable).
+            return reachable ? ReachState.Reachable : ReachState.Unproven;
         }
 
         // Walk to a walkable spot at the orb body's footprint. An orb can float above the mesh, so snap its

@@ -3,6 +3,33 @@ using System.Numerics;
 namespace DiscoAccess.Core.World
 {
     /// <summary>
+    /// A thing's reachability verdict from a reference position. Richer than a bool because a "no" comes in
+    /// two kinds the discovery gates must treat differently: one they can trust to hide the thing, one they
+    /// cannot.
+    /// </summary>
+    public enum ReachState
+    {
+        /// <summary>A walk from the reference would arrive: a complete navmesh path to the stand-ground, or
+        /// (a click-priced thing) the game's own click prices the approach finite, or (an orb) the walk lands
+        /// inside the trigger sphere.</summary>
+        Reachable,
+
+        /// <summary>A TRUSTWORTHY refusal: the stand target was located - a click-priced thing's authored
+        /// stand-spot, or a markerless thing's own standing ground - and the navmesh path to it is genuinely
+        /// severed (the game's click would refuse too). Even the permissive same-level gate drops on this: the
+        /// sealed backroom box, the sealed-room pinball.</summary>
+        Severed,
+
+        /// <summary>A refusal the discovery gates must NOT trust: the markerless standing-ground geometry could
+        /// not locate the body's floor at all (a body hung past the drop cap, a pivot floating over its
+        /// surface), or an orb's own trigger test could not confirm a reach. The refusal is the finder missing,
+        /// not a proven severance, so the permissive same-level gate keeps the thing rather than hide something
+        /// a sighted player can still reach (the dress shirt past the old cap); its walk-interact reports the
+        /// wall if it really is blocked.</summary>
+        Unproven
+    }
+
+    /// <summary>
     /// The sensing-facing view of one thing in the world: what the cursor readout, sonar, and scanner read.
     /// Implemented by a thin Module proxy over a live game object, so every property reads live (the "never
     /// cache game state" rule) and no Unity type crosses into Core - the proxy converts to
@@ -51,25 +78,29 @@ namespace DiscoAccess.Core.World
         Vector3 InteractionPoint(Vector3 from);
 
         /// <summary>Whether acting on this thing from <paramref name="from"/> would succeed, for the
-        /// discovery gates (cursor hover, scanner offer). For a person or a marker-bearing thing this is
-        /// the game's own click verdict - a MovementCommand priced to the authored stand-spots, refused
-        /// while every path is severed - which is anchored to the party's live position (the walk can only
-        /// start at the character), so gates must pass the player as <paramref name="from"/>. A markerless
-        /// thing falls back to standing-ground walk-connectivity: the ground its body stands on - or, for a
-        /// body over unwalkable surface, the ground its clickable edge meets (a boat moored against a
-        /// walkway) - is walk-connected to <paramref name="from"/>. Never cached and never inferred from
-        /// <see cref="IsAccessible"/>, which a walled-off thing passes while unreachable; a thing
-        /// unreachable from here can become reachable once the character moves.</summary>
-        bool ReachableFrom(Vector3 from);
+        /// discovery gates (cursor hover, scanner offer), as a three-way <see cref="ReachState"/>. For a
+        /// person or a marker-bearing thing this is the game's own click verdict - a MovementCommand priced to
+        /// the authored stand-spots, refused while every path is severed - which is anchored to the party's
+        /// live position (the walk can only start at the character), so gates must pass the player as
+        /// <paramref name="from"/>. A markerless thing falls back to standing-ground walk-connectivity: the
+        /// ground its body stands on - or, for a body over unwalkable surface, the ground its clickable edge
+        /// meets (a boat moored against a walkway) - is walk-connected to <paramref name="from"/>. When that
+        /// ground is found but severed the verdict is <see cref="ReachState.Severed"/> (trustworthy); when the
+        /// finder cannot locate the floor at all it is <see cref="ReachState.Unproven"/> (untrustworthy). Never
+        /// cached and never inferred from <see cref="IsAccessible"/>, which a walled-off thing passes while
+        /// unreachable; a thing unreachable from here can become reachable once the character moves.</summary>
+        ReachState ReachableFrom(Vector3 from);
 
         /// <summary>Whether <see cref="ReachableFrom"/>'s verdict here is the game's own click pricing - a
         /// person, or a thing with authored interaction stand-spots - rather than the markerless
-        /// standing-ground geometry that over-rejects a walled-off same-level thing. The same-level scanner
-        /// and cursor gates skip the reach test by default (a same-level woodpile behind a fence still pings,
-        /// and its walk-interact reports the wall), because that geometry cannot be trusted to say "no". A
-        /// click-priced thing CAN be: the game refuses the click exactly when a sighted player's would fail,
-        /// so a false here is authoritative and the same-level gate drops the thing (the sealed-room pinball).
-        /// False leaves the thing on the permissive same-level path unchanged.</summary>
+        /// standing-ground geometry. Both verdicts are trusted when they say <see cref="ReachState.Severed"/>
+        /// (the sealed-room pinball is click-priced and drops; the sealed backroom box is markerless with its
+        /// ground found and its path cut, and drops too). The kinds diverge only on
+        /// <see cref="ReachState.Unproven"/>: the standing-ground geometry can miss a reachable body's floor
+        /// (a thing hung past the drop cap), so a markerless Unproven leaves the thing on the permissive
+        /// same-level path, while the click pricing never returns Unproven - it refuses exactly when a sighted
+        /// player's click would fail. This flag is off-level's companion signal (see the scanner and cursor
+        /// gates), not itself an offer decision.</summary>
         bool ReachIsClickPriced { get; }
 
         /// <summary>Trigger the game's interaction for this thing (auto-path and act). Returns whether

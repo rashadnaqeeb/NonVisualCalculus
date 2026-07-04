@@ -189,17 +189,17 @@ namespace DiscoAccess.Core.World.Overlays.Systems
                 if (d > bestDist || (d == bestDist && (best == null || body >= bestBody))) continue;
                 // Height-reachability gate. XZ-only detection would also put the cursor "on" a thing hanging
                 // well above (or below) the ground it is clamped to - the Whirling balcony door overhanging the
-                // plaza reads as under the cursor though its body sits metres overhead. Drop such a candidate
-                // when it is off reachable ground (ReachableFrom) AND either past the same-level slack OR
-                // click-priced (its reach verdict is the game's own pricing, trustworthy on the same level -
-                // the sealed-room pinball): a staircase or step-exit stands on connected ground and is kept, a
-                // same-level MARKERLESS thing within the slack (an NPC behind a bar counter, whom every
-                // geometry oracle over-rejects) is kept without any path test, an orb overhead is always
-                // reachable and is kept, and a cross-level conversation (the balcony smoker spoken to from
-                // below) is kept through the person fallback. The path test runs only for an off-slack or
-                // click-priced candidate, so it is rare, not per item per frame.
-                if ((System.Math.Abs(np.Y - cursor.Y) > SameLevelSlack || it.ReachIsClickPriced)
-                    && !it.ReachableFrom(player)) continue;
+                // plaza reads as under the cursor though its body sits metres overhead. An off-slack or
+                // click-priced candidate (its reach verdict trustworthy - the sealed-room pinball, the balcony
+                // door) must be genuinely Reachable; a same-level markerless candidate is kept unless its
+                // refusal is trustworthy (a Severed path over located ground - the sealed backroom box - drops
+                // it, while a ground-finder miss keeps it). So a staircase or step-exit on connected ground is
+                // kept, an NPC behind a bar counter (a cross-level conversation priced from below) is kept
+                // through the person fallback, an orb overhead reads Reachable and is kept, and only a proven
+                // severance hides a thing. The verdict runs for the current best candidate only, not per item.
+                ReachState reach = it.ReachableFrom(player);
+                bool strict = System.Math.Abs(np.Y - cursor.Y) > SameLevelSlack || it.ReachIsClickPriced;
+                if (strict ? reach != ReachState.Reachable : reach == ReachState.Severed) continue;
                 bestDist = d; bestBody = body; best = it;
             }
             return best;

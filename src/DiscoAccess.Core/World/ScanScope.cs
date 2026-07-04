@@ -32,9 +32,11 @@ namespace DiscoAccess.Core.World
     /// until a path opens; the corridor doors return the moment the player's own door opens; the sealed-room
     /// pinball drops though it sits on the player's own level), and the standing-ground walk-connectivity
     /// geometry for the markerless rest (the crate up the harbour gate connects via its stairs; the
-    /// mezzanine door over the bar floor does not). A same-level markerless non-crossing thing is offered
-    /// without a path test: a walled-off woodpile still pings, and its walk-interact reports the wall - the
-    /// known over-rejection traps live in that geometry, so the gate stays permissive for it.
+    /// mezzanine door over the bar floor does not). A same-level markerless non-crossing thing is kept unless
+    /// its refusal is trustworthy: a <see cref="ReachState.Severed"/> verdict (its ground was found and the
+    /// path to it is cut, and the game's click would refuse too) drops it, as for the sealed backroom box;
+    /// an <see cref="ReachState.Unproven"/> verdict (the standing-ground finder missed the floor) keeps it,
+    /// so a genuinely over-rejected thing still pings and its walk-interact reports the wall.
     /// </summary>
     public static class ScanScope
     {
@@ -43,12 +45,17 @@ namespace DiscoAccess.Core.World
             if (!it.IsAccessible || !it.IsVisible) return false;
             Vector3 nearest = it.Bounds.NearestPoint(from);
             if (!env.InView(nearest)) return false;
+            // A person, a crossing, a click-priced thing, or anything off the player's level must prove it is
+            // reachable - the reach verdict is trustworthy for those (see the kinds above).
             if (it.Category == WorldTaxonomy.Npc
                 || it.Category == WorldTaxonomy.Door || it.Category == WorldTaxonomy.Exit
                 || it.ReachIsClickPriced
                 || Math.Abs(nearest.Y - from.Y) > Overlays.Systems.ObjectCueSystem.SameLevelSlack)
-                return it.ReachableFrom(from);
-            return true;
+                return it.ReachableFrom(from) == ReachState.Reachable;
+            // Same-level markerless thing: keep it unless the reach test can be TRUSTED to say no. A severed
+            // path over located ground is trustworthy (the sealed backroom box drops); a ground-finder miss is
+            // not (an over-rejected thing stays, and its walk-interact reports the wall).
+            return it.ReachableFrom(from) != ReachState.Severed;
         }
     }
 }

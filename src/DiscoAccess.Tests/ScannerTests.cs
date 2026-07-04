@@ -40,8 +40,8 @@ namespace DiscoAccess.Tests
             public bool Open { get; set; }
             public bool IsOpen => Open;
             public Vector3 InteractionPoint(Vector3 from) => Position;
-            public bool Reachable { get; set; } = true;
-            public bool ReachableFrom(Vector3 from) => Reachable;
+            public ReachState Reach { get; set; } = ReachState.Reachable;
+            public ReachState ReachableFrom(Vector3 from) => Reach;
             public bool ClickPriced { get; set; }
             public bool ReachIsClickPriced => ClickPriced;
             public bool Interact() => false;
@@ -85,21 +85,26 @@ namespace DiscoAccess.Tests
             => new FakeItem { Position = new Vector3(x, 0f, z), Name = name, Cat = cat };
 
         [Fact]
-        public void SameLevelPerson_GatedByClickVerdict_ThingsAreNot()
+        public void SameLevelReach_GatesPersonAndSeveredThing_ButKeepsUnproven()
         {
             var env = new FakeEnv();
             // A person on the player's own level is offered only while the click verdict says reachable
             // (Cuno beyond the yard fence is filtered until a path opens)...
             var person = At(2f, 0f, "cuno", WorldTaxonomy.Npc);
-            person.Reachable = false;
+            person.Reach = ReachState.Severed;
             Assert.False(ScanScope.Offered(person, Vector3.Zero, env));
-            person.Reachable = true;
+            person.Reach = ReachState.Reachable;
             Assert.True(ScanScope.Offered(person, Vector3.Zero, env));
-            // ...while a same-level thing is offered regardless: the walled-off woodpile still pings, and
-            // only its walk-interact reports the wall.
-            var thing = At(2f, 0f, "woodpile");
-            thing.Reachable = false;
-            Assert.True(ScanScope.Offered(thing, Vector3.Zero, env));
+            // ...while a same-level markerless thing whose refusal is only Unproven (the ground-finder missed
+            // its floor) still pings, and its walk-interact reports the wall if it truly is blocked...
+            var overRejected = At(2f, 0f, "woodpile");
+            overRejected.Reach = ReachState.Unproven;
+            Assert.True(ScanScope.Offered(overRejected, Vector3.Zero, env));
+            // ...but a same-level markerless thing with a trustworthy Severed refusal (ground found, path cut -
+            // the sealed backroom box) is dropped, like the person's.
+            var severed = At(2f, 0f, "box");
+            severed.Reach = ReachState.Severed;
+            Assert.False(ScanScope.Offered(severed, Vector3.Zero, env));
         }
 
         [Fact]
@@ -247,47 +252,46 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
-        public void SameLevelSeveredCrossing_IsNotOffered()
+        public void SameLevelSevered_CrossingsAndMarkerless_AreNotOffered()
         {
             var (scanner, model, speech, _, _) = Build();
-            // The corridor doors beyond the player's own shut door: same level, in frame, visible over the
-            // walls - but the closed door severs every path, so their reachability verdict (the click
-            // pricing) refuses and a walk-interact would too. Only crossings and people take the test: the
-            // container on a mesh-carving table behind the same severance stays offered (the over-rejection
-            // trap).
+            // Beyond the player's own shut door: same level, in frame, visible over the walls - but the closed
+            // door severs every path. The corridor door and stairs (crossings) refuse via the click pricing;
+            // the markerless crate on a mesh-carving table behind the same severance has its ground found but
+            // its path cut, a trustworthy Severed refusal - so it drops too, not just the crossings.
             model.List.Add(At(2f, 0f, "own door", WorldTaxonomy.Door));
             var corridorDoor = At(5f, 0f, "corridor door", WorldTaxonomy.Door);
-            corridorDoor.Reachable = false;
+            corridorDoor.Reach = ReachState.Severed;
             model.List.Add(corridorDoor);
             var corridorStairs = At(6f, 0f, "corridor stairs", WorldTaxonomy.Exit);
-            corridorStairs.Reachable = false;
+            corridorStairs.Reach = ReachState.Severed;
             model.List.Add(corridorStairs);
             var crate = At(7f, 0f, "corridor crate", WorldTaxonomy.Container);
-            crate.Reachable = false;
+            crate.Reach = ReachState.Severed;
             model.List.Add(crate);
 
             scanner.StepItem(1);
             Assert.StartsWith("own door; ", speech.Spoken[^1]);
-            scanner.StepItem(1);
-            Assert.StartsWith("corridor crate; ", speech.Spoken[^1]);
-            scanner.StepItem(1); // wraps: the severed door and stairs never land
+            scanner.StepItem(1); // wraps: the severed door, stairs, and crate never land
             Assert.StartsWith("own door; ", speech.Spoken[^1]);
         }
 
         [Fact]
-        public void SameLevelSealedClickPricedThing_IsNotOffered_ButMarkerlessStillPings()
+        public void SameLevelSealedClickPricedThing_IsNotOffered_ButUnprovenMarkerlessStillPings()
         {
             var (scanner, model, speech, _, _) = Build();
             // The Gurdis Goats pinball: a talking-prop interactable on the player's own level, in frame,
-            // unfogged, but sealed behind a wall so its click prices infinite. Because its reach verdict is
-            // the game's own pricing (ReachIsClickPriced), a false is trusted and it drops - unlike a
-            // markerless woodpile behind the same wall, whose geometry over-rejects, so it stays offered.
+            // unfogged, but sealed behind a wall so its click prices infinite - a click-priced Severed refusal,
+            // trusted, so it drops. A markerless woodpile whose standing-ground finder cannot locate its floor
+            // is only Unproven - an untrustworthy refusal the same-level gate does not act on - so it still
+            // pings (a genuinely blocked one reports the wall on walk-interact; a wrongly-rejected reachable one
+            // is not hidden).
             var pinball = At(3f, 0f, "pinball machine", WorldTaxonomy.Interactable);
             pinball.ClickPriced = true;
-            pinball.Reachable = false;
+            pinball.Reach = ReachState.Severed;
             model.List.Add(pinball);
             var woodpile = At(4f, 0f, "woodpile", WorldTaxonomy.Interactable);
-            woodpile.Reachable = false; // markerless: not click-priced, stays permissive
+            woodpile.Reach = ReachState.Unproven; // ground-finder miss, not a proven severance: stays permissive
             model.List.Add(woodpile);
 
             scanner.StepItem(1);
@@ -302,7 +306,7 @@ namespace DiscoAccess.Tests
             var (scanner, model, speech, _, _) = Build();
             // The balcony door seen from the plaza: hanging well above the scan reference's level, standing
             // on a disconnected island - reachable only by going elsewhere, so never offered.
-            model.List.Add(new FakeItem { Position = new Vector3(1f, 5f, 0f), Name = "balcony door", Reachable = false });
+            model.List.Add(new FakeItem { Position = new Vector3(1f, 5f, 0f), Name = "balcony door", Reach = ReachState.Severed });
             model.List.Add(At(2f, 0f, "crate"));
 
             scanner.StepItem(1);
@@ -317,7 +321,7 @@ namespace DiscoAccess.Tests
             var (scanner, model, speech, _, _) = Build();
             // The ground below a low balcony (Martinaise stacks levels as tight as 2 m): past the pivot
             // slack, off reachable ground, so hidden even though the height gap is small.
-            model.List.Add(new FakeItem { Position = new Vector3(1f, -2f, 0f), Name = "tracks", Reachable = false });
+            model.List.Add(new FakeItem { Position = new Vector3(1f, -2f, 0f), Name = "tracks", Reach = ReachState.Severed });
             model.List.Add(At(2f, 0f, "crate"));
 
             scanner.StepItem(1);
@@ -332,22 +336,40 @@ namespace DiscoAccess.Tests
             var (scanner, model, speech, _, _) = Build();
             // The crate up on the harbour gate (its platform connects via stairs) or the balcony smoker
             // (a conversation authored from the ground): off-level but ReachableFrom, so still findable.
-            model.List.Add(new FakeItem { Position = new Vector3(1f, 5f, 0f), Name = "smoker", Reachable = true });
+            model.List.Add(new FakeItem { Position = new Vector3(1f, 5f, 0f), Name = "smoker", Reach = ReachState.Reachable });
 
             scanner.StepItem(1);
             Assert.StartsWith("smoker; ", speech.Spoken[^1]);
         }
 
         [Fact]
-        public void OnLevelThing_IsOfferedWithoutAPathTest()
+        public void OnLevelUnprovenThing_StaysOffered()
         {
             var (scanner, model, speech, _, _) = Build();
-            // The NPC behind the bar counter: on the scan reference's level but standing on a navmesh pocket
-            // no path test accepts; within the pivot slack the gate never asks, so they stay offered.
-            model.List.Add(new FakeItem { Position = new Vector3(1f, 0.8f, 0f), Name = "bartender", Reachable = false });
+            // A thing on the scan reference's level whose standing-ground finder cannot locate its floor (a body
+            // over a navmesh pocket, hung past the drop cap): an Unproven refusal, which the same-level gate
+            // does not trust, so it stays offered rather than hide something a sighted player may still reach.
+            model.List.Add(new FakeItem { Position = new Vector3(1f, 0.8f, 0f), Name = "shelf item", Reach = ReachState.Unproven });
 
             scanner.StepItem(1);
-            Assert.StartsWith("bartender; ", speech.Spoken[^1]);
+            Assert.StartsWith("shelf item; ", speech.Spoken[^1]);
+        }
+
+        [Fact]
+        public void OnLevelSeveredMarkerless_IsNotOffered()
+        {
+            var (scanner, model, speech, _, _) = Build();
+            // The sealed backroom box: on the player's own level, in frame, a markerless container - but its
+            // ground is found and the path to it cut (a story-locked door severs the room). A trustworthy
+            // Severed refusal, so it drops rather than ping a thing the player cannot reach, matching the
+            // sealed-room pinball beside it.
+            model.List.Add(new FakeItem { Position = new Vector3(1f, 0.4f, 0f), Name = "box", Cat = WorldTaxonomy.Container, Reach = ReachState.Severed });
+            model.List.Add(At(2f, 0f, "crate"));
+
+            scanner.StepItem(1);
+            Assert.StartsWith("crate; ", speech.Spoken[^1]);
+            scanner.StepItem(1); // wraps: the sealed box never lands
+            Assert.StartsWith("crate; ", speech.Spoken[^1]);
         }
 
         [Fact]
