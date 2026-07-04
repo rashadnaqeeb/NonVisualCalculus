@@ -146,6 +146,7 @@ SettingSonarRest = Time between sonar sweeps
 SettingSonarCategory = Sonar {0}
 SettingRunToDestinations = Run to destinations
 DialogueContinue = continue
+DialogueAlreadyChosen = already chosen
 NewspaperNextArticle = next article
 NewspaperPreviousArticle = previous article
 CheckWhite = white check

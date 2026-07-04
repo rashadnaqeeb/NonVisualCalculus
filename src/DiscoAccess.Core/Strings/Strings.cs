@@ -283,6 +283,10 @@ namespace DiscoAccess.Core.Strings
             // The control that advances a conversation when there are no response choices; verb.
             // Match the game's Continue button caption (I2 Buttons/ARCHETYPE_BUTTON_CONTINUE_TEXT).
             D("DialogueContinue", "continue"),
+            // Suffix on a response the player has already picked before (its node was displayed): the game
+            // dims such an option's text, so we speak this after the option and its breakdown. Only a chosen
+            // response earns it - an option merely offered before but never taken reads plain, as it draws.
+            D("DialogueAlreadyChosen", "already chosen"),
             // The endgame newspaper's article-paging arrow buttons.
             D("NewspaperNextArticle", "next article"),
             D("NewspaperPreviousArticle", "previous article"),
@@ -869,6 +873,9 @@ namespace DiscoAccess.Core.Strings
         // The navigable affordance that advances a conversation when there are no response choices
         // (DE's own continue control is an image with no clean text label).
         public static string DialogueContinue => T("DialogueContinue");
+
+        // Spoken after a dialogue response the player has already selected before (the game dims it).
+        public static string DialogueAlreadyChosen => T("DialogueAlreadyChosen");
 
         // The endgame newspaper's article-paging arrows, image-only buttons with no caption term.
         public static string NewspaperNextArticle => T("NewspaperNextArticle");

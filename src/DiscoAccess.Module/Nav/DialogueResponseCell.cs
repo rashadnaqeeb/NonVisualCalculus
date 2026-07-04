@@ -59,6 +59,14 @@ namespace DiscoAccess.Module.Nav
             string breakdown = CheckBreakdown(label) ?? CostBreakdown(label);
             if (!string.IsNullOrEmpty(breakdown))
                 label = string.IsNullOrEmpty(label) ? breakdown : label + SentenceJoin(label) + breakdown;
+            // An option the player has already picked before is dimmed on screen; speak that last, after
+            // any breakdown, so the distinguishing option text leads and the status trails. Only a chosen
+            // response (its node displayed) earns it - one merely offered before reads plain, as DE draws it.
+            DialogueEntry entry = _response != null ? _response.destinationEntry : null;
+            if (entry != null && SunshineNode.IsSeen(entry))
+                label = string.IsNullOrEmpty(label)
+                    ? Strings.DialogueAlreadyChosen
+                    : label + SentenceJoin(label) + Strings.DialogueAlreadyChosen;
             return TextFilter.Clean(label);
         }
 
