@@ -521,9 +521,9 @@ namespace DiscoAccess.Module.World
         // same radius-grabbed interaction location that makes IsActionable lie (see below), so geometry
         // stays its truth.
         //
-        // A markerless thing asks for standing ground: the nearest walkable mesh the body stands on,
-        // walk-connected to the reference by a COMPLETE navmesh path - the stairs triggers connect via their
-        // own steps, the plaza below the Whirling balcony is a separate island. A body with no walkable mesh
+        // A markerless thing asks for standing ground: the walkable mesh under its footprint point nearest
+        // the reference, walk-connected to the reference by a COMPLETE navmesh path - the stairs triggers
+        // connect via their own steps, the plaza below the Whirling balcony is a separate island. A body with no walkable mesh
         // under it at all is grounded at its edge instead (MooredGround): the fishing village's Motorboat
         // floats on water, which carries no navmesh, but its gunwale meets the walkway a sighted player
         // clicks it from. The game's click oracle (IsActionable) is deliberately not consulted: its
@@ -545,7 +545,7 @@ namespace DiscoAccess.Module.World
             // Markerless: no standing ground located at all (past the drop cap, floating over its surface) is
             // an Unproven refusal the same-level gate must not trust - the finder missed, the thing may still
             // be reachable. Ground found but the path to it cut is a proven Severed refusal.
-            if (!StandingGround(out UnityEngine.Vector3 ground) && !MooredGround(from, out ground))
+            if (!StandingGround(from, out UnityEngine.Vector3 ground) && !MooredGround(from, out ground))
                 return ReachState.Unproven;
             var path = new UnityEngine.AI.NavMeshPath();
             bool complete = UnityEngine.AI.NavMesh.CalculatePath(WorldConvert.ToUnity(from), ground, -1, path)
@@ -636,31 +636,63 @@ namespace DiscoAccess.Module.World
             return false;
         }
 
-        // The walkable mesh this thing STANDS ON: sampled from the body downward in steps, accepting only a
-        // hit inside the body's own floor band - a nearest-mesh sample alone grabs the platform overhead
-        // where levels stack tight (the Whirling front door sits in a wall the street mesh is cut back from,
-        // so its nearest mesh is the balcony floor 2 m over its head), and an uncapped descent adopts the
-        // storey below (Tequila's bedroom door on the Whirling's meshless mezzanine would ground on the bar
-        // floor 3.6 m under it). Descending restarts shift the search below an overhead platform to the real
-        // floor (the street under the door, the steps under a floating exit trigger). False when no mesh
-        // lands in the band - a display-only landing or a thing hanging over void has no standing ground.
-        private bool StandingGround(out UnityEngine.Vector3 ground)
+        // The walkable mesh this thing STANDS ON: sampled downward in steps from the clickable point nearest
+        // the reference, accepting only a hit inside the body's own floor band. Nearest-to-the-reference,
+        // not the pivot, because a thing sitting ON a navmesh boundary grounds on whichever side the sample
+        // happens to grab, and the pivot leans the wrong way: the closed kitchen backdoor's own carve seam
+        // runs under its pivot, so a pivot descent adopts the severed far side while the kitchen side the
+        // player opens it from paths fine; the Whirling counter money pivots over the staff strip behind the
+        // bar though its click collider hangs toward the customer floor. The anchor is the click colliders'
+        // TRUE bounds, not the cursor footprint (which recenters their extents on the pivot for the moving-NPC
+        // cursor, erasing exactly the off-pivot lean the money needs; only markerless static things reach
+        // here, so recentering buys nothing). The floor band (keyed to the body, the thing's own height)
+        // still applies: a nearest-mesh sample alone grabs the platform overhead where levels stack tight
+        // (the Whirling front door sits in a wall the street mesh is cut back from, so its nearest mesh is
+        // the balcony floor 2 m over its head), and an uncapped descent adopts the storey below (Tequila's
+        // bedroom door on the Whirling's meshless mezzanine would ground on the bar floor 3.6 m under it).
+        // Descending restarts shift the search below an overhead platform to the real floor (the street
+        // under the door, the steps under a floating exit trigger). False when no mesh lands in the band -
+        // a display-only landing or a thing hanging over void has no standing ground.
+        private bool StandingGround(Vector3 from, out UnityEngine.Vector3 ground)
         {
-            UnityEngine.Vector3 body = _e.transform.position;
+            float bodyY = _e.transform.position.y;
+            UnityEngine.Vector3 near = NearestClickPoint(WorldConvert.ToUnity(from));
+            var foot = new UnityEngine.Vector3(near.x, bodyY, near.z);
             for (float drop = 0f; drop <= GroundMaxDrop; drop += 1f)
             {
-                var probe = new UnityEngine.Vector3(body.x, body.y - drop, body.z);
+                var probe = new UnityEngine.Vector3(foot.x, foot.y - drop, foot.z);
                 if (UnityEngine.AI.NavMesh.SamplePosition(probe, out var hit, GroundSampleRadius, -1)
-                    && hit.position.y <= body.y + GroundHeadroom
-                    && body.y - hit.position.y <= GroundMaxDrop)
+                    && hit.position.y <= bodyY + GroundHeadroom
+                    && bodyY - hit.position.y <= GroundMaxDrop)
                 {
                     ground = hit.position;
                     return true;
                 }
             }
             ground = default;
-            WarnIfNearMiss(body);
+            WarnIfNearMiss(foot);
             return false;
+        }
+
+        // The point on this thing's click colliders nearest the reference, read from their live bounds
+        // (see StandingGround for why not the recentered cursor footprint). A thing with no usable click
+        // collider anchors at the footprint's nearest point instead - for a renderer-measured or point
+        // footprint those coincide with what the cursor map already says.
+        private UnityEngine.Vector3 NearestClickPoint(UnityEngine.Vector3 reference)
+        {
+            UnityEngine.Vector3 best = default;
+            float bestSqr = float.MaxValue;
+            foreach (UnityEngine.Collider c in ClickColliders)
+            {
+                if (c == null || !c.enabled) continue;
+                UnityEngine.Bounds b = c.bounds;
+                if (b.size.x == 0f && b.size.y == 0f && b.size.z == 0f) continue;
+                UnityEngine.Vector3 p = b.ClosestPoint(reference);
+                float d = (p - reference).sqrMagnitude;
+                if (d < bestSqr) { bestSqr = d; best = p; }
+            }
+            if (bestSqr < float.MaxValue) return best;
+            return WorldConvert.ToUnity(Bounds.NearestPoint(WorldConvert.ToSnv(reference)));
         }
 
         // Surface a silent over-reject to the log: a markerless interactable that fails StandingGround yet
@@ -674,13 +706,13 @@ namespace DiscoAccess.Module.World
         // past the band, so neither is flagged. The caller has already established this body is accessible,
         // visible, and in-frame (ScanScope/ObjectCueSystem gate on those before ReachableFrom), so a hit here
         // is exactly a thing that should be offered and is not.
-        private void WarnIfNearMiss(UnityEngine.Vector3 body)
+        private void WarnIfNearMiss(UnityEngine.Vector3 foot)
         {
             if (_nearMissChecked) return;
             _nearMissChecked = true;
-            var probe = new UnityEngine.Vector3(body.x, body.y - GroundMaxDrop, body.z);
+            var probe = new UnityEngine.Vector3(foot.x, foot.y - GroundMaxDrop, foot.z);
             if (!UnityEngine.AI.NavMesh.SamplePosition(probe, out var hit, GroundSampleRadius, -1)) return;
-            float depth = body.y - hit.position.y;
+            float depth = foot.y - hit.position.y;
             if (depth > GroundMaxDrop && depth <= GroundMaxDrop + NearMissMargin)
                 _log($"[reach] '{_e.name}' dropped as unreachable, but walkable floor sits {depth:F2} m below it, " +
                      $"just past the {GroundMaxDrop} m GroundMaxDrop cap. If it is a usable interactable, the cap may be too tight.");
