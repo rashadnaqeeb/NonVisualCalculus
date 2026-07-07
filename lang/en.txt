@@ -147,6 +147,7 @@ SettingSonarVolume = Sonar volume
 SettingSonarContinuous = Continuous sonar
 SettingSonarRest = Time between sonar sweeps
 SettingSonarCategory = Sonar {0}
+SettingScannerFromCursor = Scanner readouts from cursor
 SettingRunToDestinations = Run to destinations
 DialogueContinue = continue
 DialogueAlreadyChosen = already chosen

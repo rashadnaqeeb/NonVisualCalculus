@@ -147,6 +147,7 @@ SettingSonarVolume = Громкость сонара
 SettingSonarContinuous = Непрерывный сонар
 SettingSonarRest = Время между импульсами сонара
 SettingSonarCategory = Сонар: {0}
+SettingScannerFromCursor = Показания сканера от курсора
 SettingRunToDestinations = Бежать к целям
 DialogueContinue = продолжить
 DialogueAlreadyChosen = уже выбрано

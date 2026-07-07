@@ -150,6 +150,7 @@ SettingSonarVolume = Volumen del sónar
 SettingSonarContinuous = Sónar continuo
 SettingSonarRest = Tiempo entre barridos del sónar
 SettingSonarCategory = Sónar {0}
+SettingScannerFromCursor = Lecturas del escáner desde el cursor
 SettingRunToDestinations = Correr hacia los destinos
 DialogueContinue = continuar
 DialogueAlreadyChosen = ya elegida

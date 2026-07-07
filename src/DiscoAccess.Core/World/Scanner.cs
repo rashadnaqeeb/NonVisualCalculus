@@ -19,9 +19,12 @@ namespace DiscoAccess.Core.World
     /// The list is rebuilt from the live registry on every keypress, never held across presses - the world
     /// set changes as rooms reveal and orbs stream - and the selection is continued by proxy identity,
     /// which the registry keeps stable. The set is what a sighted player could see and act on right now
-    /// (<see cref="ScanScope"/>), judged from the PLAYER: membership, sort, and the spoken readout all
-    /// measure from where the character stands, never the cursor, because acting on a scanned thing is a
-    /// walk that starts at the character. Sorted nearest-first from the player, so "next" walks outward.
+    /// (<see cref="ScanScope"/>), judged from the PLAYER: membership always measures from where the
+    /// character stands, because acting on a scanned thing is a walk that starts at the character. The
+    /// readout - the spoken bearing and distance, the review ping's ear, and the nearest-first browse
+    /// order - measures from the bindable measure reference (<see cref="BindMeasureFrom"/>), the same
+    /// player anchor until bound; the module binds the cursor there when the cursor-relative setting is
+    /// on (the sonar's own listening-ear rule), so "next" walks outward from wherever the readout measures.
     ///
     /// Two cycle shapes share one selection: the browse category (<see cref="WorldTaxonomy.Scan"/>
     /// plus a synthetic Everything at index 0; stepping categories skips empty ones, Everything always
@@ -48,12 +51,16 @@ namespace DiscoAccess.Core.World
         // pings); the WOTR level until bound.
         private Func<float> _volume = () => WorldCues.DefaultVolume;
 
+        // The measure reference the readout, browse order, and review ping use; the scan anchor until bound.
+        private Func<Vector3> _measureFrom;
+
         public Scanner(IWorldModel model, Overlays.IWorldEnvironment env, Func<Vector3> scanFrom,
                        SpeechPipeline speech, SpatialSources cues)
         {
             _model = model;
             _env = env;
             _scanFrom = scanFrom;
+            _measureFrom = scanFrom;
             _speech = speech;
             _cues = cues;
         }
@@ -69,8 +76,16 @@ namespace DiscoAccess.Core.World
             if (provider != null) _volume = provider;
         }
 
-        /// <summary>Step through the current browse category (+1 next, -1 previous), nearest-first from the
-        /// player. The first press lands on the nearest thing without stepping.</summary>
+        /// <summary>Bind the live measure reference the readout, browse order, and review ping use (the
+        /// cursor-relative setting binds the cursor here). Membership stays judged from the scan anchor:
+        /// the walk an offered thing supports starts at the character, wherever the readout measures.</summary>
+        public void BindMeasureFrom(Func<Vector3> provider)
+        {
+            if (provider != null) _measureFrom = provider;
+        }
+
+        /// <summary>Step through the current browse category (+1 next, -1 previous), nearest-first from
+        /// the measure reference. The first press lands on the nearest thing without stepping.</summary>
         public void StepItem(int dir) => Step(dir, BrowseCategories(), CategoryLabel());
 
         /// <summary>Step through a quick-nav group (+1 next, -1 previous), the group's own fixed filter,
@@ -85,18 +100,19 @@ namespace DiscoAccess.Core.World
         public void StepCategory(int dir)
         {
             Vector3 from = _scanFrom();
+            Vector3 measure = _measureFrom();
             if (_entered) _catIndex = NextCategoryIndex(from, dir);
             _entered = true;
             _selected = null; // a fresh category enters at its nearest thing
 
-            List<IWorldItem> list = Build(from, BrowseCategories());
+            List<IWorldItem> list = Build(from, measure, BrowseCategories());
             string line = WorldScanCategoryCount(CategoryLabel(), list.Count);
             if (list.Count == 0)
             {
                 _speech.Speak(line, interrupt: true);
                 return;
             }
-            Land(list[0], from, line + "; ");
+            Land(list[0], measure, line + "; ");
         }
 
         /// <summary>Drop the selection (the overlay disengaged, the area changed). The category is kept -
@@ -113,7 +129,8 @@ namespace DiscoAccess.Core.World
         private void Step(int dir, IReadOnlyList<string>? cats, string label)
         {
             Vector3 from = _scanFrom();
-            List<IWorldItem> list = Build(from, cats);
+            Vector3 measure = _measureFrom();
+            List<IWorldItem> list = Build(from, measure, cats);
             if (list.Count == 0)
             {
                 _entered = true;
@@ -129,34 +146,35 @@ namespace DiscoAccess.Core.World
                 idx = ((idx + dir) % list.Count + list.Count) % list.Count;
             _entered = true;
 
-            Land(list[idx], from);
+            Land(list[idx], measure);
         }
 
         // Land on a thing: select it, ping it in stereo at its nearest part, and announce its name and its
-        // bearing and distance - measured to that same nearest part, so the words agree with the ear and
-        // describe where the THING is (the balcony smoker reads "above"), not where acting on it would
-        // stand the player; the stand spot is the cursor move's business (IWorldItem.InteractionPoint).
-        private void Land(IWorldItem item, Vector3 from, string prefix = "")
+        // bearing and distance - measured from the measure reference to that same nearest part, so the
+        // words agree with the ear and describe where the THING is (the balcony smoker reads "above"), not
+        // where acting on it would stand the player; the stand spot is the cursor move's business
+        // (IWorldItem.InteractionPoint).
+        private void Land(IWorldItem item, Vector3 measure, string prefix = "")
         {
             _selected = item;
             Ping(item);
-            string spatial = SpatialReadout.Describe(from, item.Bounds.NearestPoint(from));
+            string spatial = SpatialReadout.Describe(measure, item.Bounds.NearestPoint(measure));
             // The shared name-plus-state composition (ItemLabel), so the scanner and the cursor readout
             // can never disagree about a door standing open.
             string name = ItemLabel.For(item, string.IsNullOrEmpty(item.Name) ? WorldThingObject : item.Name);
             _speech.Speak(prefix + name + "; " + spatial, interrupt: true);
         }
 
-        // The review ping: the thing's own category sound placed at its nearest part relative to the scan
-        // reference, so the ear hears where the readout says it is. The one shared WorldCues.Ping the
-        // sonar sweep also plays, so review and sweep speak one sound language with one falloff.
-        private void Ping(IWorldItem item) => WorldCues.Ping(_cues, item, _scanFrom, _volume);
+        // The review ping: the thing's own category sound placed at its nearest part relative to the
+        // measure reference, so the ear hears where the readout says it is. The one shared WorldCues.Ping
+        // the sonar sweep also plays, so review and sweep speak one sound language with one falloff.
+        private void Ping(IWorldItem item) => WorldCues.Ping(_cues, item, _measureFrom, _volume);
 
         // The current filter's live list: the accessible-and-visible things inside the visible frame
-        // (what a sighted player could see and act on right now), filtered through the door-folds-into-exit
-        // mapping (null = everything), sorted nearest-first from the player by body position. Rebuilt on
-        // every press; never cached.
-        private List<IWorldItem> Build(Vector3 from, IReadOnlyList<string>? cats)
+        // (what a sighted player could see and act on right now, judged from the player anchor), filtered
+        // through the door-folds-into-exit mapping (null = everything), sorted nearest-first from the
+        // measure reference by body position. Rebuilt on every press; never cached.
+        private List<IWorldItem> Build(Vector3 from, Vector3 measure, IReadOnlyList<string>? cats)
         {
             var list = new List<IWorldItem>();
             foreach (IWorldItem it in _model.Items)
@@ -165,7 +183,7 @@ namespace DiscoAccess.Core.World
                 if (cats != null && !cats.Contains(WorldTaxonomy.ScanCategory(it.Category))) continue;
                 list.Add(it);
             }
-            list.Sort((a, b) => Geo.Distance(a.Position, from).CompareTo(Geo.Distance(b.Position, from)));
+            list.Sort((a, b) => Geo.Distance(a.Position, measure).CompareTo(Geo.Distance(b.Position, measure)));
             return list;
         }
 

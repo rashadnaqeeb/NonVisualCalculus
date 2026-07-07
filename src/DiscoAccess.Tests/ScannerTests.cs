@@ -496,6 +496,37 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
+        public void MeasureFrom_Bound_ReadoutAndOrderMeasureFromIt_MembershipStaysAnchored()
+        {
+            var (scanner, model, speech, _, env) = Build();
+            scanner.BindMeasureFrom(() => new Vector3(10f, 0f, 0f)); // the cursor, parked 10 m east
+            env.ViewFn = p => p.X <= 5f; // the frame ends 5 m east of the player anchor
+            model.List.Add(At(1f, 0f, "near player"));
+            model.List.Add(At(4f, 0f, "near cursor"));
+            // Within a metre of the measure point, but outside the offered frame: sitting next to the
+            // cursor never makes a thing browsable - membership stays the anchor's sighted-frame set.
+            model.List.Add(At(9f, 0f, "out of frame"));
+
+            scanner.StepItem(1); // enters at the nearest to the MEASURE point among what is offered
+            Assert.Equal("near cursor; west, 6 meters", speech.Spoken[^1]);
+            scanner.StepItem(1); // steps outward from the measure point, not the anchor
+            Assert.Equal("near player; west, 9 meters", speech.Spoken[^1]);
+        }
+
+        [Fact]
+        public void MeasureFrom_Bound_PingListensFromIt()
+        {
+            var (scanner, model, _, audio, _) = Build();
+            scanner.BindMeasureFrom(() => new Vector3(10f, 0f, 0f));
+            model.List.Add(At(3f, 0f, "thing")); // east of the anchor, but west of the measure point
+
+            scanner.StepItem(1);
+            var (_, _, placement) = Assert.Single(audio.Played);
+            Assert.True(placement.Pan < 0.5f);      // west of the ear pans left
+            Assert.True(placement.ItdSeconds < 0f); // west leads the left ear
+        }
+
+        [Fact]
         public void CategoryLanding_Selects()
         {
             var (scanner, model, _, _, _) = Build();

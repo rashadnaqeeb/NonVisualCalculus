@@ -146,6 +146,7 @@ SettingSonarVolume = مستوى صوت السونار
 SettingSonarContinuous = سونار مستمر
 SettingSonarRest = الوقت بين مسحات السونار
 SettingSonarCategory = سونار {0}
+SettingScannerFromCursor = قراءات الماسح من المؤشر
 SettingRunToDestinations = الركض إلى الوجهات
 DialogueContinue = استمرار
 DialogueAlreadyChosen = سبق اختياره

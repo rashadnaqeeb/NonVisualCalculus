@@ -54,6 +54,12 @@ namespace DiscoAccess.Core.Settings
         public ToggleSetting SonarOrbs { get; }
         public ToggleSetting SonarExits { get; }
 
+        /// <summary>When on, the scanner's readout - the spoken bearing and distance, the review ping's
+        /// ear, and the browse order - measures from the cursor instead of the character (the sonar's own
+        /// listening-ear rule). What is offered stays judged from the character, whose walk acting on a
+        /// scanned thing starts. Off (the default) measures everything from the character.</summary>
+        public ToggleSetting ScannerFromCursor { get; }
+
         /// <summary>When on, the character runs to a clicked destination instead of walking. Off (the default)
         /// leaves the pace to the game's own policy, which walks, matching a vanilla single click.</summary>
         public ToggleSetting RunToDestinations { get; }
@@ -87,6 +93,8 @@ namespace DiscoAccess.Core.Settings
                 "sonar_orb", () => SettingSonarOrbs, defaultValue: true, store));
             SonarExits = Add(new ToggleSetting(
                 "sonar_exit", () => SettingSonarExits, defaultValue: true, store));
+            ScannerFromCursor = Add(new ToggleSetting(
+                "scanner_from_cursor", () => SettingScannerFromCursor, defaultValue: false, store));
             RunToDestinations = Add(new ToggleSetting(
                 "run_to_destinations", () => SettingRunToDestinations, defaultValue: false, store));
         }

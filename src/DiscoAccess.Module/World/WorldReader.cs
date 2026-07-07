@@ -102,12 +102,16 @@ namespace DiscoAccess.Module.World
             _overlay.With(_sonar);
             _walk = new WalkInteract(host);
             // The review cursor: browses the same live registry the cursor senses, scoped by the same env
-            // (in-frame, unfogged), anchored to the PLAYER - membership, sort, and spoken distances all
-            // measure from where the character stands, since the walk a scanned thing supports starts there.
-            // Its selection is a second point of attention: landing announces without moving the cursor or
-            // the character, and I acts on the selection through the same walk-then-interact verb as Enter.
+            // (in-frame, unfogged), anchored to the PLAYER - membership always measures from where the
+            // character stands, since the walk a scanned thing supports starts there. Its selection is a
+            // second point of attention: landing announces without moving the cursor or the character, and
+            // I acts on the selection through the same walk-then-interact verb as Enter.
             _scanner = new Scanner(_model, _env, () => _env.PlayerPosition, host.Speech, _sources);
             _scanner.BindVolume(() => host.Settings.SonarVolume.Fraction);
+            // The readout's measure reference: the character, or - when the player chose cursor-relative
+            // readouts - the cursor, the same ear the sonar already listens from.
+            _scanner.BindMeasureFrom(() => host.Settings.ScannerFromCursor.Value
+                ? _overlay.Cursor.Position : _env.PlayerPosition);
             Active = this;
         }
 

@@ -282,6 +282,9 @@ namespace DiscoAccess.Core.Strings
             // The sonar's per-category toggles; {0} = a scanner category word (the WorldScan* keys), so
             // the menu and the scanner call a category the same thing.
             D("SettingSonarCategory", "Sonar {0}"),
+            // Toggle: the scanner speaks each thing's direction and distance measured from the cursor's
+            // position instead of the character's. "Readouts" = those spoken direction-and-distance lines.
+            D("SettingScannerFromCursor", "Scanner readouts from cursor"),
             // Toggle: the character runs instead of walking when sent somewhere.
             D("SettingRunToDestinations", "Run to destinations"),
 
@@ -893,6 +896,7 @@ namespace DiscoAccess.Core.Strings
         public static string SettingSonarContainers => F("SettingSonarCategory", WorldScanContainers);
         public static string SettingSonarOrbs => F("SettingSonarCategory", WorldScanOrbs);
         public static string SettingSonarExits => F("SettingSonarCategory", WorldScanExits);
+        public static string SettingScannerFromCursor => T("SettingScannerFromCursor");
         public static string SettingRunToDestinations => T("SettingRunToDestinations");
 
         // The navigable affordance that advances a conversation when there are no response choices
