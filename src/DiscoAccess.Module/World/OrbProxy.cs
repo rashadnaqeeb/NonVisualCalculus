@@ -111,8 +111,9 @@ namespace DiscoAccess.Module.World
         // A thought-cabinet orb rides the character, so the cursor's near-player skip must spare it.
         public bool RidesPlayer => IsThoughtFamily;
 
-        // An orb has no open/closed state.
+        // An orb has no open/closed state and is not a person with dialogue waiting.
         public bool IsOpen => false;
+        public bool HasPendingDialogue => false;
 
         private bool IsWorldAnchored
             => _orb.orbType == OrbType.MAP || _orb.orbType == OrbType.ORBITAL || _orb.orbType == OrbType.DICK;

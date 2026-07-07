@@ -267,6 +267,7 @@ WorldOrbHolds = held by an orb, resolve it to move
 WorldContainerClosed = container closed
 StatusLocked = locked
 StatusOpen = open
+StatusHasSomethingToSay = has something to say
 WorldMoney = {0}.{1} réal
 WorldHealth = {0} {1}/{2}, {3}; {4} {5}/{6}, {7}
 WorldExperience = {0}: {1}/{2}, {3}

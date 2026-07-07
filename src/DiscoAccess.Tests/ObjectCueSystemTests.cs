@@ -54,6 +54,8 @@ namespace DiscoAccess.Tests
             public bool RidesPlayer => Rides;
             public bool Open { get; set; }
             public bool IsOpen => Open;
+            public bool PendingDialogue { get; set; }
+            public bool HasPendingDialogue => PendingDialogue;
             public Vector3 InteractionPoint(Vector3 from) => Position;
             // The reach verdict from here. Defaults Reachable; a test sets Severed to model a proven refusal
             // (a balcony door over the plaza, the sealed backroom box) or Unproven to model a refusal the
@@ -216,6 +218,24 @@ namespace DiscoAccess.Tests
             overlay.Cursor.Position = new Vector3(2f, 0f, 0f);
             overlay.AnnounceCurrent();
             Assert.Equal(new[] { "bathroom door, open" }, backend.Spoken);
+        }
+
+        [Fact]
+        public void PersonWithDialogueWaiting_NamesTheState()
+        {
+            // A person with new dialogue waiting (the state the game shows by pulsing Kim's HUD portrait)
+            // folds it into the same ItemLabel composition the scanner uses, after the name.
+            var backend = new FakeBackend();
+            var (overlay, _, model, _, _) = Build(backend);
+            model.List.Add(new FakeItem
+            {
+                Name = "Kim Kitsuragi", Cat = WorldTaxonomy.Npc,
+                Position = new Vector3(2f, 0f, 0f), PendingDialogue = true,
+            });
+
+            overlay.Cursor.Position = new Vector3(2f, 0f, 0f);
+            overlay.AnnounceCurrent();
+            Assert.Equal(new[] { "Kim Kitsuragi, has something to say" }, backend.Spoken);
         }
 
         [Fact]

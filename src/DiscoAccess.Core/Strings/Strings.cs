@@ -529,6 +529,9 @@ namespace DiscoAccess.Core.Strings
             D("StatusLocked", "locked"),
             // A door standing open; adjective (only the open state is spoken; closed is assumed).
             D("StatusOpen", "open"),
+            // A person with new dialogue waiting (the game pulses Kim's portrait for this); spoken
+            // after the person's name: "Kim Kitsuragi, has something to say".
+            D("StatusHasSomethingToSay", "has something to say"),
 
             // World status readouts (spoken on their read keys).
             // The wallet total. {0} = the whole réal figure, {1} = the two-digit centims fraction, so
@@ -1101,6 +1104,11 @@ namespace DiscoAccess.Core.Strings
         /// player assumes, so only open is spoken. The game marks the state only by the door mesh's
         /// rotation, with no string to reuse.</summary>
         public static string StatusOpen => T("StatusOpen");
+
+        /// <summary>A person with new dialogue waiting, appended to their cursor/scanner readout. The
+        /// game shows this state only by pulsing Kim's HUD portrait (an animator, no string to
+        /// reuse).</summary>
+        public static string StatusHasSomethingToSay => T("StatusHasSomethingToSay");
 
         // ---- World status readouts (mod-authored; the game has no spoken equivalent) ----
 

@@ -266,6 +266,7 @@ WorldOrbHolds = كرة تمنع الحركة، تفاعل معها للتحرك
 WorldContainerClosed = أغلقت الحاوية
 StatusLocked = مغلق
 StatusOpen = مفتوح
+StatusHasSomethingToSay = لديه ما يقوله
 WorldMoney = {0}.{1} ريال
 WorldHealth = {0} {1} من {2}، {3}. {4} {5} من {6}، {7}
 WorldExperience = {0}: {1} من {2}، {3}

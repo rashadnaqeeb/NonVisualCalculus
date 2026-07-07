@@ -62,6 +62,11 @@ namespace DiscoAccess.Core.World
         /// player assumes, never announced) and for anything with no open/closed state at all.</summary>
         bool IsOpen { get; }
 
+        /// <summary>Whether this person has new dialogue waiting - the state the game shows a sighted
+        /// player by pulsing Kim's HUD portrait (only Kim has the mechanic), announced with the name so
+        /// the cursor and scanner surface it. False for everything else.</summary>
+        bool HasPendingDialogue { get; }
+
         /// <summary>Whether this thing rides the player character rather than sitting at a fixed world spot
         /// (a thought-cabinet orb orbiting the character). Such a thing sits on top of the character, so the
         /// cursor's near-player skip - which drops the character's own entity so it is never hover-announced -

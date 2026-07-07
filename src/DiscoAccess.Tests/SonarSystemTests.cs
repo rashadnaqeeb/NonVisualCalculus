@@ -33,6 +33,7 @@ namespace DiscoAccess.Tests
             public bool IsVisible => Live(Visible);
             public bool RidesPlayer => false;
             public bool IsOpen => false;
+            public bool HasPendingDialogue => false;
             public Vector3 InteractionPoint(Vector3 from) => Position;
             public ReachState ReachableFrom(Vector3 from) => ReachState.Reachable;
             public bool ReachIsClickPriced => false;

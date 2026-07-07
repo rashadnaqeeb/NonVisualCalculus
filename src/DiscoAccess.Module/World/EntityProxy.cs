@@ -413,6 +413,26 @@ namespace DiscoAccess.Module.World
             }
         }
 
+        // Whether this person has new dialogue waiting - what the game shows a sighted player by pulsing
+        // Kim's HUD portrait (only Kim has the mechanic: KimSwitchboardTracker watches "kim_watch"-tagged
+        // switchboard nodes and drives KimKitsuragi.OnNotificationOn/Off). Read live from the pulsing
+        // widget itself, KimTalkPortraitNotification.isActive - the exact state Show/Hide toggle,
+        // deferred-after-conversation timing included, so speech can never disagree with the portrait.
+        // FindObjectOfType sees only an active widget: the manager activates it on Kim's portrait alone,
+        // so with Kim out of the party (no portrait) this reads false.
+        public bool HasPendingDialogue
+        {
+            get
+            {
+                Character character = _e.TryCast<Character>();
+                if (character == null) return false;
+                Character kim = Sunshine.Hack.KimKitsuragi.Singleton?.Character;
+                if (kim == null || kim.GetInstanceID() != character.GetInstanceID()) return false;
+                var notification = UnityEngine.Object.FindObjectOfType<KimTalkPortraitNotification>();
+                return notification != null && notification.isActive;
+            }
+        }
+
         // Whether a sighted player can currently see this thing. Interiors hide unentered rooms behind
         // fog-of-war volumes rendered as black void; FogSense reads what the volume over a point says.
         // The volumes' meshes cover rooms' open interiors but stop at walls, so a wall-recessed body (the

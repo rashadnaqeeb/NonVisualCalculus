@@ -39,6 +39,8 @@ namespace DiscoAccess.Tests
             public bool RidesPlayer => false;
             public bool Open { get; set; }
             public bool IsOpen => Open;
+            public bool PendingDialogue { get; set; }
+            public bool HasPendingDialogue => PendingDialogue;
             public Vector3 InteractionPoint(Vector3 from) => Position;
             public ReachState Reach { get; set; } = ReachState.Reachable;
             public ReachState ReachableFrom(Vector3 from) => Reach;
