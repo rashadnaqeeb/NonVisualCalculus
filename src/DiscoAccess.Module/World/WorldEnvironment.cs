@@ -27,10 +27,26 @@ namespace DiscoAccess.Module.World
             }
         }
 
-        /// <summary>The player controls the character when one exists and no conversation is up. The world
-        /// reader already only ticks on the in-game (LOBBY) view, so this is the finer cutscene/dialogue
-        /// gate on top of that.</summary>
-        public bool HasControl => Main != null && !DialogueManager.isConversationActive;
+        /// <summary>The player controls the character when one exists, no conversation is up, and the
+        /// game itself is accepting world input. The input-lock read is the game's own click gate
+        /// (<c>GameController.inputLocks</c>, which its ground- and entity-click paths check before
+        /// moving): every scripted sequence - a dialogue's outro animation, a sequencer camera move, a
+        /// door transition, quicktravel - holds a lock for exactly its duration, so this stays false
+        /// through the window after a conversation ends while the scene still animates, and flips true
+        /// the moment the game would accept a click again. The static cutscene flag covers the staged
+        /// full-scene situations (dreams, day starts) for their whole lifetime, wider than the locks
+        /// they hold while performing. The world reader already only ticks on the in-game (CLEAR) view,
+        /// so this is the finer cutscene/dialogue gate on top of that.</summary>
+        public bool HasControl
+        {
+            get
+            {
+                if (Main == null || DialogueManager.isConversationActive) return false;
+                if (Sunshine.CutsceneSituation.CUTSCENE_SITUATION_ACTIVE) return false;
+                Sunshine.GameController gc = Sunshine.GameController.Singleton;
+                return gc != null && !gc.IsWorldInputDisabled();
+            }
+        }
 
         /// <summary>Whether a player character exists at all (a game is loaded) - position reads are
         /// meaningless without one.</summary>

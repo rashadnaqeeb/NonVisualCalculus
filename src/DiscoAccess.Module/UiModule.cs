@@ -62,6 +62,9 @@ namespace DiscoAccess.Module
         // Keeps the mod's authored strings in the game's language (loads a lang/<language>.txt into
         // Core's Translation table, English when none). Owns no native handle.
         private LanguageSync _language;
+        // Heals the game's stranded dialogue input lock (a vanilla wedge that permanently disables world
+        // clicks) by firing the game's own unused recovery. Owns no native handle.
+        private SequenceLockHealer _lockHealer;
         private static readonly InputCategory[] UiCategory = { InputCategory.UI };
         // Status precedes UI ON PURPOSE: in a screen that wants the status keys (dialogue) the heal arrows
         // (Status, Left/Right) shadow the inert UI Left/Right; the rest of UI (Up/Down/Tab/Enter/Escape/
@@ -101,6 +104,7 @@ namespace DiscoAccess.Module
             // The world sensing overlay, driven each frame while in the isometric scene.
             _world = new WorldReader(_host);
             _commands = new WorldCommands(_host);
+            _lockHealer = new SequenceLockHealer(_host);
             _bookmarks = new BookmarkStore(_host);
             // Speak the game's HUD notifications; its Harmony patches register through this load's instance.
             _notifications = new NotificationReader(_host);
@@ -334,6 +338,10 @@ namespace DiscoAccess.Module
             // keyboard back to the game (see TextEditGate); it only gates our own dispatch, via _editGate.
             _editGate.Update();
 
+            // Heal a stranded dialogue input lock before ownership resolves, so the recovered control
+            // (and the world reader's "map" announcement) lands this same frame.
+            _lockHealer.Tick();
+
             // Resolve keyboard ownership for this frame BEFORE polling input (the live category gates on it):
             // our navigator takes the keyboard on a registered screen or the confirmation popup overlay. A
             // just-ended text edit asks the standing screen to re-read the focused control once.
@@ -482,6 +490,7 @@ namespace DiscoAccess.Module
             _screens = null;
             _world = null;
             _commands = null;
+            _lockHealer = null;
             _bookmarks = null;
             _notifications = null;
             _barks = null;

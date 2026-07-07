@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DiscoAccess.Core.Modularity;        // IModHost
+using DiscoAccess.Core.Strings;
 using DiscoPages;                         // DialogueBridgePages
 using PixelCrushers.DialogueSystem;       // DialogueManager, ConversationState, Response, SelectedResponseEventArgs
 using ConversationLogger = Sunshine.ConversationLogger;
@@ -115,9 +116,31 @@ namespace DiscoAccess.Module
         /// advances even though a check there would not roll.</summary>
         public static void SelectResponse(Response response, IModHost host)
         {
+            // While a line's sequence commands play, the game stashes the whole options panel off the
+            // layout (ContinueResponseToggle, driven by this same flag) - a sighted player has no
+            // buttons to click until the sequence finishes. Committing a response through the model in
+            // that window tears down the running sequence, whose killed commands then never report
+            // their finish to SequenceCommander, stranding its input lock PERMANENTLY (the wedge that
+            // freezes world clicks for the rest of the session). Refuse exactly while the game hides
+            // the menu, spoken so the early press is never a silent dead key.
+            if (ContinueResponseToggle.SequencerLock)
+            {
+                host?.Speech.Speak(Strings.DialogueNotReady, interrupt: true);
+                return;
+            }
             SunshineResponseButton b = FindButton(response);
             if (b != null && b.button != null)
             {
+                // Invoking onClick skips uGUI's clickability test (Button.interactable and every parent
+                // CanvasGroup) - the layer that physically stops a sighted player's click while the menu
+                // is still fading in. Refuse those presses the same way the screen refuses the mouse.
+                // The handler's own guards (the game's input-delay window, the dialogue-view check,
+                // response.enabled) still run inside the invoke.
+                if (!b.button.IsInteractable())
+                {
+                    host?.Speech.Speak(Strings.DialogueNotReady, interrupt: true);
+                    return;
+                }
                 b.button.onClick.Invoke();
                 return;
             }

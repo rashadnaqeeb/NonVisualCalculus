@@ -293,6 +293,10 @@ namespace DiscoAccess.Core.Strings
             // dims such an option's text, so we speak this after the option and its breakdown. Only a chosen
             // response earns it - an option merely offered before but never taken reads plain, as it draws.
             D("DialogueAlreadyChosen", "already chosen"),
+            // A response activation was refused because the game's own button is not accepting clicks
+            // yet (the menu still fading in, an animation holding it); pressing again a moment later
+            // works, so this only marks the early press.
+            D("DialogueNotReady", "not ready"),
             // The endgame newspaper's article-paging arrow buttons.
             D("NewspaperNextArticle", "next article"),
             D("NewspaperPreviousArticle", "previous article"),
@@ -529,6 +533,10 @@ namespace DiscoAccess.Core.Strings
             // A walk was refused because an unresolved thought orb pins the character in place; full
             // clause telling the player to trigger the orb to get free.
             D("WorldOrbHolds", "held by an orb, resolve it to move"),
+            // A walk was refused because the game is not accepting world input yet (a scripted scene
+            // still animating after a dialogue's last line, a camera move, a transition); it clears by
+            // itself when control returns.
+            D("WorldNoControl", "cutscene playing"),
             // The loot panel closed, however it was closed.
             D("WorldContainerClosed", "container closed"),
             // A container or door that refuses to open; adjective. Fallback for the game's tooltip
@@ -894,6 +902,10 @@ namespace DiscoAccess.Core.Strings
         // Spoken after a dialogue response the player has already selected before (the game dims it).
         public static string DialogueAlreadyChosen => T("DialogueAlreadyChosen");
 
+        /// <summary>Spoken when a response activation is refused because the game's button is not
+        /// accepting clicks yet (menu fade-in, an animation holding it); a later press works.</summary>
+        public static string DialogueNotReady => T("DialogueNotReady");
+
         // The endgame newspaper's article-paging arrows, image-only buttons with no caption term.
         public static string NewspaperNextArticle => T("NewspaperNextArticle");
         public static string NewspaperPreviousArticle => T("NewspaperPreviousArticle");
@@ -1121,6 +1133,10 @@ namespace DiscoAccess.Core.Strings
         /// character in place (the game's own movement block); the orb rides the character and must be
         /// triggered to release it.</summary>
         public static string WorldOrbHolds => T("WorldOrbHolds");
+
+        /// <summary>Spoken when a walk is refused because the game is not accepting world input (its
+        /// input-lock gate is held by a scripted scene, a camera move, or a transition).</summary>
+        public static string WorldNoControl => T("WorldNoControl");
 
         // ---- Bookmarks (the mod's own named world positions; DE has no equivalent) ----
 
