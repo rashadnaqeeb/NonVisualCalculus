@@ -32,6 +32,25 @@ namespace DiscoAccess.Module.World
         /// gate on top of that.</summary>
         public bool HasControl => Main != null && !DialogueManager.isConversationActive;
 
+        /// <summary>Whether a player character exists at all (a game is loaded) - position reads are
+        /// meaningless without one.</summary>
+        public bool HasPlayer => Main != null;
+
+        /// <summary>Whether the character could walk between two points: both ends snapped onto the
+        /// navmesh and a COMPLETE path between them (the entity reachability gate's oracle, for a bare
+        /// stored point such as a bookmark). A point whose ground was never walkable, or that a later
+        /// game state severed, reads unreachable.</summary>
+        public bool PathComplete(Snv from, Snv to)
+        {
+            if (!NavMesh.SamplePosition(WorldConvert.ToUnity(from), out NavMeshHit start, PathSnapRadius, AllAreas))
+                return false;
+            if (!NavMesh.SamplePosition(WorldConvert.ToUnity(to), out NavMeshHit end, PathSnapRadius, AllAreas))
+                return false;
+            var path = new NavMeshPath();
+            return NavMesh.CalculatePath(start.position, end.position, AllAreas, path)
+                   && path.status == NavMeshPathStatus.PathComplete;
+        }
+
         /// <summary>Clamp a glide onto walkable ground: on hitting a navmesh boundary, hop the cursor across
         /// it to the ground beyond when the block is small debris the character can still round cheaply (see
         /// <see cref="TrySkipBoundary"/>), else stop at the boundary; with no boundary between the points, snap
@@ -189,6 +208,10 @@ namespace DiscoAccess.Module.World
         // Navmesh snap radius for the frame-drag clamp - generous, since a viewport-clamped point lands at
         // the old camera depth and can float a little off the floor.
         private const float ClampSnapRadius = 2.5f;
+        // Navmesh snap radius for the path-completeness test (the cursor glide's snap radius): a stored
+        // point was captured on the mesh, so a small tolerance covers drift, while a large one would
+        // "reach" the wrong floor of a stacked interior.
+        private const float PathSnapRadius = 1.5f;
         // Cursor debris-skip tuning (see TrySkipBoundary). Chosen by profiling Martinaise's navmesh: at a ~1 m
         // gap the boundaries are still thin seams and genuinely small debris (all measuring a tight sub-1.8
         // detour), while a detour within 2x the straight hop separates that debris from a thin wall with ground

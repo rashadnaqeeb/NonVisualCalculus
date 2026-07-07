@@ -54,6 +54,7 @@ namespace DiscoAccess.Core.Strings
             // A control's secondary action (e.g. deleting the focused save).
             D("InputSecondary", "Secondary action"),
             D("InputModMenu", "Open mod menu"),
+            D("InputBookmarks", "Open bookmarks menu"),
             D("InputWorldMoveNorth", "Move cursor north"),
             D("InputWorldMoveSouth", "Move cursor south"),
             D("InputWorldMoveEast", "Move cursor east"),
@@ -261,6 +262,8 @@ namespace DiscoAccess.Core.Strings
             D("ScreenBeginPrompt", "Press Enter to begin"),
             // The mod's own settings menu.
             D("ScreenModMenu", "mod menu"),
+            // The mod's own bookmarks menu (named world positions; Ctrl+B).
+            D("ScreenBookmarks", "bookmarks"),
 
             // Mod settings labels (rows in the mod menu; sentence case). "Wall tones" are the mod's
             // audio cue for walls near the cursor; the "sonar" is its periodic audio sweep over nearby
@@ -519,6 +522,8 @@ namespace DiscoAccess.Core.Strings
             D("WorldUnreachable", "can't reach"),
             // The player cancelled a walk in progress.
             D("WorldStopped", "stopped"),
+            // A committed walk stalled mid-path (something blocked it) and gave up short of its spot.
+            D("WorldStoppedShort", "stopped short"),
             // A walk was refused because an unresolved thought orb pins the character in place; full
             // clause telling the player to trigger the orb to get free.
             D("WorldOrbHolds", "held by an orb, resolve it to move"),
@@ -557,6 +562,26 @@ namespace DiscoAccess.Core.Strings
             // as a sentence.
             D("CrisisHealLeft", "{0} critical, press left arrow to heal"),
             D("CrisisHealRight", "{0} critical, press right arrow to heal"),
+
+            // Bookmarks: named world positions the player saves and walks back to (the Ctrl+B menu).
+            // The menu row that creates a bookmark at the character's position; verb phrase.
+            D("BookmarkAdd", "add bookmark"),
+            // Column header of a bookmark row's walk column (activating it walks the character there);
+            // verb.
+            D("ActionWalk", "walk"),
+            // Column header of a bookmark row's delete column; verb.
+            D("ActionDelete", "delete"),
+            // A new bookmark's suggested name, offered in the name prompt before the player types
+            // their own; {0} = a counter ("bookmark 3").
+            D("BookmarkDefaultName", "bookmark {0}"),
+            // A bookmark was created; {0} = its name.
+            D("BookmarkSaved", "bookmark {0} saved"),
+            // A bookmark was removed; {0} = its name.
+            D("BookmarkDeleted", "bookmark {0} deleted"),
+            // The bookmarks menu was opened with no game running (bookmarks live on a map).
+            D("BookmarksUnavailable", "bookmarks need a loaded game"),
+            // An add or delete could not write the bookmarks file (the log has the details).
+            D("BookmarkWriteFailed", "bookmark file write failed"),
 
             // Cutscene descriptions: authored narration for the game's silent visual set pieces, written
             // to be unambiguous by ear (no words that collapse into a different meaning through a
@@ -662,6 +687,7 @@ namespace DiscoAccess.Core.Strings
         public static string InputJumpLast => T("InputJumpLast");
         public static string InputSecondary => T("InputSecondary");
         public static string InputModMenu => T("InputModMenu");
+        public static string InputBookmarks => T("InputBookmarks");
         public static string InputWorldMoveNorth => T("InputWorldMoveNorth");
         public static string InputWorldMoveSouth => T("InputWorldMoveSouth");
         public static string InputWorldMoveEast => T("InputWorldMoveEast");
@@ -840,6 +866,7 @@ namespace DiscoAccess.Core.Strings
         public static string ScreenThoughtComplete => T("ScreenThoughtComplete");
         public static string ScreenBeginPrompt => T("ScreenBeginPrompt");
         public static string ScreenModMenu => T("ScreenModMenu");
+        public static string ScreenBookmarks => T("ScreenBookmarks");
 
         // Mod settings labels (the mod's own options, no game string to read).
         public static string SettingAutoReadDialogue => T("SettingAutoReadDialogue");
@@ -1078,16 +1105,41 @@ namespace DiscoAccess.Core.Strings
         public static string WorldArrived => T("WorldArrived");
 
         /// <summary>Spoken when the target cannot be pathed to from where the character currently stands.</summary>
-        public static string WorldUnreachable(string name)
-            => string.IsNullOrEmpty(name) ? T("WorldUnreachable") : F("WorldUnreachableNamed", name);
+        public static string WorldUnreachable(string? name)
+            => string.IsNullOrEmpty(name) ? T("WorldUnreachable") : F("WorldUnreachableNamed", name!);
 
         /// <summary>Spoken when the player cancels a committed walk.</summary>
         public static string WorldStopped => T("WorldStopped");
+
+        /// <summary>Spoken when a committed walk stalls mid-path and gives up short of its spot, so a
+        /// "moving" is never left dangling in silence.</summary>
+        public static string WorldStoppedShort => T("WorldStoppedShort");
 
         /// <summary>Spoken when a walk is refused because a paralyzer or unresolved thought orb holds the
         /// character in place (the game's own movement block); the orb rides the character and must be
         /// triggered to release it.</summary>
         public static string WorldOrbHolds => T("WorldOrbHolds");
+
+        // ---- Bookmarks (the mod's own named world positions; DE has no equivalent) ----
+
+        public static string BookmarkAdd => T("BookmarkAdd");
+        public static string ActionWalk => T("ActionWalk");
+        public static string ActionDelete => T("ActionDelete");
+
+        /// <summary>A new bookmark's suggested name ("bookmark 3"), offered before the player types.</summary>
+        public static string BookmarkDefaultName(int counter) => F("BookmarkDefaultName", counter);
+
+        /// <summary>Spoken when a bookmark is created.</summary>
+        public static string BookmarkSaved(string name) => F("BookmarkSaved", name);
+
+        /// <summary>Spoken when a bookmark is deleted.</summary>
+        public static string BookmarkDeleted(string name) => F("BookmarkDeleted", name);
+
+        /// <summary>Spoken when the bookmarks menu is opened with no game loaded.</summary>
+        public static string BookmarksUnavailable => T("BookmarksUnavailable");
+
+        /// <summary>Spoken when an add or delete could not write the bookmarks file.</summary>
+        public static string BookmarkWriteFailed => T("BookmarkWriteFailed");
 
         // ---- The world's loot panel (see the module's ContainerPanelScreen / ContainerReader) ----
 

@@ -191,10 +191,16 @@ namespace DiscoAccess.Module.World
         // wandering NPC briefly blocking a crowded doorway, or a degenerate path the game handed back), so
         // recompute the stand-point from where the character actually stopped and walk again, bounded by the
         // retry budget; once spent, say can't-reach rather than leave the player in silence. A bare-ground
-        // walk (no target) just stops being watched.
+        // walk (no target) has no interaction to retry toward: say it ended short, so its "moving" is
+        // likewise never left dangling in silence.
         private void Stall()
         {
-            if (_target == null) { _active = false; return; }
+            if (_target == null)
+            {
+                _active = false;
+                _host.Speech.Speak(Strings.WorldStoppedShort, interrupt: true);
+                return;
+            }
             if (_target.Interact()) { _active = false; SpeakPostInteract(_target); return; }
 
             Character main = Main;

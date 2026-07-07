@@ -243,7 +243,15 @@ namespace DiscoAccess.Dev
             }
 
             if (route == "/type" && method == "POST")
-                return OnMainThread(() => TextInjector.Type(body ?? ""));
+                return OnMainThread(() =>
+                {
+                    // A mod-owned text edit (a bookmark name) has no focused InputField to inject into;
+                    // the module routes the text itself and reports null when no mod edit is active, so
+                    // the game-field injector stays the fallback.
+                    var driver = _loader.Module as IDevDriver;
+                    string viaModule = driver != null ? driver.TypeText(body ?? "") : null;
+                    return viaModule ?? TextInjector.Type(body ?? "");
+                });
 
             if (route == "/wait" && method == "POST")
                 return Wait(body, QueryInt(query, "timeout", 10000, 100, 120000));
@@ -430,10 +438,11 @@ namespace DiscoAccess.Dev
         // Map a dev verb to a world-layer action key. The keys are the module's registered action ids
         // (WorldActions), duplicated here as the dev wire protocol - the host cannot reference the
         // reloadable module's types. A dotted verb passes through as a raw key, so every registered
-        // world/status action is reachable without a new alias.
+        // world/status action - and the "mod." global toggles (mod.menu, mod.bookmarks) - is reachable
+        // without a new alias.
         private static string VerbToWorldAction(string v)
         {
-            if (v.StartsWith("world.", StringComparison.Ordinal))
+            if (v.StartsWith("world.", StringComparison.Ordinal) || v.StartsWith("mod.", StringComparison.Ordinal))
                 return v;
             switch (v)
             {

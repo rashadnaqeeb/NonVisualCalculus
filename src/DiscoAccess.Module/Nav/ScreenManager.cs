@@ -64,22 +64,23 @@ namespace DiscoAccess.Module.Nav
         // the broken screen stays up. Cleared on any successful build.
         private Screen _buildFailed;
 
-        // The mod's own settings menu when open (F12), null when closed. A mod overlay floats above the
-        // game and maps to no ViewType, so it is driven ahead of any view or popup; _modMenuAttached gates
-        // its one-time build/announce, and _modMenuWasActive lets the frame after close resume the screen
-        // underneath (re-attach our navigator and re-announce its focus, which the overlay left untouched).
-        private ModMenuScreen _modMenu;
-        private bool _modMenuAttached;
-        private bool _modMenuWasActive;
+        // The open mod overlay (the F12 settings menu, the Ctrl+B bookmarks menu), null when none. A mod
+        // overlay floats above the game and maps to no ViewType, so it is driven ahead of any view or
+        // popup; _overlayAttached gates its one-time build/announce, and _overlayWasActive lets the frame
+        // after close resume the screen underneath (re-attach our navigator and re-announce its focus,
+        // which the overlay left untouched). One at a time: opening a different overlay swaps it in.
+        private ModOverlay _overlay;
+        private bool _overlayAttached;
+        private bool _overlayWasActive;
 
         /// <summary>Whether our navigator is driving a registered screen this frame (lever taken). Set by
         /// <see cref="Tick"/> before input is polled, so the input layer can gate UI keys on it.</summary>
         public bool OwnsKeyboard { get; private set; }
 
-        /// <summary>Whether the surface we drive is the mod's own (the settings menu or the confirmation
+        /// <summary>Whether the surface we drive is the mod's own (a mod overlay or the confirmation
         /// popup), which have no game equivalent, so we handle their Escape ourselves. On a game view, Escape
         /// is instead handed to the game's own back action so the game closes the screen.</summary>
-        public bool OnOwnSurface => _modMenu != null || PopupOverlay.IsShowing();
+        public bool OnOwnSurface => _overlay != null || PopupOverlay.IsShowing();
 
         /// <summary>Whether type-ahead search is enabled on the attached screen (default true when none).</summary>
         public bool TypeAheadEnabled => _attachedScreen?.TypeAheadEnabled ?? true;
@@ -177,46 +178,72 @@ namespace DiscoAccess.Module.Nav
         /// <summary>Silently drop any live type-ahead search (the keyboard left our navigator).</summary>
         public void ClearSearch() => _nav.ClearSearch(announce: false);
 
-        /// <summary>Open the mod menu if closed, close it if open. Driven by the F12 global hotkey. The
-        /// open/close takes effect on the next <see cref="Tick"/>.</summary>
-        public void ToggleModMenu()
+        /// <summary>Open a mod overlay, close it when the same one (by type) is already open, or swap it
+        /// in over a different one. Driven by the global hotkeys (F12 settings, Ctrl+B bookmarks); takes
+        /// effect on the next <see cref="Tick"/>.</summary>
+        public void ToggleOverlay(ModOverlay overlay)
         {
-            if (_modMenu != null) _modMenu = null;
-            else _modMenu = new ModMenuScreen();
+            if (_overlay != null && _overlay.GetType() == overlay.GetType()) SetOverlay(null);
+            else SetOverlay(overlay);
         }
 
-        // The overlay's Back action (Escape) closes the menu; the next Tick resumes the screen underneath.
-        private void CloseModMenu() => _modMenu = null;
+        // The overlay's Back action (Escape) closes it; the next Tick resumes the screen underneath.
+        private void CloseOverlay() => SetOverlay(null);
+
+        private void SetOverlay(ModOverlay overlay)
+        {
+            _overlay = overlay;
+            _overlayAttached = false;
+            // A closed or swapped overlay takes any mod text edit (a bookmark name) with it, so typing
+            // keys are never left routed into a cell whose menu is gone.
+            Input.ModTextEntry.Active = null;
+        }
 
         /// <summary>Resolve the active screen and set keyboard ownership for this frame. Call before
         /// polling input. <paramref name="editEnded"/> means a text edit just committed, so the standing
         /// screen re-reads the focused control once.</summary>
         public void Tick(bool editEnded)
         {
-            // The mod menu floats above everything when open: it owns the keyboard, drives its own navigable
-            // tree, and closes on Escape (or F12 again). It maps to no game view, so it is resolved before
-            // the view system and the popup overlay. The screen underneath stays attached (untouched) and
-            // resumes when the menu closes.
-            if (_modMenu != null)
+            // A mod overlay floats above everything when open: it owns the keyboard, drives its own
+            // navigable tree, and closes on Escape (or its toggle key again). It maps to no game view, so
+            // it is resolved before the view system and the popup overlay. The screen underneath stays
+            // attached (untouched) and resumes when the overlay closes.
+            if (_overlay != null)
             {
                 InControl.InputManager.Enabled = false; // reasserted each frame, like the screen path
                 _wasOwning = true;
                 OwnsKeyboard = true;
-                if (!_modMenuAttached)
+                if (!_overlayAttached)
                 {
-                    _nav.Attach(_modMenu.BuildRoot(_host, CloseModMenu));
-                    _host.Speech.Speak(_modMenu.Title, interrupt: true); // supersedes; the landing queues behind
-                    _nav.AnnounceCurrent();
-                    _modMenuAttached = true;
+                    // Like a screen's build, an overlay build throw would leave the keyboard muted with
+                    // nothing driving it; close the overlay instead, and next frame resumes underneath.
+                    try
+                    {
+                        _nav.Attach(_overlay.BuildRoot(_host, CloseOverlay));
+                        _host.Speech.Speak(_overlay.Title, interrupt: true); // supersedes; the landing queues behind
+                        _nav.AnnounceCurrent();
+                        _overlayAttached = true;
+                    }
+                    catch (System.Exception e)
+                    {
+                        _host.LogError($"ScreenManager: building overlay {_overlay.GetType().Name} failed; closing it. {e}");
+                        CloseOverlay();
+                    }
                 }
-                _modMenuWasActive = true;
+                else if (_overlay.OnUpdate(_host, _nav))
+                {
+                    // A rich overlay (bookmarks) rebuilt and re-homed focus: announce the landing once,
+                    // the screen path's update rule.
+                    _nav.AnnounceCurrent();
+                }
+                _overlayWasActive = true;
                 return;
             }
-            // The menu just closed: the screen under it (if registered) resumes below, re-attaching our
+            // The overlay just closed: the screen under it (if registered) resumes below, re-attaching our
             // navigator to its root and re-announcing the focus the overlay left untouched but unspoken.
-            bool modMenuJustClosed = _modMenuWasActive;
-            _modMenuWasActive = false;
-            _modMenuAttached = false;
+            bool overlayJustClosed = _overlayWasActive;
+            _overlayWasActive = false;
+            _overlayAttached = false;
 
             // The popup overlay floats over any view; while up, our navigator drives it ahead of the view's
             // own screen. It needs no view system, so it is resolved before the view-ready gate below. The
@@ -278,25 +305,25 @@ namespace DiscoAccess.Module.Nav
                     _attachedScreen = null;
                     _baseRoot = null;
                 }
-                else if (modMenuJustClosed)
-                    _nav.Attach(null); // menu closed over an unowned view; drop its now-stale tree
+                else if (overlayJustClosed)
+                    _nav.Attach(null); // overlay closed over an unowned view; drop its now-stale tree
                 return;
             }
 
             if (screen == _attachedScreen)
             {
-                // A popup or the mod menu just closed over us: it left our navigator pointed at its own tree,
+                // A popup or a mod overlay just closed over us: it left our navigator pointed at its own tree,
                 // so restore it to this screen's root (kept intact underneath) before refreshing/announcing.
-                if (popupJustClosed || modMenuJustClosed)
+                if (popupJustClosed || overlayJustClosed)
                     _nav.Attach(_baseRoot);
 
                 // Refresh the screen's dynamic content FIRST (a rich screen may rebuild its tree and re-home
                 // focus), THEN announce once. Announcing after the update means we read the live focus, not a
                 // cell the rebuild just destroyed, and the single announce avoids double-speaking. Speak when:
-                // a popup or the mod menu just closed over us (focus untouched but unheard), a text edit just
+                // a popup or a mod overlay just closed over us (focus untouched but unheard), a text edit just
                 // committed (hear the result and landing), or the update re-homed focus this frame.
                 bool refocused = screen.OnUpdate(_host, _nav);
-                if (popupJustClosed || modMenuJustClosed || editEnded || refocused)
+                if (popupJustClosed || overlayJustClosed || editEnded || refocused)
                     _nav.AnnounceCurrent();
                 return;
             }
@@ -368,9 +395,8 @@ namespace DiscoAccess.Module.Nav
             _baseRoot = null;
             _popupActive = false;
             _lastPopupMessage = null;
-            _modMenu = null;
-            _modMenuAttached = false;
-            _modMenuWasActive = false;
+            SetOverlay(null);
+            _overlayWasActive = false;
             _wasOwning = false;
             OwnsKeyboard = false;
         }

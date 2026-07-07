@@ -68,8 +68,11 @@ namespace DiscoAccess.Module
         // Home/End/Backspace) binds no key Status binds, so it is unaffected.
         private static readonly InputCategory[] UiWithStatus = { InputCategory.Status, InputCategory.UI };
         private static readonly InputCategory[] WorldCategory = { InputCategory.World, InputCategory.Status };
-        // The global mod-menu hotkey's action key (internal id, never spoken).
+        // The global mod-menu and bookmarks hotkeys' action keys (internal ids, never spoken).
         private const string ModMenuAction = "mod.menu";
+        private const string BookmarksAction = "mod.bookmarks";
+        // The bookmarks file (BepInEx config folder), read fresh by the bookmarks menu on each query.
+        private BookmarkStore _bookmarks;
         // The single source of truth for "a game text field owns the keyboard" (grace-inclusive). While
         // Active, our navigator stands down so keystrokes reach the field; the input dispatcher set up in
         // Load gates on it, as must any future raw-key path (type-ahead). See TextEditGate for the why.
@@ -98,6 +101,7 @@ namespace DiscoAccess.Module
             // The world sensing overlay, driven each frame while in the isometric scene.
             _world = new WorldReader(_host);
             _commands = new WorldCommands(_host);
+            _bookmarks = new BookmarkStore(_host);
             // Speak the game's HUD notifications; its Harmony patches register through this load's instance.
             _notifications = new NotificationReader(_host);
             _notifications.Apply(_harmony);
@@ -202,11 +206,11 @@ namespace DiscoAccess.Module
             // too, not just free-roam. Each hands the game its own action; the game's own CanSave/CanQuickLoad
             // gates decide silently, the mod neither gates nor announces. Not while a text field is editing.
             _input.Register(WorldActions.QuickSave, Strings.InputWorldQuickSave, InputCategory.Global,
-                () => { if (!_editGate.Active) _commands.QuickSave(); })
+                () => { if (!AnyTextEditActive) _commands.QuickSave(); })
                 .AddBinding(new KeyboardBinding(KeyCode.F5))
                 .AddBinding(new KeyboardBinding(KeyCode.S, alt: true));
             _input.Register(WorldActions.QuickLoad, Strings.InputWorldQuickLoad, InputCategory.Global,
-                () => { if (!_editGate.Active) _commands.QuickLoad(); })
+                () => { if (!AnyTextEditActive) _commands.QuickLoad(); })
                 .AddBinding(new KeyboardBinding(KeyCode.F8))
                 .AddBinding(new KeyboardBinding(KeyCode.L, alt: true));
 
@@ -223,15 +227,22 @@ namespace DiscoAccess.Module
             // menus), since the game's bare-key bindings are killed by type-ahead in our migrated screens.
             // Hands the game its own LanguageSwitch action; the game gates and switches. Not while editing.
             _input.Register(WorldActions.Language, Strings.InputWorldLanguage, InputCategory.Global,
-                () => { if (!_editGate.Active) _commands.SwitchLanguage(); })
+                () => { if (!AnyTextEditActive) _commands.SwitchLanguage(); })
                 .AddBinding(new KeyboardBinding(KeyCode.L, ctrl: true));
 
             // F12 opens/closes the mod's settings menu. Global, so it fires anywhere (the world, a game
             // menu, a conversation); the navigator then drives the overlay through the UI category above. Not
-            // while a game text field owns the keyboard, so it never steals a keystroke from a save-name edit.
+            // while any text edit owns the keyboard (a save-name field or a mod-owned bookmark-name edit),
+            // so it never steals a keystroke and never yanks the overlay out from under a live edit.
             _input.Register(ModMenuAction, Strings.InputModMenu, InputCategory.Global,
-                () => { if (!_editGate.Active) _screens.ToggleModMenu(); })
+                () => { if (!AnyTextEditActive) _screens.ToggleOverlay(new ModMenuScreen()); })
                 .AddBinding(new KeyboardBinding(KeyCode.F12));
+
+            // Ctrl+B opens/closes the bookmarks menu, the same overlay pattern as F12. Bookmarks live on
+            // a map, so with no game loaded the toggle only says why nothing opened.
+            _input.Register(BookmarksAction, Strings.InputBookmarks, InputCategory.Global,
+                () => { if (!AnyTextEditActive) ToggleBookmarks(); })
+                .AddBinding(new KeyboardBinding(KeyCode.B, ctrl: true));
 
             // The live category each frame: the UI category while our navigator owns the keyboard (a
             // registered screen, no popup up), plus the Status keys when that screen wants them (the
@@ -249,22 +260,57 @@ namespace DiscoAccess.Module
             {
                 if (!_screens.OwnsKeyboard || _editGate.Active || a.Category != InputCategory.UI)
                     return false;
-                // Escape on a game view is handed to the game's own back action (context-sensitive: it closes
-                // the open view or world container), so the game closes screens the way it does for a sighted
-                // player - the mod reconstructs no close. Only the mod's own surfaces (settings menu, popup)
-                // handle Escape themselves, since the game has no equivalent to close.
-                if (a.Key == UiActions.Back && !_screens.OnOwnSurface)
-                {
-                    _commands.Escape();
-                    return true;
-                }
-                return _screens.Dispatch(a.Key);
+                return DispatchUiKey(a.Key);
             };
 
             // Surface any view ScreenAdapter neither names nor silences (e.g. one a game update added),
             // so it is noticed and named rather than going silently unannounced.
             foreach (var view in ScreenAdapter.UnmappedScreens())
                 _host.LogWarning($"ScreenAdapter has no name or exclusion for view {view}; it will not be announced.");
+        }
+
+        // Whether any text edit owns the keyboard: a game field (grace-inclusive, see TextEditGate) or a
+        // mod-owned edit (a bookmark name). The global hotkeys gate on this so they neither steal a
+        // keystroke nor pull a menu out from under a live edit.
+        private bool AnyTextEditActive => _editGate.Active || ModTextEntry.Active != null;
+
+        // Toggle the bookmarks menu. Bookmarks hang off a map and the character's position, so with no
+        // game loaded there is nothing to show - say why instead of opening an inert menu.
+        private void ToggleBookmarks()
+        {
+            if (!_world.GameLoaded)
+            {
+                _host.Speech.Speak(Strings.BookmarksUnavailable, interrupt: true);
+                return;
+            }
+            _screens.ToggleOverlay(new BookmarksScreen(_bookmarks, _world));
+        }
+
+        // Route one UI action, shared by the live dispatcher and the dev seam so both honor the mod text
+        // editor and the Escape handoff identically.
+        private bool DispatchUiKey(string key)
+        {
+            // A mod-owned text edit owns the UI keys: Enter commits, Escape backs out, and the rest are
+            // consumed so navigation stays frozen under the typing. Backspace (the Secondary action) is
+            // consumed here but does its deleting through the typed '\b' the char reader feeds, the same
+            // split as type-ahead's delete.
+            IModTextSession edit = ModTextEntry.Active;
+            if (edit != null)
+            {
+                if (key == UiActions.Activate) edit.Commit();
+                else if (key == UiActions.Back) edit.Cancel();
+                return true;
+            }
+            // Escape on a game view is handed to the game's own back action (context-sensitive: it closes
+            // the open view or world container), so the game closes screens the way it does for a sighted
+            // player - the mod reconstructs no close. Only the mod's own surfaces (a mod overlay, the
+            // popup) handle Escape themselves, since the game has no equivalent to close.
+            if (key == UiActions.Back && !_screens.OnOwnSurface)
+            {
+                _commands.Escape();
+                return true;
+            }
+            return _screens.Dispatch(key);
         }
 
         public void Tick()
@@ -306,10 +352,15 @@ namespace DiscoAccess.Module
             // the previous frame's, so the game's own handlers read it as a one-frame keypress (see there).
             Input.GameActionPress.Tick();
 
+            // Feed OS-typed characters into a live mod-owned text edit (a bookmark name); its Enter and
+            // Escape ride the bound UI actions through DispatchUiKey above.
+            ModTextEntry.Tick();
+
             // Read OS-typed characters into the navigator's type-ahead search. Bound nav keys (arrows,
             // Home/End, Escape) drive the results through _input above; this reads only the unbound typed
-            // text, gated on the same text-edit state so it never fights the save-name field.
-            _typeahead.Tick(_screens, _editGate.Active);
+            // text, gated on the text-edit state (game field or mod-owned edit) so a typed letter never
+            // both names a bookmark and jumps a list at once.
+            _typeahead.Tick(_screens, _editGate.Active || ModTextEntry.Active != null);
 
             // Speak "edit mode" as editing engages so the player knows they can type. The matching re-read
             // when editing ends is driven through _screens.Tick (editEnded) above, so it lands after any
@@ -365,29 +416,50 @@ namespace DiscoAccess.Module
         {
             if (_screens == null || !_screens.OwnsKeyboard || _editGate.Active)
                 return null;
-            if (action == UiActions.Back && !_screens.OnOwnSurface)
+            return (DispatchUiKey(action) ? "consumed " : "unconsumed ") + action;
+        }
+
+        // Dev seam (IDevDriver): type text into a live mod-owned edit (a bookmark name), the headless
+        // counterpart of the OS-typed characters ModTextEntry reads. Null when no mod edit is active, so
+        // the dev server falls back to the game-field injector.
+        public string TypeText(string text)
+        {
+            IModTextSession edit = ModTextEntry.Active;
+            if (edit == null)
+                return null;
+            foreach (char c in text ?? "")
             {
-                _commands.Escape();
-                return "escape handed to the game's back action";
+                if (c == '\b') edit.Backspace();
+                else if (!char.IsControl(c)) edit.Type(c);
             }
-            return (_screens.Dispatch(action) ? "consumed " : "unconsumed ") + action;
+            return "typed into the mod text editor\n";
         }
 
         // Dev seam (IDevDriver): our navigator's live state for the dev server's /nav.
         public string DescribeNav() => _screens != null ? _screens.DescribeNav() : "(no screen manager)\n";
 
         // Dev seam (IDevDriver): fire a world verb through its registered handler, the headless
-        // counterpart to a real world key. Gated exactly like the live keys: only while the world reader
-        // owns the keyboard (null hands the caller a "not driving" verdict rather than firing a world
-        // verb under a menu). Status-category actions (the readouts, quick-heals) fire here too - they
-        // are live in the world category set.
+        // counterpart to a real world key. Gated exactly like the live keys: a Global action (quicksave,
+        // the F12/Ctrl+B menu toggles) is live everywhere, so it fires no matter who owns the keyboard;
+        // anything else only while the world reader owns it (null hands the caller a "not driving"
+        // verdict rather than firing a world verb under a menu). Status-category actions (the readouts,
+        // quick-heals) fire here too - they are live in the world category set.
         public string DriveWorld(string actionKey)
         {
-            if (_input == null || _world == null || !_world.OwnsKeyboard || _editGate.Active)
+            if (_input == null || _world == null || _editGate.Active)
+                return null;
+            if (!IsGlobalAction(actionKey) && !_world.OwnsKeyboard)
                 return null;
             return _input.FireAction(actionKey)
                 ? "fired " + actionKey
                 : "unknown action " + actionKey;
+        }
+
+        private bool IsGlobalAction(string key)
+        {
+            foreach (InputAction a in _input.Actions)
+                if (a.Key == key) return a.Category == InputCategory.Global;
+            return false;
         }
 
         public void Dispose()
@@ -405,10 +477,12 @@ namespace DiscoAccess.Module
             _cutscenes?.Dispose(); // and the cutscene feeder's
             _harmony?.UnpatchSelf();
             _harmony = null;
+            ModTextEntry.Active = null; // a live bookmark-name edit dies with its overlay
             _input = null; // owns no native handle; the registration list goes with the dropped context
             _screens = null;
             _world = null;
             _commands = null;
+            _bookmarks = null;
             _notifications = null;
             _barks = null;
             _containers = null;

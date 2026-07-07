@@ -263,6 +263,39 @@ namespace DiscoAccess.Module.World
             _walk.BeginWalk(_overlay.Cursor.Position, Strings.WorldMoving);
         }
 
+        // ---- the bookmarks menu's world reads and its walk (see Nav.BookmarksScreen) ----
+
+        /// <summary>Whether a playable game is loaded - the bookmarks menu's gate. A player character
+        /// alone does not prove it: the title screen keeps one parked at the origin of its "Lobby"
+        /// shell scene (verified live), where a bookmark would be meaningless.</summary>
+        public bool GameLoaded => _env.HasPlayer && SceneName() != LobbyScene;
+
+        // The menu/credits shell scene's internal id (also hosts the endgame newspaper).
+        private const string LobbyScene = "Lobby";
+
+        /// <summary>The character's position in the mod's world frame, for capturing a bookmark.</summary>
+        public Snv PlayerPosition => _env.PlayerPosition;
+
+        /// <summary>The current scene id, the per-map key bookmark lists are scoped by.</summary>
+        public string CurrentScene => SceneName();
+
+        /// <summary>Whether a complete navmesh path connects the character to a stored point, for a
+        /// bookmark row's spoken reachability.</summary>
+        public bool CanReach(Snv point) => _env.PathComplete(_env.PlayerPosition, point);
+
+        /// <summary>Walk to a stored point (a bookmark): the same bare-ground move as the Walk verb.
+        /// Outside the free-roam world (the bookmarks menu also opens over a game menu or a
+        /// conversation) the character cannot be driven, spoken as can't-reach.</summary>
+        public void WalkTo(Snv point)
+        {
+            if (!_engaged)
+            {
+                _host.Speech.Speak(Strings.WorldUnreachable(null), interrupt: true);
+                return;
+            }
+            _walk.BeginWalk(point, Strings.WorldMoving);
+        }
+
         // ---- the scanner (review cursor) verbs, fired by the world keys ----
 
         /// <summary>Cycle the scanner selection through the current browse category (PageDown / PageUp).</summary>

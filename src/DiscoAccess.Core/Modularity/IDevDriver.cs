@@ -21,10 +21,17 @@ namespace DiscoAccess.Core.Modularity
         /// selection (which the /focus endpoint reports).</summary>
         string DescribeNav();
 
-        /// <summary>Fire one world-layer action (a <c>WorldActions</c> key, e.g. "world.interact") through
-        /// its registered handler - the same code path a real key press runs. Returns a status line, or
-        /// null when the world reader does not own the keyboard (a menu or text edit has it), so the
-        /// caller reports why nothing fired rather than firing into the wrong layer.</summary>
+        /// <summary>Fire one world-layer or Global action (a <c>WorldActions</c> key like
+        /// "world.interact", or a global toggle like "mod.bookmarks") through its registered handler -
+        /// the same code path a real key press runs. A Global action fires from anywhere, like its live
+        /// key; for the rest, returns null when the world reader does not own the keyboard (a menu or
+        /// text edit has it), so the caller reports why nothing fired rather than firing into the wrong
+        /// layer.</summary>
         string DriveWorld(string actionKey);
+
+        /// <summary>Type text into a live mod-owned text edit (a bookmark name), the headless counterpart
+        /// of the OS-typed characters the module reads for it. Returns a status line, or null when no mod
+        /// edit is active, so the caller falls back to the game-field text injector.</summary>
+        string TypeText(string text);
     }
 }
