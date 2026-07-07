@@ -17,7 +17,7 @@ namespace DiscoAccess.Module
     {
         private static readonly Dictionary<ViewType, string> Names = new Dictionary<ViewType, string>
         {
-            { ViewType.LOBBY, Strings.ScreenWorld },
+            { ViewType.LOBBY, Strings.ScreenMap },
             { ViewType.INVENTORY, Strings.ScreenInventory },
             { ViewType.INVENTORY_PAWN, Strings.ScreenClothing },
             { ViewType.THOUGHTCABINET, Strings.ScreenThoughtCabinet },

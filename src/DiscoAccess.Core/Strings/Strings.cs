@@ -217,8 +217,10 @@ namespace DiscoAccess.Core.Strings
 
             // Screen names, spoken once when a screen opens; noun phrases. Where the game titles the
             // same screen, match its word (noted per key).
-            // The in-game world view - no menu open, walking around.
-            D("ScreenWorld", "world"),
+            // The in-game world view - no menu open, walking around. "Map" is the mod's player-facing
+            // word for it; spoken when the keyboard lands back on the map controls (a menu, popup, or
+            // conversation closed, or a cutscene returned control).
+            D("ScreenMap", "map"),
             // Match I2 F1_SCREEN_I_KEY ("INVENTORY").
             D("ScreenInventory", "inventory"),
             // The inventory's worn-clothing view.
@@ -843,7 +845,7 @@ namespace DiscoAccess.Core.Strings
         public static string JournalOfficerProfileLabel => T("JournalOfficerProfileLabel");
 
         // Screen names, spoken when a screen opens; mapped from the live view enum in ScreenAdapter.
-        public static string ScreenWorld => T("ScreenWorld");
+        public static string ScreenMap => T("ScreenMap");
         public static string ScreenInventory => T("ScreenInventory");
         public static string ScreenClothing => T("ScreenClothing");
         public static string ScreenThoughtCabinet => T("ScreenThoughtCabinet");

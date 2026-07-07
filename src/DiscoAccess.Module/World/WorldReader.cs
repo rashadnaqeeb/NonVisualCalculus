@@ -137,6 +137,13 @@ namespace DiscoAccess.Module.World
             if (own) InControl.InputManager.Enabled = false;
             else if (_wasOwning && !screensOwn) InControl.InputManager.Enabled = true;
 
+            // Landing on the map controls is announced by name, the world counterpart of a screen
+            // speaking its ScreenName on open: closing a menu, the mod overlay, or a popup, ending a
+            // conversation, or a cutscene returning control all land here. Queued, not interrupting:
+            // the surface just closed may still be speaking its own last line (a dialogue's final
+            // node, the container-closed cue), which must finish.
+            if (own && !_wasOwning) _host.Speech.Speak(Strings.ScreenMap, interrupt: false);
+
             _wasOwning = own;
             _ownsKeyboard = own;
         }
