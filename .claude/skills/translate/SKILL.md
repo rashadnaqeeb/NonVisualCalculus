@@ -39,23 +39,32 @@ Work through the phases in order. Each depends on the one before it.
 ## Phase 1 - harvest the game's vocabulary
 
 Collect every I2 term named in a "match I2" comment in Strings.cs, then dump their values in the
-TARGET language in one `/eval` sweep - do not switch the game's language for this; read the target
-column from the term data. Starting-point snippet (adjust against `/typeinfo` if the API differs):
+TARGET language in one `/eval` sweep.
+
+**DE streams one language at a time, so you MUST switch the game to the target language to read
+it.** Each I2 source holds only the current language's column in memory (`src.mLanguages.Count`
+is 1 per source), and DE loads a language's UI data from asset bundles on demand - so reading
+another language's `GetTermData(...).Languages[i]` or a bare `GetTranslation` returns null/empty
+until that language is loaded. Setting `LocalizationManager.CurrentLanguage` alone does NOT load
+it. The two-call load that works (found by decompiling `LocalizationSettingsOption.SwitchLanguageSource`):
 
 ```csharp
-string lang = "French"; // the I2 language name
+// I2 language name + code from the Phase 0 table (e.g. "French"/"fr").
+I2.Loc.LocalizationAssetBundlesManager.Instance.LoadBundlesForLanguage("French");
+I2.Loc.LocalizationManager.SetLanguageAndCode("French", "fr", false, true);
+// Then read terms with the mod's own GetTranslation signature (fixForRTL off):
+string G(string t) => I2.Loc.LocalizationManager.GetTranslation(t, false, 0, true, false, null, null, true);
 var terms = new[] { "TOOLTIP_TUTO_CHECK_WHITE_OPEN", "TOOLTIP_TUTO_CHECK_RED", /* ...the rest */ };
-foreach (var src in I2.Loc.LocalizationManager.Sources) {
-    int li = -1;
-    for (int i = 0; i < src.mLanguages.Count; i++)
-        if (src.mLanguages[i].Name == lang) li = i;
-    if (li < 0) continue;
-    foreach (var name in terms) {
-        var t = src.GetTermData(name);
-        if (t != null) Console.WriteLine(name + " = " + t.Languages[li]);
-    }
-}
+foreach (var name in terms) Console.WriteLine(name + " = " + (G(name) ?? "<null>"));
 ```
+
+This also puts the game into the target language, which Phase 5 needs anyway - so harvest and the
+listen phase share one switch; there is no separate "switch later" step. Caveat: `LoadBundlesForLanguage`
+loads the UI localization ("lockit") bundles but NOT the Pixel Crushers dialogue database, so live
+barks and conversation lines stay in the language the save booted in during preview. That is expected
+and does not affect reviewing authored UI strings (which never read dialogue). When done, restore the
+boot language the same way (`LoadBundlesForLanguage` + `SetLanguageAndCode` back to English) so the
+game is not left in a mixed UI-French / dialogue-English state.
 
 Never fetch with RTL fixing on. For the district names, also grep the target-language column of
 the dialogue terms for the place names (best effort; where the game never names a place, translate
@@ -105,10 +114,12 @@ dropped or invented slots, form counts, the compass). Fix until green.
 LanguageSync reads the DEPLOYED copy of the file (`<game>\BepInEx\plugins\DiscoAccess\lang\`),
 not the repo's, and with the game running a full build cannot refresh the deploy (locked DLLs).
 So the iteration loop is: edit the repo file, copy it into the deployed lang folder, then
-`POST /reload` (module recreation re-runs LanguageSync, which re-reads the file). Switch the game
-to the target language first (via `/eval` on the game's language setting, or the mod's
-cycle-language key). Then drive the real flows with `POST /input` and read `GET /speech` (or
-`/eval`'s speech capture):
+`POST /reload` (module recreation re-runs LanguageSync, which re-reads the file). The game is
+already in the target language from the Phase 1 load; if a restart intervened, redo that
+`LoadBundlesForLanguage` + `SetLanguageAndCode` pair (setting `CurrentLanguage` alone will not
+load the data). Deploy path is `<PluginPath>/DiscoAccess/lang/` - read `BepInEx.Paths.PluginPath`
+via `/eval` rather than hardcoding a Steam path. Then drive the real flows with `POST /input` and
+read `GET /speech` (or `/eval`'s speech capture):
 
 - move the world cursor and cross a district boundary (compass, distance, location readout)
 - scan to an exit (the WorldExitNamed composition - word order is the thing to hear)
