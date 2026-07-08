@@ -68,9 +68,9 @@ namespace DiscoAccess.Module.World
         }
 
         /// <summary>Clamp a glide onto walkable ground: on hitting a navmesh boundary, hop the cursor across
-        /// it to the ground beyond when the block is small debris the character can still round cheaply (see
-        /// <see cref="TrySkipBoundary"/>), else stop at the boundary; with no boundary between the points, snap
-        /// the target onto the mesh so the cursor never leaves the floor.</summary>
+        /// it to the ground beyond when the block is small debris or a step seam the character can still cross
+        /// cheaply (see <see cref="TrySkipBoundary"/>), else stop at the boundary; with no boundary between the
+        /// points, snap the target onto the mesh so the cursor never leaves the floor.</summary>
         public Snv TraceMove(Snv from, Snv intended)
         {
             Vector3 f = WorldConvert.ToUnity(from), t = WorldConvert.ToUnity(intended);
@@ -78,8 +78,21 @@ namespace DiscoAccess.Module.World
             {
                 Vector3 dir = t - f; dir.y = 0f;
                 float len = dir.magnitude;
-                if (len > 1e-4f && TrySkipBoundary(boundary.position, dir / len, out Vector3 resume))
-                    return WorldConvert.ToSnv(resume);
+                if (len > 1e-4f)
+                {
+                    dir /= len;
+                    // A hit AT the ray's own origin is the cursor sitting on a mesh edge (a hop's resume
+                    // point, the fragmented kerb strips around the plaza roundabout), where Raycast blocks
+                    // instantly though the floor continues - so try the whole step directly first, or the
+                    // stroke degrades into probe-step crawling through the boundary hop below.
+                    if ((boundary.position - f).sqrMagnitude < PhantomHit * PhantomHit
+                        && NavMesh.SamplePosition(t, out NavMeshHit direct, ProbeRadius, AllAreas)
+                        && AlignedResume(f, dir, direct.position)
+                        && CheapWalk(f, direct.position))
+                        return WorldConvert.ToSnv(direct.position);
+                    if (TrySkipBoundary(boundary.position, dir, out Vector3 resume))
+                        return WorldConvert.ToSnv(resume);
+                }
                 return WorldConvert.ToSnv(boundary.position);
             }
             if (NavMesh.SamplePosition(t, out NavMeshHit snapped, 1.5f, AllAreas))
@@ -90,7 +103,7 @@ namespace DiscoAccess.Module.World
         /// <summary>Distance to the first navmesh boundary along a cardinal, for the wall tones: cast a
         /// navmesh ray out to <paramref name="range"/> and measure the planar gap to the hit, or report
         /// <paramref name="range"/> (no wall, silent) when the ray reaches the end unobstructed. Boundaries the
-        /// cursor would hop (small debris; see <see cref="TrySkipBoundary"/>) are seen through and the cast
+        /// cursor would hop (small debris, step seams; see <see cref="TrySkipBoundary"/>) are seen through and the cast
         /// continues beyond them, so the tone sounds only real walls and never contradicts the cursor. The
         /// cursor is navmesh-clamped, so an off-mesh origin (where Raycast would misbehave) does not arise in
         /// play.</summary>
@@ -118,10 +131,15 @@ namespace DiscoAccess.Module.World
         // Can the cursor hop a navmesh boundary at <paramref name="boundary"/> travelling along unit
         // <paramref name="dir"/>? March past it up to SkipProbeDistance for where the mesh resumes, then take
         // the gap only when a complete path from the boundary to that ground exists and is no longer than
-        // SkipDetourRatio times the straight hop - so small debris (a short walk-around) is skipped while a
-        // thin wall with ground close behind it (a long walk-around, or no path at all) is not. The single
-        // source of truth for "passable" shared by the cursor clamp and the wall-tone cast, so they never
-        // disagree. Tuning constants below are hot-reloadable (F6): a pure-module edit re-lands them live.
+        // SkipDetourRatio times the straight hop - so small debris (a short walk-around) and stair steps
+        // (whose treads connect directly) are skipped while a thin wall with ground close behind it (a long
+        // walk-around, or no path at all) is not. Boundaries include STEP SEAMS, not just gaps: a staircase
+        // bakes as treads the pathfinder walks but Raycast stops at (the plaza roundabout's platform stairs),
+        // with the next tread a hair forward and a fraction of a metre up - so resumed ground is judged by
+        // planar FORWARD PROGRESS along the glide (a near-edge snap-back has none), never by an absolute
+        // gap floor, which re-seals exactly those seams. The single source of truth for "passable" shared
+        // by the cursor clamp and the wall-tone cast, so they never disagree. Tuning constants below are
+        // hot-reloadable (F6): a pure-module edit re-lands them live.
         private static bool TrySkipBoundary(Vector3 boundary, Vector3 dir, out Vector3 resume)
         {
             resume = default;
@@ -129,16 +147,39 @@ namespace DiscoAccess.Module.World
             {
                 if (!NavMesh.SamplePosition(boundary + dir * t, out NavMeshHit r, ProbeRadius, AllAreas))
                     continue;
-                float gap = Vector3.Distance(boundary, r.position);
-                if (gap <= MinGap) continue; // still snapping to the near edge: keep marching past the gap
-                var path = new NavMeshPath();
-                if (!NavMesh.CalculatePath(boundary, r.position, AllAreas, path)) return false;
-                if (path.status != NavMeshPathStatus.PathComplete) return false;
-                if (PathLength(path) > gap * SkipDetourRatio) return false;
+                if (!AlignedResume(boundary, dir, r.position))
+                    continue; // near-edge or sideways snap: keep marching
+                if (!CheapWalk(boundary, r.position)) return false;
                 resume = r.position;
                 return true;
             }
             return false;
+        }
+
+        // Whether a candidate resume point is genuinely along the stroke: planar forward progress past
+        // <paramref name="origin"/> along unit <paramref name="dir"/>, deviating sideways no more than it
+        // advances (a 45-degree cone). The forward floor rejects a snap-back to the near edge; the cone
+        // keeps the stroke honest - on a thin mesh sliver through a void pocket, an unconstrained snap
+        // projects every push onto the sliver like a bead on a wire (a west stroke sliding the cursor
+        // south, proven on the road strip west of the plaza roundabout), where a stroke that cannot
+        // mostly-advance should bump instead.
+        private static bool AlignedResume(Vector3 origin, Vector3 dir, Vector3 candidate)
+        {
+            float forward = (candidate.x - origin.x) * dir.x + (candidate.z - origin.z) * dir.z;
+            if (forward < ForwardEpsilon) return false;
+            float lx = (candidate.x - origin.x) - dir.x * forward;
+            float lz = (candidate.z - origin.z) - dir.z * forward;
+            return lx * lx + lz * lz <= forward * forward;
+        }
+
+        // Whether a complete navmesh walk connects the points at no more than the hop detour allowance -
+        // the "same floor, trivially crossed" test shared by the boundary hop and the phantom-edge step.
+        private static bool CheapWalk(Vector3 a, Vector3 b)
+        {
+            var path = new NavMeshPath();
+            if (!NavMesh.CalculatePath(a, b, AllAreas, path)) return false;
+            if (path.status != NavMeshPathStatus.PathComplete) return false;
+            return PathLength(path) <= Mathf.Max(Vector3.Distance(a, b) * SkipDetourRatio, MinDetourAllowance);
         }
 
         private static float PathLength(NavMeshPath path)
@@ -235,8 +276,21 @@ namespace DiscoAccess.Module.World
         private const float SkipProbeDistance = 1.0f; // widest gap (metres) the cursor will hop
         private const float SkipDetourRatio = 2.0f;   // max walk-around length as a multiple of the straight hop
         private const float ProbeStep = 0.1f;         // march resolution past the boundary
-        private const float ProbeRadius = 0.2f;       // snap radius when sampling for resumed ground
-        private const float MinGap = 0.25f;           // ignore resume points this close to the boundary (near edge)
+        // Snap radius when sampling for resumed ground. The probe line marches FLAT at the boundary's own
+        // height while a staircase's treads rise away from it (the roundabout platform stairs sit ~0.3 m
+        // above the line one tread in), so the radius must span that rise; a tighter radius walks the whole
+        // march past a step seam finding nothing.
+        private const float ProbeRadius = 0.5f;
+        // The least planar forward progress a sample must make to count as ground BEYOND the boundary rather
+        // than a snap-back to the near edge. A step seam's next tread can sit ~0.15 m out, so this stays well
+        // under that; near-edge snaps measure ~0 along the glide direction.
+        private const float ForwardEpsilon = 0.05f;
+        // The detour allowance's floor: a step seam's straight hop is tiny (~0.15 m), and twice that would
+        // refuse the stair path's own riser zigzag, so a hop this short is allowed a short absolute walk-around.
+        private const float MinDetourAllowance = 0.5f;
+        // A raycast hit within this of the ray's origin is the cursor standing on the mesh edge itself
+        // (see TraceMove), not a boundary out along the stroke.
+        private const float PhantomHit = 0.05f;
         private const int MaxSeeThrough = 3;          // wall-tone cast: most skippable boundaries to see through
 
         private static Character Main
