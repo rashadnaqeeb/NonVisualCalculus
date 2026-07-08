@@ -139,6 +139,14 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
+        public void UnrestrictCursor_DefaultsOff()
+        {
+            var settings = new ModSettings(new FakeStore());
+            Assert.False(settings.UnrestrictCursor.Value);
+            Assert.Contains(settings.UnrestrictCursor, settings.All);
+        }
+
+        [Fact]
         public void SonarCategoryEnabled_MapsEveryScanCategoryToItsToggle()
         {
             var settings = new ModSettings(new FakeStore());

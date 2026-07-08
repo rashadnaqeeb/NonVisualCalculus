@@ -54,6 +54,7 @@ namespace DiscoAccess.Core.World.Overlays
         public const float FogFringe = 2f;
 
         private readonly IWorldEnvironment _env;
+        private Func<bool> _unrestricted = () => false;
         private Vector3 _pos;
         private bool _has;
         private Vector3 _fogEntry; // the last clear ground the cursor stood on (the fringe's centre)
@@ -62,6 +63,15 @@ namespace DiscoAccess.Core.World.Overlays
         {
             _env = env;
         }
+
+        /// <summary>Bind the live unrestricted toggle (a testing aid, off by default): while it reads true,
+        /// glides pass the view-edge and fog bounds instead of being refused (navmesh walls still clamp),
+        /// and the overlay swaps the impassable bump for the fog enter/exit cues at those crossings. A
+        /// provider, not a captured value, so the setting reads live across module reloads.</summary>
+        public void BindUnrestricted(Func<bool> provider) => _unrestricted = provider;
+
+        /// <summary>Whether the bound unrestricted toggle reads true right now.</summary>
+        public bool Unrestricted => _unrestricted();
 
         /// <summary>The cursor's world point; falls back to the player's position until set.</summary>
         public Vector3 Position
@@ -113,8 +123,11 @@ namespace DiscoAccess.Core.World.Overlays
             if (!_env.IsFogged(cur) || PlanarDistance(_fogEntry, cur) > FogFringe + 0.1f)
                 _fogEntry = cur;
 
+            // Unrestricted: the view-edge and fog bounds don't refuse (the navmesh trace above still
+            // clamps at walls). Reported as unblocked so the overlay never bumps; its fog cues sound the
+            // crossings instead.
             var traced = Trace(cur, dx * step, dz * step, out GlideBlock block);
-            if (block == GlideBlock.None)
+            if (block == GlideBlock.None || _unrestricted())
             {
                 Position = traced;
                 return new GlideOutcome(Moved(cur, traced), GlideBlock.None, default);

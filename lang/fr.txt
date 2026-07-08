@@ -150,6 +150,7 @@ SettingSonarRest = Temps entre les balayages du sonar
 SettingSonarCategory = Sonar {0}
 SettingScannerFromCursor = Lectures du scanner depuis le curseur
 SettingRunToDestinations = Courir vers les destinations
+SettingUnrestrictCursor = Curseur sans restriction
 DialogueContinue = continuer
 DialogueAlreadyChosen = déjà choisie
 DialogueNotReady = pas encore prêt

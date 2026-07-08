@@ -64,6 +64,11 @@ namespace DiscoAccess.Core.Settings
         /// leaves the pace to the game's own policy, which walks, matching a vanilla single click.</summary>
         public ToggleSetting RunToDestinations { get; }
 
+        /// <summary>A testing aid: when on, the cursor glides past the senses' edges - out of the visible
+        /// frame and into fog-of-war ground - instead of being refused there, with the fog enter/exit cues
+        /// sounding the crossings. The scanner and object senses are unchanged. Off by default.</summary>
+        public ToggleSetting UnrestrictCursor { get; }
+
         public ModSettings(ISettingsStore store)
         {
             // Labels are providers, not captured strings: the settings outlive module reloads and a
@@ -97,6 +102,8 @@ namespace DiscoAccess.Core.Settings
                 "scanner_from_cursor", () => SettingScannerFromCursor, defaultValue: false, store));
             RunToDestinations = Add(new ToggleSetting(
                 "run_to_destinations", () => SettingRunToDestinations, defaultValue: false, store));
+            UnrestrictCursor = Add(new ToggleSetting(
+                "unrestrict_cursor", () => SettingUnrestrictCursor, defaultValue: false, store));
         }
 
         /// <summary>Whether the sonar should sound the given <see cref="World.WorldTaxonomy.Scan"/> browse

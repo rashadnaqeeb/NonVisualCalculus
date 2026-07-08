@@ -22,6 +22,9 @@ namespace DiscoAccess.Core.World.Overlays
         private const float ImpassableVolume = 0.8f;
         private const float ImpassablePanWidth = 3f;
 
+        // The unrestricted cursor's fog enter/exit cues: at the cursor itself, so centred and flat.
+        private const float FogCueVolume = 0.8f;
+
         private readonly List<OverlaySystem> _systems = new List<OverlaySystem>(); // ordered (readout order)
         private readonly Dictionary<Type, OverlaySystem> _byType = new Dictionary<Type, OverlaySystem>();
         private readonly IWorldEnvironment _env;
@@ -29,6 +32,7 @@ namespace DiscoAccess.Core.World.Overlays
         private readonly SpatialSources _cues;
         private readonly MotionTracker _motion = new MotionTracker();
         private bool _wasBlocked; // last stroke frame ended pinned - the bump fires on the transition
+        private bool _wasOutside; // unrestricted cursor was beyond the senses - the fog cues fire on the transitions
 
         public Cursor Cursor { get; }
 
@@ -77,6 +81,7 @@ namespace DiscoAccess.Core.World.Overlays
             foreach (var s in _systems) s.OnExit(this);
             _motion.Reset();
             _wasBlocked = false;
+            _wasOutside = false;
             // Leaving the world drops the remembered spot: when the view reopens (a conversation ends, a
             // menu closes), the cursor is back on the character, where the next action starts from.
             Cursor.Reset();
@@ -103,8 +108,9 @@ namespace DiscoAccess.Core.World.Overlays
             // rather than falling out of the senses. Silent - the glide-stop and recenter readouts answer
             // "where am I". Only while driven, so a dialogue or menu camera never drags the cursor around;
             // only while pinned, so an unpinned cursor (riding the player) is never re-pinned against a
-            // camera that hasn't caught up to a just-repositioned character.
-            if (driven && Cursor.IsPinned && !_env.InView(Cursor.Position))
+            // camera that hasn't caught up to a just-repositioned character. An unrestricted cursor is
+            // allowed out of the frame, so it is not dragged back either.
+            if (driven && Cursor.IsPinned && !Cursor.Unrestricted && !_env.InView(Cursor.Position))
                 Cursor.Position = _env.ClampToView(Cursor.Position);
 
             _motion.Update(dt, intent);
@@ -118,6 +124,23 @@ namespace DiscoAccess.Core.World.Overlays
                            _ => ImpassableVolume,
                            ImpassablePanWidth);
             _wasBlocked = blocked;
+
+            // The unrestricted cursor's boundary sense: crossing out past the edge of the senses (off the
+            // visible frame or onto fogged ground - exactly where a restricted glide refuses and bumps)
+            // plays the fog-enter cue, and coming back in plays the exit cue. Pinned only, so a camera
+            // mid-catch-up under an unpinned cursor never reads as a crossing; the transition is judged
+            // only while driven, so a menu opening over the world neither cues nor swallows one.
+            bool outside = Cursor.Unrestricted && Cursor.IsPinned
+                && (!_env.InView(Cursor.Position) || _env.IsFogged(Cursor.Position));
+            if (driven && outside != _wasOutside)
+            {
+                _cues.Play(outside ? AudioCue.CursorFogEnter : AudioCue.CursorFogExit,
+                           () => Cursor.Position,
+                           p => p,
+                           _ => FogCueVolume,
+                           ImpassablePanWidth);
+                _wasOutside = outside;
+            }
         }
 
         /// <summary>Gather every system's announcements for the request, keep those matching the requested

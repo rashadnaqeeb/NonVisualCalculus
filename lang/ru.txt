@@ -149,6 +149,7 @@ SettingSonarRest = Время между импульсами сонара
 SettingSonarCategory = Сонар: {0}
 SettingScannerFromCursor = Показания сканера от курсора
 SettingRunToDestinations = Бежать к целям
+SettingUnrestrictCursor = Курсор без ограничений
 DialogueContinue = продолжить
 DialogueAlreadyChosen = уже выбрано
 DialogueNotReady = ещё не готово

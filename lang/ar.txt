@@ -148,6 +148,7 @@ SettingSonarRest = الوقت بين مسحات السونار
 SettingSonarCategory = سونار {0}
 SettingScannerFromCursor = قراءات الماسح من المؤشر
 SettingRunToDestinations = الركض إلى الوجهات
+SettingUnrestrictCursor = مؤشر بلا قيود
 DialogueContinue = استمرار
 DialogueAlreadyChosen = سبق اختياره
 DialogueNotReady = ليس جاهزًا بعد

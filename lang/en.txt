@@ -149,6 +149,7 @@ SettingSonarRest = Time between sonar sweeps
 SettingSonarCategory = Sonar {0}
 SettingScannerFromCursor = Scanner readouts from cursor
 SettingRunToDestinations = Run to destinations
+SettingUnrestrictCursor = Unrestricted cursor
 DialogueContinue = continue
 DialogueAlreadyChosen = already chosen
 DialogueNotReady = not ready

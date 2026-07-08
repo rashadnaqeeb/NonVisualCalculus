@@ -119,6 +119,8 @@ namespace DiscoAccess.Audio
                 case AudioCue.CursorEnter: return Path.Combine(CueDir, "enter.wav");
                 case AudioCue.CursorExit: return Path.Combine(CueDir, "exit.wav");
                 case AudioCue.CursorImpassable: return Path.Combine(CueDir, "cursor_impassable.wav");
+                case AudioCue.CursorFogEnter: return Path.Combine(CueDir, "fog_enter.wav");
+                case AudioCue.CursorFogExit: return Path.Combine(CueDir, "fog_exit.wav");
                 case AudioCue.ThingNpc: return Path.Combine(ThingDir, "npc.wav");
                 case AudioCue.ThingContainer: return Path.Combine(ThingDir, "container.wav");
                 case AudioCue.ThingOrb: return Path.Combine(ThingDir, "orb.wav");

@@ -75,6 +75,9 @@ namespace DiscoAccess.Module.World
             // geometry) can surface itself to the log at the point it happens - see EntityProxy.WarnIfNearMiss.
             _model = new WorldModel(host.LogWarning);
             _overlay = new Overlay(_env, host.Speech, _sources);
+            // The testing toggle that lets the cursor roam past the view edge and into fog, with the
+            // overlay's fog cues sounding the crossings instead of the impassable bump.
+            _overlay.Cursor.BindUnrestricted(() => host.Settings.UnrestrictCursor.Value);
             // The cursor's object sense: the enter/exit blips while gliding and the name of the thing under
             // the cursor on stop. Registered before the spatial system so its name leads the joined readout
             // ("crate; northeast, 2 meters"). Reads the same live registry the sonar and scanner will.

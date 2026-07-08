@@ -217,6 +217,87 @@ namespace DiscoAccess.Tests
             Assert.True(cursor.Position.X > 2f + Cursor.FogFringe);
         }
 
+        // ---- the unrestricted cursor (testing aid): bounds pass, fog cues sound the crossings ----
+
+        [Fact]
+        public void UnrestrictedGlide_PassesViewEdgeAndFog_WithoutBumping()
+        {
+            var env = new FakeEnv { ViewFn = p => p.X <= 2f, FogFn = p => p.X > 3f };
+            var audio = new FakeAudioEngine();
+            var overlay = NewOverlay(env, audio: audio);
+            overlay.Cursor.BindUnrestricted(() => true);
+
+            overlay.Tick(1f, 1f, 0f, speed: 8f); // one 8 m step east: out of view AND deep in fog
+            Assert.Equal(8f, overlay.Cursor.Position.X, 3);
+            Assert.DoesNotContain(AudioCue.CursorImpassable, audio.Cues);
+        }
+
+        [Fact]
+        public void UnrestrictedCrossing_PlaysFogEnter_ThenExitOnReturn()
+        {
+            var env = new FakeEnv { FogFn = p => p.X > 2f };
+            var audio = new FakeAudioEngine();
+            var overlay = NewOverlay(env, audio: audio);
+            overlay.Cursor.BindUnrestricted(() => true);
+
+            overlay.Tick(1f, 1f, 0f, speed: 4f); // to x=4: fogged ground
+            Assert.Equal(new[] { AudioCue.CursorFogEnter }, audio.Cues);
+
+            overlay.Tick(1f, 1f, 0f, speed: 4f); // deeper (x=8): still outside, no re-fire
+            Assert.Single(audio.Played);
+
+            overlay.Tick(2f, -1f, 0f, speed: 4f); // back to x=0: clear ground
+            Assert.Equal(new[] { AudioCue.CursorFogEnter, AudioCue.CursorFogExit }, audio.Cues);
+        }
+
+        [Fact]
+        public void UnrestrictedCursor_IsNotFrameDragged()
+        {
+            var env = new FakeEnv { ViewFn = p => p.X <= 3f, ClampFn = p => new Vector3(3f, p.Y, p.Z) };
+            var overlay = NewOverlay(env);
+            overlay.Cursor.BindUnrestricted(() => true);
+            overlay.Cursor.Position = new Vector3(5f, 0f, 0f);
+
+            overlay.Tick(0.1f, 0f, 0f, speed: 4f);
+            Assert.Equal(new Vector3(5f, 0f, 0f), overlay.Cursor.Position); // left where it roamed
+        }
+
+        [Fact]
+        public void UnrestrictedFogCues_InertWhileInputInactive()
+        {
+            var env = new FakeEnv { FogFn = p => p.X > 2f };
+            var audio = new FakeAudioEngine();
+            var overlay = NewOverlay(env, audio: audio);
+            overlay.Cursor.BindUnrestricted(() => true);
+            overlay.Cursor.Position = new Vector3(4f, 0f, 0f); // planted on fogged ground
+            overlay.InputActive = false; // a menu floats over the world
+
+            overlay.Tick(0.1f, 0f, 0f, speed: 4f);
+            Assert.Empty(audio.Played); // the crossing is judged only while driven
+
+            overlay.InputActive = true; // the menu closed: the pending crossing cues now
+            overlay.Tick(0.1f, 0f, 0f, speed: 4f);
+            Assert.Equal(new[] { AudioCue.CursorFogEnter }, audio.Cues);
+        }
+
+        [Fact]
+        public void TurningRestrictionBackOn_PlaysFogExit_AndFrameDragsHome()
+        {
+            var env = new FakeEnv { ViewFn = p => p.X <= 3f, ClampFn = p => new Vector3(3f, p.Y, p.Z) };
+            var audio = new FakeAudioEngine();
+            var overlay = NewOverlay(env, audio: audio);
+            bool unrestricted = true;
+            overlay.Cursor.BindUnrestricted(() => unrestricted);
+
+            overlay.Tick(1f, 1f, 0f, speed: 8f); // roam out of view (x=8)
+            Assert.Equal(new[] { AudioCue.CursorFogEnter }, audio.Cues);
+
+            unrestricted = false; // the toggle turned off with the cursor stranded outside
+            overlay.Tick(0.1f, 0f, 0f, speed: 4f);
+            Assert.Equal(new Vector3(3f, 0f, 0f), overlay.Cursor.Position); // dragged back in view
+            Assert.Equal(new[] { AudioCue.CursorFogEnter, AudioCue.CursorFogExit }, audio.Cues);
+        }
+
         [Fact]
         public void Glide_WallStop_StaysSilent()
         {

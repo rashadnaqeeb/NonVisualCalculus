@@ -287,6 +287,9 @@ namespace DiscoAccess.Core.Strings
             D("SettingScannerFromCursor", "Scanner readouts from cursor"),
             // Toggle: the character runs instead of walking when sent somewhere.
             D("SettingRunToDestinations", "Run to destinations"),
+            // Toggle, a testing aid: the cursor may leave the visible frame and enter fog-of-war ground
+            // instead of stopping at those edges.
+            D("SettingUnrestrictCursor", "Unrestricted cursor"),
 
             // Dialogue and checks.
             // The control that advances a conversation when there are no response choices; verb.
@@ -898,6 +901,7 @@ namespace DiscoAccess.Core.Strings
         public static string SettingSonarExits => F("SettingSonarCategory", WorldScanExits);
         public static string SettingScannerFromCursor => T("SettingScannerFromCursor");
         public static string SettingRunToDestinations => T("SettingRunToDestinations");
+        public static string SettingUnrestrictCursor => T("SettingUnrestrictCursor");
 
         // The navigable affordance that advances a conversation when there are no response choices
         // (DE's own continue control is an image with no clean text label).

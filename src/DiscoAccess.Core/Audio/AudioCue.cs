@@ -21,6 +21,14 @@ namespace DiscoAccess.Core.Audio
         /// with your body and there will be more".</summary>
         CursorImpassable,
 
+        /// <summary>The unrestricted cursor crossed out past the edge of the senses - off the visible frame
+        /// or onto fogged ground (where a restricted glide would have been refused with
+        /// <see cref="CursorImpassable"/> instead).</summary>
+        CursorFogEnter,
+
+        /// <summary>The unrestricted cursor came back inside the senses - in frame, on clear ground.</summary>
+        CursorFogExit,
+
         /// <summary>A person.</summary>
         ThingNpc,
 
