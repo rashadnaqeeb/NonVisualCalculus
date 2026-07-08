@@ -336,6 +336,27 @@ namespace DiscoAccess.Module.World
             _walk.BeginInteract(target, _overlay.Cursor.PlayerPosition);
         }
 
+        /// <summary>Speak the walking direction to the scanned thing (P): the bearing and distance of the
+        /// next leg of the navmesh path from the CURSOR toward its interaction point - the "which way from
+        /// here" answer, where the scanner's readout gives the straight-line bearing (which a wall or a
+        /// stair detour can point away from the walk). Anchored to the cursor, not the character, so the
+        /// path can be traced: press P, glide the leg, press P again for the next one; an unpinned cursor
+        /// rides the character, so a fresh readout still starts from where the walk would. Re-priced from
+        /// the live positions on every press.</summary>
+        public void ScanWaypoint()
+        {
+            if (!_engaged) return;
+            IWorldItem target = _scanner.Selected;
+            if (target == null) { _host.Speech.Speak(Strings.WorldScanNothing, interrupt: true); return; }
+            Snv cursor = _overlay.Cursor.Position;
+            if (!_env.NextPathLeg(cursor, target.InteractionPoint(cursor), out Snv corner))
+            {
+                _host.Speech.Speak(Strings.WorldUnreachable(target.Name), interrupt: true);
+                return;
+            }
+            _host.Speech.Speak(SpatialReadout.Describe(cursor, corner), interrupt: true);
+        }
+
         /// <summary>Move the cursor to the scanned thing (J): onto its interaction point - the walkable
         /// stand-spot the game's click would walk the player to, the same point the scanner's readout
         /// measures - never the thing's own body, which can sit off-mesh (a wall fixture, a boat on

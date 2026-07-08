@@ -67,6 +67,39 @@ namespace DiscoAccess.Module.World
                    && path.status == NavMeshPathStatus.PathComplete;
         }
 
+        /// <summary>The next corner of the character's own walk from <paramref name="from"/> to
+        /// <paramref name="to"/> (both snapped onto the mesh): the first path corner meaningfully past the
+        /// start, or the destination itself on a straight path - the "which way do I start walking" point
+        /// the scanner's waypoint readout speaks. False when no complete path connects the points.</summary>
+        public bool NextPathLeg(Snv from, Snv to, out Snv corner)
+        {
+            corner = default;
+            if (!NavMesh.SamplePosition(WorldConvert.ToUnity(from), out NavMeshHit start, PathSnapRadius, AllAreas))
+                return false;
+            if (!NavMesh.SamplePosition(WorldConvert.ToUnity(to), out NavMeshHit end, PathSnapRadius, AllAreas))
+                return false;
+            var path = new NavMeshPath();
+            if (!NavMesh.CalculatePath(start.position, end.position, AllAreas, path)
+                || path.status != NavMeshPathStatus.PathComplete)
+                return false;
+            Vector3[] corners = path.corners;
+            if (corners.Length == 0) return false;
+            for (int i = 1; i < corners.Length; i++)
+                if (Planar(start.position, corners[i]) >= MinLegDistance)
+                {
+                    corner = WorldConvert.ToSnv(corners[i]);
+                    return true;
+                }
+            // Every corner within a stride: the path is straight (or the character already stands there),
+            // so the destination itself is the leg.
+            corner = WorldConvert.ToSnv(corners[corners.Length - 1]);
+            return true;
+        }
+
+        // A path corner closer than this to the start is the start's own snap jitter, not a walking
+        // direction - a bearing to a point under a stride reads as noise.
+        private const float MinLegDistance = 0.5f;
+
         /// <summary>Clamp a glide onto walkable ground: on hitting a navmesh boundary, hop the cursor across
         /// it to the ground beyond when the block is small debris or a step seam the character can still cross
         /// cheaply (see <see cref="TrySkipBoundary"/>), else stop at the boundary; with no boundary between the

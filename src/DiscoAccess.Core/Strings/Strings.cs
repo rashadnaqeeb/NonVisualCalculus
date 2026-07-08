@@ -75,6 +75,7 @@ namespace DiscoAccess.Core.Strings
             D("InputWorldScanExitsNext", "Scanner next exit"),
             D("InputWorldScanExitsPrev", "Scanner previous exit"),
             D("InputWorldScanCursor", "Move cursor to scanned thing"),
+            D("InputWorldScanWaypoint", "Walking direction to scanned thing"),
             D("InputWorldInventory", "Open inventory"),
             D("InputWorldCharacterSheet", "Open character sheet"),
             D("InputWorldJournal", "Open journal"),
@@ -724,6 +725,7 @@ namespace DiscoAccess.Core.Strings
         public static string InputWorldScanExitsNext => T("InputWorldScanExitsNext");
         public static string InputWorldScanExitsPrev => T("InputWorldScanExitsPrev");
         public static string InputWorldScanCursor => T("InputWorldScanCursor");
+        public static string InputWorldScanWaypoint => T("InputWorldScanWaypoint");
         public static string InputWorldInventory => T("InputWorldInventory");
         public static string InputWorldCharacterSheet => T("InputWorldCharacterSheet");
         public static string InputWorldJournal => T("InputWorldJournal");

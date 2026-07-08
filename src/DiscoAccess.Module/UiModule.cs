@@ -170,9 +170,10 @@ namespace DiscoAccess.Module
             // punctuation row quick-navs a fixed group (comma people and interactables, period items, slash
             // exits; Shift reverses - the screen-reader quick-nav idiom), I walks-and-interacts with the
             // selection (bare I; Ctrl+I is the inventory, distinct by modifier - the same split as T time /
-            // Ctrl+T thought cabinet), and J moves the cursor to the selection's interaction point (bare J;
-            // Ctrl+J is the journal). Home and End double for I and J (the UI Home/End actions are in the
-            // UI category, so the two never collide).
+            // Ctrl+T thought cabinet), J moves the cursor to the selection's interaction point (bare J;
+            // Ctrl+J is the journal), and P speaks the walking direction to the selection (the next leg of
+            // the path the walk would take, where the readout's bearing is the straight line). Home and End
+            // double for I and J (the UI Home/End actions are in the UI category, so the two never collide).
             _input.Register(WorldActions.ScanNext, Strings.InputWorldScanNext, InputCategory.World, () => _world.ScanNext()).AddBinding(new KeyboardBinding(KeyCode.PageDown));
             _input.Register(WorldActions.ScanPrev, Strings.InputWorldScanPrev, InputCategory.World, () => _world.ScanPrev()).AddBinding(new KeyboardBinding(KeyCode.PageUp));
             _input.Register(WorldActions.ScanNextCategory, Strings.InputWorldScanNextCategory, InputCategory.World, () => _world.ScanNextCategory()).AddBinding(new KeyboardBinding(KeyCode.PageDown, ctrl: true));
@@ -185,6 +186,7 @@ namespace DiscoAccess.Module
             _input.Register(WorldActions.ScanExitsPrev, Strings.InputWorldScanExitsPrev, InputCategory.World, () => _world.ScanExits(-1)).AddBinding(new KeyboardBinding(KeyCode.Slash, shift: true));
             _input.Register(WorldActions.ScanInteract, Strings.InputWorldScanInteract, InputCategory.World, () => _world.ScanInteract()).AddBinding(new KeyboardBinding(KeyCode.I)).AddBinding(new KeyboardBinding(KeyCode.Home));
             _input.Register(WorldActions.ScanCursor, Strings.InputWorldScanCursor, InputCategory.World, () => _world.ScanCursor()).AddBinding(new KeyboardBinding(KeyCode.J)).AddBinding(new KeyboardBinding(KeyCode.End));
+            _input.Register(WorldActions.ScanWaypoint, Strings.InputWorldScanWaypoint, InputCategory.World, () => _world.ScanWaypoint()).AddBinding(new KeyboardBinding(KeyCode.P));
 
             // Information screens: the game's own hotkey letter under Ctrl, so the bare letters stay free for
             // the cursor/status keys (C recenters, T/M read time/money). They open the game's view; our screen
