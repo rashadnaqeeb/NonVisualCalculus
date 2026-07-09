@@ -456,6 +456,19 @@ namespace DiscoAccess.Core.Strings
             D("WorldThingBathroomDoor", "bathroom door"),
             D("WorldThingConnectingDoor", "connecting door"),
             D("WorldThingLockedDoor", "locked door"),
+            // Authored destination name for the harbour secretary's office: the game's own area
+            // label for that interior is just "Harbour", the same word the actual harbour speaks,
+            // so a door into the office would be indistinguishable by ear from a harbour gate.
+            // Fills the destination slot of WorldExitNamed ("secretary's office door"). Noun phrase.
+            D("WorldPlaceSecretaryOffice", "secretary's office"),
+            // The same for the dockworkers' union boss's office (Evrart's container): its game area
+            // label is also just "Harbour". "Union" matches the game's own vocabulary (I2 term
+            // Items/union_membership_card names the "Débardeurs' Union"). Noun phrase.
+            D("WorldPlaceUnionOffice", "union office"),
+            // The same for the enterable cargo container in the container yard (Union-container-int),
+            // the third and last area the game labels "Harbour". "Cargo container" is the game's own
+            // examine wording; its owner is a discovery, so no name that reveals one. Noun phrase.
+            D("WorldPlaceCargoContainer", "cargo container"),
             // An exit named for where it goes: {0} = the destination name, {1} = the portal type word
             // ("Whirling in Rags door", "floor 2 stairs"); order the two as the language wants.
             D("WorldExitNamed", "{0} {1}"),
@@ -1079,6 +1092,18 @@ namespace DiscoAccess.Core.Strings
         public static string WorldThingBathroomDoor => T("WorldThingBathroomDoor");
         public static string WorldThingConnectingDoor => T("WorldThingConnectingDoor");
         public static string WorldThingLockedDoor => T("WorldThingLockedDoor");
+
+        /// <summary>Authored destination name for the secretary's office interior, whose game area
+        /// label ("Harbour") would hide which door enters it (see EntityNaming.AuthoredAreaName).</summary>
+        public static string WorldPlaceSecretaryOffice => T("WorldPlaceSecretaryOffice");
+
+        /// <summary>Authored destination name for the union boss's office, whose game area label
+        /// is also "Harbour" (see EntityNaming.AuthoredAreaName).</summary>
+        public static string WorldPlaceUnionOffice => T("WorldPlaceUnionOffice");
+
+        /// <summary>Authored destination name for the container yard's enterable cargo container,
+        /// the third area labeled "Harbour" (see EntityNaming.AuthoredAreaName).</summary>
+        public static string WorldPlaceCargoContainer => T("WorldPlaceCargoContainer");
 
         /// <summary>An exit named for where it goes: the destination (or outdoor spot) and the portal
         /// type word, composed by the translation so the word order is its choice ("Whirling in Rags

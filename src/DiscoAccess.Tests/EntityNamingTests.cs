@@ -83,6 +83,16 @@ namespace DiscoAccess.Tests
             // A different building is distinct, so its own name is used (hyphens spaced later, in Resolve).
             Assert.Equal("Whirling-in-Rags",
                 EntityNaming.ExitDestinationLabel("Whirling-int-f1", "Whirling-in-Rags", "Martinaise"));
+            // The secretary's office is authored: the game labels that interior "Harbour", the same
+            // word as the harbour itself, which would hide which door enters the office.
+            Assert.Equal("secretary's office",
+                EntityNaming.ExitDestinationLabel("Secretary-int", "Harbour", "Martinaise"));
+            // The union boss's office and the yard's cargo container share that "Harbour" label
+            // (the only three areas that carry it), so they are authored too.
+            Assert.Equal("union office",
+                EntityNaming.ExitDestinationLabel("Union-boss-int", "Harbour", "Martinaise"));
+            Assert.Equal("cargo container",
+                EntityNaming.ExitDestinationLabel("Union-container-int", "Harbour", "Martinaise"));
         }
 
         [Fact]

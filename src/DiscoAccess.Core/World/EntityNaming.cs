@@ -393,13 +393,32 @@ namespace DiscoAccess.Core.World
         // shares the current name (all Whirling floors are "Whirling-in-Rags"), that name says nothing new, so
         // fall back to the floor/level word from the scene id suffix ("Whirling-int-f2" to "floor 2",
         // "Doomed-commerce-int-s1" to "basement"). Null when neither yields anything, so the caller uses the
-        // exit's own clean name or the plain type word.
+        // exit's own clean name or the plain type word. A scene id whose game label misnames the place gets
+        // the mod's authored name first (see AuthoredAreaName).
         public static string? ExitDestinationLabel(string? destAreaId, string? destLocalizedName, string? currentLocalizedName)
         {
+            string? authored = AuthoredAreaName(destAreaId);
+            if (authored != null) return authored;
             if (!string.IsNullOrEmpty(destLocalizedName)
                 && !string.Equals(destLocalizedName, currentLocalizedName, StringComparison.OrdinalIgnoreCase))
                 return destLocalizedName;
             return LevelLabel(destAreaId);
+        }
+
+        // The mod's authored name for a destination whose game area label misnames the place: the
+        // secretary's office, the union boss's office, and the container yard's cargo container are
+        // all localized "Harbour" (the only three areas that are), so the game's labels cannot tell
+        // those doors from a harbour gate or from each other. Resolved per call so a runtime
+        // language switch is honoured.
+        private static string? AuthoredAreaName(string? destAreaId)
+        {
+            if (string.Equals(destAreaId, "Secretary-int", StringComparison.OrdinalIgnoreCase))
+                return WorldPlaceSecretaryOffice;
+            if (string.Equals(destAreaId, "Union-boss-int", StringComparison.OrdinalIgnoreCase))
+                return WorldPlaceUnionOffice;
+            if (string.Equals(destAreaId, "Union-container-int", StringComparison.OrdinalIgnoreCase))
+                return WorldPlaceCargoContainer;
+            return null;
         }
 
         /// <summary>The floor/level word from a scene id's suffix: "-f&lt;n&gt;" is a numbered floor
