@@ -169,16 +169,21 @@ namespace DiscoAccess.Core.Strings
             D("ThoughtSlotGridLabel", "grid"),
             // The list of every discovered thought, the screen's other Tab-stop.
             D("ThoughtListLabel", "all thoughts"),
-            // Spoken AFTER a duration: "2 hours remaining" (research time left on a cooking thought).
-            D("ThoughtTimeRemaining", "remaining"),
-            // Spoken BEFORE a duration: "research time 3 hours" (how long a thought will take).
-            D("ThoughtResearchTime", "research time"),
+            // The research time left on a cooking thought; {0} = a duration phrase built from the
+            // Duration* keys below ("2 hours remaining"). Place the slot where the language wants it.
+            D("ThoughtTimeRemaining", "{0} remaining"),
+            // How long an unplaced thought will take to research; {0} = the same duration phrase
+            // ("research time 3 hours"). Place the slot where the language wants it.
+            D("ThoughtResearchTime", "research time {0}"),
             // A thought mid-research; {0} = whole-number percent complete.
             D("ThoughtResearching", "researching, {0} percent"),
-            // In-game durations, composed as "<hours> <minutes>" with either part dropped when zero.
+            // In-game durations. A duration with both parts joins the two below; {0} = the hours
+            // phrase, {1} = the minutes phrase. A language that writes no space between them (the CJK
+            // ones) drops it here rather than carrying the English one.
             D("DurationZero", "less than a minute"),
             D("DurationHours", "{0} hour|{0} hours"),
             D("DurationMinutes", "{0} minute|{0} minutes"),
+            D("DurationHoursMinutes", "{0} {1}"),
 
             // Journal: the game's task log plus its map tab.
             // Task states (DE shows a resolved task only as struck-through text). Adjectives.
@@ -849,24 +854,25 @@ namespace DiscoAccess.Core.Strings
         public static string ThoughtListLabel => T("ThoughtListLabel");
 
         // Research time, in-game hours and minutes: a cooking thought reads how much is left, an
-        // available one how long it will take.
-        public static string ThoughtTimeRemaining => T("ThoughtTimeRemaining");
-        public static string ThoughtResearchTime => T("ThoughtResearchTime");
+        // available one how long it will take. The duration is a phrase from <see cref="Duration"/>,
+        // and the translation places it, so neither label hardcodes English word order.
+        public static string ThoughtTimeRemaining(string duration) => F("ThoughtTimeRemaining", duration);
+        public static string ThoughtResearchTime(string duration) => F("ThoughtResearchTime", duration);
 
         /// <summary>A cooking thought's research stage, e.g. "researching, 40 percent".</summary>
         public static string ThoughtResearching(int percent) => F("ThoughtResearching", percent);
 
         /// <summary>An in-game duration in hours and minutes, e.g. "2 hours 15 minutes", "45 minutes",
-        /// "3 hours". Zero reads as "less than a minute" (a research time that rounds to nothing left).</summary>
+        /// "3 hours". Zero reads as "less than a minute" (a research time that rounds to nothing left).
+        /// The two-part form joins through its own template, so the separator is the translation's.</summary>
         public static string Duration(int minutes)
         {
             if (minutes <= 0)
                 return T("DurationZero");
             int h = minutes / 60, m = minutes % 60;
-            var parts = new List<string>(2);
-            if (h > 0) parts.Add(P("DurationHours", h));
-            if (m > 0) parts.Add(P("DurationMinutes", m));
-            return string.Join(" ", parts);
+            if (h > 0 && m > 0)
+                return F("DurationHoursMinutes", P("DurationHours", h), P("DurationMinutes", m));
+            return h > 0 ? P("DurationHours", h) : P("DurationMinutes", m);
         }
 
         // Journal task and subtask status words (DE shows a resolved task only as struck-through text).

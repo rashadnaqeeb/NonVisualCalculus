@@ -37,10 +37,14 @@ namespace DiscoAccess.Core.UI
 
         // A cooking thought appends the in-game time left ("researching, 60 percent, 2 hours remaining").
         private static string WithTimeLeft(string status, ThoughtSnapshot t)
-            => t.ResearchMinutesLeft > 0 ? status + ", " + Duration(t.ResearchMinutesLeft) + " " + ThoughtTimeRemaining : status;
+            => t.ResearchMinutesLeft > 0
+                ? Text.SpokenLine.Join(status, ThoughtTimeRemaining(Duration(t.ResearchMinutesLeft)))
+                : status;
 
         // An unplaced thought appends how long it will take to research ("available, research time 3 hours").
         private static string WithTotalTime(string status, ThoughtSnapshot t)
-            => t.ResearchMinutesTotal > 0 ? status + ", " + ThoughtResearchTime + " " + Duration(t.ResearchMinutesTotal) : status;
+            => t.ResearchMinutesTotal > 0
+                ? Text.SpokenLine.Join(status, ThoughtResearchTime(Duration(t.ResearchMinutesTotal)))
+                : status;
     }
 }
