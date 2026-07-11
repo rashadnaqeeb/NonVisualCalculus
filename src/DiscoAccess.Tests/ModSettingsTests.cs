@@ -131,18 +131,18 @@ namespace DiscoAccess.Tests
         }
 
         [Fact]
-        public void ScannerFromCursor_DefaultsOff()
+        public void ScannerFromCursor_DefaultsOn()
         {
             var settings = new ModSettings(new FakeStore());
-            Assert.False(settings.ScannerFromCursor.Value);
+            Assert.True(settings.ScannerFromCursor.Value);
             Assert.Contains(settings.ScannerFromCursor, settings.All);
         }
 
         [Fact]
-        public void UnrestrictCursor_DefaultsOff()
+        public void UnrestrictCursor_DefaultsOn()
         {
             var settings = new ModSettings(new FakeStore());
-            Assert.False(settings.UnrestrictCursor.Value);
+            Assert.True(settings.UnrestrictCursor.Value);
             Assert.Contains(settings.UnrestrictCursor, settings.All);
         }
 

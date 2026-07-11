@@ -54,19 +54,19 @@ namespace DiscoAccess.Core.Settings
         public ToggleSetting SonarOrbs { get; }
         public ToggleSetting SonarExits { get; }
 
-        /// <summary>When on, the scanner's readout - the spoken bearing and distance, the review ping's
-        /// ear, and the browse order - measures from the cursor instead of the character (the sonar's own
-        /// listening-ear rule). What is offered stays judged from the character, whose walk acting on a
-        /// scanned thing starts. Off (the default) measures everything from the character.</summary>
+        /// <summary>When on (the default), the scanner's readout - the spoken bearing and distance, the
+        /// review ping's ear, and the browse order - measures from the cursor instead of the character (the
+        /// sonar's own listening-ear rule). What is offered stays judged from the character, whose walk
+        /// acting on a scanned thing starts. Off measures everything from the character.</summary>
         public ToggleSetting ScannerFromCursor { get; }
 
         /// <summary>When on, the character runs to a clicked destination instead of walking. Off (the default)
         /// leaves the pace to the game's own policy, which walks, matching a vanilla single click.</summary>
         public ToggleSetting RunToDestinations { get; }
 
-        /// <summary>A testing aid: when on, the cursor glides past the senses' edges - out of the visible
+        /// <summary>When on (the default), the cursor glides past the senses' edges - out of the visible
         /// frame and into fog-of-war ground - instead of being refused there, with the fog enter/exit cues
-        /// sounding the crossings. The scanner and object senses are unchanged. Off by default.</summary>
+        /// sounding the crossings. The scanner and object senses are unchanged.</summary>
         public ToggleSetting UnrestrictCursor { get; }
 
         public ModSettings(ISettingsStore store)
@@ -99,11 +99,11 @@ namespace DiscoAccess.Core.Settings
             SonarExits = Add(new ToggleSetting(
                 "sonar_exit", () => SettingSonarExits, defaultValue: true, store));
             ScannerFromCursor = Add(new ToggleSetting(
-                "scanner_from_cursor", () => SettingScannerFromCursor, defaultValue: false, store));
+                "scanner_from_cursor", () => SettingScannerFromCursor, defaultValue: true, store));
             RunToDestinations = Add(new ToggleSetting(
                 "run_to_destinations", () => SettingRunToDestinations, defaultValue: false, store));
             UnrestrictCursor = Add(new ToggleSetting(
-                "unrestrict_cursor", () => SettingUnrestrictCursor, defaultValue: false, store));
+                "unrestrict_cursor", () => SettingUnrestrictCursor, defaultValue: true, store));
         }
 
         /// <summary>Whether the sonar should sound the given <see cref="World.WorldTaxonomy.Scan"/> browse
