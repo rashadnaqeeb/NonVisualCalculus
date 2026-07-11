@@ -31,8 +31,10 @@ namespace DiscoAccess.Module.Nav
         public override Container BuildRoot(IModHost host) => BuildList(host);
 
         /// <summary>The vertical list of the menu's active, interactable buttons in visual order. Shared
-        /// with <see cref="PauseMenuScreen"/>, which wraps it in a closeable root.</summary>
-        protected static Container BuildList(IModHost host)
+        /// with <see cref="PauseMenuScreen"/>, which wraps it in a closeable root and slots its own
+        /// <paramref name="beforeOptions"/> entry in just above the Options button (appended last, with a
+        /// warning, should the game's menu ever stop carrying one).</summary>
+        protected static Container BuildList(IModHost host, UIElement beforeOptions = null)
         {
             var list = new Container(ContainerShape.VerticalList);
 
@@ -43,6 +45,7 @@ namespace DiscoAccess.Module.Nav
                 return list;
             }
 
+            bool inserted = false;
             for (int i = 0; i < parent.childCount; i++)
             {
                 var child = parent.GetChild(i);
@@ -53,10 +56,21 @@ namespace DiscoAccess.Module.Nav
                 // path, so it is the one button we navigate to but refuse to open. A menu button knows the
                 // view it opens via RelatedViewType; the Collage entry's is COLLAGEMODE.
                 var menuButton = child.GetComponent<MainMenuButton>();
+                if (!inserted && beforeOptions != null
+                    && menuButton != null && menuButton.RelatedViewType == ViewType.OPTIONS)
+                {
+                    list.Add(beforeOptions);
+                    inserted = true;
+                }
                 if (menuButton != null && menuButton.RelatedViewType == ViewType.COLLAGEMODE)
                     list.Add(new BlockedButton(selectable, host, Strings.CollageInaccessible));
                 else
                     list.Add(new SelectableButton(selectable));
+            }
+            if (beforeOptions != null && !inserted)
+            {
+                host.LogWarning("MainMenuScreen: no Options button to anchor the extra entry; appending it last.");
+                list.Add(beforeOptions);
             }
             return list;
         }

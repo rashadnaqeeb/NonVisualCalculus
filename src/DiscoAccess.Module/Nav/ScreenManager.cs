@@ -103,8 +103,9 @@ namespace DiscoAccess.Module.Nav
             _host = host;
             _nav = new TraditionalNavigator((text, interrupt) => _host.Speech.Speak(text, interrupt));
             // PauseMenuScreen before MainMenuScreen: both are MAINMENU, and the pause menu is the more
-            // specific match (the title menu is the fallback).
-            Register(new PauseMenuScreen());
+            // specific match (the title menu is the fallback). It gets the overlay toggle so its
+            // learn-game-sounds entry can open that menu over the paused game.
+            Register(new PauseMenuScreen(ToggleOverlay));
             Register(new MainMenuScreen());
             Register(new OptionsScreen());
             Register(new LoadGameScreen());
@@ -201,6 +202,16 @@ namespace DiscoAccess.Module.Nav
 
         private void SetOverlay(ModOverlay overlay)
         {
+            // Every close path funnels through here, so the leaving overlay reliably releases what it
+            // holds (a sounding preview) whether it closed on Escape, its toggle key, a swap, or teardown.
+            if (_overlay != null && _overlay != overlay)
+            {
+                try { _overlay.OnClosed(); }
+                catch (System.Exception e)
+                {
+                    _host.LogWarning($"ScreenManager: {_overlay.GetType().Name}.OnClosed failed: {e}");
+                }
+            }
             _overlay = overlay;
             _overlayAttached = false;
             // A closed or swapped overlay takes any mod text edit (a bookmark name) with it, so typing

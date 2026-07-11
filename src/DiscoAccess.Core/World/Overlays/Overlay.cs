@@ -18,12 +18,13 @@ namespace DiscoAccess.Core.World.Overlays
     public sealed class Overlay
     {
         // The impassable bump's spatialization: panned toward the refused point from the cursor, at the
-        // cursor-cue level. The distance is under a step, so the gain is flat - no falloff.
-        private const float ImpassableVolume = 0.8f;
+        // cursor-cue level. The distance is under a step, so the gain is flat - no falloff. The volumes
+        // are public so the learn-sounds menu previews each cue at exactly its in-world level.
+        public const float ImpassableVolume = 0.8f;
         private const float ImpassablePanWidth = 3f;
 
         // The unrestricted cursor's fog enter/exit cues: at the cursor itself, so centred and flat.
-        private const float FogCueVolume = 0.8f;
+        public const float FogCueVolume = 0.8f;
 
         private readonly List<OverlaySystem> _systems = new List<OverlaySystem>(); // ordered (readout order)
         private readonly Dictionary<Type, OverlaySystem> _byType = new Dictionary<Type, OverlaySystem>();

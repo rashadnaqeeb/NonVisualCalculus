@@ -25,5 +25,11 @@ namespace DiscoAccess.Module.Nav
         /// was re-homed so the ScreenManager announces the landing once - the same contract as
         /// <see cref="Screen.OnUpdate"/>, announcing included. The default does nothing.</summary>
         public virtual bool OnUpdate(IModHost host, TraditionalNavigator nav) => false;
+
+        /// <summary>Called once when the overlay leaves, on every close path - Escape, its toggle key, a
+        /// swap to another overlay, module teardown. An overlay holding something live (a sounding
+        /// preview) releases it here, so nothing keeps running with its menu gone. The default does
+        /// nothing.</summary>
+        public virtual void OnClosed() { }
     }
 }

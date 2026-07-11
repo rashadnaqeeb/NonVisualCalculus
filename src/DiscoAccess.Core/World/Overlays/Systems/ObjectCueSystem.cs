@@ -45,7 +45,8 @@ namespace DiscoAccess.Core.World.Overlays.Systems
         // Crossover distance for the blip pan: close in the pan tracks the lateral offset, far out it
         // saturates toward the bearing.
         private const float PanWidth = 3f;
-        private const float CueVolume = 0.7f;
+        // Public so the learn-sounds menu previews the blips at exactly this level.
+        public const float CueVolume = 0.7f;
 
         // Cursor travel this frame below this is "not moving" (flicker/jitter); above MaxGlideStep is a jump
         // (a recenter or area change), not a glide, so neither counts as crossing a footprint.

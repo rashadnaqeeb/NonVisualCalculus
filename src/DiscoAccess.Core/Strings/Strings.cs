@@ -332,6 +332,26 @@ namespace DiscoAccess.Core.Strings
             D("ScreenBookmarks", "bookmarks"),
             // The mod's own key-help screen (Shift+F1): the keys live in the current context.
             D("ScreenKeyHelp", "key help"),
+            // The mod's own learn-game-sounds menu, reached from the pause menu (its title, and the
+            // pause-menu button that opens it): each entry plays one of the mod's audio cues on demand.
+            D("ScreenLearnSounds", "learn game sounds"),
+
+            // The learn-sounds menu's two sections: the cues the gliding cursor itself makes, and the
+            // per-category pings the sonar sweep and the scanner share (those entries reuse the
+            // WorldScan* category words).
+            D("LearnSoundsCursorSection", "cursor sounds"),
+            D("LearnSoundsSonarSection", "sonar sounds"),
+            // The cursor cue entries: what event each sound marks, phrased as the cursor's motion.
+            // The cursor slid onto a thing (a rising click), and off it to bare ground (a falling one).
+            D("SoundCursorEnter", "onto an object"),
+            D("SoundCursorExit", "off an object"),
+            // The bump when a glide is refused at the edge of the sensed area.
+            D("SoundCursorImpassable", "blocked at the edge"),
+            // The unrestricted cursor crossing out past the sensed area, and coming back inside.
+            D("SoundCursorFogEnter", "out past the senses"),
+            D("SoundCursorFogExit", "back into the senses"),
+            // The sonar's open-door variant of the exits cue; "open" as in standing open, not locked.
+            D("SoundOpenDoor", "open door"),
 
             // Mod settings labels (rows in the mod menu; sentence case). "Wall tones" are the mod's
             // audio cue for walls near the cursor; the "sonar" is its periodic audio sweep over nearby
@@ -1022,6 +1042,18 @@ namespace DiscoAccess.Core.Strings
         public static string ScreenModMenu => T("ScreenModMenu");
         public static string ScreenBookmarks => T("ScreenBookmarks");
         public static string ScreenKeyHelp => T("ScreenKeyHelp");
+        public static string ScreenLearnSounds => T("ScreenLearnSounds");
+
+        // The learn-sounds menu's sections and cursor-cue entries (its sonar entries reuse the
+        // scanner's category words, so the menu and the scanner call a category the same thing).
+        public static string LearnSoundsCursorSection => T("LearnSoundsCursorSection");
+        public static string LearnSoundsSonarSection => T("LearnSoundsSonarSection");
+        public static string SoundCursorEnter => T("SoundCursorEnter");
+        public static string SoundCursorExit => T("SoundCursorExit");
+        public static string SoundCursorImpassable => T("SoundCursorImpassable");
+        public static string SoundCursorFogEnter => T("SoundCursorFogEnter");
+        public static string SoundCursorFogExit => T("SoundCursorFogExit");
+        public static string SoundOpenDoor => T("SoundOpenDoor");
 
         // Mod settings labels (the mod's own options, no game string to read).
         public static string SettingAutoReadDialogue => T("SettingAutoReadDialogue");

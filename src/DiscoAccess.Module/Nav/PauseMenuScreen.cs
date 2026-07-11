@@ -1,3 +1,4 @@
+using System;
 using DiscoAccess.Core.Modularity;
 using DiscoAccess.Core.Strings;
 using DiscoAccess.Core.UI.Nav;
@@ -12,10 +13,15 @@ namespace DiscoAccess.Module.Nav
     /// reuses <see cref="MainMenuScreen"/>'s button list but announces itself as the pause menu and, unlike
     /// the title menu, wraps it in a closeable root so Escape resumes the game the game's own way (the
     /// MAINMENU view's CloseOnEscapeKey). It is the more specific MAINMENU screen, registered before the
-    /// title-menu fallback.
+    /// title-menu fallback. It adds one entry of the mod's own above Options: the learn-game-sounds menu
+    /// (a <see cref="LearnSoundsScreen"/> overlay, opened through the toggle the ScreenManager hands in).
     /// </summary>
     public sealed class PauseMenuScreen : MainMenuScreen
     {
+        private readonly Action<ModOverlay> _toggleOverlay;
+
+        public PauseMenuScreen(Action<ModOverlay> toggleOverlay) => _toggleOverlay = toggleOverlay;
+
         public override string ScreenName => Strings.ScreenPauseMenu;
 
         // This is the pause menu, not the title menu, when the return-to-title "Main Menu" button is present
@@ -39,11 +45,14 @@ namespace DiscoAccess.Module.Nav
             return false;
         }
 
-        // Wrap the shared button list in a closeable root so Escape resumes the game.
+        // Wrap the shared button list in a closeable root so Escape resumes the game, with the
+        // learn-game-sounds entry slotted in above Options.
         public override Container BuildRoot(IModHost host)
         {
             var root = new ScreenRoot();
-            root.Add(BuildList(host));
+            root.Add(BuildList(host, new ModActionButton(
+                () => Strings.ScreenLearnSounds,
+                () => _toggleOverlay(new LearnSoundsScreen()))));
             return root;
         }
     }
