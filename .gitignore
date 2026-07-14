@@ -7,7 +7,9 @@
 [Bb]in/
 [Oo]bj/
 /release/
+/releases/
 /dist/
+/installer/target/
 *.dll.mdb
 *.pdb
 

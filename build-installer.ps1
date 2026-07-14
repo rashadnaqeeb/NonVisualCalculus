@@ -1,0 +1,68 @@
+# Build the standalone installer exe (installer/, Rust + wxWidgets) into
+# releases\WhirlingInWordsInstaller.exe. Needs cargo and libclang (the wxWidgets
+# build uses bindgen); LIBCLANG_PATH is probed from the usual LLVM locations.
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
+
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$installerDir = Join-Path $scriptDir "installer"
+$releaseDir = Join-Path $scriptDir "releases"
+$targetExe = Join-Path $installerDir "target\release\whirling-in-words-installer.exe"
+$outputExe = Join-Path $releaseDir "WhirlingInWordsInstaller.exe"
+
+if (-not (Test-Path (Join-Path $installerDir "Cargo.toml"))) {
+    throw "Installer project not found: $installerDir"
+}
+
+if ([string]::IsNullOrWhiteSpace($env:LIBCLANG_PATH)) {
+    $libclangCandidates = @(
+        "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\x64\bin",
+        "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Tools\Llvm\x64\bin",
+        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\Llvm\x64\bin",
+        "C:\Program Files\Microsoft Visual Studio\2022\BuildTools\VC\Tools\Llvm\x64\bin",
+        "C:\Program Files\LLVM\bin"
+    )
+    foreach ($candidate in $libclangCandidates) {
+        if (Test-Path (Join-Path $candidate "libclang.dll")) {
+            $env:LIBCLANG_PATH = $candidate
+            break
+        }
+    }
+}
+
+# The wxWidgets build drives CMake with the Ninja generator; Visual Studio ships a
+# ninja.exe that is not on PATH by default.
+if ($null -eq (Get-Command ninja -ErrorAction SilentlyContinue)) {
+    $ninjaCandidates = @(
+        "C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja",
+        "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja",
+        "C:\Program Files\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja"
+    )
+    foreach ($candidate in $ninjaCandidates) {
+        if (Test-Path (Join-Path $candidate "ninja.exe")) {
+            $env:PATH = "$candidate;$env:PATH"
+            break
+        }
+    }
+}
+
+Push-Location $installerDir
+try {
+    cargo build --release
+    if ($LASTEXITCODE -ne 0) {
+        throw "Installer build failed with exit code $LASTEXITCODE"
+    }
+}
+finally {
+    Pop-Location
+}
+
+if (-not (Test-Path $targetExe)) {
+    throw "Expected installer executable not found: $targetExe"
+}
+
+New-Item -ItemType Directory -Force $releaseDir | Out-Null
+Copy-Item -LiteralPath $targetExe -Destination $outputExe -Force
+
+Write-Host "Installer: $outputExe"
