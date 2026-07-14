@@ -288,6 +288,22 @@ with no error the player can see. Every catch logs via `Plugin.Logger.LogWarning
 failed and where. No empty catches, no catch-and-return-default without logging. A logged failure is
 actionable; a silent one is invisible.
 
+## Changelog
+
+When committing a new feature or bug fix, add an entry to `CHANGELOG.md` under `## Unreleased`, beneath one of two section headers: `New Features and improvements:` or `Bug fixes:`. Add the header if it isn't there yet.
+
+Keep entries terse. One sentence per change, from the player's perspective, ideally under ~120 characters. State the change directly and stop.
+
+Player-facing means player language.
+
+Do not include:
+
+- Pre-fix behavior beyond what the fix itself implies. "The character sheet no longer speaks stale skill totals after equipping an item" is the entry; "It used to read the old bonus, but now re-reads the live value" is bloat.
+- Multiple quoted strings illustrating the same point. At most one short parenthetical example, and only if the entry is ambiguous without it.
+- Meta-commentary about parity with sighted players, rationale, or how a sighted player would experience the fix. The reader knows the audience.
+- Implementation detail, file paths, internal symbol names.
+- Bug fixes for unreleased features.
+
 ## Gotchas
 
 Recurring traps found while building readers. These bite again on each new screen, so check them
