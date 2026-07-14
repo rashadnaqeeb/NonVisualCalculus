@@ -24,6 +24,7 @@ Publish the release whose version is given as the argument. The argument is a ba
 
 - `dotnet test WhirlingInWords.slnx` must be green.
 - `.\build_release.ps1` then `.\build-installer.ps1`, producing `releases\WhirlingInWords-v<version>.zip` and `releases\WhirlingInWordsInstaller.exe`.
+- The release scripts are PowerShell, and the Bash tool is blocked from invoking `powershell.exe` (see the tooling gotchas in CLAUDE.md). When they cannot be run, perform each script's steps directly with allowed tools instead, reading the script first so the replication stays faithful: for the zip, `dotnet build -c Release`, stage the BepInEx zip contents plus plugin DLLs, audio assets, lang files, and prism.dll exactly as build_release.ps1 lays them out, and zip with clean forward-slash relative paths (python zipfile works); for the installer, probe LIBCLANG_PATH and ninja as the script does, `cargo build --release`, and copy the exe. Verify the zip afterward against the installer's `required_loader_files()` list.
 - Build before committing or tagging, so a failed build pushes nothing. At this point the tree holds exactly the release edits, so the artifacts match the commit about to be made.
 
 ## Phase 3 - commit, tag, push
@@ -34,6 +35,7 @@ Publish the release whose version is given as the argument. The argument is a ba
 ## Phase 4 - publish
 
 - `.\create-release.ps1 v<version>`. It re-verifies the tag exists locally and on origin, finds both artifacts, extracts the changelog section, and runs `gh release create` with the zip and installer attached.
+- If PowerShell is blocked (same as Phase 2), replicate: extract the lines between `## V<version>` and the next `##` heading into a notes file, then `gh release create v<version> <zip> <installer.exe> --title "V<version>" --notes-file <notes>`.
 
 ## Phase 5 - verify and clean up
 
