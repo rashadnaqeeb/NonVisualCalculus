@@ -4,6 +4,8 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 ## Unreleased
 
+## V1.1.0
+
 New Features and improvements:
 
 - The mod is now named Non-Visual Calculus, after the game's Visual Calculus skill.
