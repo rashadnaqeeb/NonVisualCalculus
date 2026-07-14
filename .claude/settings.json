@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell.exe -NoProfile -File build_release.ps1)",
+      "Bash(powershell.exe -NoProfile -File build-installer.ps1)",
+      "Bash(powershell.exe -NoProfile -File create-release.ps1 *)"
+    ]
+  }
+}
