@@ -59,13 +59,24 @@ fn get_game_install(s: &Strings) -> Option<GameInstall> {
 
     let input = prompt(s.cli_type_path);
     let path = PathBuf::from(input.trim_matches('"'));
-    if detect::validate_game_dir(&path) {
-        Some(GameInstall {
+    match detect::missing_marker(&path) {
+        None => Some(GameInstall {
             path,
             source: GameSource::Manual,
-        })
-    } else {
-        None
+        }),
+        Some(missing) => {
+            println!(
+                "{}",
+                fill(
+                    s.log_invalid_dir,
+                    &[
+                        ("path", &path.display().to_string()),
+                        ("missing", &missing),
+                    ],
+                )
+            );
+            None
+        }
     }
 }
 

@@ -6,9 +6,12 @@ pub const GITHUB_RELEASES_URL: &str =
     "https://api.github.com/repos/rashadnaqeeb/WhirlingInWords/releases?per_page=100";
 pub const MOD_ZIP_PREFIX: &str = "WhirlingInWords-v";
 pub const MOD_ZIP_SUFFIX: &str = ".zip";
-pub const GAME_EXE: &str = "disco.exe";
+// Steam and GOG name the executable disco.exe; the Epic Games Store build of
+// the same game names it "Disco Elysium.exe" (and its data folder
+// "Disco Elysium_Data" instead of "disco_Data").
+pub const GAME_EXES: &[&str] = &["disco.exe", "Disco Elysium.exe"];
 // The game is IL2CPP: GameAssembly.dll holds the compiled game code and sits
-// next to disco.exe in every install, so together they identify the game dir.
+// next to the exe in every install, so together they identify the game dir.
 pub const IL2CPP_MARKER: &str = "GameAssembly.dll";
 pub const PLUGIN_REL: &str = "BepInEx/plugins/WhirlingInWords/WhirlingInWords.dll";
 pub const MANIFEST_REL: &str = "BepInEx/config/WhirlingInWords/install.json";

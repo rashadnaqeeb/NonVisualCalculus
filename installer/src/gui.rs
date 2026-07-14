@@ -97,6 +97,25 @@ pub fn run() {
         } else {
             status.set_label(s.status_not_found);
             log_append(&log, s.log_could_not_detect);
+            // Name every folder that exists but failed validation, so a bug
+            // report says which file the rejected install was missing.
+            for candidate in detect::game_candidates() {
+                if !candidate.path.is_dir() {
+                    continue;
+                }
+                if let Some(missing) = detect::missing_marker(&candidate.path) {
+                    log_append(
+                        &log,
+                        &fill(
+                            s.log_invalid_dir,
+                            &[
+                                ("path", &candidate.path.display().to_string()),
+                                ("missing", &missing),
+                            ],
+                        ),
+                    );
+                }
+            }
         }
 
         refresh_state(
@@ -131,10 +150,16 @@ pub fn run() {
                     return;
                 };
                 let path = std::path::PathBuf::from(&path_str);
-                if !detect::validate_game_dir(&path) {
+                if let Some(missing) = detect::missing_marker(&path) {
                     log_append(
                         &log_c,
-                        &fill(s.log_invalid_dir, &[("path", &path.display().to_string())]),
+                        &fill(
+                            s.log_invalid_dir,
+                            &[
+                                ("path", &path.display().to_string()),
+                                ("missing", &missing),
+                            ],
+                        ),
                     );
                     status_c.set_label(s.status_invalid_dir);
                     return;

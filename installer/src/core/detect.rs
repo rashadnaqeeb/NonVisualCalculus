@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 
 use regex::Regex;
 
-use super::paths::{GAME_EXE, IL2CPP_MARKER};
+use super::paths::{GAME_EXES, IL2CPP_MARKER};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum GameSource {
@@ -42,7 +42,19 @@ pub fn detect_game() -> Option<GameInstall> {
 }
 
 pub fn validate_game_dir(path: &Path) -> bool {
-    path.join(GAME_EXE).exists() && path.join(IL2CPP_MARKER).exists()
+    missing_marker(path).is_none()
+}
+
+/// The required file `path` lacks, named for diagnostics; None when the
+/// directory is a valid game install.
+pub fn missing_marker(path: &Path) -> Option<String> {
+    if !GAME_EXES.iter().any(|exe| path.join(exe).exists()) {
+        return Some(GAME_EXES.join(" / "));
+    }
+    if !path.join(IL2CPP_MARKER).exists() {
+        return Some(IL2CPP_MARKER.to_string());
+    }
+    None
 }
 
 pub fn game_candidates() -> Vec<GameInstall> {
@@ -257,7 +269,15 @@ mod tests {
     #[test]
     fn validates_game_dir_markers() {
         let dir = tempfile::tempdir().unwrap();
-        fs::write(dir.path().join(GAME_EXE), "").unwrap();
+        fs::write(dir.path().join("disco.exe"), "").unwrap();
+        fs::write(dir.path().join(IL2CPP_MARKER), "").unwrap();
+        assert!(validate_game_dir(dir.path()));
+    }
+
+    #[test]
+    fn validates_epic_exe_name() {
+        let dir = tempfile::tempdir().unwrap();
+        fs::write(dir.path().join("Disco Elysium.exe"), "").unwrap();
         fs::write(dir.path().join(IL2CPP_MARKER), "").unwrap();
         assert!(validate_game_dir(dir.path()));
     }
@@ -265,8 +285,22 @@ mod tests {
     #[test]
     fn rejects_dir_without_game_assembly() {
         let dir = tempfile::tempdir().unwrap();
-        fs::write(dir.path().join(GAME_EXE), "").unwrap();
+        fs::write(dir.path().join("disco.exe"), "").unwrap();
         assert!(!validate_game_dir(dir.path()));
+        assert_eq!(
+            missing_marker(dir.path()),
+            Some(IL2CPP_MARKER.to_string())
+        );
+    }
+
+    #[test]
+    fn missing_marker_names_the_exe_first() {
+        let dir = tempfile::tempdir().unwrap();
+        fs::write(dir.path().join(IL2CPP_MARKER), "").unwrap();
+        assert_eq!(
+            missing_marker(dir.path()),
+            Some("disco.exe / Disco Elysium.exe".to_string())
+        );
     }
 
     #[test]
