@@ -65,6 +65,26 @@ pub fn verify_sha256(path: &Path, expected: &str) -> Result<(), String> {
     Ok(())
 }
 
+/// Clear the read-only attribute so the file can be overwritten or removed.
+/// Windows refuses both on a read-only file even for an elevated process
+/// (e.g. a `.doorstop_version` extracted read-only by a manual BepInEx unzip).
+pub fn ensure_writable(path: &Path) -> Result<(), String> {
+    let Ok(metadata) = fs::metadata(path) else {
+        return Ok(());
+    };
+    let mut permissions = metadata.permissions();
+    if permissions.readonly() {
+        permissions.set_readonly(false);
+        fs::set_permissions(path, permissions).map_err(|e| {
+            format!(
+                "Failed to clear the read-only attribute on {}: {e}",
+                path.display()
+            )
+        })?;
+    }
+    Ok(())
+}
+
 pub fn sha256_file(path: &Path) -> Result<String, String> {
     let mut file =
         fs::File::open(path).map_err(|e| format!("Failed to open file for hashing: {e}"))?;
@@ -169,6 +189,7 @@ fn extract_archive<R: Read + Seek>(
             fs::create_dir_all(parent)
                 .map_err(|e| format!("Failed to create parent directory: {e}"))?;
         }
+        ensure_writable(&dest)?;
         let mut output = fs::File::create(&dest)
             .map_err(|e| format!("Failed to create {}: {e}", dest.display()))?;
         std::io::copy(&mut entry, &mut output)
@@ -201,6 +222,9 @@ fn backup_file(
             .map_err(|e| format!("Failed to create backup directory: {e}"))?;
     }
     fs::copy(&src, &backup_abs).map_err(|e| format!("Failed to back up {}: {e}", src.display()))?;
+    // fs::copy carries the read-only attribute onto the backup, which would
+    // block removing it on uninstall.
+    ensure_writable(&backup_abs)?;
     backups.insert(rel_key.to_string(), backup_rel);
     Ok(())
 }
@@ -363,6 +387,48 @@ mod tests {
             fs::read_to_string(dir.path().join("winhttp.dll")).unwrap(),
             "original loader"
         );
+        assert!(!dir.path().join(paths::BACKUPS_REL).exists());
+    }
+
+    #[test]
+    fn overwrites_and_uninstalls_read_only_files() {
+        let dir = tempfile::tempdir().unwrap();
+        // A read-only pre-existing file (e.g. .doorstop_version from a manual
+        // BepInEx unzip) must not block install or uninstall.
+        let existing = dir.path().join(".doorstop_version");
+        fs::write(&existing, "4.0.0").unwrap();
+        let mut perms = fs::metadata(&existing).unwrap().permissions();
+        perms.set_readonly(true);
+        fs::set_permissions(&existing, perms).unwrap();
+
+        let zip_path = dir.path().join("release.zip");
+        create_zip(
+            &zip_path,
+            &[
+                (paths::PLUGIN_REL, "plugin"),
+                (".doorstop_version", "4.4.0"),
+            ],
+        );
+
+        let manifest = install_from_zip(
+            &zip_path,
+            dir.path(),
+            &GameSource::Manual,
+            &test_asset(),
+            &InstallState::Fresh,
+        )
+        .unwrap();
+
+        assert_eq!(fs::read_to_string(&existing).unwrap(), "4.4.0");
+        let backup_rel = manifest.backups.get(".doorstop_version").unwrap();
+        assert_eq!(
+            fs::read_to_string(dir.path().join(backup_rel)).unwrap(),
+            "4.0.0"
+        );
+
+        uninstall::uninstall(dir.path(), &manifest).unwrap();
+
+        assert_eq!(fs::read_to_string(&existing).unwrap(), "4.0.0");
         assert!(!dir.path().join(paths::BACKUPS_REL).exists());
     }
 

@@ -3,6 +3,13 @@ name = "whirling-in-words-installer"
 version = "0.1.0"
 edition = "2024"
 
+# test = false: the exe embeds a requireAdministrator manifest, so a test
+# harness built from it cannot run unelevated. Tests live in the lib target.
+[[bin]]
+name = "whirling-in-words-installer"
+path = "src/main.rs"
+test = false
+
 [dependencies]
 dirs = "=6.0.0"
 regex = "=1.12.3"

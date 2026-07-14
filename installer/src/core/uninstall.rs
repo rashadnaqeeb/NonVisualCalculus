@@ -1,6 +1,7 @@
 use std::fs;
 use std::path::Path;
 
+use super::install::ensure_writable;
 use super::manifest::InstallManifest;
 use super::paths;
 
@@ -8,6 +9,7 @@ pub fn uninstall(game_dir: &Path, manifest: &InstallManifest) -> Result<(), Stri
     for rel in manifest.installed_files.iter().rev() {
         let path = game_dir.join(rel);
         if path.exists() {
+            ensure_writable(&path)?;
             fs::remove_file(&path)
                 .map_err(|e| format!("Failed to remove {}: {e}", path.display()))?;
         }
@@ -26,6 +28,7 @@ pub fn uninstall(game_dir: &Path, manifest: &InstallManifest) -> Result<(), Stri
         }
         fs::copy(&backup, &target)
             .map_err(|e| format!("Failed to restore {}: {e}", target.display()))?;
+        ensure_writable(&backup)?;
         fs::remove_file(&backup)
             .map_err(|e| format!("Failed to remove backup {}: {e}", backup.display()))?;
         remove_empty_parents(game_dir, backup.parent());
@@ -33,6 +36,7 @@ pub fn uninstall(game_dir: &Path, manifest: &InstallManifest) -> Result<(), Stri
 
     let manifest_path = paths::manifest_path(game_dir);
     if manifest_path.exists() {
+        ensure_writable(&manifest_path)?;
         fs::remove_file(&manifest_path).map_err(|e| format!("Failed to remove manifest: {e}"))?;
     }
 

@@ -1,9 +1,6 @@
 #![windows_subsystem = "windows"]
 
-mod cli;
-mod core;
-mod gui;
-mod i18n;
+use whirling_in_words_installer::{cli, gui};
 
 fn main() {
     if std::env::args().any(|a| a == "--cli") {
