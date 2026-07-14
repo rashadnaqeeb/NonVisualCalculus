@@ -50,8 +50,16 @@ impl InstallManifest {
         Ok(())
     }
 
+    /// Reads the manifest, falling back to the pre-rename Whirling in Words location so an existing
+    /// install is recognized as Managed and upgraded rather than treated as foreign files.
     pub fn read(game_dir: &Path) -> ManifestRead {
-        let path = paths::manifest_path(game_dir);
+        match Self::read_at(&paths::manifest_path(game_dir)) {
+            ManifestRead::Missing => Self::read_at(&paths::legacy_manifest_path(game_dir)),
+            read => read,
+        }
+    }
+
+    fn read_at(path: &Path) -> ManifestRead {
         if !path.exists() {
             return ManifestRead::Missing;
         }
@@ -92,7 +100,7 @@ mod tests {
             "schema_version": 1,
             "installed_at": "2026-07-14T00:00:00Z",
             "source": "manual",
-            "release_asset": "WhirlingInWords-v1.0.0.zip",
+            "release_asset": "NonVisualCalculus-v1.0.0.zip",
             "sha256": null,
             "installed_files": [],
             "backups": {}
@@ -108,7 +116,7 @@ mod tests {
             mod_version: "1.0.0".to_string(),
             installed_at: "2026-07-14T00:00:00Z".to_string(),
             source: "manual".to_string(),
-            release_asset: "WhirlingInWords-v1.0.0.zip".to_string(),
+            release_asset: "NonVisualCalculus-v1.0.0.zip".to_string(),
             sha256: None,
             installed_files: Vec::new(),
             backups: HashMap::new(),

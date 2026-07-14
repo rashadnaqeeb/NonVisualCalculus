@@ -1,4 +1,4 @@
-# Whirling in Words authored strings - Simplified Chinese.
+# Non-Visual Calculus authored strings - Simplified Chinese.
 # Register: standard written Mandarin (Simplified), plain neutral terse screen-reader
 # style, matching the game's own Chinese localization. Full-width punctuation as normal
 # written Chinese; no spaces between words.
@@ -9,9 +9,10 @@
 # cost = 花费, you have = 当前拥有.
 # Mod jargon: cursor = 光标, scanner = 扫描, thing = 物体, item = 物品, orb = 光球.
 _plural = one
-ModLoaded = 言语飞旋 {0} 已加载
-ModuleFailed = 言语飞旋功能加载失败
-UpdateAvailable = 言语飞旋有更新 {0}，运行安装程序即可更新
+ModLoaded = 非视觉计算 {0} 已加载
+ModuleFailed = 非视觉计算功能加载失败
+UpdateAvailable = 非视觉计算有更新 {0}，运行安装程序即可更新
+LegacyModStillInstalled = 旧版言语飞旋仍安装在游戏中，所有内容都会朗读两次。请删除游戏文件夹中 BepInEx plugins 下的 WhirlingInWords 文件夹。
 InputNavigateUp = 向上导航
 InputNavigateDown = 向下导航
 InputNavigateLeft = 向左导航

@@ -1,8 +1,13 @@
 # Changelog
 
-Release notes for Whirling in Words. Ongoing work is recorded under the Unreleased heading; the release skill retitles that section to the version being released, and create-release.ps1 reads the tagged version's section as the GitHub release notes.
+Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unreleased heading; the release skill retitles that section to the version being released, and create-release.ps1 reads the tagged version's section as the GitHub release notes.
 
 ## Unreleased
+
+New Features and improvements:
+
+- The mod is now named Non-Visual Calculus, after the game's Visual Calculus skill.
+- Updating removes the old Whirling in Words version and carries settings and bookmarks over to the new name.
 
 ## V1.0.1
 

@@ -1,4 +1,4 @@
-# Whirling in Words authored strings - Traditional Chinese.
+# Non-Visual Calculus authored strings - Traditional Chinese.
 # Register: standard written Traditional Chinese (Taiwan), plain neutral terse
 # screen-reader style, matching the game's own zh-TW localization. Full-width
 # punctuation as normal written Chinese; no spaces between words. Chinese has no
@@ -14,9 +14,10 @@
 # Mod jargon: cursor = 游標, scanner = 掃描, thing = 物體, item = 物品,
 # interactable = 可互動物件.
 _plural = one
-ModLoaded = 言語飛旋 {0} 已載入
-ModuleFailed = 言語飛旋功能載入失敗
-UpdateAvailable = 言語飛旋有更新 {0}，執行安裝程式即可更新
+ModLoaded = 非視覺計算 {0} 已載入
+ModuleFailed = 非視覺計算功能載入失敗
+UpdateAvailable = 非視覺計算有更新 {0}，執行安裝程式即可更新
+LegacyModStillInstalled = 舊版言語飛旋仍安裝在遊戲中，所有內容都會朗讀兩次。請刪除遊戲資料夾中 BepInEx plugins 下的 WhirlingInWords 資料夾。
 InputNavigateUp = 向上導覽
 InputNavigateDown = 向下導覽
 InputNavigateLeft = 向左導覽

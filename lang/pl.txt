@@ -1,4 +1,4 @@
-# Whirling in Words authored strings - Polish.
+# Non-Visual Calculus authored strings - Polish.
 # Register: standard literary Polish, informal "ty" for the player, matching the game's own
 # Polish localization (Tu jesteś, Masz, Wydaj punkt umiejętności). Terse neutral screen-reader
 # style, lowercase where the English is lowercase.
@@ -8,9 +8,10 @@
 # zablokowane, currency = reáli, signature skill = umiejętność wiodąca, ability spread =
 # rozkład atrybutów, skill points = punkty umiejętności, bullets = naboje.
 _plural = slavic
-ModLoaded = Wczytano Whirling in Words {0}
-ModuleFailed = Nie udało się wczytać funkcji Whirling in Words
-UpdateAvailable = Dostępna aktualizacja {0} Whirling in Words, uruchom instalator, aby zaktualizować
+ModLoaded = Wczytano Matematykę niewzrokową {0}
+ModuleFailed = Nie udało się wczytać funkcji Matematyki niewzrokowej
+UpdateAvailable = Dostępna aktualizacja {0} Matematyki niewzrokowej, uruchom instalator, aby zaktualizować
+LegacyModStillInstalled = Stara wersja Whirling in Words jest nadal zainstalowana i wszystko będzie czytane podwójnie. Usuń folder WhirlingInWords z BepInEx plugins w folderze gry.
 InputNavigateUp = Przejdź w górę
 InputNavigateDown = Przejdź w dół
 InputNavigateLeft = Przejdź w lewo

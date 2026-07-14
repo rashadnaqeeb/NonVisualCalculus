@@ -33,7 +33,7 @@
 
   <!-- Only the plugin needs the game; warn there if detection failed or the game hasn't been launched. -->
   <Target Name="_CheckGameDir" BeforeTargets="ResolveAssemblyReferences"
-          Condition="'$(MSBuildProjectName)' == 'WhirlingInWords' and ('$(GameDir)' == '' or !Exists('$(InteropDir)'))">
+          Condition="'$(MSBuildProjectName)' == 'NonVisualCalculus' and ('$(GameDir)' == '' or !Exists('$(InteropDir)'))">
     <Warning Text="Game not found. GameDir='$(GameDir)'. Set DISCO_ELYSIUM_DIR, pass -p:GameDir=..., or create Directory.Build.local.props; and launch the game once through Steam so BepInEx/interop exists." />
   </Target>
 </Project>

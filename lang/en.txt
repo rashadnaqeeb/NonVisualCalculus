@@ -1,4 +1,4 @@
-# Whirling in Words authored strings - English template.
+# Non-Visual Calculus authored strings - English template.
 # To translate: copy to <language>.txt in this folder, named by the game's I2
 # language code or lowercased language name (fr.txt or french.txt), and translate
 # each value. Missing keys fall back to English, so a partial file works.
@@ -6,9 +6,10 @@
 # '|' separates plural forms (or the compass list), chosen by the _plural rule:
 # one, english, french, slavic, or arabic.
 _plural = english
-ModLoaded = Whirling in Words {0} loaded
-ModuleFailed = Whirling in Words features failed to load
-UpdateAvailable = Whirling in Words update {0} available, run the installer to update
+ModLoaded = Non-Visual Calculus {0} loaded
+ModuleFailed = Non-Visual Calculus features failed to load
+UpdateAvailable = Non-Visual Calculus update {0} available, run the installer to update
+LegacyModStillInstalled = The old Whirling in Words version is also installed and everything will speak twice. Delete the WhirlingInWords folder from BepInEx plugins in the game folder.
 InputNavigateUp = Navigate up
 InputNavigateDown = Navigate down
 InputNavigateLeft = Navigate left

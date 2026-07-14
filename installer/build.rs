@@ -4,7 +4,7 @@ fn main() {
         // not apply to the test harness binary or `cargo test` cannot run.
         let _ = embed_resource::compile_for(
             "app.rc",
-            ["whirling-in-words-installer"],
+            ["non-visual-calculus-installer"],
             embed_resource::NONE,
         );
     }

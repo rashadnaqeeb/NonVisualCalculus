@@ -1,4 +1,4 @@
-# Whirling in Words authored strings - Japanese.
+# Non-Visual Calculus authored strings - Japanese.
 # Register: terse screen-reader Japanese. UI labels and status words are bare noun or
 # 名詞句 with no sentence ending; the few authored full sentences and the cutscene
 # narration use 常体 (plain form), matching the game's own tooltips
@@ -23,9 +23,10 @@
 # the deposit tare, not 缶詰), pot = 植木鉢, vent = 通気口 (the wall grating, not 換気設備),
 # locker = ロッカー vs cabinet = キャビネット, canister = 燃料缶.
 _plural = one
-ModLoaded = ワーリング・イン・ワーズ {0} 読み込み完了
-ModuleFailed = ワーリング・イン・ワーズの機能の読み込みに失敗
-UpdateAvailable = ワーリング・イン・ワーズの更新 {0} あり。インストーラーを実行して更新
+ModLoaded = 非視覚計算 {0} 読み込み完了
+ModuleFailed = 非視覚計算の機能の読み込みに失敗
+UpdateAvailable = 非視覚計算の更新 {0} あり。インストーラーを実行して更新
+LegacyModStillInstalled = 旧版ワーリング・イン・ワーズもインストールされているため、すべてが二重に読み上げられる。ゲームフォルダーのBepInEx plugins内のWhirlingInWordsフォルダーを削除
 InputNavigateUp = 上に移動
 InputNavigateDown = 下に移動
 InputNavigateLeft = 左に移動

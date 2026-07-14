@@ -1,0 +1,126 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The BepInEx 6 IL2CPP plugin: engine + native glue only. References the loader's core dlls and the
+    Il2CppInterop-generated proxy assemblies (BepInEx/interop, produced on the game's first launch),
+    plus NonVisualCalculus.Core. Runs on .NET 6 (BepInEx's bundled CoreCLR).
+    Referenced game/loader dlls are Private=false so they are never copied to our output.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>NonVisualCalculus</AssemblyName>
+    <RootNamespace>NonVisualCalculus</RootNamespace>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- Game/loader dlls are referenced directly; don't warn about their lack of XML docs etc. -->
+    <NoWarn>$(NoWarn);CS0436</NoWarn>
+    <!-- Copy NuGet runtime assemblies (Roslyn scripting, the dev /eval REPL) into the build output so
+         DeployToGame can ship them next to the plugin. The game/loader refs are Private=false. -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <!-- The mod version lives in Directory.Build.props' <Version> alone; this generates the
+       BuildVersion constant the BepInPlugin attribute and the spoken load line read. -->
+  <Target Name="GenerateBuildVersion" BeforeTargets="BeforeCompile">
+    <PropertyGroup>
+      <_BuildVersionFile>$(IntermediateOutputPath)BuildVersion.g.cs</_BuildVersionFile>
+    </PropertyGroup>
+    <ItemGroup>
+      <_BuildVersionLine Include="namespace NonVisualCalculus" />
+      <_BuildVersionLine Include="{" />
+      <_BuildVersionLine Include="    internal static class BuildVersion" />
+      <_BuildVersionLine Include="    {" />
+      <_BuildVersionLine Include='        public const string Value = "$(Version)"%3B' />
+      <_BuildVersionLine Include="    }" />
+      <_BuildVersionLine Include="}" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(_BuildVersionFile)" Lines="@(_BuildVersionLine)"
+                      Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <Compile Include="$(_BuildVersionFile)" />
+      <FileWrites Include="$(_BuildVersionFile)" />
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NonVisualCalculus.Core\NonVisualCalculus.Core.csproj" />
+    <!-- The reloadable module. ReferenceOutputAssembly=false: the host loads it by hand (reflection)
+         and never references its types at compile time; this entry only forces it to build before the
+         host so DeployToGame can copy its DLL. -->
+    <ProjectReference Include="..\NonVisualCalculus.Module\NonVisualCalculus.Module.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- In-process C# REPL for the dev /eval server (Roslyn scripting; runs on CoreCLR, unlike
+         Mono.CSharp whose Reflection.Emit codegen needs the removed net4x AppDomain overloads).
+         Shipped beside the plugin via DeployToGame (it and its deps land in the output by
+         CopyLocalLockFileAssemblies). -->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.8.0" />
+    <!-- Our own stereo audio backend for the spatial soundscape (sonar, wall tones), kept off the game's
+         mixer. Ships beside the plugin via CopyLocalLockFileAssemblies. -->
+    <PackageReference Include="NAudio" Version="2.2.1" />
+  </ItemGroup>
+
+  <!--
+    Auto-deploy on build (Debug only): copy the host + Core + Roslyn deps (everything in the output:
+    the game/loader refs are Private=false so they never land there) plus the module DLL into
+    BepInEx/plugins/NonVisualCalculus, and prism.dll next to disco.exe, so a plain `dotnet build` is all
+    that's needed. ContinueOnError keeps a locked file (game running) a warning and lets the compile
+    succeed; close the game and rebuild to deploy. The module DLL is overwrite-safe at runtime (the
+    host loads it from bytes, leaving the file unlocked); BepInEx's chainloader ignores it since it
+    carries no [BepInPlugin].
+  -->
+  <Target Name="DeployToGame" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <PropertyGroup>
+      <PluginDeployDir>$(BepInExDir)\plugins\NonVisualCalculus</PluginDeployDir>
+      <ModuleDll>$(RepoRoot)src\NonVisualCalculus.Module\bin\$(Configuration)\$(TargetFramework)\NonVisualCalculus.Module.dll</ModuleDll>
+    </PropertyGroup>
+    <ItemGroup>
+      <_DeployDll Include="$(TargetDir)*.dll" />
+      <!-- WOTR's set-1 wall-tone WAVs; the engine resolves them at assets/audio/walltones/1 beside the plugin. -->
+      <_WallToneAsset Include="$(RepoRoot)assets\audio\walltones\1\*.wav" />
+      <!-- The cursor enter/exit cue WAVs (rising = enter, falling = exit); resolved at assets/audio/cursor beside the plugin. -->
+      <_CursorCueAsset Include="$(RepoRoot)assets\audio\cursor\*.wav" />
+      <!-- The per-category thing cue WAVs (sonar sweep + scanner review ping); resolved at assets/audio/interactables beside the plugin. -->
+      <_ThingCueAsset Include="$(RepoRoot)assets\audio\interactables\*.wav" />
+      <!-- Authored-string translation files (en.txt is the translator template); resolved at lang beside the plugin. -->
+      <_LangFile Include="$(RepoRoot)lang\*.txt" />
+    </ItemGroup>
+    <MakeDir Directories="$(PluginDeployDir)" />
+    <!-- Retries=0: when iterating with the game running, the host/Roslyn DLLs are locked; fail fast
+         to one warning each instead of MSBuild's default 10x1s retry storm. (Use the module's own
+         DeployModule for the hot loop; this full copy is for closed-game / first deploys.) -->
+    <Copy SourceFiles="@(_DeployDll);$(ModuleDll)"
+          DestinationFolder="$(PluginDeployDir)" ContinueOnError="true" Retries="0" />
+    <Copy SourceFiles="$(RepoRoot)third_party\prism\prism.dll"
+          DestinationFolder="$(GameDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
+    <Copy SourceFiles="@(_WallToneAsset)"
+          DestinationFolder="$(PluginDeployDir)\assets\audio\walltones\1"
+          SkipUnchangedFiles="true" ContinueOnError="true" />
+    <Copy SourceFiles="@(_CursorCueAsset)"
+          DestinationFolder="$(PluginDeployDir)\assets\audio\cursor"
+          SkipUnchangedFiles="true" ContinueOnError="true" />
+    <Copy SourceFiles="@(_ThingCueAsset)"
+          DestinationFolder="$(PluginDeployDir)\assets\audio\interactables"
+          SkipUnchangedFiles="true" ContinueOnError="true" />
+    <Copy SourceFiles="@(_LangFile)"
+          DestinationFolder="$(PluginDeployDir)\lang"
+          SkipUnchangedFiles="true" ContinueOnError="true" />
+    <Message Importance="high" Text="NonVisualCalculus deployed -> $(PluginDeployDir)" />
+  </Target>
+
+  <ItemGroup>
+    <!-- BepInEx loader + Harmony + Il2CppInterop runtime (dobby.dll is native, skip it) -->
+    <Reference Include="$(BepInExDir)\core\*.dll" Exclude="$(BepInExDir)\core\dobby.dll">
+      <Private>false</Private>
+    </Reference>
+    <!-- Il2CppInterop proxy assemblies for the game + Unity -->
+    <Reference Include="$(InteropDir)\*.dll">
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>

@@ -1,4 +1,4 @@
-# Whirling in Words authored strings - French.
+# Non-Visual Calculus authored strings - French.
 # Register: standard written French, formal "vous", plain neutral terse screen-reader
 # style, matching the game's own French localization (Vous etes ici, Vous avez).
 # Game vocabulary reused: check = lancer (blanc/rouge), thought cabinet = tiroir a
@@ -9,9 +9,10 @@
 # Words spoken after a noun the game picks (an item, a category) carry their own head noun
 # instead of agreeing with it: nouvel objet, rien.
 _plural = french
-ModLoaded = Whirling in Words {0} chargé
-ModuleFailed = Échec du chargement des fonctions de Whirling in Words
-UpdateAvailable = Mise à jour {0} de Whirling in Words disponible, lancez l'installateur pour mettre à jour
+ModLoaded = Calcul non visuel {0} chargé
+ModuleFailed = Échec du chargement des fonctions de Calcul non visuel
+UpdateAvailable = Mise à jour {0} de Calcul non visuel disponible, lancez l'installateur pour mettre à jour
+LegacyModStillInstalled = L'ancienne version Whirling in Words est aussi installée et tout sera lu deux fois. Supprimez le dossier WhirlingInWords de BepInEx plugins dans le dossier du jeu.
 InputNavigateUp = Naviguer vers le haut
 InputNavigateDown = Naviguer vers le bas
 InputNavigateLeft = Naviguer vers la gauche

@@ -1,4 +1,4 @@
-# Whirling in Words authored strings - Brazilian Portuguese.
+# Non-Visual Calculus authored strings - Brazilian Portuguese.
 # Register: Brazilian Portuguese, "voce" address and "voce"-imperatives, matching the
 # game's own localization (Voce esta aqui, Voce tem, Pressione), plain neutral terse
 # screen-reader style. Adjectives that would follow a slot whose gender varies are
@@ -13,9 +13,10 @@
 # penhores, collage = montagem, delete = apagar, union = sindicato, cargo container =
 # container de carga. thing = objeto, item (scanner group) = item.
 _plural = french
-ModLoaded = Whirling in Words {0} carregado
-ModuleFailed = Falha ao carregar os recursos do Whirling in Words
-UpdateAvailable = Atualização {0} do Whirling in Words disponível, execute o instalador para atualizar
+ModLoaded = Cálculo Não Visual {0} carregado
+ModuleFailed = Falha ao carregar os recursos do Cálculo Não Visual
+UpdateAvailable = Atualização {0} do Cálculo Não Visual disponível, execute o instalador para atualizar
+LegacyModStillInstalled = A versão antiga Whirling in Words ainda está instalada também e tudo será falado duas vezes. Exclua a pasta WhirlingInWords de BepInEx plugins na pasta do jogo.
 InputNavigateUp = Navegar para cima
 InputNavigateDown = Navegar para baixo
 InputNavigateLeft = Navegar para a esquerda

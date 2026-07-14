@@ -1,4 +1,4 @@
-# Whirling in Words authored strings - Arabic.
+# Non-Visual Calculus authored strings - Arabic.
 # Register: Modern Standard Arabic (MSA), plain neutral, terse screen-reader style,
 # matching the game's own MSA localization. Game vocabulary reused: check = اختبار
 # (أبيض/أحمر), thought cabinet = كابينة الأفكار, thought = فكرة, health = الصحة,
@@ -7,9 +7,10 @@
 # Words spoken after a noun the game picks (an item, a slot) carry their own head noun
 # instead of agreeing with it: غرض جديد, خانة فارغة.
 _plural = arabic
-ModLoaded = تم تحميل ورلينج إن ووردز {0}
-ModuleFailed = فشل تحميل ميزات ورلينج إن ووردز
-UpdateAvailable = يتوفر تحديث {0} لورلينج إن ووردز، شغّل المثبّت للتحديث
+ModLoaded = تم تحميل الاستنتاج غير البصري {0}
+ModuleFailed = فشل تحميل ميزات الاستنتاج غير البصري
+UpdateAvailable = يتوفر تحديث {0} للاستنتاج غير البصري، شغّل المثبّت للتحديث
+LegacyModStillInstalled = النسخة القديمة ورلينج إن ووردز لا تزال مثبتة أيضًا وسيُنطق كل شيء مرتين. احذف مجلد WhirlingInWords من BepInEx plugins في مجلد اللعبة.
 InputNavigateUp = التنقل لأعلى
 InputNavigateDown = التنقل لأسفل
 InputNavigateLeft = التنقل لليسار

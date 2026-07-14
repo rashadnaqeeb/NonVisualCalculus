@@ -1,4 +1,4 @@
-# Whirling in Words authored strings - Russian.
+# Non-Visual Calculus authored strings - Russian.
 # Register: standard literary Russian, formal "вы", plain neutral terse screen-reader
 # style, matching the game's own Russian localization (Вы находитесь здесь, У вас).
 # Game vocabulary reused: check = проверка (белая/красная), thought cabinet = шкафчик
@@ -6,9 +6,10 @@
 # журнал, character sheet = страница персонажа, locked = заблокировано, currency = реал,
 # archetype = архетип, signature skill = коронный навык.
 _plural = slavic
-ModLoaded = Танцы в словах {0} загружены
-ModuleFailed = Не удалось загрузить функции мода Танцы в словах
-UpdateAvailable = Доступно обновление {0} мода Танцы в словах, запустите установщик, чтобы обновить
+ModLoaded = Невизуальный анализ {0} загружен
+ModuleFailed = Не удалось загрузить функции мода Невизуальный анализ
+UpdateAvailable = Доступно обновление {0} мода Невизуальный анализ, запустите установщик, чтобы обновить
+LegacyModStillInstalled = Старая версия мода Танцы в словах тоже установлена, и всё будет озвучиваться дважды. Удалите папку WhirlingInWords из BepInEx plugins в папке игры.
 InputNavigateUp = Перейти вверх
 InputNavigateDown = Перейти вниз
 InputNavigateLeft = Перейти влево

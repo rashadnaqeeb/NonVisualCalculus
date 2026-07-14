@@ -1,8 +1,0 @@
-<Solution>
-  <Folder Name="/src/">
-    <Project Path="src/WhirlingInWords.Core/WhirlingInWords.Core.csproj" />
-    <Project Path="src/WhirlingInWords.Module/WhirlingInWords.Module.csproj" />
-    <Project Path="src/WhirlingInWords.Tests/WhirlingInWords.Tests.csproj" />
-    <Project Path="src/WhirlingInWords/WhirlingInWords.csproj" />
-  </Folder>
-</Solution>

@@ -1,4 +1,4 @@
-# Whirling in Words authored strings - Turkish.
+# Non-Visual Calculus authored strings - Turkish.
 # Register: standard written Turkish, informal "sen", terse neutral screen-reader style,
 # matching the game's own Turkish localization (Buradasın, tekrar deneyebilirsin, bas).
 # Game vocabulary reused: check = sınama (beyaz/kırmızı), skill = beceri, skill point =
@@ -23,9 +23,10 @@
 # item, a category, a health bar) needs no agreement: boş, yeni, yok, kritik seviyede.
 # Turkish keeps a noun singular after a numeral, so every counted phrase has one form.
 _plural = one
-ModLoaded = Whirling in Words {0} yüklendi
-ModuleFailed = Whirling in Words özellikleri yüklenemedi
-UpdateAvailable = Whirling in Words {0} güncellemesi var, güncellemek için yükleyiciyi çalıştır
+ModLoaded = Görsel Olmayan Analiz {0} yüklendi
+ModuleFailed = Görsel Olmayan Analiz özellikleri yüklenemedi
+UpdateAvailable = Görsel Olmayan Analiz {0} güncellemesi var, güncellemek için yükleyiciyi çalıştır
+LegacyModStillInstalled = Eski sürüm Whirling in Words da hâlâ kurulu ve her şey iki kez okunacak. Oyun klasöründeki BepInEx plugins içinden WhirlingInWords klasörünü sil.
 InputNavigateUp = Yukarı git
 InputNavigateDown = Aşağı git
 InputNavigateLeft = Sola git

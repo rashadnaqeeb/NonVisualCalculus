@@ -1,4 +1,4 @@
-# Whirling in Words authored strings - German.
+# Non-Visual Calculus authored strings - German.
 # Register: standard written German, informal "du", terse neutral screen-reader style,
 # matching the game's own German localization (Du bist hier, Du hast, drücke).
 # Game vocabulary reused: check = Würfelprobe (weiße/rote), thought cabinet =
@@ -16,9 +16,10 @@
 # Words spoken after a noun the game picks (an item, a category, a health bar) stay
 # predicative, which German does not inflect: leer, neu, kritisch, offen, nichts.
 _plural = english
-ModLoaded = Whirling in Words {0} geladen
-ModuleFailed = Funktionen von Whirling in Words konnten nicht geladen werden
-UpdateAvailable = Update {0} für Whirling in Words verfügbar, führe den Installer aus, um zu aktualisieren
+ModLoaded = Nicht-Visuelles Kalkül {0} geladen
+ModuleFailed = Funktionen von Nicht-Visuellem Kalkül konnten nicht geladen werden
+UpdateAvailable = Update {0} für Nicht-Visuelles Kalkül verfügbar, führe den Installer aus, um zu aktualisieren
+LegacyModStillInstalled = Die alte Version Whirling in Words ist ebenfalls installiert und alles wird doppelt gesprochen. Lösche den Ordner WhirlingInWords aus BepInEx plugins im Spielordner.
 InputNavigateUp = Nach oben navigieren
 InputNavigateDown = Nach unten navigieren
 InputNavigateLeft = Nach links navigieren

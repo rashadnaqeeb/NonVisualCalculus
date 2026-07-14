@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The reloadable feature module: adapters, readers, announcers, and any Harmony patches. NOT a
+    BepInEx plugin (no [BepInPlugin]); the host loads it by hand from the DLL bytes into a collectible
+    AssemblyLoadContext, so it can be rebuilt and reloaded without restarting the game. It injects no
+    IL2CPP types and owns no native handles - that permanent code stays in the host. Same reference
+    block as the host (Core + Il2CppInterop proxies + BepInEx/Harmony); those resolve to the
+    already-loaded default-context copies at runtime, never the module's collectible context.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>NonVisualCalculus.Module</AssemblyName>
+    <RootNamespace>NonVisualCalculus.Module</RootNamespace>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoWarn>$(NoWarn);CS0436</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NonVisualCalculus.Core\NonVisualCalculus.Core.csproj" />
+  </ItemGroup>
+
+  <!--
+    Fast iteration deploy (Debug only): copy just this module's DLL into the plugin folder. The module
+    is overwrite-safe while the game runs (the host loaded it from bytes, leaving the file unlocked),
+    so the day-to-day loop is `dotnet build` this project then POST /reload - no whole-solution build,
+    no fighting the locked host DLLs. The host's DeployToGame also copies it, for first deploy / full builds.
+  -->
+  <Target Name="DeployModule" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <PropertyGroup>
+      <PluginDeployDir>$(BepInExDir)\plugins\NonVisualCalculus</PluginDeployDir>
+    </PropertyGroup>
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PluginDeployDir)" ContinueOnError="true" />
+    <Message Importance="high" Text="NonVisualCalculus.Module deployed -> $(PluginDeployDir)" />
+  </Target>
+
+  <ItemGroup>
+    <!-- BepInEx loader + Harmony + Il2CppInterop runtime (dobby.dll is native, skip it) -->
+    <Reference Include="$(BepInExDir)\core\*.dll" Exclude="$(BepInExDir)\core\dobby.dll">
+      <Private>false</Private>
+    </Reference>
+    <!-- Il2CppInterop proxy assemblies for the game + Unity -->
+    <Reference Include="$(InteropDir)\*.dll">
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>

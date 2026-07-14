@@ -1,4 +1,4 @@
-# Whirling in Words
+# Non-Visual Calculus
 
 A screen-reader accessibility mod for **Disco Elysium: The Final Cut**, for blind and visually-impaired players. It speaks the game's dialogue, menus, and screens, adds keyboard navigation over the whole UI, and makes the world itself playable with a movement cursor, a categorized scanner of everything around you, and audio cues for geometry and objects.
 
@@ -15,7 +15,7 @@ The only thing that does not work is the game's collage mode, which is used to t
 
 ## Install and update
 
-1. Download the installer: **[WhirlingInWordsInstaller.exe](https://github.com/rashadnaqeeb/WhirlingInWords/releases/latest/download/WhirlingInWordsInstaller.exe)**
+1. Download the installer: **[NonVisualCalculusInstaller.exe](https://github.com/rashadnaqeeb/NonVisualCalculus/releases/latest/download/NonVisualCalculusInstaller.exe)**
 2. Run it. It finds your game folder on its own (Steam, GOG, or Epic; you can browse to it if needed) and downloads and installs the latest release.
 3. Launch the game through Steam, GOG Galaxy, or the Epic Games Launcher. The first launch takes a few minutes while the mod loader generates files, so be patient if it seems frozen. This is only a one-time issue.
 
@@ -75,7 +75,7 @@ In menus and dialogue: the left stick or dpad navigates, cross (A) activates lik
 
 ## Reporting bugs
 
-Please report anything that speaks wrong, goes silent, or gets stuck on the [issue tracker](https://github.com/rashadnaqeeb/WhirlingInWords/issues). The most useful reports say where you were, what you pressed, and what you heard versus what you expected. A save file placed near the problem helps enormously, especially for scanner and world-navigation issues.
+Please report anything that speaks wrong, goes silent, or gets stuck on the [issue tracker](https://github.com/rashadnaqeeb/NonVisualCalculus/issues). The most useful reports say where you were, what you pressed, and what you heard versus what you expected. A save file placed near the problem helps enormously, especially for scanner and world-navigation issues.
 
 ## Building from source (developers)
 

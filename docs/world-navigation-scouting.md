@@ -1,6 +1,6 @@
 # World Navigation: Scouting Notes
 
-Feasibility findings for porting WOTR-style world navigation into WhirlingInWords. Everything
+Feasibility findings for porting WOTR-style world navigation into NonVisualCalculus. Everything
 here was confirmed against the running game (Martinaise exterior, opening) via the dev `/eval`
 REPL unless marked otherwise. This is a scouting reference, not a build plan.
 
@@ -16,7 +16,7 @@ we ride the game's.
 
 WOTR's exploration code cleanly separates engine-agnostic logic from engine glue.
 
-- Reuse (lands in `WhirlingInWords.Core`): the overlay framework (an `OverlayManager` holding overlays,
+- Reuse (lands in `NonVisualCalculus.Core`): the overlay framework (an `OverlayManager` holding overlays,
   each with one shared cursor plus a list of `OverlaySystem` lenses, movement modes kept separate
   from systems), the scanner taxonomy and shape geometry, spatial math, the sonar sweep timing and
   pan/volume formulas, and the announcement composer.
@@ -216,7 +216,7 @@ device handle lives in the permanent host alongside Prism; the module decides wh
 ## Open items for build time (none block feasibility)
 
 - The "where am I" area-name source. `Sunshine.AreaManager` holds scene-name constants
-  (`MARTINAISE_EXT`, `WHIRLING_INT_F1/F2`, etc.) and an `additivelyLoadedScenes` list, but
+  (`MARTINAISE_EXT`, `NVC_INT_F1/F2`, etc.) and an `additivelyLoadedScenes` list, but
   `AreaManager.current` read null. The current area is identifiable as the loaded non-interior scene
   name (e.g. `Martinaise-ext`); a localized display title still needs locating.
 - Resolve item term IDs to localized names for container contents.

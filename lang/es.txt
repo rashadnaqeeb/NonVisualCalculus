@@ -1,4 +1,4 @@
-# Whirling in Words authored strings - Spanish.
+# Non-Visual Calculus authored strings - Spanish.
 # Register: European Spanish, informal "tu" (matching the game's own localization:
 # "Mejora tu", "Tienes", "Estas aqui"), plain neutral terse screen-reader style.
 # Game vocabulary reused: check = tirada (basica = white/retryable, critica =
@@ -11,9 +11,10 @@
 # Words spoken after a noun the game picks (an item, a slot, a category) carry their own
 # head noun instead of agreeing with it: nuevo objeto, sin objeto, nada.
 _plural = english
-ModLoaded = Whirling in Words {0} cargado
-ModuleFailed = Error al cargar las funciones de Whirling in Words
-UpdateAvailable = Actualización {0} de Whirling in Words disponible, ejecuta el instalador para actualizar
+ModLoaded = Cálculo no visual {0} cargado
+ModuleFailed = Error al cargar las funciones de Cálculo no visual
+UpdateAvailable = Actualización {0} de Cálculo no visual disponible, ejecuta el instalador para actualizar
+LegacyModStillInstalled = La versión antigua Whirling in Words sigue instalada también y todo se leerá dos veces. Borra la carpeta WhirlingInWords de BepInEx plugins en la carpeta del juego.
 InputNavigateUp = Navegar hacia arriba
 InputNavigateDown = Navegar hacia abajo
 InputNavigateLeft = Navegar hacia la izquierda

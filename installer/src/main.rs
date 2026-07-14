@@ -1,6 +1,6 @@
 #![windows_subsystem = "windows"]
 
-use whirling_in_words_installer::{cli, gui};
+use non_visual_calculus_installer::{cli, gui};
 
 fn main() {
     if std::env::args().any(|a| a == "--cli") {

@@ -1,6 +1,7 @@
-# Publish a GitHub release for an existing, pushed tag: uploads the mod zip and the
-# installer exe from releases\ with notes taken from the tag's CHANGELOG.md section.
-# Run build_release.ps1 and build-installer.ps1 first.
+# Publish a GitHub release for an existing, pushed tag: uploads the mod zip, the compat zip
+# (the same release under the pre-rename asset name, which is all a Whirling in Words-era
+# installer exe recognizes), and the installer exe from releases\ with notes taken from the
+# tag's CHANGELOG.md section. Run build_release.ps1 and build-installer.ps1 first.
 
 param(
     [Parameter(Mandatory = $true, Position = 0)]
@@ -81,7 +82,7 @@ function Get-ChangelogSection {
     return $section
 }
 
-# The installer finds the mod zip by the asset name pattern WhirlingInWords-v<maj>.<min>.<patch>.zip
+# The installer finds the mod zip by the asset name pattern NonVisualCalculus-v<maj>.<min>.<patch>.zip
 # and parses that version with semver, so only a strict three-part tag produces a release it can consume.
 if ($VersionTag -notmatch '^v\d+\.\d+\.\d+$') {
     Fail "Version tag must be lowercase 'v' plus a three-part version, for example v1.0.0."
@@ -90,8 +91,9 @@ if ($VersionTag -notmatch '^v\d+\.\d+\.\d+$') {
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $releaseDir = Join-Path $scriptDir "releases"
 $changelogPath = Join-Path $scriptDir "CHANGELOG.md"
-$zipPath = Join-Path $releaseDir "WhirlingInWords-$VersionTag.zip"
-$installerPath = Join-Path $releaseDir "WhirlingInWordsInstaller.exe"
+$zipPath = Join-Path $releaseDir "NonVisualCalculus-$VersionTag.zip"
+$compatZipPath = Join-Path $releaseDir "WhirlingInWords-$VersionTag.zip"
+$installerPath = Join-Path $releaseDir "NonVisualCalculusInstaller.exe"
 $releaseTitle = "V$($VersionTag.Substring(1))"
 
 Push-Location $scriptDir
@@ -105,6 +107,10 @@ try {
         Fail "Release zip not found: $zipPath"
     }
 
+    if (-not (Test-Path -LiteralPath $compatZipPath -PathType Leaf)) {
+        Fail "Compat zip not found: $compatZipPath"
+    }
+
     if (-not (Test-Path -LiteralPath $installerPath -PathType Leaf)) {
         Fail "Installer not found: $installerPath"
     }
@@ -115,7 +121,7 @@ try {
     }
 
     $releaseNotes = Get-ChangelogSection -ChangelogPath $changelogPath -ReleaseTitle $releaseTitle
-    $notesFile = Join-Path ([System.IO.Path]::GetTempPath()) "WhirlingInWords-$VersionTag-release-notes.md"
+    $notesFile = Join-Path ([System.IO.Path]::GetTempPath()) "NonVisualCalculus-$VersionTag-release-notes.md"
     Set-Content -LiteralPath $notesFile -Value $releaseNotes -Encoding UTF8
 
     try {
@@ -124,7 +130,7 @@ try {
         }
 
         Invoke-Checked "GitHub release creation" {
-            & gh release create $VersionTag $zipPath $installerPath --title $releaseTitle --notes-file $notesFile
+            & gh release create $VersionTag $zipPath $compatZipPath $installerPath --title $releaseTitle --notes-file $notesFile
         }
     }
     finally {

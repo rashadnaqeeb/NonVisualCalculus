@@ -48,7 +48,7 @@ impl Asset {
 
 pub fn fetch_releases() -> Result<Vec<ReleaseInfo>, String> {
     let client = Client::builder()
-        .user_agent("WhirlingInWordsInstaller")
+        .user_agent("NonVisualCalculusInstaller")
         .timeout(std::time::Duration::from_secs(30))
         .build()
         .map_err(|e| format!("Failed to create HTTP client: {e}"))?;
@@ -123,7 +123,7 @@ pub fn parse_mod_zip_version(name: &str) -> Option<String> {
 
 pub fn download_asset(asset: &Asset, dest: &std::path::Path) -> Result<(), String> {
     let client = Client::builder()
-        .user_agent("WhirlingInWordsInstaller")
+        .user_agent("NonVisualCalculusInstaller")
         .timeout(std::time::Duration::from_secs(120))
         .build()
         .map_err(|e| format!("Failed to create HTTP client: {e}"))?;
@@ -172,11 +172,11 @@ mod tests {
     #[test]
     fn parses_mod_zip_version() {
         assert_eq!(
-            parse_mod_zip_version("WhirlingInWords-v1.0.0.zip").as_deref(),
+            parse_mod_zip_version("NonVisualCalculus-v1.0.0.zip").as_deref(),
             Some("1.0.0")
         );
         assert!(parse_mod_zip_version("source.zip").is_none());
-        assert!(parse_mod_zip_version("WhirlingInWordsInstaller.exe").is_none());
+        assert!(parse_mod_zip_version("NonVisualCalculusInstaller.exe").is_none());
     }
 
     #[test]

@@ -5,7 +5,7 @@ argument-hint: <language>
 ---
 
 Produce a complete `lang/<language>.txt` for the language given as the argument. The translation
-source is `src/WhirlingInWords.Core/Strings/Strings.cs`: every entry in the `Defaults` table carries a
+source is `src/NonVisualCalculus.Core/Strings/Strings.cs`: every entry in the `Defaults` table carries a
 comment saying where it is spoken, what fills each `{n}` slot, and which game I2 term to match.
 Read the table directly; do not work from `lang/en.txt` (it has no context).
 
@@ -120,7 +120,7 @@ Write the whole file in one pass, top to bottom, reading each entry's comment in
 
 ## Phase 4 - validate
 
-`dotnet test WhirlingInWords.slnx`. `LanguageFileTests` gates the file mechanically (unknown keys,
+`dotnet test NonVisualCalculus.slnx`. `LanguageFileTests` gates the file mechanically (unknown keys,
 dropped or invented slots, form counts, the compass). Fix until green.
 
 ## Phase 5 - verify against the live game
@@ -130,7 +130,7 @@ the game to watch them work again proves nothing about the translation. Two thin
 need the live game. Do those; do not press keys to re-observe the mod running.
 
 Deploy first: LanguageSync reads the DEPLOYED copy of the file
-(`<PluginPath>/WhirlingInWords/lang/` - read `BepInEx.Paths.PluginPath` via `/eval` rather than
+(`<PluginPath>/NonVisualCalculus/lang/` - read `BepInEx.Paths.PluginPath` via `/eval` rather than
 hardcoding a Steam path), not the repo's, and with the game running a full build cannot refresh
 the deploy (locked DLLs). So each iteration is: edit the repo file, copy it into the deployed
 lang folder, `POST /reload` (module recreation re-runs LanguageSync). The game is already in the

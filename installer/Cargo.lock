@@ -1002,6 +1002,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "non-visual-calculus-installer"
+version = "0.1.0"
+dependencies = [
+ "dirs",
+ "embed-resource",
+ "regex",
+ "reqwest",
+ "semver",
+ "serde",
+ "serde_json",
+ "sha2",
+ "sys-locale",
+ "sysinfo",
+ "tempfile",
+ "time",
+ "windows-sys 0.61.2",
+ "winreg 0.56.0",
+ "wxdragon",
+ "zip",
+]
+
+[[package]]
 name = "ntapi"
 version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2172,28 +2194,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0d46a5a140e6f7afeccd8eae97eff335163939eac8b929834875168b29b3d267"
 dependencies = [
  "rustls-pki-types",
-]
-
-[[package]]
-name = "whirling-in-words-installer"
-version = "0.1.0"
-dependencies = [
- "dirs",
- "embed-resource",
- "regex",
- "reqwest",
- "semver",
- "serde",
- "serde_json",
- "sha2",
- "sys-locale",
- "sysinfo",
- "tempfile",
- "time",
- "windows-sys 0.61.2",
- "winreg 0.56.0",
- "wxdragon",
- "zip",
 ]
 
 [[package]]

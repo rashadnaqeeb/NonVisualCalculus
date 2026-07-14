@@ -34,17 +34,23 @@ pub fn uninstall(game_dir: &Path, manifest: &InstallManifest) -> Result<(), Stri
         remove_empty_parents(game_dir, backup.parent());
     }
 
-    let manifest_path = paths::manifest_path(game_dir);
-    if manifest_path.exists() {
-        ensure_writable(&manifest_path)?;
-        fs::remove_file(&manifest_path).map_err(|e| format!("Failed to remove manifest: {e}"))?;
+    // The manifest may live at either name's location (a pre-rename install is read from the
+    // legacy path); remove both so no stale manifest survives to misclassify a later install.
+    for manifest_path in [
+        paths::manifest_path(game_dir),
+        paths::legacy_manifest_path(game_dir),
+    ] {
+        if manifest_path.exists() {
+            ensure_writable(&manifest_path)?;
+            fs::remove_file(&manifest_path)
+                .map_err(|e| format!("Failed to remove manifest: {e}"))?;
+        }
+        remove_empty_parents(game_dir, manifest_path.parent());
     }
-
-    remove_empty_parents(game_dir, manifest_path.parent());
     Ok(())
 }
 
-fn remove_empty_parents(game_dir: &Path, mut current: Option<&Path>) {
+pub(crate) fn remove_empty_parents(game_dir: &Path, mut current: Option<&Path>) {
     while let Some(dir) = current {
         if dir == game_dir {
             break;

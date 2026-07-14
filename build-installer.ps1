@@ -1,5 +1,5 @@
 # Build the standalone installer exe (installer/, Rust + wxWidgets) into
-# releases\WhirlingInWordsInstaller.exe. Needs cargo and libclang (the wxWidgets
+# releases\NonVisualCalculusInstaller.exe. Needs cargo and libclang (the wxWidgets
 # build uses bindgen); LIBCLANG_PATH is probed from the usual LLVM locations.
 
 Set-StrictMode -Version Latest
@@ -8,8 +8,8 @@ $ErrorActionPreference = "Stop"
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $installerDir = Join-Path $scriptDir "installer"
 $releaseDir = Join-Path $scriptDir "releases"
-$targetExe = Join-Path $installerDir "target\release\whirling-in-words-installer.exe"
-$outputExe = Join-Path $releaseDir "WhirlingInWordsInstaller.exe"
+$targetExe = Join-Path $installerDir "target\release\non-visual-calculus-installer.exe"
+$outputExe = Join-Path $releaseDir "NonVisualCalculusInstaller.exe"
 
 if (-not (Test-Path (Join-Path $installerDir "Cargo.toml"))) {
     throw "Installer project not found: $installerDir"

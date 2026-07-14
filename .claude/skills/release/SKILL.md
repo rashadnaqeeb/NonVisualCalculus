@@ -8,7 +8,7 @@ Publish the release whose version is given as the argument. The argument is a ba
 
 ## Phase 0 - preconditions
 
-- The version must match `\d+\.\d+\.\d+` exactly. This is a hard contract, not a style rule: the installer identifies the mod zip asset by the name pattern `WhirlingInWords-v<maj>.<min>.<patch>.zip` and parses that version with the semver crate (`installer/src/core/github.rs`, `paths.rs`), and the mod's launch update check parses the release tag with `System.Version` (`src/WhirlingInWords.Core/Updates/UpdateCheck.cs`). A two-part or suffixed version publishes a release the installer cannot consume, and because the installer always reads `releases/latest`, that breaks every new install immediately, not just the new version.
+- The version must match `\d+\.\d+\.\d+` exactly. This is a hard contract, not a style rule: the installer identifies the mod zip asset by the name pattern `NonVisualCalculus-v<maj>.<min>.<patch>.zip` and parses that version with the semver crate (`installer/src/core/github.rs`, `paths.rs`), and the mod's launch update check parses the release tag with `System.Version` (`src/NonVisualCalculus.Core/Updates/UpdateCheck.cs`). A two-part or suffixed version publishes a release the installer cannot consume, and because the installer always reads `releases/latest`, that breaks every new install immediately, not just the new version.
 - The version must be strictly greater than the newest existing `v*` tag (semver order; no tags at all is fine). An equal or lower version makes the update check silently stop announcing to players on newer builds.
 - On `main`, working tree clean, `main` not behind `origin/main` (`git fetch origin` and compare), and `gh auth status` succeeds.
 - The game may stay running until the final Debug redeploy in Phase 5: everything else builds Release, which never deploys, so no game DLL is touched before then.
@@ -22,8 +22,8 @@ Publish the release whose version is given as the argument. The argument is a ba
 
 ## Phase 2 - test and build
 
-- `dotnet test WhirlingInWords.slnx` must be green.
-- `powershell.exe -NoProfile -File build_release.ps1` then `powershell.exe -NoProfile -File build-installer.ps1`, producing `releases\WhirlingInWords-v<version>.zip` and `releases\WhirlingInWordsInstaller.exe`. The project settings allow exactly these invocations, run from the repo root: no `cd &&` or environment-variable prefix, or the permission rule won't match.
+- `dotnet test NonVisualCalculus.slnx` must be green.
+- `powershell.exe -NoProfile -File build_release.ps1` then `powershell.exe -NoProfile -File build-installer.ps1`, producing `releases\NonVisualCalculus-v<version>.zip`, `releases\WhirlingInWords-v<version>.zip` (the compat zip: the same release under the mod's pre-rename asset name, which is the only asset name a Whirling in Words-era installer exe recognizes; it carries zero-byte tombstones over the old plugin folder so that installer's overwrite-only update still kills the old mod), and `releases\NonVisualCalculusInstaller.exe`. The project settings allow exactly these invocations, run from the repo root: no `cd &&` or environment-variable prefix, or the permission rule won't match.
 - If the scripts still cannot be run (the allow rules were removed, or a different environment), perform each script's steps directly with allowed tools instead, reading the script first so the replication stays faithful: for the zip, `dotnet build -c Release`, stage the BepInEx zip contents plus plugin DLLs, audio assets, lang files, and prism.dll exactly as build_release.ps1 lays them out, and zip with clean forward-slash relative paths (python zipfile works); for the installer, probe LIBCLANG_PATH and ninja as the script does, `cargo build --release`, and copy the exe. Verify the zip afterward against the installer's `required_loader_files()` list.
 - Build before committing or tagging, so a failed build pushes nothing. At this point the tree holds exactly the release edits, so the artifacts match the commit about to be made.
 
@@ -35,13 +35,13 @@ Publish the release whose version is given as the argument. The argument is a ba
 ## Phase 4 - publish
 
 - `powershell.exe -NoProfile -File create-release.ps1 v<version>` (same allowed invocation form as Phase 2). It re-verifies the tag exists locally and on origin, finds both artifacts, extracts the changelog section, and runs `gh release create` with the zip and installer attached.
-- If PowerShell is blocked (same as Phase 2), replicate: extract the lines between `## V<version>` and the next `##` heading into a notes file, then `gh release create v<version> <zip> <installer.exe> --title "V<version>" --notes-file <notes>`.
+- If PowerShell is blocked (same as Phase 2), replicate: extract the lines between `## V<version>` and the next `##` heading into a notes file, then `gh release create v<version> <zip> <compat zip> <installer.exe> --title "V<version>" --notes-file <notes>`.
 
 ## Phase 5 - verify and clean up
 
-- Read back `gh api repos/rashadnaqeeb/WhirlingInWords/releases/latest` and confirm both consumer contracts on the real thing: `tag_name` is `v<version>` (what the update check announces from), and the assets are `WhirlingInWords-v<version>.zip` (what the installer's name pattern must match) and `WhirlingInWordsInstaller.exe`.
-- Delete `releases\WhirlingInWords-v<version>.zip` and `releases\WhirlingInWordsInstaller.exe`. `create-release.ps1` only checks that the files exist, so an artifact left behind can be republished stale by a future run that skipped a build.
-- Finish with `dotnet build WhirlingInWords.slnx -c Debug` so the deployed local game build carries the released version (only Debug deploys, so until this runs the game still loads the pre-bump build and its update check compares against the wrong version). If the running game holds the DLLs locked and the deploy is skipped (`MSB3021`), carry the cycle per CLAUDE.md: close the game, rebuild, relaunch through Steam.
+- Read back `gh api repos/rashadnaqeeb/NonVisualCalculus/releases/latest` and confirm the consumer contracts on the real thing: `tag_name` is `v<version>` (what the update check announces from), and the assets are `NonVisualCalculus-v<version>.zip` (what the installer's name pattern must match), `WhirlingInWords-v<version>.zip` (what a pre-rename installer's name pattern must match), and `NonVisualCalculusInstaller.exe`.
+- Delete `releases\NonVisualCalculus-v<version>.zip`, `releases\WhirlingInWords-v<version>.zip`, and `releases\NonVisualCalculusInstaller.exe`. `create-release.ps1` only checks that the files exist, so an artifact left behind can be republished stale by a future run that skipped a build.
+- Finish with `dotnet build NonVisualCalculus.slnx -c Debug` so the deployed local game build carries the released version (only Debug deploys, so until this runs the game still loads the pre-bump build and its update check compares against the wrong version). If the running game holds the DLLs locked and the deploy is skipped (`MSB3021`), carry the cycle per CLAUDE.md: close the game, rebuild, relaunch through Steam.
 
 ## Failure and re-run notes
 
