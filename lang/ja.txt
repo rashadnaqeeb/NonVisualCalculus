@@ -25,6 +25,7 @@
 _plural = one
 ModLoaded = ワーリング・イン・ワーズ {0} 読み込み完了
 ModuleFailed = ワーリング・イン・ワーズの機能の読み込みに失敗
+UpdateAvailable = ワーリング・イン・ワーズの更新 {0} あり。インストーラーを実行して更新
 InputNavigateUp = 上に移動
 InputNavigateDown = 下に移動
 InputNavigateLeft = 左に移動
@@ -216,6 +217,7 @@ SettingSonarCategory = ソナー {0}
 SettingScannerFromCursor = スキャナーの読み上げをカーソル基準にする
 SettingRunToDestinations = 目的地まで走る
 SettingUnrestrictCursor = カーソルの移動制限を解除
+SettingCheckForUpdates = 起動時に更新を確認
 DialogueContinue = 次に進む
 DialogueAlreadyChosen = 選択済み
 DialogueNotReady = 準備中

@@ -25,6 +25,7 @@
 _plural = one
 ModLoaded = Whirling in Words {0} yüklendi
 ModuleFailed = Whirling in Words özellikleri yüklenemedi
+UpdateAvailable = Whirling in Words {0} güncellemesi var, güncellemek için yükleyiciyi çalıştır
 InputNavigateUp = Yukarı git
 InputNavigateDown = Aşağı git
 InputNavigateLeft = Sola git
@@ -215,6 +216,7 @@ SettingSonarCategory = Sonar: {0}
 SettingScannerFromCursor = Tarayıcı okumaları imleçten
 SettingRunToDestinations = Hedeflere koşarak git
 SettingUnrestrictCursor = Sınırsız imleç
+SettingCheckForUpdates = Başlangıçta güncellemeleri denetle
 DialogueContinue = devam et
 DialogueAlreadyChosen = daha önce seçildi
 DialogueNotReady = hazır değil

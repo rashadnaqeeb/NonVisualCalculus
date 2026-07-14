@@ -16,6 +16,9 @@ namespace WhirlingInWords.Core.Modularity
         void LogWarning(string message);
         void LogError(string message);
 
+        /// <summary>The running mod version ("1.0.0"), for the launch line and the update check.</summary>
+        string ModVersion { get; }
+
         /// <summary>The single funnel for everything the mod says (the host owns its lifetime).</summary>
         SpeechPipeline Speech { get; }
 

@@ -9,6 +9,7 @@
 _plural = arabic
 ModLoaded = تم تحميل ورلينج إن ووردز {0}
 ModuleFailed = فشل تحميل ميزات ورلينج إن ووردز
+UpdateAvailable = يتوفر تحديث {0} لورلينج إن ووردز، شغّل المثبّت للتحديث
 InputNavigateUp = التنقل لأعلى
 InputNavigateDown = التنقل لأسفل
 InputNavigateLeft = التنقل لليسار
@@ -199,6 +200,7 @@ SettingSonarCategory = سونار {0}
 SettingScannerFromCursor = قراءات الماسح من المؤشر
 SettingRunToDestinations = الركض إلى الوجهات
 SettingUnrestrictCursor = مؤشر بلا قيود
+SettingCheckForUpdates = التحقق من التحديثات عند التشغيل
 DialogueContinue = استمرار
 DialogueAlreadyChosen = سبق اختياره
 DialogueNotReady = ليس جاهزًا بعد

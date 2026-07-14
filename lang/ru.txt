@@ -8,6 +8,7 @@
 _plural = slavic
 ModLoaded = Танцы в словах {0} загружены
 ModuleFailed = Не удалось загрузить функции мода Танцы в словах
+UpdateAvailable = Доступно обновление {0} мода Танцы в словах, запустите установщик, чтобы обновить
 InputNavigateUp = Перейти вверх
 InputNavigateDown = Перейти вниз
 InputNavigateLeft = Перейти влево
@@ -198,6 +199,7 @@ SettingSonarCategory = Сонар: {0}
 SettingScannerFromCursor = Показания сканера от курсора
 SettingRunToDestinations = Бежать к целям
 SettingUnrestrictCursor = Курсор без ограничений
+SettingCheckForUpdates = Проверять обновления при запуске
 DialogueContinue = продолжить
 DialogueAlreadyChosen = уже выбрано
 DialogueNotReady = ещё не готово

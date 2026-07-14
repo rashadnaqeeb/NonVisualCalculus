@@ -3,6 +3,7 @@ using WhirlingInWords.Core.Input;
 using WhirlingInWords.Core.Modularity;
 using WhirlingInWords.Core.Strings;
 using WhirlingInWords.Core.UI.Nav;
+using WhirlingInWords.Core.Updates;
 using WhirlingInWords.Module.Input;
 using WhirlingInWords.Module.Nav;
 using WhirlingInWords.Module.World;
@@ -86,6 +87,11 @@ namespace WhirlingInWords.Module
         // Reads OS-typed characters into our navigator's type-ahead search each frame. Owns no native
         // handle (rebuilt fresh on reload); gates itself on the text-edit state below.
         private readonly TypeaheadInput _typeahead = new TypeaheadInput();
+        // When this load happened, so the update announcement waits out the launch lines below.
+        private float _loadedAt;
+        // How long Tick holds a ready update-check result before speaking it: long enough for the
+        // load announcement to be queued first, short enough to still land at the title screen.
+        private const float UpdateAnnounceDelay = 3f;
 
         public void Load(IModHost host)
         {
@@ -347,6 +353,12 @@ namespace WhirlingInWords.Module
             // so it is noticed and named rather than going silently unannounced.
             foreach (var view in ScreenAdapter.UnmappedScreens())
                 _host.LogWarning($"ScreenAdapter has no name or exclusion for view {view}; it will not be announced.");
+
+            // Look up the mod's newest release in the background; Tick consumes the result. Core keeps
+            // the once-per-process latch, so a hot-reload neither re-checks nor re-announces.
+            if (_host.Settings.CheckForUpdates.Value)
+                UpdateCheck.Start(_host.ModVersion, _host.LogInfo, _host.LogWarning);
+            _loadedAt = Time.unscaledTime;
         }
 
         // Attach pad bindings to an already-registered action (the keyboard registrations above created
@@ -541,6 +553,16 @@ namespace WhirlingInWords.Module
             // Speak a cinematic scene's description if one started since last frame (queued, so the
             // dialogue line that triggered it finishes first).
             _cutscenes.Drain();
+
+            // Say so if a newer mod release exists (staged by the launch check), held a beat so the
+            // launch lines queue first. One-shot: TakeUpdate hands the result over once per process.
+            // Up to date or a failed check stays silent (the latter is in the log).
+            if (Time.unscaledTime - _loadedAt >= UpdateAnnounceDelay)
+            {
+                string newVersion = UpdateCheck.TakeUpdate();
+                if (newVersion != null)
+                    _host.Speech.Speak(Strings.UpdateAvailable(newVersion), interrupt: false);
+            }
         }
 
         // Dev seam (IDevDriver): drive our navigator from the dev server's /input, the headless counterpart

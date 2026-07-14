@@ -8,6 +8,7 @@
 _plural = english
 ModLoaded = Whirling in Words {0} loaded
 ModuleFailed = Whirling in Words features failed to load
+UpdateAvailable = Whirling in Words update {0} available, run the installer to update
 InputNavigateUp = Navigate up
 InputNavigateDown = Navigate down
 InputNavigateLeft = Navigate left
@@ -199,6 +200,7 @@ SettingSonarCategory = Sonar {0}
 SettingScannerFromCursor = Scanner readouts from cursor
 SettingRunToDestinations = Run to destinations
 SettingUnrestrictCursor = Unrestricted cursor
+SettingCheckForUpdates = Check for updates at launch
 DialogueContinue = continue
 DialogueAlreadyChosen = already chosen
 DialogueNotReady = not ready

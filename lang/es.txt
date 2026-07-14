@@ -13,6 +13,7 @@
 _plural = english
 ModLoaded = Whirling in Words {0} cargado
 ModuleFailed = Error al cargar las funciones de Whirling in Words
+UpdateAvailable = Actualización {0} de Whirling in Words disponible, ejecuta el instalador para actualizar
 InputNavigateUp = Navegar hacia arriba
 InputNavigateDown = Navegar hacia abajo
 InputNavigateLeft = Navegar hacia la izquierda
@@ -203,6 +204,7 @@ SettingSonarCategory = Sónar {0}
 SettingScannerFromCursor = Lecturas del escáner desde el cursor
 SettingRunToDestinations = Correr hacia los destinos
 SettingUnrestrictCursor = Cursor sin restricciones
+SettingCheckForUpdates = Buscar actualizaciones al iniciar
 DialogueContinue = continuar
 DialogueAlreadyChosen = ya elegida
 DialogueNotReady = aún no está listo

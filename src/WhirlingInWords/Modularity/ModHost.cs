@@ -29,6 +29,8 @@ namespace WhirlingInWords.Modularity
 
         public IAudioEngine Audio { get; }
 
+        public string ModVersion => Plugin.Version;
+
         public void LogInfo(string message) => _log.LogInfo(message);
         public void LogWarning(string message) => _log.LogWarning(message);
         public void LogError(string message) => _log.LogError(message);

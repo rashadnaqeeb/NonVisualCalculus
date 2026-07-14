@@ -16,6 +16,7 @@
 _plural = one
 ModLoaded = 言語飛旋 {0} 已載入
 ModuleFailed = 言語飛旋功能載入失敗
+UpdateAvailable = 言語飛旋有更新 {0}，執行安裝程式即可更新
 InputNavigateUp = 向上導覽
 InputNavigateDown = 向下導覽
 InputNavigateLeft = 向左導覽
@@ -207,6 +208,7 @@ SettingSonarCategory = {0}聲納
 SettingScannerFromCursor = 掃描讀數以游標為基準
 SettingRunToDestinations = 跑向目的地
 SettingUnrestrictCursor = 不限制游標
+SettingCheckForUpdates = 啟動時檢查更新
 DialogueContinue = 繼續
 DialogueAlreadyChosen = 已選過
 DialogueNotReady = 尚未就緒

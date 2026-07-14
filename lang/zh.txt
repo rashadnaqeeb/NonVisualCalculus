@@ -11,6 +11,7 @@
 _plural = one
 ModLoaded = 言语飞旋 {0} 已加载
 ModuleFailed = 言语飞旋功能加载失败
+UpdateAvailable = 言语飞旋有更新 {0}，运行安装程序即可更新
 InputNavigateUp = 向上导航
 InputNavigateDown = 向下导航
 InputNavigateLeft = 向左导航
@@ -202,6 +203,7 @@ SettingSonarCategory = 声呐{0}
 SettingScannerFromCursor = 扫描读数以光标为基准
 SettingRunToDestinations = 跑向目的地
 SettingUnrestrictCursor = 不限制光标
+SettingCheckForUpdates = 启动时检查更新
 DialogueContinue = 继续
 DialogueAlreadyChosen = 已选过
 DialogueNotReady = 尚未就绪

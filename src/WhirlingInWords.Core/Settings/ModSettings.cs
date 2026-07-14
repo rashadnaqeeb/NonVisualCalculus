@@ -69,6 +69,11 @@ namespace WhirlingInWords.Core.Settings
         /// sounding the crossings. The scanner and object senses are unchanged.</summary>
         public ToggleSetting UnrestrictCursor { get; }
 
+        /// <summary>When on (the default), launch looks up the mod's newest release online and says so
+        /// if the installed mod is older; up to date stays silent. Read once at module load, so flipping
+        /// it takes effect next launch.</summary>
+        public ToggleSetting CheckForUpdates { get; }
+
         public ModSettings(ISettingsStore store)
         {
             // Labels are providers, not captured strings: the settings outlive module reloads and a
@@ -104,6 +109,8 @@ namespace WhirlingInWords.Core.Settings
                 "run_to_destinations", () => SettingRunToDestinations, defaultValue: false, store));
             UnrestrictCursor = Add(new ToggleSetting(
                 "unrestrict_cursor", () => SettingUnrestrictCursor, defaultValue: true, store));
+            CheckForUpdates = Add(new ToggleSetting(
+                "check_for_updates", () => SettingCheckForUpdates, defaultValue: true, store));
         }
 
         /// <summary>Whether the sonar should sound the given <see cref="World.WorldTaxonomy.Scan"/> browse

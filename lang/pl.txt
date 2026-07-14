@@ -10,6 +10,7 @@
 _plural = slavic
 ModLoaded = Wczytano Whirling in Words {0}
 ModuleFailed = Nie udało się wczytać funkcji Whirling in Words
+UpdateAvailable = Dostępna aktualizacja {0} Whirling in Words, uruchom instalator, aby zaktualizować
 InputNavigateUp = Przejdź w górę
 InputNavigateDown = Przejdź w dół
 InputNavigateLeft = Przejdź w lewo
@@ -200,6 +201,7 @@ SettingSonarCategory = Sonar: {0}
 SettingScannerFromCursor = Odczyty skanera od kursora
 SettingRunToDestinations = Biegnij do celów
 SettingUnrestrictCursor = Kursor bez ograniczeń
+SettingCheckForUpdates = Sprawdzaj aktualizacje przy uruchomieniu
 DialogueContinue = kontynuuj
 DialogueAlreadyChosen = już wybrane
 DialogueNotReady = jeszcze nie gotowe

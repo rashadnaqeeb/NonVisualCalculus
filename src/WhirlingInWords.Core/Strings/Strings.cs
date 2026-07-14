@@ -44,6 +44,11 @@ namespace WhirlingInWords.Core.Strings
             // Spoken at launch instead when the feature module fails to load (the mod is then dead).
             // Same mod-name rule as ModLoaded.
             D("ModuleFailed", "Whirling in Words features failed to load"),
+            // Spoken once, shortly after the load line, when a newer mod release exists online;
+            // {0} = the new version ("1.1.0"). "the installer" = the mod's own installer app, which
+            // the player already used to install the mod and which also updates it - match the word
+            // that installer's UI uses for itself in this language. Same mod-name rule as ModLoaded.
+            D("UpdateAvailable", "Whirling in Words update {0} available, run the installer to update"),
 
             // Input action descriptions: the human-readable name of each bound action, for a keybindings
             // reader to speak. DE names none of these (they are our own controls), so they are authored.
@@ -381,6 +386,9 @@ namespace WhirlingInWords.Core.Strings
             // Toggle, a testing aid: the cursor may leave the visible frame and enter fog-of-war ground
             // instead of stopping at those edges.
             D("SettingUnrestrictCursor", "Unrestricted cursor"),
+            // Toggle: at launch, look up the mod's newest release online and speak UpdateAvailable if
+            // the installed mod is older (up to date stays silent).
+            D("SettingCheckForUpdates", "Check for updates at launch"),
 
             // Dialogue and checks.
             // The control that advances a conversation when there are no response choices; verb.
@@ -811,6 +819,8 @@ namespace WhirlingInWords.Core.Strings
         /// <summary>The launch announcement; version is the mod's build version.</summary>
         public static string ModLoaded(string version) => F("ModLoaded", version);
         public static string ModuleFailed => T("ModuleFailed");
+        /// <summary>Spoken once when a newer mod release exists; version is the new release's.</summary>
+        public static string UpdateAvailable(string version) => F("UpdateAvailable", version);
 
         // Input action descriptions (see the table above).
         public static string InputNavigateUp => T("InputNavigateUp");
@@ -1079,6 +1089,7 @@ namespace WhirlingInWords.Core.Strings
         public static string SettingScannerFromCursor => T("SettingScannerFromCursor");
         public static string SettingRunToDestinations => T("SettingRunToDestinations");
         public static string SettingUnrestrictCursor => T("SettingUnrestrictCursor");
+        public static string SettingCheckForUpdates => T("SettingCheckForUpdates");
 
         // The navigable affordance that advances a conversation when there are no response choices
         // (DE's own continue control is an image with no clean text label).
