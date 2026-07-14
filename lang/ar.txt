@@ -135,6 +135,7 @@ ThoughtResearching = قيد البحث، {0} بالمئة
 DurationZero = أقل من دقيقة
 DurationHours = {0} ساعة|ساعة واحدة|ساعتان|{0} ساعات|{0} ساعة|{0} ساعة
 DurationMinutes = {0} دقيقة|دقيقة واحدة|دقيقتان|{0} دقائق|{0} دقيقة|{0} دقيقة
+DurationHoursMinutes = {0} {1}
 JournalStatusActive = نشطة
 JournalStatusDone = مكتملة
 JournalStatusCancelled = ملغاة

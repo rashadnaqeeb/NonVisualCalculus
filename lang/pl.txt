@@ -136,6 +136,7 @@ ThoughtResearching = analiza, {0} procent
 DurationZero = mniej niż minuta
 DurationHours = {0} godzina|{0} godziny|{0} godzin
 DurationMinutes = {0} minuta|{0} minuty|{0} minut
+DurationHoursMinutes = {0} {1}
 JournalStatusActive = aktywne
 JournalStatusDone = ukończone
 JournalStatusCancelled = anulowane

@@ -139,6 +139,7 @@ ThoughtResearching = desarrollando, {0} por ciento
 DurationZero = menos de un minuto
 DurationHours = {0} hora|{0} horas
 DurationMinutes = {0} minuto|{0} minutos
+DurationHoursMinutes = {0} {1}
 JournalStatusActive = activa
 JournalStatusDone = completada
 JournalStatusCancelled = cancelada

@@ -151,6 +151,7 @@ ThoughtResearching = araştırılıyor, yüzde {0}
 DurationZero = bir dakikadan az
 DurationHours = {0} saat
 DurationMinutes = {0} dakika
+DurationHoursMinutes = {0} {1}
 JournalStatusActive = etkin
 JournalStatusDone = bitti
 JournalStatusCancelled = iptal edildi

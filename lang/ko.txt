@@ -146,6 +146,7 @@ ThoughtResearching = 연구 중, {0} 퍼센트
 DurationZero = 1분 미만
 DurationHours = {0}시간
 DurationMinutes = {0}분
+DurationHoursMinutes = {0} {1}
 JournalStatusActive = 진행 중
 JournalStatusDone = 완료
 JournalStatusCancelled = 취소됨

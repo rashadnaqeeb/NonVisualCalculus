@@ -134,6 +134,7 @@ ThoughtResearching = изучается, {0} процентов
 DurationZero = меньше минуты
 DurationHours = {0} час|{0} часа|{0} часов
 DurationMinutes = {0} минута|{0} минуты|{0} минут
+DurationHoursMinutes = {0} {1}
 JournalStatusActive = активно
 JournalStatusDone = выполнено
 JournalStatusCancelled = отменено
