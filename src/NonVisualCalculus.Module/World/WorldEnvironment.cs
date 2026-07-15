@@ -124,10 +124,8 @@ namespace NonVisualCalculus.Module.World
                     // instantly though the floor continues - so try the whole step directly first, or the
                     // stroke degrades into probe-step crawling through the boundary hop below.
                     if ((boundary.position - f).sqrMagnitude < PhantomHit * PhantomHit
-                        && NavMesh.SamplePosition(t, out NavMeshHit direct, ProbeRadius, AllAreas)
-                        && AlignedResume(f, dir, direct.position)
-                        && CheapWalk(f, direct.position))
-                        return WorldConvert.ToSnv(direct.position);
+                        && BestResume(f, dir, t, out Vector3 direct, out _))
+                        return WorldConvert.ToSnv(direct);
                     if (TrySkipBoundary(boundary.position, dir, out Vector3 resume))
                         return WorldConvert.ToSnv(resume);
                 }
@@ -168,14 +166,17 @@ namespace NonVisualCalculus.Module.World
 
         // Can the cursor hop a navmesh boundary at <paramref name="boundary"/> travelling along unit
         // <paramref name="dir"/>? March past it up to SkipProbeDistance for where the mesh resumes, then take
-        // the gap only when a complete path from the boundary to that ground exists and is no longer than
-        // SkipDetourRatio times the straight hop - so small debris (a short walk-around) and stair steps
+        // the gap only when a complete path from the boundary to that ground exists and is within the hop's
+        // detour allowance (see CheapWalk) - so small debris (a short walk-around) and stair steps
         // (whose treads connect directly) are skipped while a thin wall with ground close behind it (a long
         // walk-around, or no path at all) is not. Boundaries include STEP SEAMS, not just gaps: a staircase
         // bakes as treads the pathfinder walks but Raycast stops at (the plaza roundabout's platform stairs),
         // with the next tread a hair forward and a fraction of a metre up - so resumed ground is judged by
         // planar FORWARD PROGRESS along the glide (a near-edge snap-back has none), never by an absolute
-        // gap floor, which re-seals exactly those seams. The single source of truth for "passable" shared
+        // gap floor, which re-seals exactly those seams. Ground is sought at stepped heights on both
+        // sides of the march line (see BestResume): a seam between FLOORS - an interior staircase,
+        // Evrart's office dropping ~1.1 m over ~1.5 m - resumes well below (or above) the boundary's own
+        // height, where a flat sphere alone cannot reach. The single source of truth for "passable" shared
         // by the cursor clamp and the wall-tone cast, so they never disagree. Tuning constants below are
         // hot-reloadable (F6): a pure-module edit re-lands them live.
         private static bool TrySkipBoundary(Vector3 boundary, Vector3 dir, out Vector3 resume)
@@ -183,15 +184,44 @@ namespace NonVisualCalculus.Module.World
             resume = default;
             for (float t = ProbeStep; t <= SkipProbeDistance; t += ProbeStep)
             {
-                if (!NavMesh.SamplePosition(boundary + dir * t, out NavMeshHit r, ProbeRadius, AllAreas))
-                    continue;
-                if (!AlignedResume(boundary, dir, r.position))
-                    continue; // near-edge or sideways snap: keep marching
-                if (!CheapWalk(boundary, r.position)) return false;
-                resume = r.position;
-                return true;
+                if (BestResume(boundary, dir, boundary + dir * t, out resume, out bool sawAligned))
+                    return true;
+                if (sawAligned) return false; // ground along the stroke with no trivial walk to it: a wall
             }
             return false;
+        }
+
+        // The best resumed ground visible from one probe point: sample at stepped heights (ProbeLifts -
+        // a floor seam's ground sits about a metre off the stroke's own height, past one flat sphere's
+        // reach), keep candidates genuinely along the stroke (AlignedResume) and trivially walkable
+        // (CheapWalk), and of those take the FURTHEST planar progress. On a staircase edge the down-slope
+        // stair ribbon and the far floor can both qualify, and the ribbon (a diagonal at the 45-degree
+        // cone's own edge) merely projects the stroke, so the furthest candidate is the stroke's actual
+        // intent. sawAligned reports aligned ground that failed the walk test (a thin wall with floor
+        // close behind it), which refuses the whole hop.
+        private static bool BestResume(Vector3 origin, Vector3 dir, Vector3 probe, out Vector3 resume, out bool sawAligned)
+        {
+            resume = default;
+            sawAligned = false;
+            float bestForward = 0f;
+            bool found = false;
+            foreach (float lift in ProbeLifts)
+            {
+                if (!NavMesh.SamplePosition(probe + Vector3.up * lift, out NavMeshHit r, ProbeRadius, AllAreas))
+                    continue;
+                if (!AlignedResume(origin, dir, r.position))
+                    continue; // near-edge or sideways snap
+                sawAligned = true;
+                if (!CheapWalk(origin, r.position)) continue;
+                float forward = (r.position.x - origin.x) * dir.x + (r.position.z - origin.z) * dir.z;
+                if (!found || forward > bestForward)
+                {
+                    resume = r.position;
+                    bestForward = forward;
+                    found = true;
+                }
+            }
+            return found;
         }
 
         // Whether a candidate resume point is genuinely along the stroke: planar forward progress past
@@ -211,13 +241,18 @@ namespace NonVisualCalculus.Module.World
         }
 
         // Whether a complete navmesh walk connects the points at no more than the hop detour allowance -
-        // the "same floor, trivially crossed" test shared by the boundary hop and the phantom-edge step.
+        // the "trivially crossed" test shared by the boundary hop and the phantom-edge step. The allowance
+        // grows with the height the hop crosses (ClimbDetourPerMeter): a staircase's treads zigzag, so its
+        // path runs long against the straight slope hop, while a FLAT hop keeps the plain ratio cap - the
+        // guard that refuses a thin wall with ground close behind it is unchanged on level ground.
         private static bool CheapWalk(Vector3 a, Vector3 b)
         {
             var path = new NavMeshPath();
             if (!NavMesh.CalculatePath(a, b, AllAreas, path)) return false;
             if (path.status != NavMeshPathStatus.PathComplete) return false;
-            return PathLength(path) <= Mathf.Max(Vector3.Distance(a, b) * SkipDetourRatio, MinDetourAllowance);
+            float allowance = Mathf.Max(Vector3.Distance(a, b) * SkipDetourRatio, MinDetourAllowance)
+                              + Mathf.Abs(b.y - a.y) * ClimbDetourPerMeter;
+            return PathLength(path) <= allowance;
         }
 
         private static float PathLength(NavMeshPath path)
@@ -326,6 +361,17 @@ namespace NonVisualCalculus.Module.World
         // The detour allowance's floor: a step seam's straight hop is tiny (~0.15 m), and twice that would
         // refuse the stair path's own riser zigzag, so a hop this short is allowed a short absolute walk-around.
         private const float MinDetourAllowance = 0.5f;
+        // Vertical offsets the resume probe samples at (every one is scanned; BestResume picks by forward
+        // progress, not sample order). A floor seam's resumed ground sits about a metre off the march line
+        // (Evrart's office stairs: ~1.05 m below), past the flat sphere's reach. The band caps at
+        // lift + ProbeRadius = 1.7 m, well under stacked-interior floor spacing, so another storey never
+        // reads as resumed ground.
+        private static readonly float[] ProbeLifts = { 0f, -0.6f, 0.6f, -1.2f, 1.2f };
+        // Extra walk-around allowance per metre of height a hop crosses (see CheapWalk). Evrart's office
+        // stairs measure a 2.81 m path against a 1.38 m straight hop (ratio 2.04, refused by the flat cap);
+        // one extra metre per metre of drop admits a staircase's zigzag while a railing or ledge whose real
+        // descent is a distant stair (several times the hop) stays refused.
+        private const float ClimbDetourPerMeter = 1.0f;
         // A raycast hit within this of the ray's origin is the cursor standing on the mesh edge itself
         // (see TraceMove), not a boundary out along the stroke.
         private const float PhantomHit = 0.05f;
