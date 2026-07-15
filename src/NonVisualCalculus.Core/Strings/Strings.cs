@@ -667,9 +667,9 @@ namespace NonVisualCalculus.Core.Strings
             D("WorldStopped", "stopped"),
             // A committed walk stalled mid-path (something blocked it) and gave up short of its spot.
             D("WorldStoppedShort", "stopped short"),
-            // A walk was refused because an unresolved thought orb pins the character in place; full
-            // clause telling the player to trigger the orb to get free.
-            D("WorldOrbHolds", "held by an orb, resolve it to move"),
+            // A world action was refused because an unresolved thought or paralyzer orb pins the
+            // character in place; full clause telling the player to interact with the orb to get free.
+            D("WorldOrbHolds", "held by an orb, interact with it to continue"),
             // A world action (a walk, a screen open, a hand item) was refused because the game is not
             // accepting world input yet (a scripted scene still animating after a dialogue's last line,
             // a camera move, a transition); it clears by itself when control returns.
@@ -1345,9 +1345,9 @@ namespace NonVisualCalculus.Core.Strings
         /// "moving" is never left dangling in silence.</summary>
         public static string WorldStoppedShort => T("WorldStoppedShort");
 
-        /// <summary>Spoken when a walk is refused because a paralyzer or unresolved thought orb holds the
-        /// character in place (the game's own movement block); the orb rides the character and must be
-        /// triggered to release it.</summary>
+        /// <summary>Spoken when a world action is refused because a paralyzer or unresolved thought orb
+        /// holds the character in place (the game's own movement block, whose orb also holds the input
+        /// lock); the orb rides the character and interacting with it is what releases the hold.</summary>
         public static string WorldOrbHolds => T("WorldOrbHolds");
 
         /// <summary>Spoken when a world action (a walk, a screen open, a hand item) is refused because the

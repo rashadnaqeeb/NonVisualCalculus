@@ -63,7 +63,10 @@ namespace NonVisualCalculus.Module.World
         private bool MayAct()
         {
             if (!GameInputLock.Held) return true;
-            _host.Speech.Speak(Strings.WorldNoControl, interrupt: true);
+            // A paralyzer or unresolved thought orb holds the input lock itself, so name the orb - the
+            // player must interact with it - rather than a scene that would pass by itself.
+            _host.Speech.Speak(GlobalOrbManager.HasOrbsBlockingTequilaMovement()
+                ? Strings.WorldOrbHolds : Strings.WorldNoControl, interrupt: true);
             return false;
         }
 

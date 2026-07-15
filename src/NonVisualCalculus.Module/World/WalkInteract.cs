@@ -57,23 +57,27 @@ namespace NonVisualCalculus.Module.World
         /// an orb is walked to by this verb and triggered on arrival.</summary>
         public bool BeginInteract(IWalkTarget target, Snv from)
         {
+            // A paralyzer or unresolved thought orb freezes the character where they stand (the game's own
+            // HasOrbsBlockingTequilaMovement gate, which its move paths honour silently) - and the holding
+            // orb keeps a GameController input lock of its own, so this is judged BEFORE the generic
+            // input-lock refusal: the hold is spoken as what it is, and an interact with the holding orb
+            // itself (a player-anchored orb travels nowhere) passes through - its Open is the game's own
+            // orb-UI click, which the world-click gate never applied to, and is what releases the hold.
+            if (MovementBlocked())
+            {
+                if (!target.RidesPlayer)
+                {
+                    _host.Speech.Speak(Strings.WorldOrbHolds, interrupt: true);
+                    return false;
+                }
+            }
             // The game ignores world clicks while any input lock is held (see GameInputLock): its own
             // click paths check this before moving, so mirror it at command time - Drive is the raw
             // MoveToTarget, which skips that gate, and a bookmark walk arrives from the menu without the
             // world reader's ownership check. Spoken, so the refusal is never a silent dead key.
-            if (GameInputLock.Held)
+            else if (GameInputLock.Held)
             {
                 _host.Speech.Speak(Strings.WorldNoControl, interrupt: true);
-                return false;
-            }
-
-            // A paralyzer or unresolved thought orb freezes the character where they stand (the game's own
-            // HasOrbsBlockingTequilaMovement gate, which its move paths honour silently). Refuse first, so
-            // the hold is SPOKEN rather than the game's mute refusal - except an in-place interact with the
-            // holding orb itself (a player-anchored orb travels nowhere), which is how the block is released.
-            if (MovementBlocked() && !target.RidesPlayer)
-            {
-                _host.Speech.Speak(Strings.WorldOrbHolds, interrupt: true);
                 return false;
             }
 
@@ -115,17 +119,18 @@ namespace NonVisualCalculus.Module.World
         /// walkable and getting closer can make that thing reachable for a follow-up).</summary>
         public bool BeginWalk(Snv point, string announcement)
         {
+            // Bare-ground walk carries the character off with no target to resolve the hold, so it is always
+            // refused while a paralyzer or unresolved thought orb holds them in place - named before the
+            // generic input-lock refusal, since the holding orb keeps that lock held too (see BeginInteract).
+            if (MovementBlocked())
+            {
+                _host.Speech.Speak(Strings.WorldOrbHolds, interrupt: true);
+                return false;
+            }
             // The game's input-lock gate, exactly as in BeginInteract.
             if (GameInputLock.Held)
             {
                 _host.Speech.Speak(Strings.WorldNoControl, interrupt: true);
-                return false;
-            }
-            // Bare-ground walk carries the character off with no target to resolve the hold, so it is always
-            // refused while a paralyzer or unresolved thought orb holds them in place (see BeginInteract).
-            if (MovementBlocked())
-            {
-                _host.Speech.Speak(Strings.WorldOrbHolds, interrupt: true);
                 return false;
             }
             // The game priced the spot unwalkable (off-mesh, or inside something's footprint - likelier for
