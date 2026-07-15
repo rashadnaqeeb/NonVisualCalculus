@@ -4,6 +4,8 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 ## Unreleased
 
+## V1.1.2
+
 Bug fixes:
 
 - Fixed the stairs in the union office being untraversable with the cursor. Warning: they are still very narrow; the bookmark system is suggested in this room.
