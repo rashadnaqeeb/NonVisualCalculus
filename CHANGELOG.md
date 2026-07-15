@@ -4,6 +4,8 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 ## Unreleased
 
+## V1.1.1
+
 Bug fixes:
 
 - A thought or paralyzer orb that pins the character can now be opened instead of every action refusing with "cutscene playing".
