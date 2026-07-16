@@ -115,9 +115,7 @@ namespace NonVisualCalculus.Module
         // What the item does, read straight off its own model so it is correct for the item being
         // announced (the shared tooltip lags a frame behind focus): the equip effects, then for a substance
         // the effects-when-used riding its buffs, labelled with the game's own hover header so a drug's
-        // payload is not mistaken for a wear bonus. Each effect's own full name already carries the sign,
-        // the affected skill, and the flavour line ("+1 Half Light: Head as battering ram"); we only strip
-        // its colour markup and join them.
+        // payload is not mistaken for a wear bonus.
         private static string Effects(InventoryItem item)
         {
             var parts = new List<string>();
@@ -140,17 +138,25 @@ namespace NonVisualCalculus.Module
             return parts.Count > 0 ? string.Join(", ", parts) : null;
         }
 
+        // One effect reads as the game's tooltip renders it: EffectName (which knows every effect kind -
+        // a skill bonus's skill, an ability bonus's attribute, damage as "-1 Health"/"-1 Morale", a tool's
+        // instruction line) plus the flavour quip after a colon when one exists. EffectFullName is NOT that
+        // formatter: it renders the skillType field regardless of kind, so an ability bonus reads "+1 None"
+        // and health damage reads its resist skill, "+1 Endurance". The flags are editor, withColor, and
+        // the two RTL reverts, all off: speech needs the plain logical string, and the parts are cleaned
+        // separately (name and quip are distinct game strings, so a joined line cannot be unfixed whole).
         private static void AddEffects(CharacterEffect[] effects, List<string> parts)
         {
             if (effects == null) return;
             foreach (CharacterEffect e in effects)
             {
                 if (e == null) continue;
-                // Skip effects with no stat target (e.g. a tool's TOOLTIP effect reads "+0 None"): keep only
-                // those that boost a skill or an attribute.
-                if (e.skillType == SkillType.NONE && e.abilityType == AbilityType.Error) continue;
-                string full = e.EffectFullName();
-                if (!string.IsNullOrEmpty(full)) parts.Add(TextFilter.Clean(full));
+                string name = e.EffectName(false, false, false, false);
+                if (string.IsNullOrWhiteSpace(name)) continue; // the game's own skip condition
+                name = TextFilter.Clean(name);
+                string term = e.quipLineTerm.Term;
+                string quip = string.IsNullOrEmpty(term) ? null : GameLocalization.Term(term, null);
+                parts.Add(string.IsNullOrEmpty(quip) ? name : name + ": " + TextFilter.Clean(quip));
             }
         }
 
