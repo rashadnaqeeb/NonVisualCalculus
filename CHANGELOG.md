@@ -4,6 +4,8 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 ## Unreleased
 
+## V1.1.3
+
 Bug fixes:
 
 - Item effects now read as the game shows them: attribute bonuses, substance damage, and instruction lines were misread or skipped ("+1 None" for +1 Intellect).
