@@ -19,9 +19,28 @@ namespace NonVisualCalculus.Module.Input
 
     internal static class ModTextEntry
     {
+        private static IModTextSession _active;
+
         /// <summary>The active session, null when none. Set by the editing cell, cleared by the session
-        /// ending (commit/cancel) or its host overlay closing.</summary>
-        internal static IModTextSession Active;
+        /// ending (commit/cancel) or its host overlay closing. The setter also owns the OS IME: Unity's
+        /// default Auto mode enables composition only for the engine's own input fields, and this field
+        /// is mod-drawn, so CJK typing composes only while a session explicitly turns the IME on.</summary>
+        internal static IModTextSession Active
+        {
+            get => _active;
+            set
+            {
+                _active = value;
+                UnityEngine.Input.imeCompositionMode = value != null
+                    ? UnityEngine.IMECompositionMode.On
+                    : UnityEngine.IMECompositionMode.Auto;
+            }
+        }
+
+        /// <summary>Whether the IME holds an uncommitted composition. While it does, Enter and Escape
+        /// belong to the IME (accept or cancel the composition), not the edit; the committed characters
+        /// arrive through <c>Input.inputString</c> like any typed text.</summary>
+        internal static bool Composing => !string.IsNullOrEmpty(UnityEngine.Input.compositionString);
 
         /// <summary>Feed this frame's OS-typed characters (<c>Input.inputString</c>, which honors
         /// keyboard layout and key repeat) into the active session. Ctrl/Alt chords are hotkeys, never

@@ -440,6 +440,9 @@ namespace NonVisualCalculus.Module
             IModTextSession edit = ModTextEntry.Active;
             if (edit != null)
             {
+                // Mid-composition the IME owns Enter (accept) and Escape (cancel); the edit acts only
+                // once no composition is pending.
+                if (ModTextEntry.Composing) return true;
                 if (key == UiActions.Activate) edit.Commit();
                 else if (key == UiActions.Back) edit.Cancel();
                 return true;

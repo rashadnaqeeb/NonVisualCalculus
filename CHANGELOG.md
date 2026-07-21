@@ -4,6 +4,10 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 ## Unreleased
 
+Bug fixes:
+
+- The bookmark name field now accepts IME-composed text, so Chinese and other IME names can be typed.
+
 ## V1.1.4
 
 New Features and improvements:
