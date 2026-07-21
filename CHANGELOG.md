@@ -4,6 +4,8 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 ## Unreleased
 
+## V1.1.5
+
 New Features and improvements:
 
 - Hold Shift with WASD to move the cursor at double speed.
