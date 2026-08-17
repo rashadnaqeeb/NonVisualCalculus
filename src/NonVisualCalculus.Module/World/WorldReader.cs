@@ -89,8 +89,11 @@ namespace NonVisualCalculus.Module.World
             _objects.BindMode(() => PlayMode.Continuous);
             _overlay.With(_objects);
             _spatial = new SpatialSystem();
-            // Until the settings menu wires the world systems, the cursor readout is simply on.
-            _spatial.BindMode(() => PlayMode.Continuous);
+            // The cursor's point readout measures from the character, so it only makes sense while the
+            // player's frame of reference IS the character: with cursor-relative readouts chosen, every
+            // other bearing is measured from the cursor and this lone character-relative one would
+            // contradict them.
+            _spatial.BindMode(() => host.Settings.ScannerFromCursor.Value ? PlayMode.Off : PlayMode.Continuous);
             _overlay.With(_spatial);
             // Wall tones: continuous when the player chose it, else only while the cursor is gliding (and the
             // brief linger after). The same env backs the cursor clamp and the wall-distance cast.

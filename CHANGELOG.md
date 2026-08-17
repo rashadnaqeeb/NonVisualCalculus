@@ -11,6 +11,7 @@ New Features and improvements:
 Bug fixes:
 
 - The scanner now finds wall-mounted things hanging high above the floor, such as the pawnshop's shelf of boomboxes.
+- The cursor no longer reads its bearing and distance from your character while scanner readouts are set to come from the cursor.
 
 ## V1.1.5
 
