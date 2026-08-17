@@ -577,10 +577,11 @@ namespace NonVisualCalculus.Module.World
         // connect via their own steps, the plaza below the Whirling balcony is a separate island. A body with no walkable mesh
         // under it at all is grounded at its edge instead (MooredGround): the fishing village's Motorboat
         // floats on water, which carries no navmesh, but its gunwale meets the walkway a sighted player
-        // clicks it from. The game's click oracle (IsActionable) is deliberately not consulted: its
-        // stand-point search is a 3D radius that can grab a spot on an unrelated level over the thing's
-        // head (the Whirling front door's 3 m radius reaches the balcony floor above it, and the oracle
-        // then paths two metres to the balcony edge and calls the ground-floor door reachable).
+        // clicks it from. Where the geometry locates no ground at all the game's own click pricing answers
+        // instead, under a guard (HangingReach): the pricing's stand-point search is a 3D radius that can
+        // grab a spot on an unrelated level over the thing's head (the Whirling front door's 3 m radius
+        // reaches the balcony floor above it, then paths two metres to the balcony edge and calls the
+        // ground-floor door reachable), so its verdict is taken only for a spot under the body.
         // Whether ReachableFrom prices the game's own click (a person, or a thing with authored interaction
         // stand-spots) rather than falling back to the markerless standing-ground geometry. The click pricing
         // never returns Unproven - its "no" is always a proven Severed the same-level gates trust; the
@@ -593,11 +594,11 @@ namespace NonVisualCalculus.Module.World
             // A click-priced thing's refusal is the game's own pricing, always trustworthy: finite is
             // Reachable, infinite is a proven Severed (never Unproven).
             if (ReachIsClickPriced) return ClickWouldAct() ? ReachState.Reachable : ReachState.Severed;
-            // Markerless: no standing ground located at all (past the drop cap, floating over its surface) is
-            // an Unproven refusal the same-level gate must not trust - the finder missed, the thing may still
-            // be reachable. Ground found but the path to it cut is a proven Severed refusal.
+            // Markerless: no standing ground located at all (hung past the drop cap, floating over its
+            // surface) leaves the geometry nothing to path to, so the game's own click decides instead.
+            // Ground found but the path to it cut is a proven Severed refusal.
             if (!StandingGround(from, out UnityEngine.Vector3 ground) && !MooredGround(from, out ground))
-                return ReachState.Unproven;
+                return HangingReach(from);
             var path = new UnityEngine.AI.NavMeshPath();
             bool complete = UnityEngine.AI.NavMesh.CalculatePath(WorldConvert.ToUnity(from), ground, -1, path)
                             && path.status == UnityEngine.AI.NavMeshPathStatus.PathComplete;
@@ -619,6 +620,28 @@ namespace NonVisualCalculus.Module.World
         {
             MovementCommand command = PriceClick();
             return command != null && !float.IsPositiveInfinity(command.cost);
+        }
+
+        // The verdict for a body with no standing ground of its own: a thing hung over the floor it is used
+        // from, higher than the floor band reaches (the pawnshop's shelf of boomboxes hangs 3.47 m over the
+        // shop floor, and the game prices clicking it cheaper than anything else in the room). Such a thing
+        // rests on nothing the geometry can path to, so the game's own click pricing is the verdict - guarded
+        // against the one way that pricing over-accepts, its radius grabbing a stand spot on a level OVER the
+        // thing's head. A hanging body is used from underneath, so the spot it picked must sit no higher than
+        // the body, within the same headroom a floor plane gets. A refusal stays Unproven rather than Severed:
+        // this body's floor was never located, so the same-level gate must keep applying its permissive rule.
+        private ReachState HangingReach(Vector3 from)
+        {
+            MovementCommand command = PriceClick();
+            if (command != null && !float.IsPositiveInfinity(command.cost))
+            {
+                Formation to = command.to;
+                if (to.IsValid && to.Count > 0
+                    && to.GetPosition(0).y <= _e.transform.position.y + GroundHeadroom)
+                    return ReachState.Reachable;
+            }
+            WarnIfNearMiss(from);
+            return ReachState.Unproven;
         }
 
         // Diagnostic accessor for the reachability audit (WorldReader.DevReach): the game's own click
@@ -721,7 +744,6 @@ namespace NonVisualCalculus.Module.World
                 }
             }
             ground = default;
-            WarnIfNearMiss(foot);
             return false;
         }
 
@@ -746,21 +768,24 @@ namespace NonVisualCalculus.Module.World
             return WorldConvert.ToUnity(Bounds.NearestPoint(WorldConvert.ToSnv(reference)));
         }
 
-        // Surface a silent over-reject to the log: a markerless interactable that fails StandingGround yet
-        // hangs a hair above real floor was dropped as unreachable though a sighted player still uses it (the
-        // Whirling dress shirt hung 2.52 m over its floor, 0.02 m past the old 2.5 m cap). This runs on the
-        // same scan/cursor path a sighted player's own review drives, so the NEXT such item announces itself
-        // to the log during ordinary play - the class is defined by no one knowing the item is there to look
-        // for. Deduped per proxy (the geometry is static), so the per-scan path probes and logs at most once
-        // per area. Only a floor within the near-miss band trips it: a genuine floating-over-void body finds
-        // no floor and a correct storey-down reject (the mezzanine door over the bar floor ~3.5 m below) sits
-        // past the band, so neither is flagged. The caller has already established this body is accessible,
-        // visible, and in-frame (ScanScope/ObjectCueSystem gate on those before ReachableFrom), so a hit here
-        // is exactly a thing that should be offered and is not.
-        private void WarnIfNearMiss(UnityEngine.Vector3 foot)
+        // Surface a silent over-reject to the log: a markerless interactable that found no standing ground and
+        // that the game's own click refused too (HangingReach's Unproven leg), yet hangs a hair above real
+        // floor - the shape of a floor band set a little short, which once hid the Whirling dress shirt 0.02 m
+        // past the old 2.5 m cap. This runs on the same scan/cursor path a sighted player's own review drives,
+        // so the NEXT such item announces itself to the log during ordinary play - the class is defined by no
+        // one knowing the item is there to look for. Deduped per proxy (the geometry is static), so the
+        // per-scan path probes and logs at most once per area. Only a floor within the near-miss band trips
+        // it: a genuine floating-over-void body finds no floor and a correct storey-down reject (the mezzanine
+        // door over the bar floor ~3.5 m below) sits past the band, so neither is flagged. The caller has
+        // already established this body is accessible, visible, and in-frame (ScanScope/ObjectCueSystem gate
+        // on those before ReachableFrom), so a hit here is a dropped thing worth a second look: the floor band
+        // ends just short of ground a player could stand on.
+        private void WarnIfNearMiss(Vector3 from)
         {
             if (_nearMissChecked) return;
             _nearMissChecked = true;
+            UnityEngine.Vector3 near = NearestClickPoint(WorldConvert.ToUnity(from));
+            var foot = new UnityEngine.Vector3(near.x, _e.transform.position.y, near.z);
             var probe = new UnityEngine.Vector3(foot.x, foot.y - GroundMaxDrop, foot.z);
             if (!UnityEngine.AI.NavMesh.SamplePosition(probe, out var hit, GroundSampleRadius, -1)) return;
             float depth = foot.y - hit.position.y;

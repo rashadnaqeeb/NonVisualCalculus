@@ -4,6 +4,10 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 ## Unreleased
 
+Bug fixes:
+
+- The scanner now finds wall-mounted things hanging high above the floor, such as the pawnshop's shelf of boomboxes.
+
 ## V1.1.5
 
 New Features and improvements:
