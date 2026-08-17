@@ -10,6 +10,7 @@ New Features and improvements:
 
 Bug fixes:
 
+- In languages other than English, the pause menu now announces itself as the pause menu and offers the learn game sounds entry.
 - The scanner now finds wall-mounted things hanging high above the floor, such as the pawnshop's shelf of boomboxes.
 - The cursor no longer reads its bearing and distance from your character while scanner readouts are set to come from the cursor.
 

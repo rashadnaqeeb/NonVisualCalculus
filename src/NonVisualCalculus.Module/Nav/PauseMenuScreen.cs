@@ -24,10 +24,15 @@ namespace NonVisualCalculus.Module.Nav
 
         public override string ScreenName => Strings.ScreenPauseMenu;
 
+        // The I2 term behind the return-to-title "Main Menu" button. DE names each menu button's GameObject
+        // after the button's LOCALIZED label, so the term is what identifies a button in any language -
+        // the same handle MainMenuButton itself keys off to pick its click sound.
+        private const string QuitToTitleTerm = "MAIN_MENU_QUIT_TO_MENU";
+
         // This is the pause menu, not the title menu, when the return-to-title "Main Menu" button is present
         // and active: that action exists only while a game is loaded. (A game-session signal would read
         // cleaner, but DE has none we could find: GameMenuManager exists at the title too, and every
-        // location scene is always loaded additively, so neither distinguishes. If this name match ever goes
+        // location scene is always loaded additively, so neither distinguishes. If this term match ever goes
         // stale and the title-menu fallback claims the pause overlay, the player is not stranded: its
         // Continue button still resumes, and an unconsumed Escape is handed back to the game, which resumes.)
         public override bool AppliesNow()
@@ -39,7 +44,10 @@ namespace NonVisualCalculus.Module.Nav
                 Transform child = content.GetChild(i);
                 if (!child.gameObject.activeInHierarchy) continue;
                 Selectable selectable = child.GetComponent<Selectable>();
-                if (selectable != null && selectable.interactable && child.gameObject.name == "Main Menu")
+                if (selectable == null || !selectable.interactable) continue;
+                MainMenuButton button = child.GetComponent<MainMenuButton>();
+                if (button != null && button.localization != null
+                    && button.localization.Term == QuitToTitleTerm)
                     return true;
             }
             return false;
