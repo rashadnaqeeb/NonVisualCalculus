@@ -4,6 +4,8 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 ## Unreleased
 
+## V1.1.6
+
 New Features and improvements:
 
 - Mod menu settings now explain what they do, spoken after the setting's state.
