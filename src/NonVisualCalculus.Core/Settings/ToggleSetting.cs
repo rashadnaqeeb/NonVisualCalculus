@@ -14,8 +14,9 @@ namespace NonVisualCalculus.Core.Settings
 
         public bool Value { get; private set; }
 
-        public ToggleSetting(string key, System.Func<string> label, bool defaultValue, ISettingsStore store)
-            : base(key, label)
+        public ToggleSetting(string key, System.Func<string> label, bool defaultValue, ISettingsStore store,
+                             System.Func<string>? description = null)
+            : base(key, label, description)
         {
             DefaultValue = defaultValue;
             _store = store;

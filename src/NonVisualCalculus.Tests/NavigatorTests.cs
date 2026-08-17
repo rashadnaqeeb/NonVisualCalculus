@@ -49,6 +49,21 @@ namespace NonVisualCalculus.Tests
                 => changed ? GetValueText() : "blocked here";
         }
 
+        // A toggle that also explains what it does, as a mod-settings row does.
+        private sealed class DescribedToggle : UIElement
+        {
+            public bool On;
+            public override string Label => "Continuous sonar";
+            public override string Role => "toggle";
+            public override string Value => On ? "on" : "off";
+            public override string Description => "Keeps sweeping while the cursor is not moving.";
+            public override bool ReannounceOnActivate => true;
+            public override IEnumerable<ElementAction> GetActions()
+            {
+                yield return new ElementAction(ActionIds.Activate, () => On = !On);
+            }
+        }
+
         private static (Container root, Stepper stepper) StepperTree(int val, int min, int max)
         {
             var root = new Container(ContainerShape.Panel);
@@ -95,6 +110,27 @@ namespace NonVisualCalculus.Tests
             Assert.True(nav.Handle(UiActions.Down));
             Assert.Same(items[1], nav.Current);
             Assert.Equal(new[] { "New Game, button" }, _spoken);
+        }
+
+        [Fact]
+        public void Description_FollowsTheStateOnLanding_ButNotOnTheChange()
+        {
+            var root = new Container(ContainerShape.Panel);
+            var list = new Container(ContainerShape.VerticalList);
+            var toggle = new DescribedToggle();
+            list.Add(toggle);
+            root.Add(list);
+            var nav = NewNav();
+            nav.Attach(root);
+
+            nav.AnnounceCurrent();
+            Assert.Equal("Continuous sonar, toggle, off, Keeps sweeping while the cursor is not moving.",
+                _spoken[^1]);
+
+            // Flipping it re-announces the new state alone - the explanation was heard on landing.
+            Assert.True(nav.Handle(UiActions.Activate));
+            Assert.True(toggle.On);
+            Assert.Equal("on", _spoken[^1]);
         }
 
         [Fact]

@@ -76,41 +76,55 @@ namespace NonVisualCalculus.Core.Settings
 
         public ModSettings(ISettingsStore store)
         {
-            // Labels are providers, not captured strings: the settings outlive module reloads and a
-            // language switch, so each label resolves through the strings table at speak time.
+            // Labels and explanations are providers, not captured strings: the settings outlive module
+            // reloads and a language switch, so each resolves through the strings table at speak time.
+            // The two volumes pass no explanation - their label and percentage say everything.
             AutoReadDialogue = Add(new ToggleSetting(
-                "auto_read_dialogue", () => SettingAutoReadDialogue, defaultValue: true, store));
+                "auto_read_dialogue", () => SettingAutoReadDialogue, defaultValue: true, store,
+                () => SettingDescAutoReadDialogue));
             ReadAmbientDialogue = Add(new ToggleSetting(
-                "read_ambient_dialogue", () => SettingReadAmbientDialogue, defaultValue: true, store));
+                "read_ambient_dialogue", () => SettingReadAmbientDialogue, defaultValue: true, store,
+                () => SettingDescReadAmbientDialogue));
             WallToneVolume = Add(new RangeSetting(
                 "wall_tone_volume", () => SettingWallToneVolume, defaultValue: 50, step: 5, store));
             WallTonesContinuous = Add(new ToggleSetting(
-                "wall_tones_continuous", () => SettingWallTonesContinuous, defaultValue: false, store));
+                "wall_tones_continuous", () => SettingWallTonesContinuous, defaultValue: false, store,
+                () => SettingDescWallTonesContinuous));
             SonarVolume = Add(new RangeSetting(
                 "sonar_volume", () => SettingSonarVolume, defaultValue: 70, step: 5, store));
             SonarContinuous = Add(new ToggleSetting(
-                "sonar_continuous", () => SettingSonarContinuous, defaultValue: false, store));
+                "sonar_continuous", () => SettingSonarContinuous, defaultValue: false, store,
+                () => SettingDescSonarContinuous));
             SonarRest = Add(new RangeSetting(
                 "sonar_rest", () => SettingSonarRest, defaultValue: 400, step: 50, min: 0, max: 1500,
-                RangeUnit.Milliseconds, store));
+                RangeUnit.Milliseconds, store, () => SettingDescSonarRest));
             SonarNpcs = Add(new ToggleSetting(
-                "sonar_npc", () => SettingSonarNpcs, defaultValue: true, store));
+                "sonar_npc", () => SettingSonarNpcs, defaultValue: true, store,
+                () => SettingDescSonarNpcs));
             SonarInteractables = Add(new ToggleSetting(
-                "sonar_interactable", () => SettingSonarInteractables, defaultValue: true, store));
+                "sonar_interactable", () => SettingSonarInteractables, defaultValue: true, store,
+                () => SettingDescSonarInteractables));
             SonarContainers = Add(new ToggleSetting(
-                "sonar_container", () => SettingSonarContainers, defaultValue: true, store));
+                "sonar_container", () => SettingSonarContainers, defaultValue: true, store,
+                () => SettingDescSonarContainers));
             SonarOrbs = Add(new ToggleSetting(
-                "sonar_orb", () => SettingSonarOrbs, defaultValue: true, store));
+                "sonar_orb", () => SettingSonarOrbs, defaultValue: true, store,
+                () => SettingDescSonarOrbs));
             SonarExits = Add(new ToggleSetting(
-                "sonar_exit", () => SettingSonarExits, defaultValue: true, store));
+                "sonar_exit", () => SettingSonarExits, defaultValue: true, store,
+                () => SettingDescSonarExits));
             ScannerFromCursor = Add(new ToggleSetting(
-                "scanner_from_cursor", () => SettingScannerFromCursor, defaultValue: true, store));
+                "scanner_from_cursor", () => SettingScannerFromCursor, defaultValue: true, store,
+                () => SettingDescScannerFromCursor));
             RunToDestinations = Add(new ToggleSetting(
-                "run_to_destinations", () => SettingRunToDestinations, defaultValue: false, store));
+                "run_to_destinations", () => SettingRunToDestinations, defaultValue: false, store,
+                () => SettingDescRunToDestinations));
             UnrestrictCursor = Add(new ToggleSetting(
-                "unrestrict_cursor", () => SettingUnrestrictCursor, defaultValue: true, store));
+                "unrestrict_cursor", () => SettingUnrestrictCursor, defaultValue: true, store,
+                () => SettingDescUnrestrictCursor));
             CheckForUpdates = Add(new ToggleSetting(
-                "check_for_updates", () => SettingCheckForUpdates, defaultValue: true, store));
+                "check_for_updates", () => SettingCheckForUpdates, defaultValue: true, store,
+                () => SettingDescCheckForUpdates));
         }
 
         /// <summary>Whether the sonar should sound the given <see cref="World.WorldTaxonomy.Scan"/> browse

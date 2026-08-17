@@ -4,6 +4,10 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 ## Unreleased
 
+New Features and improvements:
+
+- Mod menu settings now explain what they do, spoken after the setting's state.
+
 Bug fixes:
 
 - The scanner now finds wall-mounted things hanging high above the floor, such as the pawnshop's shelf of boomboxes.

@@ -24,6 +24,10 @@ namespace NonVisualCalculus.Core.UI.Nav
         /// <summary>The element's current value/state (e.g. "on", "50 percent"), or null.</summary>
         public virtual string? Value => null;
 
+        /// <summary>An explanation of what the control does, spoken last on landing and left out of the
+        /// value re-announce (the same place the game's own options screen speaks a tooltip), or null.</summary>
+        public virtual string? Description => null;
+
         /// <summary>
         /// True if activating changes this element's value in place (a toggle, a slider) so the navigator
         /// re-announces it. False for buttons that open another screen (the screen change announces itself).
@@ -41,12 +45,12 @@ namespace NonVisualCalculus.Core.UI.Nav
             return false;
         }
 
-        /// <summary>The composed spoken focus message: label, role, value, joined by ", " (non-empty only,
-        /// each part un-RTL-fixed - the label is game text that can arrive display-shaped). Virtual so an
-        /// element with a richer composition (e.g. an options control that also speaks its type and
-        /// tooltip via a Core composer) can override the default label/role/value join.</summary>
+        /// <summary>The composed spoken focus message: label, role, value, description, joined by ", "
+        /// (non-empty only, each part un-RTL-fixed - the label is game text that can arrive display-shaped).
+        /// Virtual so an element with a richer composition (e.g. an options control that also speaks its
+        /// type and tooltip via a Core composer) can override the default join.</summary>
         public virtual string GetFocusText()
-            => Text.SpokenLine.Join(Label, Role, Value);
+            => Text.SpokenLine.Join(Label, Role, Value, Description);
 
         /// <summary>Just the changed state, for re-announcing after an in-place activation.</summary>
         public string GetValueText() => Value ?? "";

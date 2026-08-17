@@ -375,32 +375,53 @@ namespace NonVisualCalculus.Core.Strings
             // The sonar's open-door variant of the exits cue; "open" as in standing open, not locked.
             D("SoundOpenDoor", "open door"),
 
-            // Mod settings labels (rows in the mod menu; sentence case). "Wall tones" are the mod's
-            // audio cue for walls near the cursor; the "sonar" is its periodic audio sweep over nearby
-            // things.
+            // Mod settings labels (rows in the mod menu; sentence case), each followed by its SettingDesc
+            // explanation: a tooltip-style sentence spoken after the setting's state when the menu lands
+            // on the row, so keep them short and plain. "Wall tones" are the mod's audio cue for walls
+            // near the cursor; the "sonar" is its periodic audio sweep over nearby things. A setting whose
+            // label and value say everything (the two volumes) has no explanation.
             D("SettingAutoReadDialogue", "Automatically read dialogue"),
+            D("SettingDescAutoReadDialogue", "Speaks new lines as they arrive using your screen reader."),
             // Ambient dialogue: incidental background lines characters say unprompted.
             D("SettingReadAmbientDialogue", "Read ambient dialogue"),
+            D("SettingDescReadAmbientDialogue", "Speaks background talk: the TV, chatter between other characters."),
             D("SettingWallToneVolume", "Wall tone volume"),
             // "Continuous" = the cue keeps sounding while idle, rather than only when moving.
             D("SettingWallTonesContinuous", "Continuous wall tones"),
+            D("SettingDescWallTonesContinuous",
+                "If on, wall tones play continuously, even when the cursor is not moving."),
             D("SettingSonarVolume", "Sonar volume"),
             D("SettingSonarContinuous", "Continuous sonar"),
+            D("SettingDescSonarContinuous", "Keeps sweeping while the cursor is not moving."),
             D("SettingSonarRest", "Time between sonar sweeps"),
+            D("SettingDescSonarRest", "The pause after each sweep ends."),
             // The sonar's per-category toggles; {0} = a scanner category word (the WorldScan* keys), so
             // the menu and the scanner call a category the same thing.
             D("SettingSonarCategory", "Sonar {0}"),
+            D("SettingDescSonarCategory", "Includes {0} in the sonar sweep."),
             // Toggle: the scanner speaks each thing's direction and distance measured from the cursor's
             // position instead of the character's. "Readouts" = those spoken direction-and-distance lines.
             D("SettingScannerFromCursor", "Scanner readouts from cursor"),
+            D("SettingDescScannerFromCursor",
+                "If on, directions are given relative to the position of the cursor. "
+                + "If off, they are given relative to your character."),
             // Toggle: the character runs instead of walking when sent somewhere.
             D("SettingRunToDestinations", "Run to destinations"),
+            // "Double click" = the mouse gesture a sighted player uses to run; name it as that language does.
+            D("SettingDescRunToDestinations", "Runs instead of walking. Equivalent to a mouse double click."),
             // Toggle, a testing aid: the cursor may leave the visible frame and enter fog-of-war ground
             // instead of stopping at those edges.
             D("SettingUnrestrictCursor", "Unrestricted cursor"),
+            // "The frame" = the part of the world the camera currently shows.
+            D("SettingDescUnrestrictCursor",
+                "Lets the cursor leave the frame into areas outside the camera's view. Plays a tone when "
+                + "you have left the camera's range. Note that many items do not load when the camera is "
+                + "not focused on them, and you will need to move your character closer to fully reveal "
+                + "all items, people, and exits."),
             // Toggle: at launch, look up the mod's newest release online and speak UpdateAvailable if
             // the installed mod is older (up to date stays silent).
             D("SettingCheckForUpdates", "Check for updates at launch"),
+            D("SettingDescCheckForUpdates", "Announces a newer mod release at launch."),
 
             // Dialogue and checks.
             // The control that advances a conversation when there are no response choices; verb.
@@ -1154,6 +1175,23 @@ namespace NonVisualCalculus.Core.Strings
         public static string SettingRunToDestinations => T("SettingRunToDestinations");
         public static string SettingUnrestrictCursor => T("SettingUnrestrictCursor");
         public static string SettingCheckForUpdates => T("SettingCheckForUpdates");
+
+        // Their explanations, spoken after the state when the menu lands on the row. The two volumes
+        // have none: the label and the percentage say everything.
+        public static string SettingDescAutoReadDialogue => T("SettingDescAutoReadDialogue");
+        public static string SettingDescReadAmbientDialogue => T("SettingDescReadAmbientDialogue");
+        public static string SettingDescWallTonesContinuous => T("SettingDescWallTonesContinuous");
+        public static string SettingDescSonarContinuous => T("SettingDescSonarContinuous");
+        public static string SettingDescSonarRest => T("SettingDescSonarRest");
+        public static string SettingDescSonarNpcs => F("SettingDescSonarCategory", WorldScanNpcs);
+        public static string SettingDescSonarInteractables => F("SettingDescSonarCategory", WorldScanInteractables);
+        public static string SettingDescSonarContainers => F("SettingDescSonarCategory", WorldScanContainers);
+        public static string SettingDescSonarOrbs => F("SettingDescSonarCategory", WorldScanOrbs);
+        public static string SettingDescSonarExits => F("SettingDescSonarCategory", WorldScanExits);
+        public static string SettingDescScannerFromCursor => T("SettingDescScannerFromCursor");
+        public static string SettingDescRunToDestinations => T("SettingDescRunToDestinations");
+        public static string SettingDescUnrestrictCursor => T("SettingDescUnrestrictCursor");
+        public static string SettingDescCheckForUpdates => T("SettingDescCheckForUpdates");
 
         // The navigable affordance that advances a conversation when there are no response choices
         // (DE's own continue control is an image with no clean text label).

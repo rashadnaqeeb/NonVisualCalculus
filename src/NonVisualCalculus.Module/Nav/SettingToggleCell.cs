@@ -7,7 +7,8 @@ namespace NonVisualCalculus.Module.Nav
 {
     /// <summary>
     /// A navigable toggle for one boolean mod setting. Reads the live value at announce time and, on
-    /// activate, flips and persists it; the navigator then re-announces the new state ("on"/"off").
+    /// activate, flips and persists it; the navigator then re-announces the new state ("on"/"off"),
+    /// without the explanation that follows the state on landing.
     /// </summary>
     public sealed class SettingToggleCell : UIElement
     {
@@ -18,6 +19,7 @@ namespace NonVisualCalculus.Module.Nav
         public override string Label => _setting.Label;
         public override string Role => Strings.ControlToggle;
         public override string Value => _setting.Value ? Strings.StatusOn : Strings.StatusOff;
+        public override string Description => _setting.Description;
         public override bool ReannounceOnActivate => true;
 
         public override IEnumerable<ElementAction> GetActions()

@@ -172,6 +172,23 @@ namespace NonVisualCalculus.Tests
         }
 
         [Fact]
+        public void Description_ExplainsEverySettingExceptTheVolumes()
+        {
+            var settings = new ModSettings(new FakeStore());
+
+            // A volume's label and percentage say everything, so it carries no explanation.
+            Assert.Null(settings.WallToneVolume.Description);
+            Assert.Null(settings.SonarVolume.Description);
+            foreach (var setting in settings.All)
+                if (setting != settings.WallToneVolume && setting != settings.SonarVolume)
+                    Assert.False(string.IsNullOrWhiteSpace(setting.Description), setting.Key);
+
+            // The per-category explanations name their own category, like their labels.
+            Assert.Contains("orbs", settings.SonarOrbs.Description);
+            Assert.Contains("exits", settings.SonarExits.Description);
+        }
+
+        [Fact]
         public void Fraction_ThrowsForANonPercentRange()
         {
             var settings = new ModSettings(new FakeStore());

@@ -9,7 +9,8 @@ namespace NonVisualCalculus.Module.Nav
     /// A navigable slider for one numeric mod setting. Reads the live value at announce time in the
     /// setting's own unit (a percentage, a millisecond duration) and steps it on Left/Right
     /// (decrease/increase); the navigator re-announces the new value, or names the bound
-    /// ("minimum"/"maximum") when a step at the end moved nothing.
+    /// ("minimum"/"maximum") when a step at the end moved nothing, without the explanation that
+    /// follows the value on landing.
     /// </summary>
     public sealed class SettingRangeCell : UIElement
     {
@@ -22,6 +23,7 @@ namespace NonVisualCalculus.Module.Nav
         public override string Value => _setting.Unit == RangeUnit.Milliseconds
             ? Strings.Milliseconds(_setting.Value)
             : Strings.Percent(_setting.Value);
+        public override string Description => _setting.Description;
 
         public override IEnumerable<ElementAction> GetActions()
         {
