@@ -52,8 +52,9 @@ one hypothesis at a time and leaves uncertainty. Use the HTTP server to confirm 
 discover structure. Two artifacts: the full pre-decompiled tree at `decompiled/ghidra/` (one `.c` per
 type under namespace dirs, plus `_strings.txt`) to browse and grep, and the saved Ghidra project for
 fresh single-class dumps via `tools/re/decompile.sh 'Type$$'` (the `$$` separates Type from Method,
-e.g. `SenseOrb$$`), which writes `decompiled/ghidra/<query>.c`. After a game update run
-`tools/re/refresh.sh` once to rebuild everything. See `tools/re/README.md`.
+e.g. `SenseOrb$$`), which writes `decompiled/ghidra/<query>.c` with `$` replaced by `_`
+(`SenseOrb__.c`). After a game update run `tools/re/refresh.sh` once to rebuild everything. See
+`tools/re/README.md`.
 
 **Accessibility in `decompiled/` is not the proxy's.** The decompiled sources report each method's
 original accessibility, but the Il2CppInterop proxies we actually compile against
@@ -174,8 +175,9 @@ the CoreCLR runtime removed, so it throws on every eval). Roslyn's deps (Microso
 System.Collections.Immutable/Reflection.Metadata 7.0) deploy beside the plugin and load fine on
 BepInEx's CoreCLR.
 
-After a game update, relaunch once through Steam to regenerate `BepInEx/interop/`, and re-dump
-`decompiled/` with Cpp2IL.
+After a game update, relaunch once through Steam to regenerate `BepInEx/interop/`, re-dump
+`decompiled/dummydll` and `decompiled/src` with `tools/re/dump-cpp2il.sh`, and rebuild the Ghidra
+reference with `tools/re/refresh.sh`.
 
 ## Architecture
 
