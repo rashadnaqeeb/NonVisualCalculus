@@ -111,6 +111,19 @@ namespace NonVisualCalculus.Tests
         }
 
         [Fact]
+        public void Unfix_DropsMirroredRichTextTags_FromAShapedString()
+        {
+            // A locked purchase option in Arabic: the game's cost markup rides the fixed string with
+            // its tag brackets mirrored and contents reversed (">roloc..." is "<color..." through the
+            // fixer, adjacent tags coalescing into one span). No logical tag strip can match it and
+            // the cluster walk cannot restore it, so the span is dropped; the Arabic still restores.
+            Assert.Equal("[ :كيم]",
+                RtlText.Unfix("[>roloc/2C5D0D#=rolocroloc/2DECAE#=roloc< :ﻢﻴﻛ]"));
+            // The thought-completion bonus shape: several mirrored tag spans back to back.
+            Assert.Equal("كيم", RtlText.Unfix(">roloc=#B674CC<>/roloc<ﻢﻴﻛ"));
+        }
+
+        [Fact]
         public void Unfix_FoldsWithoutReversing_LogicalOrderShapedText()
         {
             // An RTL-flagged TMP label (captured from the live loading tip) carries presentation forms

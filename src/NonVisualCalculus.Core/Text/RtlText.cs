@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace NonVisualCalculus.Core.Text
 {
@@ -38,10 +39,19 @@ namespace NonVisualCalculus.Core.Text
             return new string(chars).Normalize(NormalizationForm.FormKC);
         }
 
+        // A rich-text tag the fixer dragged into the shaped string with its angle brackets mirrored
+        // ("<color=#AB>" arriving as ">BA#=roloc<", possibly with several tags' contents coalesced
+        // into one span). The tag-strip regexes match only logical "<...>" pairs, and the cluster
+        // walk cannot restore a mirrored tag (the fixer scatters its brackets and runs), so any
+        // mirrored pair in a SHAPED string - where an angle-bracket pair is always markup, exactly
+        // as the logical tag strip assumes - is dropped before the walk.
+        private static readonly Regex MirroredTags = new Regex(">[^<>]*<", RegexOptions.Compiled);
+
         public static string Unfix(string s)
         {
             if (string.IsNullOrEmpty(s) || !HasPresentationForms(s))
                 return s;
+            s = MirroredTags.Replace(s, string.Empty);
 
             // The mod composes spoken lines from mixed parts - a fixed game name, our own logical
             // separator and words ("<name>; east, 3 meters"), a fixed speaker and a fixed line
