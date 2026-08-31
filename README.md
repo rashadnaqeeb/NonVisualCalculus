@@ -47,6 +47,8 @@ The pause menu has a **learn game sounds** entry that plays every sound the mod 
 
 Ctrl+B opens the bookmarks menu. Adding a bookmark saves your character's current position on the current map under a name you choose. The menu lists each bookmark with its live distance and whether it is currently reachable; Enter walks you there, and each entry can also be deleted.
 
+The mod also ships preset bookmarks for notable locations (the Whirling, the shops, the harbour, and more), off by default because the names can mildly spoil places you haven't found yet. Turn on "Show preset bookmarks" in the mod settings to list them after your own bookmarks; they can be walked to like any bookmark but not deleted, and a few spots only appear from day 3.
+
 ### Mod settings
 
 F12 opens the mod's settings anywhere. You can toggle automatic dialogue reading and ambient dialogue, adjust wall tone and sonar volume, make either continuous, set the sonar sweep interval, choose which categories the sonar includes, switch scanner readouts between cursor and character, make your character run instead of walk, and restrict the cursor to the sensed area.
@@ -90,6 +92,6 @@ To update: pull, close the game, and re-run `build.ps1`. If a game update from S
 
 ## Credits
 
-Zack Kline, who designed the original Disco Elysium accessibility mod, the first ever access mod created for a unity game using AI. It introduced me to the game which immediately became one of my favorites of all time. You can find it [here](https://github.com/BlindGuyNW/disco-accessibility).
+Zack Kline, who designed the original Disco Elysium accessibility mod, the first ever access mod created for a unity game using AI. It introduced me to the game which immediately became one of my favorites of all time. You can find it [here](https://github.com/BlindGuyNW/disco-accessibility). The preset bookmarks' locations are adapted, with permission, from that mod's community-contributed waypoints.
 
 Thanks to Chaosbringer216, who designed the concept of the cursor, sonar, and wall tones used within the mod. Check out his project for Pathfinder: Wrath of the Righteous once released, where you can see a much more mature version of this system in play.

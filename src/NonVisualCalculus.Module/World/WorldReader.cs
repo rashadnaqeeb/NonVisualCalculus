@@ -318,6 +318,10 @@ namespace NonVisualCalculus.Module.World
         /// <summary>The current scene id, the per-map key bookmark lists are scoped by.</summary>
         public string CurrentScene => SceneName();
 
+        /// <summary>The in-game day, the game's own 1-based counter (it rolls at midnight only once
+        /// the post-2 AM time lock releases), gating day-bound preset bookmarks.</summary>
+        public int CurrentDay => SunshineClock.Singleton.Time.DayCounter;
+
         /// <summary>Whether a complete navmesh path connects the character to a stored point, for a
         /// bookmark row's spoken reachability.</summary>
         public bool CanReach(Snv point) => _env.PathComplete(_env.PlayerPosition, point);

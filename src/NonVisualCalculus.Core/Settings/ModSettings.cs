@@ -69,6 +69,11 @@ namespace NonVisualCalculus.Core.Settings
         /// sounding the crossings. The scanner and object senses are unchanged.</summary>
         public ToggleSetting UnrestrictCursor { get; }
 
+        /// <summary>When on, the bookmarks menu lists the mod's built-in locations
+        /// (<see cref="World.PresetBookmarks"/>) after the player's own bookmarks. Off by default:
+        /// the names hint at places a first playthrough has not discovered yet.</summary>
+        public ToggleSetting ShowPresetBookmarks { get; }
+
         /// <summary>When on (the default), launch looks up the mod's newest release online and says so
         /// if the installed mod is older; up to date stays silent. Read once at module load, so flipping
         /// it takes effect next launch.</summary>
@@ -122,6 +127,9 @@ namespace NonVisualCalculus.Core.Settings
             UnrestrictCursor = Add(new ToggleSetting(
                 "unrestrict_cursor", () => SettingUnrestrictCursor, defaultValue: true, store,
                 () => SettingDescUnrestrictCursor));
+            ShowPresetBookmarks = Add(new ToggleSetting(
+                "show_preset_bookmarks", () => SettingShowPresetBookmarks, defaultValue: false, store,
+                () => SettingDescShowPresetBookmarks));
             CheckForUpdates = Add(new ToggleSetting(
                 "check_for_updates", () => SettingCheckForUpdates, defaultValue: true, store,
                 () => SettingDescCheckForUpdates));

@@ -4,6 +4,10 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 ## Unreleased
 
+New Features and improvements:
+
+- The bookmarks menu can now list preset bookmarks for notable locations (the Whirling, shops, the harbour, the coast from day 3); enable "Show preset bookmarks" in the mod menu.
+
 Bug fixes:
 
 - Triggering an orb whose icon has not appeared yet no longer sometimes skips its story effects, read state, and XP or money rewards. This was happening very rarely, and should not have affected most players.

@@ -65,7 +65,9 @@ namespace NonVisualCalculus.Module.Nav
             return nav.EnsureFocusValid();
         }
 
-        // One row per bookmark on the current map, nearest first; the add row last.
+        // One row per bookmark on the current map, nearest first; then the preset rows (the mod's
+        // built-in locations, when enabled), nearest first, after the player's own so those stay
+        // fastest to reach; the add row last.
         private void Populate()
         {
             _table.Clear();
@@ -74,6 +76,13 @@ namespace NonVisualCalculus.Module.Nav
             marks.Sort((a, b) => Geo.Distance(a.Position, player).CompareTo(Geo.Distance(b.Position, player)));
             foreach (Bookmark mark in marks)
                 _table.AddRow(new BookmarkWalkCell(this, mark), new BookmarkDeleteCell(this, mark));
+            if (_host.Settings.ShowPresetBookmarks.Value)
+            {
+                List<PresetBookmark> presets = PresetBookmarks.For(_world.CurrentScene, _world.CurrentDay);
+                presets.Sort((a, b) => Geo.Distance(a.Position, player).CompareTo(Geo.Distance(b.Position, player)));
+                foreach (PresetBookmark preset in presets)
+                    _table.AddRow(new PresetBookmarkCell(this, preset));
+            }
             _table.AddRow(new BookmarkAddCell(this, _host));
         }
 
@@ -104,12 +113,20 @@ namespace NonVisualCalculus.Module.Nav
             return BookmarkAnnouncer.Compose(mark.Name, meters, _world.CanReach(mark.Position));
         }
 
-        /// <summary>Walk the character to a bookmark: close the menu (back to the world) and drive the
-        /// game's own party move, which speaks its own feedback (moving / can't reach / orb hold).</summary>
-        internal void Walk(Bookmark mark)
+        /// <summary>A preset row's spoken line: as <see cref="RowLine"/> with the preset marker, the
+        /// name resolved through the strings table at announce time so it follows the mod language.</summary>
+        internal string RowLine(PresetBookmark preset)
+        {
+            int meters = (int)Math.Round(Geo.Distance(preset.Position, _world.PlayerPosition));
+            return BookmarkAnnouncer.Compose(preset.Name(), meters, _world.CanReach(preset.Position), preset: true);
+        }
+
+        /// <summary>Walk the character to a stored point: close the menu (back to the world) and drive
+        /// the game's own party move, which speaks its own feedback (moving / can't reach / orb hold).</summary>
+        internal void Walk(Snv position)
         {
             _close();
-            _world.WalkTo(mark.Position);
+            _world.WalkTo(position);
         }
 
         internal void Delete(Bookmark mark)
@@ -164,7 +181,31 @@ namespace NonVisualCalculus.Module.Nav
 
         public override IEnumerable<ElementAction> GetActions()
         {
-            yield return new ElementAction(ActionIds.Activate, () => Screen.Walk(Mark));
+            yield return new ElementAction(ActionIds.Activate, () => Screen.Walk(Mark.Position));
+        }
+    }
+
+    /// <summary>A preset bookmark's row: one of the mod's built-in locations, walk column only -
+    /// presets are not stored in the bookmarks file and cannot be deleted or renamed (their names
+    /// resolve through the strings table so they follow the mod language, which a stored name could
+    /// not).</summary>
+    internal sealed class PresetBookmarkCell : TableCell
+    {
+        private readonly BookmarksScreen _screen;
+        private readonly PresetBookmark _preset;
+
+        public PresetBookmarkCell(BookmarksScreen screen, PresetBookmark preset)
+        {
+            _screen = screen;
+            _preset = preset;
+        }
+
+        public override string ColumnHeader => Strings.ActionWalk;
+        public override string RowText => _screen.RowLine(_preset);
+
+        public override IEnumerable<ElementAction> GetActions()
+        {
+            yield return new ElementAction(ActionIds.Activate, () => _screen.Walk(_preset.Position));
         }
     }
 

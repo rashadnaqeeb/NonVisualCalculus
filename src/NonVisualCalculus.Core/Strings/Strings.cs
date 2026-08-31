@@ -422,6 +422,11 @@ namespace NonVisualCalculus.Core.Strings
             // the installed mod is older (up to date stays silent).
             D("SettingCheckForUpdates", "Check for updates at launch"),
             D("SettingDescCheckForUpdates", "Announces a newer mod release at launch."),
+            // Toggle: list the mod's built-in location bookmarks in the bookmarks menu. Off by
+            // default; the place names can reveal locations the player has not discovered yet.
+            D("SettingShowPresetBookmarks", "Show preset bookmarks"),
+            D("SettingDescShowPresetBookmarks",
+                "When enabled, adds preset locations to your bookmark list. May contain slight spoilers."),
 
             // Dialogue and checks.
             // The control that advances a conversation when there are no response choices; verb.
@@ -804,6 +809,39 @@ namespace NonVisualCalculus.Core.Strings
             D("BookmarksUnavailable", "bookmarks need a loaded game"),
             // An add or delete could not write the bookmarks file (the log has the details).
             D("BookmarkWriteFailed", "bookmark file write failed"),
+            // Spoken in a preset bookmark's row line after the name and distance, marking a built-in
+            // entry the player cannot delete. Appended after a varying name, so keep it an invariant
+            // word (a noun like "built-in entry" if this language's adjective would have to agree).
+            D("BookmarkPresetMark", "preset"),
+
+            // Preset bookmark names: the mod's built-in locations in the bookmarks menu. Each is a
+            // place or landmark in the game's first area; where the game's own dialogue or map names
+            // it, reuse the game's localized name for that place rather than translating anew.
+            // "Whirling-in-Rags" is the hostel-cafeteria the game names constantly; match the game.
+            D("PresetWhirling", "Whirling-in-Rags"),
+            // The dockworkers' union office where the harbour secretary sits, east of the harbour door.
+            D("PresetHarbourOffice", "harbour secretary office"),
+            // The union boss Evrart's office inside the harbour; this bookmark stands at its entrance.
+            D("PresetUnionOffice", "union boss's office"),
+            // "Frittte" is the game's convenience-store chain (spelled with three t's); match the game.
+            D("PresetFrittte", "Frittte general store"),
+            D("PresetPawnshop", "pawn shop"),
+            D("PresetBookstore", "bookstore"),
+            // The fishing village on the coast, reachable from day 3.
+            D("PresetFishingVillage", "fishing village"),
+            // The abandoned church on the coast, reachable from day 3.
+            D("PresetChurch", "church"),
+            // The pier overlook above where Joyce's boat moors; "Joyce" is a character, keep her name
+            // as the game spells it.
+            D("PresetJoyceBoat", "Joyce's boat"),
+            // The gate into the harbour compound.
+            D("PresetHarbourGate", "harbour gate"),
+            // The courtyard behind the Whirling holding the investigation's crime scene.
+            D("PresetCrimeScene", "courtyard crime scene"),
+            // The apartment building entered from the pier boardwalk, at its doors.
+            D("PresetPierApartments", "pierside apartments"),
+            // The apartment buildings' shared courtyard, near the crime scene.
+            D("PresetApartmentCourtyard", "apartment courtyard"),
 
             // Cutscene descriptions: authored narration for the game's silent visual set pieces, written
             // to be unambiguous by ear (no words that collapse into a different meaning through a
@@ -1175,6 +1213,7 @@ namespace NonVisualCalculus.Core.Strings
         public static string SettingRunToDestinations => T("SettingRunToDestinations");
         public static string SettingUnrestrictCursor => T("SettingUnrestrictCursor");
         public static string SettingCheckForUpdates => T("SettingCheckForUpdates");
+        public static string SettingShowPresetBookmarks => T("SettingShowPresetBookmarks");
 
         // Their explanations, spoken after the state when the menu lands on the row. The two volumes
         // have none: the label and the percentage say everything.
@@ -1192,6 +1231,7 @@ namespace NonVisualCalculus.Core.Strings
         public static string SettingDescRunToDestinations => T("SettingDescRunToDestinations");
         public static string SettingDescUnrestrictCursor => T("SettingDescUnrestrictCursor");
         public static string SettingDescCheckForUpdates => T("SettingDescCheckForUpdates");
+        public static string SettingDescShowPresetBookmarks => T("SettingDescShowPresetBookmarks");
 
         // The navigable affordance that advances a conversation when there are no response choices
         // (DE's own continue control is an image with no clean text label).
@@ -1494,6 +1534,24 @@ namespace NonVisualCalculus.Core.Strings
 
         /// <summary>Spoken when an add or delete could not write the bookmarks file.</summary>
         public static string BookmarkWriteFailed => T("BookmarkWriteFailed");
+
+        /// <summary>The marker word in a preset bookmark's row line (a built-in entry, no delete).</summary>
+        public static string BookmarkPresetMark => T("BookmarkPresetMark");
+
+        // Preset bookmark names (see World.PresetBookmarks for the entries these label).
+        public static string PresetWhirling => T("PresetWhirling");
+        public static string PresetHarbourOffice => T("PresetHarbourOffice");
+        public static string PresetUnionOffice => T("PresetUnionOffice");
+        public static string PresetFrittte => T("PresetFrittte");
+        public static string PresetPawnshop => T("PresetPawnshop");
+        public static string PresetBookstore => T("PresetBookstore");
+        public static string PresetFishingVillage => T("PresetFishingVillage");
+        public static string PresetChurch => T("PresetChurch");
+        public static string PresetJoyceBoat => T("PresetJoyceBoat");
+        public static string PresetHarbourGate => T("PresetHarbourGate");
+        public static string PresetCrimeScene => T("PresetCrimeScene");
+        public static string PresetPierApartments => T("PresetPierApartments");
+        public static string PresetApartmentCourtyard => T("PresetApartmentCourtyard");
 
         // ---- The world's loot panel (see the module's ContainerPanelScreen / ContainerReader) ----
 
