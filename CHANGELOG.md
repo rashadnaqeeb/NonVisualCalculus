@@ -7,6 +7,7 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 Bug fixes:
 
 - Mod menu sliders now respond to the left and right arrows when the menu is opened during a conversation.
+- Ambient dialogue is now read in the game's language instead of English.
 
 ## V1.1.6
 

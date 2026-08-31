@@ -4,6 +4,7 @@ using NonVisualCalculus.Core.Modularity;
 using NonVisualCalculus.Core.Text;
 using NonVisualCalculus.Module.World;
 using HarmonyLib;
+using LocalizationCustomSystem;     // LocalizationUtils
 using PixelCrushers.DialogueSystem; // Subtitle
 using Sunshine;                     // FoBarkUI
 
@@ -83,7 +84,15 @@ namespace NonVisualCalculus.Module
             if (self == null || subtitle == null) return;
             try
             {
-                string line = BarkText.Compose(subtitle.speakerInfo?.Name, subtitle.formattedText?.text);
+                // The subtitle's formattedText is the database's English dev text; the game localizes a
+                // bark only at display time, resolving the entry's I2 term with that text as the fallback
+                // (FoBarkUI.Bark -> FoBarkUIReceiver.ShowLocalizedBark). Read through the same term, with
+                // fixForRTL off so Arabic arrives speakable. The speaker's Name is already localized
+                // (CharacterInfo resolves it through the localized actor field on construction).
+                string fallback = subtitle.formattedText?.text;
+                string term = LocalizationUtils.GetDialogueEntryLocalizationTerm(subtitle.dialogueEntry);
+                string text = string.IsNullOrEmpty(term) ? fallback : GameLocalization.Term(term, fallback);
+                string line = BarkText.Compose(subtitle.speakerInfo?.Name, text);
                 if (string.IsNullOrEmpty(line) || line == self._lastBark)
                     return;
                 self._lastBark = line;
