@@ -4,6 +4,8 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 ## Unreleased
 
+## V1.2.0
+
 New Features and improvements:
 
 - The bookmarks menu can now list preset bookmarks for notable locations (the Whirling, shops, the harbour, the coast from day 3); enable "Show preset bookmarks" in the mod menu.

@@ -8,7 +8,6 @@ $ErrorActionPreference = "Stop"
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $installerDir = Join-Path $scriptDir "installer"
 $releaseDir = Join-Path $scriptDir "releases"
-$targetExe = Join-Path $installerDir "target\release\non-visual-calculus-installer.exe"
 $outputExe = Join-Path $releaseDir "NonVisualCalculusInstaller.exe"
 
 if (-not (Test-Path (Join-Path $installerDir "Cargo.toml"))) {
@@ -53,10 +52,17 @@ try {
     if ($LASTEXITCODE -ne 0) {
         throw "Installer build failed with exit code $LASTEXITCODE"
     }
+    # The target dir may be redirected off the repo (e.g. a global target-dir on
+    # C:, since rustc cannot delete temp dirs on a network share), so ask cargo.
+    $targetDir = (cargo metadata --format-version 1 --no-deps | ConvertFrom-Json).target_directory
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($targetDir)) {
+        throw "cargo metadata failed to report the target directory"
+    }
 }
 finally {
     Pop-Location
 }
+$targetExe = Join-Path $targetDir "release\non-visual-calculus-installer.exe"
 
 if (-not (Test-Path $targetExe)) {
     throw "Expected installer executable not found: $targetExe"
