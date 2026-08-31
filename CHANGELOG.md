@@ -6,6 +6,7 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 Bug fixes:
 
+- Triggering an orb whose icon has not appeared yet no longer sometimes skips its story effects, read state, and XP or money rewards. This was happening very rarely, and should not have affected most players.
 - Mod menu sliders now respond to the left and right arrows when the menu is opened during a conversation.
 - Ambient dialogue is now read in the game's language instead of English.
 - In Arabic, colored game text (purchase costs, thought completion rewards) no longer reads as garbled markup, and a purchase option's price is spoken.

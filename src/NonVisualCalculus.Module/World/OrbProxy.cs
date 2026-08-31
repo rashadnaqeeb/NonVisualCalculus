@@ -29,12 +29,13 @@ namespace NonVisualCalculus.Module.World
         private const float MaxFootprintRadius = 4f;
 
         private readonly SenseOrb _orb;
+        private readonly System.Action<string> _log; // for the engage-on-trigger diagnostics (Interact)
         // Resolved once (see FootprintRadius): the widening measures the orb's centre against the static
         // navmesh and a world-anchored orb does not move, so the radius is structural - the same
         // size-not-state caching EntityProxy does; the disc centre is still read live.
         private float _footprintRadius = -1f;
 
-        public OrbProxy(SenseOrb orb) { _orb = orb; }
+        public OrbProxy(SenseOrb orb, System.Action<string> log) { _orb = orb; _log = log; }
 
         public string Name => OrbNaming.Resolve(_orb.textOverride, MorselText(), _orb.conversation,
             RidesPlayer, GameLocalization.IsEnglish);
@@ -227,14 +228,18 @@ namespace NonVisualCalculus.Module.World
         public bool InteractWalks => _orb.orbUI != null;
         public bool Interact(bool run) => Interact();
 
-        // Trigger the orb through the game's own orb click (OrbUiElement.Open): a simple orb floats its text
-        // (spoken by PostInteractLine), a dialogue orb opens its conversation (read by the dialogue screen),
-        // and both mark it shown and update visuals - which a bare StartConversation would skip, leaving a
-        // simple orb's float text unshown. Drawn: fire from wherever the character stands, the sighted
-        // click's own behaviour. Undrawn: only in range (the walk verb has walked the character into the
-        // trigger sphere), where a world orb falls back to its conversation so an undrawn dialogue orb still
-        // reads; a thought-cabinet orb can only be triggered through Open (which alone runs the
-        // thought/paralyzer removal), so it refuses and the caller logs the miss rather than mis-trigger.
+        // Trigger the orb through the game's own orb click (OrbUiElement.Open), which alone runs the whole
+        // commit: the conversation's Instruction Lua, the conversation or float text, the shown mark, and
+        // the thought alterants' orb rewards (money/XP). Drawn: fire from wherever the character stands,
+        // the sighted click's own behaviour. Undrawn and in range (the walk verb has walked the character
+        // into the trigger sphere): engage the orb first through the game's own engagement path - the one
+        // its proximity trigger drives (PlayerOrbGatherer.OnTriggerEnter registers an orbital orb with
+        // OrbitBehaviour, which builds its orbUI; a non-orbital world orb gets its UI from the renderer
+        // exactly as SenseOrb.OnEnable does) - then Open it. The engagement itself can refuse (the game
+        // judges the orb inaccessible, the interface hidden, or the Mullen minigame inactive), leaving
+        // orbUI null: refuse too, logged, since Open is the only correct trigger. A thought-cabinet orb
+        // can only be triggered through an existing orbUI's Open (which alone runs the thought/paralyzer
+        // removal), so it refuses and the caller logs the miss rather than mis-trigger.
         public bool Interact()
         {
             var ui = _orb.orbUI;
@@ -244,7 +249,18 @@ namespace NonVisualCalculus.Module.World
             if (main == null) return false;
             if (!WithinInteractionRadius(WorldConvert.ToSnv(main.transform.position))) return false;
             if (IsThoughtFamily) return false;
-            DialogueManager.StartConversation(_orb.conversation);
+            if (_orb.IsOrbital)
+                OrbitBehaviour.Singleton.Register(_orb);
+            else
+                InteractableRenderer.current.GetOrCreateOrbUi(_orb);
+            ui = _orb.orbUI;
+            if (ui == null)
+            {
+                _log($"[orb] '{_orb.name}' is in range with no orb UI and the game refused to engage it; not triggered.");
+                return false;
+            }
+            _log($"[orb] '{_orb.name}' had no orb UI at trigger time; engaged it through the game's own path and opened it.");
+            ui.Open();
             return true;
         }
 

@@ -29,7 +29,7 @@ namespace NonVisualCalculus.Module.World
         private readonly Dictionary<int, IWorldItem> _items = new Dictionary<int, IWorldItem>();
         private readonly HashSet<int> _present = new HashSet<int>();
         private readonly List<int> _gone = new List<int>();
-        private readonly Action<string> _log; // handed to each entity proxy for its self-diagnostics
+        private readonly Action<string> _log; // handed to each proxy for its self-diagnostics
         private float _sincePoll = PollInterval; // poll on the first tick
 
         public WorldModel(Action<string> log) { _log = log; }
@@ -68,7 +68,7 @@ namespace NonVisualCalculus.Module.World
             foreach (SenseOrb orb in Object.FindObjectsOfType<SenseOrb>())
             {
                 if (orb == null) continue;
-                Track(orb, () => new OrbProxy(orb));
+                Track(orb, () => new OrbProxy(orb, _log));
             }
 
             _gone.Clear();
