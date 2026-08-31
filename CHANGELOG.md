@@ -4,6 +4,10 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 ## Unreleased
 
+Bug fixes:
+
+- Mod menu sliders now respond to the left and right arrows when the menu is opened during a conversation.
+
 ## V1.1.6
 
 New Features and improvements:

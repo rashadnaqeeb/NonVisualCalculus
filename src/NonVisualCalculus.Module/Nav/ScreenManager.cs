@@ -87,8 +87,10 @@ namespace NonVisualCalculus.Module.Nav
         public bool TypeAheadEnabled => _attachedScreen?.TypeAheadEnabled ?? true;
 
         /// <summary>Whether the attached screen wants the Status keys (status reads, quick-heals) live
-        /// (default false when none).</summary>
-        public bool StatusKeysActive => _attachedScreen?.WantsStatusKeys ?? false;
+        /// (default false when none). Only while that screen is what we drive: a mod overlay floating
+        /// over it takes plain UI, so Left/Right reach its sliders and typed letters its type-ahead
+        /// instead of the Status chords shadowing them.</summary>
+        public bool StatusKeysActive => _overlay == null && (_attachedScreen?.WantsStatusKeys ?? false);
 
         /// <summary>The attached screen's extra key-help lines (keys it handles outside the input
         /// registry, e.g. the dialogue number jump). Empty while a mod overlay is what is driven - an
