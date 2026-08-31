@@ -125,12 +125,14 @@ try {
     Set-Content -LiteralPath $notesFile -Value $releaseNotes -Encoding UTF8
 
     try {
-        if ($null -eq (Get-Command gh -ErrorAction SilentlyContinue)) {
-            Fail "GitHub CLI executable 'gh' was not found on PATH."
+        # gh.exe by extension: a bare 'gh' can resolve to the extensionless Git Bash
+        # wrapper in ~/bin, which PowerShell ShellExecutes as a silent no-op with exit 0.
+        if ($null -eq (Get-Command gh.exe -ErrorAction SilentlyContinue)) {
+            Fail "GitHub CLI executable 'gh.exe' was not found on PATH."
         }
 
         Invoke-Checked "GitHub release creation" {
-            & gh release create $VersionTag $zipPath $compatZipPath $installerPath --title $releaseTitle --notes-file $notesFile
+            & gh.exe release create $VersionTag $zipPath $compatZipPath $installerPath --title $releaseTitle --notes-file $notesFile
         }
     }
     finally {
