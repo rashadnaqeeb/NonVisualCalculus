@@ -9,6 +9,7 @@ Bug fixes:
 - Mod menu sliders now respond to the left and right arrows when the menu is opened during a conversation.
 - Ambient dialogue is now read in the game's language instead of English.
 - In Arabic, colored game text (purchase costs, thought completion rewards) no longer reads as garbled markup, and a purchase option's price is spoken.
+- In Arabic, the options menu now reads each setting's tooltip again.
 
 ## V1.1.6
 

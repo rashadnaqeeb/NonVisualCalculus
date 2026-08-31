@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using NonVisualCalculus.Core.Strings;
+using NonVisualCalculus.Core.Text;
 using NonVisualCalculus.Core.UI;
 using LocalizationCustomSystem;
 using TMPro;
@@ -86,7 +87,9 @@ namespace NonVisualCalculus.Module
             if (labelNode != null)
             {
                 var data = TooltipData(labelNode);
-                if (data != null && Normalize(data.Title) == Normalize(labelText))
+                // The provider resolves its terms with fixForRTL on, so in Arabic the title arrives
+                // display-shaped while the label was read logical; unfix it or the match never holds.
+                if (data != null && Normalize(RtlText.Unfix(data.Title)) == Normalize(labelText))
                     return data.Description;
             }
 
