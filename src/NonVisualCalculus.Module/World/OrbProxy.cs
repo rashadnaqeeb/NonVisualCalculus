@@ -235,11 +235,17 @@ namespace NonVisualCalculus.Module.World
         // into the trigger sphere): engage the orb first through the game's own engagement path - the one
         // its proximity trigger drives (PlayerOrbGatherer.OnTriggerEnter registers an orbital orb with
         // OrbitBehaviour, which builds its orbUI; a non-orbital world orb gets its UI from the renderer
-        // exactly as SenseOrb.OnEnable does) - then Open it. The engagement itself can refuse (the game
-        // judges the orb inaccessible, the interface hidden, or the Mullen minigame inactive), leaving
-        // orbUI null: refuse too, logged, since Open is the only correct trigger. A thought-cabinet orb
-        // can only be triggered through an existing orbUI's Open (which alone runs the thought/paralyzer
-        // removal), so it refuses and the caller logs the miss rather than mis-trigger.
+        // exactly as SenseOrb.OnEnable does) - then Open it. Both branches honour the game's judgment of
+        // whether the orb is engageable right now (SenseOrb.DesiredVisibilityState: inaccessible, the
+        // interface hidden, the Mullen minigame inactive): Register consults it itself and refuses by
+        // leaving orbUI null, while GetOrCreateOrbUi builds a UI for any live orb (in the game, the
+        // per-frame OrbUiElement.UpdateVisuals is what hides a hidden orb and disables its click), so the
+        // non-orbital branch asks the orb first. A refusal refuses the trigger too, logged, since Open is
+        // the only correct trigger. The engagement singletons are null-checked the way the game's own
+        // trigger checks its World singleton (PlayerOrbGatherer.OnTriggerEnter): a scene-teardown frame
+        // can still reach here through the walk verb's in-flight target. A thought-cabinet orb can only
+        // be triggered through an existing orbUI's Open (which alone runs the thought/paralyzer removal),
+        // so it refuses and the caller logs the miss rather than mis-trigger.
         public bool Interact()
         {
             var ui = _orb.orbUI;
@@ -249,15 +255,37 @@ namespace NonVisualCalculus.Module.World
             if (main == null) return false;
             if (!WithinInteractionRadius(WorldConvert.ToSnv(main.transform.position))) return false;
             if (IsThoughtFamily) return false;
-            if (_orb.IsOrbital)
-                OrbitBehaviour.Singleton.Register(_orb);
-            else
-                InteractableRenderer.current.GetOrCreateOrbUi(_orb);
-            ui = _orb.orbUI;
-            if (ui == null)
+            var orbit = OrbitBehaviour.Singleton;
+            var renderer = InteractableRenderer.current;
+            if (orbit == null || renderer == null)
             {
-                _log($"[orb] '{_orb.name}' is in range with no orb UI and the game refused to engage it; not triggered.");
+                _log($"[orb] '{_orb.name}' is in range but the world is tearing down (no orbit/renderer singleton); not triggered.");
                 return false;
+            }
+            if (_orb.IsOrbital)
+            {
+                orbit.Register(_orb);
+                ui = _orb.orbUI;
+                if (ui == null)
+                {
+                    _log($"[orb] '{_orb.name}' is in range but the game refused to engage it (judged not engageable right now); not triggered.");
+                    return false;
+                }
+            }
+            else
+            {
+                if (_orb.DesiredVisibilityState() == OrbVisibility.HIDDEN)
+                {
+                    _log($"[orb] '{_orb.name}' is in range but the game judges it hidden right now; not triggered.");
+                    return false;
+                }
+                renderer.GetOrCreateOrbUi(_orb);
+                ui = _orb.orbUI;
+                if (ui == null)
+                {
+                    _log($"[orb] '{_orb.name}' is in range but the renderer produced no orb UI (orb destroyed?); not triggered.");
+                    return false;
+                }
             }
             _log($"[orb] '{_orb.name}' had no orb UI at trigger time; engaged it through the game's own path and opened it.");
             ui.Open();

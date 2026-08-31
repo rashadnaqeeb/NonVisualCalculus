@@ -358,6 +358,7 @@ WorldMoving = idę
 WorldArrived = na miejscu
 WorldUnreachableNamed = {0}, nie można dojść
 WorldUnreachable = nie można dojść
+WorldTriggerRefusedNamed = {0}, nie można teraz aktywować
 WorldStopped = zatrzymano
 WorldStoppedShort = zatrzymano w połowie drogi
 WorldOrbHolds = trzyma cię sfera, użyj jej, aby kontynuować

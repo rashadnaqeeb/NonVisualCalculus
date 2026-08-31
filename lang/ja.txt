@@ -373,6 +373,7 @@ WorldMoving = 移動中
 WorldArrived = 到着
 WorldUnreachableNamed = {0}、到達不可
 WorldUnreachable = 到達不可
+WorldTriggerRefusedNamed = {0}、今は作動不可
 WorldStopped = 停止
 WorldStoppedShort = 途中で停止
 WorldOrbHolds = オーブに拘束されている。続けるにはオーブを調べる

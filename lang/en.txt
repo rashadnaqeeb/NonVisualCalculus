@@ -356,6 +356,7 @@ WorldMoving = moving
 WorldArrived = arrived
 WorldUnreachableNamed = {0}, can't reach
 WorldUnreachable = can't reach
+WorldTriggerRefusedNamed = {0}, can't trigger now
 WorldStopped = stopped
 WorldStoppedShort = stopped short
 WorldOrbHolds = held by an orb, interact with it to continue

@@ -357,6 +357,7 @@ WorldMoving = يتحرك
 WorldArrived = وصل
 WorldUnreachableNamed = {0}، لا يمكن الوصول
 WorldUnreachable = لا يمكن الوصول
+WorldTriggerRefusedNamed = {0}، لا يمكن التشغيل الآن
 WorldStopped = توقف
 WorldStoppedShort = توقف قبل الوصول
 WorldOrbHolds = كرة تمنع الحركة، تفاعل معها للمتابعة

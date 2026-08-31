@@ -256,15 +256,19 @@ namespace NonVisualCalculus.Module.World
             // A bare-ground walk's arrival IS the whole action, so it is the one move that announces it;
             // a targeted walk ends in its interaction, whose own readers speak instead.
             if (_target == null) { _host.Speech.Speak(Strings.WorldArrived, interrupt: true); return; }
-            // Gate the interact on the game's own arrival-range test. At a COMPLETED stand-point this holds;
-            // if somehow short, Interact() refuses in place rather than acting at the wrong spot - logged so
-            // the miss is visible rather than silent.
-            if (!_target.WithinInteractionRadius(player))
+            // Gate the interact on the game's own arrival-range test. At a COMPLETED stand-point this
+            // holds; if somehow short, Interact() refuses in place rather than acting at the wrong spot.
+            // An in-range Interact() can refuse too (the game declines to engage an undrawn orb - see
+            // OrbProxy.Interact). Either refusal is spoken, not just logged: the player heard "moving to"
+            // and must never be left waiting in silence - short of range is a can't-reach, an in-range
+            // refusal a can't-trigger.
+            bool inRange = _target.WithinInteractionRadius(player);
+            if (!inRange)
                 _host.LogWarning($"WalkInteract: arrived near {_label} but outside its interaction radius; interacting anyway.");
-            if (!_target.Interact())
-                _host.LogWarning($"WalkInteract: Interact on {_label} returned false at the stand-point.");
-            else
-                SpeakPostInteract(_target);
+            if (_target.Interact()) { SpeakPostInteract(_target); return; }
+            _host.LogWarning($"WalkInteract: Interact on {_label} returned false at the stand-point.");
+            _host.Speech.Speak(inRange ? Strings.WorldTriggerRefused(_target.Name)
+                                       : Strings.WorldUnreachable(_target.Name), interrupt: true);
         }
 
         // Speak whatever the target says after a successful interact (a simple orb's floated clue text); most

@@ -739,6 +739,10 @@ namespace NonVisualCalculus.Core.Strings
             // The target cannot be walked to from here; {0} = the target's spoken name.
             D("WorldUnreachableNamed", "{0}, can't reach"),
             D("WorldUnreachable", "can't reach"),
+            // The character arrived at the target but the game refused to fire the interaction right
+            // now (usually a scene or dialogue still holds the interface); transient, so trying again
+            // later can work. {0} = the target's spoken name.
+            D("WorldTriggerRefusedNamed", "{0}, can't trigger now"),
             // The player cancelled a walk in progress.
             D("WorldStopped", "stopped"),
             // A committed walk stalled mid-path (something blocked it) and gave up short of its spot.
@@ -1496,6 +1500,10 @@ namespace NonVisualCalculus.Core.Strings
         /// <summary>Spoken when the target cannot be pathed to from where the character currently stands.</summary>
         public static string WorldUnreachable(string? name)
             => string.IsNullOrEmpty(name) ? T("WorldUnreachable") : F("WorldUnreachableNamed", name!);
+
+        /// <summary>Spoken when the character arrived in range but the game refused to fire the
+        /// interaction right now, so the walk's "moving to" is never left dangling in silence.</summary>
+        public static string WorldTriggerRefused(string name) => F("WorldTriggerRefusedNamed", name);
 
         /// <summary>Spoken when the player cancels a committed walk.</summary>
         public static string WorldStopped => T("WorldStopped");

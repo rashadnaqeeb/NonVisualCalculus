@@ -363,6 +363,7 @@ WorldMoving = a caminho
 WorldArrived = chegou
 WorldUnreachableNamed = {0}, inacessível
 WorldUnreachable = inacessível
+WorldTriggerRefusedNamed = {0}, não é possível ativar agora
 WorldStopped = parado
 WorldStoppedShort = parou no meio do caminho
 WorldOrbHolds = preso por um orbe, interaja com ele para continuar

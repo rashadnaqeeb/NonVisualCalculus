@@ -373,6 +373,7 @@ WorldMoving = gidiliyor
 WorldArrived = varıldı
 WorldUnreachableNamed = {0}, ulaşılamıyor
 WorldUnreachable = ulaşılamıyor
+WorldTriggerRefusedNamed = {0}, şu anda tetiklenemiyor
 WorldStopped = durdu
 WorldStoppedShort = yolda durdu
 WorldOrbHolds = bir küre tutuyor, devam etmek için onunla etkileşim kur

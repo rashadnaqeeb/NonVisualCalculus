@@ -356,6 +356,7 @@ WorldMoving = иду
 WorldArrived = на месте
 WorldUnreachableNamed = {0}, не добраться
 WorldUnreachable = не добраться
+WorldTriggerRefusedNamed = {0}, сейчас не активируется
 WorldStopped = остановлено
 WorldStoppedShort = остановлено на полпути
 WorldOrbHolds = удерживает сфера, взаимодействуйте с ней, чтобы продолжить

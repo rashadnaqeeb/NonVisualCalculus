@@ -364,6 +364,7 @@ WorldMoving = 移動中
 WorldArrived = 已到達
 WorldUnreachableNamed = {0}，無法到達
 WorldUnreachable = 無法到達
+WorldTriggerRefusedNamed = {0}，現在無法觸發
 WorldStopped = 已停止
 WorldStoppedShort = 中途停下
 WorldOrbHolds = 被球體困住，與它互動才能繼續
