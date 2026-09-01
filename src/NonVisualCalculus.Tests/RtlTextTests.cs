@@ -124,6 +124,29 @@ namespace NonVisualCalculus.Tests
         }
 
         [Fact]
+        public void Unfix_RestoresAlefMaksura_NotFarsiYeh()
+        {
+            // The game's shaper renders alef maksura with the FARSI YEH presentation forms (its
+            // ArabicTable maps U+0649 to U+FBFC), which plain NFKC folds to Farsi yeh (U+06CC), a
+            // letter the synthesizer speaks as plain yeh. "مقهى" (cafe) shaped, visual order:
+            Assert.Equal("مقهى", RtlText.Unfix("ﯽﻬﻘﻣ"));
+            // The same word as an RTL-flagged label stores it (logical order).
+            Assert.Equal("مقهى", RtlText.UnfixLogical("ﻣﻘﻬﯽ"));
+        }
+
+        [Fact]
+        public void UnfixLogical_DropsRichTextTags_MirroredAndLogicalAlike()
+        {
+            // The thought-completion bonuses label: the game color-tags the quip BEFORE reversing
+            // the composed string (those tags arrive mirrored, ">roloc/<" style) and wraps the
+            // skill name in fresh tags AFTER (those arrive logical). The fold must not mirror a
+            // logical tag's brackets and reverse its name into unstrippable garbage; every tag
+            // drops, and the shaped Arabic still folds. ("كيم" in logical shaped storage.)
+            Assert.Equal("كيم", RtlText.UnfixLogical(
+                ">roloc/<<color=#B674CC>ﻛﻴﻢ</color>>CC47B6#=roloc<"));
+        }
+
+        [Fact]
         public void Unfix_FoldsWithoutReversing_LogicalOrderShapedText()
         {
             // An RTL-flagged TMP label (captured from the live loading tip) carries presentation forms

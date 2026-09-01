@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace NonVisualCalculus.Core.Text
 {
@@ -34,24 +33,49 @@ namespace NonVisualCalculus.Core.Text
         {
             if (string.IsNullOrEmpty(s) || !HasPresentationForms(s))
                 return s;
+            s = DropTags(s);
             char[] chars = s.ToCharArray();
             FoldLogicalSpan(chars, 0, chars.Length - 1);
-            return new string(chars).Normalize(NormalizationForm.FormKC);
+            return FoldShaping(chars);
         }
 
-        // A rich-text tag the fixer dragged into the shaped string with its angle brackets mirrored
-        // ("<color=#AB>" arriving as ">BA#=roloc<", possibly with several tags' contents coalesced
-        // into one span). The tag-strip regexes match only logical "<...>" pairs, and the cluster
-        // walk cannot restore a mirrored tag (the fixer scatters its brackets and runs), so any
-        // mirrored pair in a SHAPED string - where an angle-bracket pair is always markup, exactly
-        // as the logical tag strip assumes - is dropped before the walk.
-        private static readonly Regex MirroredTags = new Regex(">[^<>]*<", RegexOptions.Compiled);
+        // Rich-text tags in a shaped string, in either storage: a tag the game's reversal dragged
+        // along arrives with its angle brackets mirrored and contents reversed ("<color=#AB>"
+        // arriving as ">BA#=roloc<"), while a tag the game inserted AFTER reversing (the skill-name
+        // coloring on the thought-completion bonuses) sits logical ("<color=#AB>") - one string can
+        // carry both. No later strip can handle either once this class has run (the logical strip
+        // cannot match a mirrored pair, and the logical fold would mirror an intact tag's brackets
+        // and reverse its name into exactly that garbage), so every tag is dropped here: in a shaped
+        // string an angle-bracket pair is always markup, exactly as the logical tag strip assumes.
+        // Each bracket opens a tag in its own direction ('<' logical, '>' mirrored) running to the
+        // matching closer; a bracket with no closer is literal text and stays.
+        private static string DropTags(string s)
+        {
+            if (s.IndexOf('<') < 0 && s.IndexOf('>') < 0)
+                return s;
+            var sb = new StringBuilder(s.Length);
+            int i = 0;
+            while (i < s.Length)
+            {
+                char c = s[i];
+                if (c == '<' || c == '>')
+                {
+                    int j = s.IndexOfAny(AngleBrackets, i + 1);
+                    if (j >= 0 && s[j] == (c == '<' ? '>' : '<')) { i = j + 1; continue; }
+                }
+                sb.Append(c);
+                i++;
+            }
+            return sb.ToString();
+        }
+
+        private static readonly char[] AngleBrackets = { '<', '>' };
 
         public static string Unfix(string s)
         {
             if (string.IsNullOrEmpty(s) || !HasPresentationForms(s))
                 return s;
-            s = MirroredTags.Replace(s, string.Empty);
+            s = DropTags(s);
 
             // The mod composes spoken lines from mixed parts - a fixed game name, our own logical
             // separator and words ("<name>; east, 3 meters"), a fixed speaker and a fixed line
@@ -100,7 +124,19 @@ namespace NonVisualCalculus.Core.Text
                 i = lastArabic + 1;
             }
 
-            // Presentation-form glyphs to plain letters ("ﻛ" to "ك", lam-alef ligatures to their pair).
+            return FoldShaping(chars);
+        }
+
+        // Presentation-form glyphs to plain letters ("ﻛ" to "ك", lam-alef ligatures to their pair)
+        // via NFKC - except the Farsi yeh forms (U+FBFC-FBFF), which the game's shaper uses for ALEF
+        // MAKSURA (its ArabicTable maps U+0649 there: the glyphs are dotless, exactly the maksura
+        // shape, and no other letter maps into that block) while NFKC would fold them to Farsi yeh
+        // (U+06CC), a letter a synthesizer speaks as plain yeh. Restore the maksura first.
+        private static string FoldShaping(char[] chars)
+        {
+            for (int i = 0; i < chars.Length; i++)
+                if (chars[i] >= 'ﯼ' && chars[i] <= 'ﯿ')
+                    chars[i] = 'ى';
             return new string(chars).Normalize(NormalizationForm.FormKC);
         }
 
@@ -230,6 +266,8 @@ namespace NonVisualCalculus.Core.Text
         {
             if (c >= 'ﻵ' && c <= 'ﻼ')     // lam-alef ligatures: iso/fin pairs
                 return (c - 'ﻵ') % 2 == 0 ? PosIsolated : PosFinal;
+            if (c >= 'ﯼ' && c <= 'ﯿ')     // Farsi yeh forms: the shaper's alef maksura (see FoldShaping)
+                return PosIsolated + (c - 'ﯼ');
             if (c < 'ﺀ' || c > 'ﻴ')
                 return PosNone;
             if (c == 'ﺀ')                      // hamza: isolated only

@@ -7,6 +7,8 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 Bug fixes:
 
 - Keyring keys no longer vanish when a save made in one language is loaded in another (a game bug in Arabic; a lost key that can't be repaired is announced).
+- In Arabic, words ending in alef maqsura no longer read it as yaa.
+- In Arabic, the thought-completion screen no longer reads its bonuses as garbled markup.
 
 ## V1.2.0
 
