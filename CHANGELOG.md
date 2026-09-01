@@ -4,6 +4,8 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 ## Unreleased
 
+## V1.2.1
+
 Bug fixes:
 
 - Keyring keys no longer vanish when a save made in one language is loaded in another (a game bug in Arabic; a lost key that can't be repaired is announced).
