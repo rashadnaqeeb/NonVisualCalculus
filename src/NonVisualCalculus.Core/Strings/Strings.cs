@@ -860,6 +860,11 @@ namespace NonVisualCalculus.Core.Strings
                 + "light swells like morning flooding in, then settles. The man stirs. He rolls over, pushes up "
                 + "onto his hands and knees, and hangs there a moment, head down. Then he hauls himself to his "
                 + "feet and stands swaying in the middle of the room."),
+
+            // Spoken while a saved game loads, when one of the keyring's saved keys matches no known
+            // item and the game is about to drop it (a game bug the mod repairs where it can);
+            // {0} = the unrecognized name exactly as the save file stores it, any language.
+            D("KeyringItemNotRestored", "Keyring item not restored: {0}"),
         };
 
         private static readonly Dictionary<string, string> English = BuildEnglish();
@@ -1628,5 +1633,9 @@ namespace NonVisualCalculus.Core.Strings
             string prompt = F(healWithLeft ? "CrisisHealLeft" : "CrisisHealRight", barName);
             return string.IsNullOrEmpty(gameMessage) ? prompt : prompt + ". " + Text.RtlText.Unfix(gameMessage!);
         }
+
+        /// <summary>A saved keyring key the game is about to drop because its persisted name matches no
+        /// item (see the module's KeyringPersistenceGuard); {0} = the name as the save stores it.</summary>
+        public static string KeyringItemNotRestored(string savedName) => F("KeyringItemNotRestored", savedName);
     }
 }

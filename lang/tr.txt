@@ -412,3 +412,4 @@ PresetCrimeScene = avludaki suç mahalli
 PresetPierApartments = iskele apartmanları
 PresetApartmentCourtyard = apartman avlusu
 CutsceneNewGameWakeUp = Yukarıdan görünen bir oda yavaşça beliriyor. Oda darmadağın. Sol duvara dayalı, çarşafları buruşmuş beyaz bir yatak duruyor. Sağda altıgen desenli koyu renk duvar kâğıdı, bir şifonyer ve bir ayna var. Karo zemine kâğıtlar, kıyafetler ve şişeler saçılmış. Odanın ortasında bir adam yüzüstü, upuzun yatıyor; üzerinde iç çamaşırı ve tek bir çoraptan başka bir şey yok. Işık, içeri dolan sabah gibi güçleniyor, sonra duruluyor. Adam kımıldıyor. Yan dönüyor, elleri ve dizleri üzerinde doğruluyor ve başı önde bir an öylece kalıyor. Sonra kendini ayağa kaldırıp odanın ortasında sallanarak duruyor.
+KeyringItemNotRestored = Anahtarlıktaki eşya geri yüklenemedi: {0}

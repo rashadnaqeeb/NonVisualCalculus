@@ -62,6 +62,7 @@ namespace NonVisualCalculus.Module
         // Speaks authored descriptions of the game's silent cinematic scenes (the new-game wake-up) via a
         // Harmony feeder drained from the pump. Owns no native handle; its patch rides _harmony.
         private CutsceneReader _cutscenes;
+        private KeyringPersistenceGuard _keyringGuard;
         // Keeps the mod's authored strings in the game's language (loads a lang/<language>.txt into
         // Core's Translation table, English when none). Owns no native handle.
         private LanguageSync _language;
@@ -136,6 +137,10 @@ namespace NonVisualCalculus.Module
             // Speak the silent cinematic scenes' descriptions; likewise on this load's Harmony.
             _cutscenes = new CutsceneReader(_host);
             _cutscenes.Apply(_harmony);
+            // Repair the keyring names a saved game is restored from, before the game's loader can
+            // silently drop keys saved under another language state; likewise on this load's Harmony.
+            _keyringGuard = new KeyringPersistenceGuard(_host);
+            _keyringGuard.Apply(_harmony);
             // Mute DE's raw-input number-key response-select while our navigator owns the keyboard, so a
             // digit only moves the dialogue cursor (jump-to-choice) instead of auto-committing the option.
             ButtonKeyTriggerGuard.Apply(_harmony, () => _screens.OwnsKeyboard);
@@ -650,6 +655,7 @@ namespace NonVisualCalculus.Module
             _quotes?.Dispose(); // and the quote feeder's
             _loadingTips?.Dispose(); // and the tip feeder's
             _cutscenes?.Dispose(); // and the cutscene feeder's
+            _keyringGuard?.Dispose(); // and the keyring guard's
             _harmony?.UnpatchSelf();
             _harmony = null;
             ModTextEntry.Active = null; // a live bookmark-name edit dies with its overlay
@@ -666,6 +672,7 @@ namespace NonVisualCalculus.Module
             _quotes = null;
             _loadingTips = null;
             _cutscenes = null;
+            _keyringGuard = null;
             // The Translation table is deliberately NOT reset here: on a hot-reload the new module has
             // already loaded its own table, and a reset from the old module's teardown would wipe it
             // (the same trap as a fixed Harmony id).

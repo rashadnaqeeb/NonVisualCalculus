@@ -402,3 +402,4 @@ PresetCrimeScene = cena do crime no pátio
 PresetPierApartments = apartamentos do píer
 PresetApartmentCourtyard = pátio dos apartamentos
 CutsceneNewGameWakeUp = Um quarto surge lentamente, visto de cima. Está destruído. Uma cama de lençóis brancos amassados fica encostada na parede da esquerda. À direita, um papel de parede escuro com padrão de hexágonos, uma cômoda e um espelho. Papéis, roupas e garrafas estão espalhados pelo piso de ladrilhos. No meio do quarto, um homem está deitado de bruços no chão, vestindo apenas a cueca e uma meia. A luz cresce como a manhã entrando pela janela, depois se acalma. O homem se mexe. Ele rola de lado, se apoia nas mãos e nos joelhos, e fica assim por um instante, de cabeça baixa. Depois se levanta e fica de pé, cambaleando, no meio do quarto.
+KeyringItemNotRestored = Item do chaveiro não restaurado: {0}

@@ -400,3 +400,4 @@ PresetCrimeScene = escena del crimen del patio
 PresetPierApartments = apartamentos del muelle
 PresetApartmentCourtyard = patio de los apartamentos
 CutsceneNewGameWakeUp = Una habitación aparece lentamente, vista desde arriba. Está destrozada. Una cama con sábanas blancas revueltas se apoya contra la pared de la izquierda. A la derecha, papel pintado oscuro con motivos de hexágonos, una cómoda y un espejo. Papeles, ropa y botellas cubren el suelo de baldosas. En el centro de la habitación, un hombre yace boca abajo en el suelo, vestido solo con su ropa interior y un calcetín. La luz crece como la mañana que entra a raudales y luego se calma. El hombre se mueve. Se da la vuelta, se incorpora sobre las manos y las rodillas y se queda así un momento, con la cabeza gacha. Después se pone en pie y se queda de pie, tambaleándose, en el centro de la habitación.
+KeyringItemNotRestored = Objeto del llavero no restaurado: {0}

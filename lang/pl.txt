@@ -397,3 +397,4 @@ PresetCrimeScene = miejsce zbrodni na podwórzu
 PresetPierApartments = mieszkania przy molo
 PresetApartmentCourtyard = podwórze kamienic
 CutsceneNewGameWakeUp = Powoli wyłania się pokój, widziany z góry. Jest zdemolowany. Przy lewej ścianie stoi łóżko ze zmiętą białą pościelą. Po prawej ciemna tapeta we wzór z sześciokątów, komoda i lustro. Po posadzce rozrzucone są papiery, ubrania i butelki. Na środku pokoju mężczyzna leży płasko na podłodze, twarzą w dół, w samej bieliźnie i jednej skarpetce. Światło wzbiera, jakby wlewał się poranek, po czym się uspokaja. Mężczyzna się porusza. Przekręca się, podnosi na czworaki i przez chwilę tak zawisa, z opuszczoną głową. Potem dźwiga się na nogi i stoi, chwiejąc się, na środku pokoju.
+KeyringItemNotRestored = Nie przywrócono przedmiotu z kółka na klucze: {0}

@@ -403,3 +403,4 @@ PresetCrimeScene = 後院案發現場
 PresetPierApartments = 碼頭公寓
 PresetApartmentCourtyard = 公寓庭院
 CutsceneNewGameWakeUp = 一個房間從上方俯視的視角緩緩浮現。房間一片狼藉。左邊牆前擺著一張床，白色床單皺成一團。右邊是印著六邊形圖案的深色壁紙、一個五斗櫃和一面鏡子。地磚上散落著紙張、衣物和瓶子。房間中央，一個男人臉朝下平躺在地上，身上只穿著內褲和一隻襪子。光線像清晨湧入一般漸漸變亮，隨後穩定下來。男人動了動。他翻過身，用雙手和膝蓋撐起身體，低著頭停了一會兒。然後他掙扎著站起來，搖搖晃晃地立在房間中央。
+KeyringItemNotRestored = 鑰匙圈物品未恢復：{0}

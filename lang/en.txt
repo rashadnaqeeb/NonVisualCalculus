@@ -396,3 +396,4 @@ PresetCrimeScene = courtyard crime scene
 PresetPierApartments = pierside apartments
 PresetApartmentCourtyard = apartment courtyard
 CutsceneNewGameWakeUp = A room slowly fades in, seen from above. It is wrecked. A bed with rumpled white sheets sits against the left wall. On the right, dark wallpaper patterned with hexagons, a dresser, and a mirror. Papers, clothes and bottles are strewn across the tile floor. In the middle of the room a man lies flat on the floor, face down, wearing nothing but his underwear and one sock. The light swells like morning flooding in, then settles. The man stirs. He rolls over, pushes up onto his hands and knees, and hangs there a moment, head down. Then he hauls himself to his feet and stands swaying in the middle of the room.
+KeyringItemNotRestored = Keyring item not restored: {0}

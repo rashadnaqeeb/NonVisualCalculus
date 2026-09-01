@@ -405,3 +405,4 @@ PresetCrimeScene = Tatort im Hof
 PresetPierApartments = Wohnungen am Pier
 PresetApartmentCourtyard = Hof der Wohnhäuser
 CutsceneNewGameWakeUp = Ein Zimmer wird langsam sichtbar, von oben gesehen. Es ist verwüstet. An der linken Wand steht ein Bett mit zerwühlten weißen Laken. Rechts dunkle Tapete mit Sechseckmuster, eine Kommode und ein Spiegel. Papiere, Kleidung und Flaschen liegen über den Fliesenboden verstreut. In der Mitte des Zimmers liegt ein Mann flach auf dem Boden, mit dem Gesicht nach unten, nur in Unterwäsche und einer Socke. Das Licht schwillt an wie hereinströmender Morgen und beruhigt sich dann. Der Mann regt sich. Er rollt sich herum, stützt sich auf Hände und Knie und verharrt einen Moment mit gesenktem Kopf. Dann rappelt er sich auf die Beine und steht schwankend mitten im Zimmer.
+KeyringItemNotRestored = Schlüsselring-Gegenstand nicht wiederhergestellt: {0}

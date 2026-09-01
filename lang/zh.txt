@@ -398,3 +398,4 @@ PresetCrimeScene = 后院案发现场
 PresetPierApartments = 码头公寓
 PresetApartmentCourtyard = 公寓庭院
 CutsceneNewGameWakeUp = 一个房间从上方俯视的视角缓缓浮现。房间一片狼藉。左边墙前摆着一张床，白色床单皱成一团。右边是印着六边形图案的深色墙纸、一个梳妆柜和一面镜子。地砖上散落着纸张、衣物和瓶子。房间中央，一个男人脸朝下平躺在地上，身上只穿着内裤和一只袜子。光线像清晨涌入一般渐渐变亮，随后稳定下来。男人动了动。他翻过身，用双手和膝盖撑起身体，低着头停了一会儿。然后他挣扎着站起来，摇摇晃晃地立在房间中央。
+KeyringItemNotRestored = 钥匙圈物品未恢复：{0}

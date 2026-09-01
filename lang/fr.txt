@@ -398,3 +398,4 @@ PresetCrimeScene = scène de crime de la cour
 PresetPierApartments = appartements de la jetée
 PresetApartmentCourtyard = cour des appartements
 CutsceneNewGameWakeUp = Une pièce apparaît lentement, vue de dessus. Elle est dévastée. Un lit aux draps blancs froissés se tient contre le mur de gauche. À droite, du papier peint sombre à motif d'hexagones, une commode et un miroir. Des papiers, des vêtements et des bouteilles jonchent le sol carrelé. Au milieu de la pièce, un homme est étendu à plat ventre sur le sol, vêtu seulement de ses sous-vêtements et d'une chaussette. La lumière enfle comme le matin qui inonde la pièce, puis se stabilise. L'homme remue. Il se retourne, se redresse sur les mains et les genoux, et reste ainsi un instant, la tête baissée. Puis il se hisse sur ses pieds et se tient debout, vacillant, au milieu de la pièce.
+KeyringItemNotRestored = Objet du porte-clés non restauré : {0}
