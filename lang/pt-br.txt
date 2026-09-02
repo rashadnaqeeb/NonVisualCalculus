@@ -366,6 +366,7 @@ WorldUnreachable = inacessível
 WorldTriggerRefusedNamed = {0}, não é possível ativar agora
 WorldStopped = parado
 WorldStoppedShort = parou no meio do caminho
+WorldDetour = desvio necessário
 WorldOrbHolds = preso por um orbe, interaja com ele para continuar
 WorldNoControl = cena em andamento
 WorldContainerClosed = recipiente fechado

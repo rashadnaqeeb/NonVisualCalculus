@@ -1,5 +1,6 @@
 using NonVisualCalculus.Core.Modularity;
 using NonVisualCalculus.Core.Strings;
+using NonVisualCalculus.Core.Text;
 using FortressOccident;
 using Sunshine;
 using Snv = System.Numerics.Vector3;
@@ -20,6 +21,13 @@ namespace NonVisualCalculus.Module.World
     /// and <c>Interact</c> on arrival - a small arrival-watching state machine ticked each frame by the
     /// <see cref="WorldReader"/>, cancellable mid-path. A no-target Enter is a plain walk to bare ground
     /// handled by <see cref="BeginWalk"/>.
+    ///
+    /// A refused walk gets one more try as a two-leg detour (<see cref="GateDetour"/>): when the game
+    /// prices the destination infinite because a self-opening passage is sealed until the character stands
+    /// beside it, the verb walks to a spot inside that passage's trigger box first, then re-issues the real
+    /// destination once the gate has opened - a sighted player's click-into-the-passage-then-on, with the
+    /// game opening its own gate. The gate open is waited for, briefly, since the mesh re-carves a frame or
+    /// two after the trigger fires; if it never opens the walk ends in the same "can't reach".
     /// </summary>
     internal sealed class WalkInteract
     {
@@ -36,8 +44,14 @@ namespace NonVisualCalculus.Module.World
         private const int MaxStallRetries = 2;
         // How close (metres) to a bare-ground destination counts as arrived, when no interaction radius applies.
         private const float GroundArrivalDistance = 0.6f;
+        // Frames the character waits at a detour's gate spot for the passage to price finite. The trigger
+        // fires on entry and the obstacle lifts the same frame, but the mesh re-carves a frame or two later;
+        // at ~60 fps this is a second and a half, generous for that and short enough that a gate that never
+        // opens is reported promptly.
+        private const int GateOpenGraceFrames = 90;
 
         private readonly IModHost _host;
+        private readonly GateDetour _gates;
 
         private IWalkTarget _target; // null => bare-ground walk (arrival is the whole action, no interact)
         private string _label;       // the target's name (or "ground"), for logs only
@@ -46,8 +60,16 @@ namespace NonVisualCalculus.Module.World
         private bool _movedOnce;     // movementStatus has been MOVING/ADJUSTING since this walk began
         private int _stalledTicks;   // consecutive frames the character has been non-moving and not arrived
         private int _retries;        // stalled-walk re-issues spent on the current target (see Stall)
+        private bool _detour;        // the walk in flight is a detour's first leg, or its wait at the gate spot
+        private Snv _final;          // a detour's real destination, re-issued once the gate has opened
+        private bool _atGate;        // the detour's first leg has arrived; waiting for the gate to open
+        private int _gateTicks;      // frames spent waiting at the gate spot
 
-        public WalkInteract(IModHost host) { _host = host; }
+        public WalkInteract(IModHost host, GateDetour gates)
+        {
+            _host = host;
+            _gates = gates;
+        }
 
         /// <summary>Whether a committed walk is in flight (being watched for arrival).</summary>
         public bool Active => _active;
@@ -90,6 +112,13 @@ namespace NonVisualCalculus.Module.World
                 // walk, or speak the in-place result (an orb's float text; an entity has none).
                 if (!target.Interact(_host.Settings.RunToDestinations.Value))
                 {
+                    // Refused: a sealed self-opening passage may be all that is in the way. Its stand-spot
+                    // is where the click would have walked, so that is what the detour must reach.
+                    if (BeginDetour(target, from, target.Approach(from, out _)))
+                    {
+                        _host.Speech.Speak(SpokenLine.Join(Strings.WorldMovingTo(target.Name), Strings.WorldDetour), interrupt: true);
+                        return true;
+                    }
                     _host.Speech.Speak(Strings.WorldUnreachable(target.Name), interrupt: true);
                     return false;
                 }
@@ -105,7 +134,15 @@ namespace NonVisualCalculus.Module.World
             }
 
             Snv stand = target.Approach(from, out _); // the facing is the game's own (walk direction)
-            if (!Drive(stand)) return false;
+            if (!Drive(stand))
+            {
+                if (BeginDetour(target, from, stand))
+                {
+                    _host.Speech.Speak(SpokenLine.Join(Strings.WorldMovingTo(target.Name), Strings.WorldDetour), interrupt: true);
+                    return true;
+                }
+                return false;
+            }
             _target = target;
             _label = string.IsNullOrEmpty(target.Name) ? "target" : target.Name;
             _retries = 0;
@@ -138,6 +175,12 @@ namespace NonVisualCalculus.Module.World
             // player waiting on a walk that never started.
             if (!Drive(point))
             {
+                Character main = Main;
+                if (main != null && BeginDetour(null, WorldConvert.ToSnv(main.transform.position), point))
+                {
+                    _host.Speech.Speak(SpokenLine.Join(announcement, Strings.WorldDetour), interrupt: true);
+                    return true;
+                }
                 _host.Speech.Speak(Strings.WorldUnreachable(null), interrupt: true);
                 return false;
             }
@@ -145,6 +188,87 @@ namespace NonVisualCalculus.Module.World
             _label = "ground";
             _host.Speech.Speak(announcement, interrupt: true);
             return true;
+        }
+
+        // Commit the first leg of a two-leg detour to <paramref name="final"/> (a bare spot, or the
+        // stand-spot of <paramref name="target"/>) from <paramref name="from"/>, when a self-opening gate
+        // bridges them: walk to the gate spot and watch it (TickDetour). False when no gate bridges the two
+        // or the leg itself refuses - then the refusal stands as the plain can't-reach.
+        private bool BeginDetour(IWalkTarget target, Snv from, Snv final)
+        {
+            if (!_gates.TryFindVia(from, final, out Snv via, out string gate)) return false;
+            if (!Drive(via)) return false;
+            _target = target;
+            _label = target == null ? "ground" : string.IsNullOrEmpty(target.Name) ? "target" : target.Name;
+            _retries = 0;
+            _detour = true;
+            _final = final;
+            _atGate = false;
+            _gateTicks = 0;
+            _host.LogInfo($"WalkInteract: {_label} at {final} is behind gate '{gate}'; detouring via {via}.");
+            return true;
+        }
+
+        // A detour's watch: the first leg arrives at the gate spot, then the real destination is re-issued
+        // each frame until the game prices it finite (the gate having opened) or the wait runs out. A first
+        // leg that breaks or stalls ends as a bare walk would ("stopped short"): the player heard "moving,
+        // detour" and is never left in silence.
+        private void TickDetour(Character.MovementStatus status, Snv player)
+        {
+            if (!_atGate)
+            {
+                if (status == Character.MovementStatus.COMPLETED || Snv.Distance(player, _dest) <= GroundArrivalDistance)
+                {
+                    _atGate = true;
+                    _gateTicks = 0;
+                }
+                else
+                {
+                    int grace = _movedOnce ? StallGraceFrames : StartupGraceFrames;
+                    if (status == Character.MovementStatus.BROKEN || _stalledTicks > grace)
+                    {
+                        _host.LogWarning($"WalkInteract: detour leg toward {_label} ended short ({status}); abandoning.");
+                        EndDetour();
+                        _host.Speech.Speak(Strings.WorldStoppedShort, interrupt: true);
+                    }
+                    return;
+                }
+            }
+            if (ResumeFromGate(player))
+            {
+                _host.LogInfo($"WalkInteract: gate open; resuming toward {_label}.");
+                _detour = false;
+                return;
+            }
+            if (++_gateTicks > GateOpenGraceFrames)
+            {
+                _host.LogWarning($"WalkInteract: gate spot reached but {_label} still prices unreachable; giving up.");
+                EndDetour();
+                _host.Speech.Speak(Strings.WorldUnreachable(_target?.Name), interrupt: true);
+            }
+        }
+
+        // Re-issue the real destination from the gate spot: a self-driving target's own click (which walks
+        // the party and acts on arrival, so the watch ends here), an orb's stand-spot recomputed from where
+        // the character now stands, or the bare spot itself - the latter two continue under the ordinary
+        // arrival watch. False while the game still prices it infinite.
+        private bool ResumeFromGate(Snv player)
+        {
+            if (_target == null) return Drive(_final);
+            if (_target.InteractWalks)
+            {
+                if (!_target.Interact(_host.Settings.RunToDestinations.Value)) return false;
+                _active = false;
+                SpeakPostInteract(_target);
+                return true;
+            }
+            return Drive(_target.Approach(player, out _));
+        }
+
+        private void EndDetour()
+        {
+            _active = false;
+            _detour = false;
         }
 
         /// <summary>Player-initiated cancel (the Stop key): halt the character and say so. Covers both this
@@ -155,6 +279,7 @@ namespace NonVisualCalculus.Module.World
             if (!_active && !GameMoving()) return;
             StopCharacter();
             _active = false;
+            _detour = false;
             _host.Speech.Speak(Strings.WorldStopped, interrupt: true);
         }
 
@@ -168,7 +293,11 @@ namespace NonVisualCalculus.Module.World
         /// area unloaded): only drop the watch, never halt the character. The game (a conversation, a scripted
         /// sequence) owns the character's movement now, so issuing StopMovement here would fight it; the player
         /// did not ask to stop, so there is nothing to say.</summary>
-        public void Abandon() => _active = false;
+        public void Abandon()
+        {
+            _active = false;
+            _detour = false;
+        }
 
         /// <summary>Advance the walk: when the character finishes its path (or already stands in range),
         /// interact once and finish. A broken path, or a walk that stalls (never starts, or moves then halts
@@ -185,6 +314,8 @@ namespace NonVisualCalculus.Module.World
             Character.MovementStatus status = main.movementStatus;
             bool moving = status == Character.MovementStatus.MOVING || status == Character.MovementStatus.ADJUSTING;
             if (moving) { _movedOnce = true; _stalledTicks = 0; } else _stalledTicks++;
+
+            if (_detour) { TickDetour(status, player); return; }
 
             if (HasArrived(status, player)) { Arrive(player); _active = false; return; }
 

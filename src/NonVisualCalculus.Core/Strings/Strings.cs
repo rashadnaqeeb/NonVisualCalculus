@@ -747,6 +747,11 @@ namespace NonVisualCalculus.Core.Strings
             D("WorldStopped", "stopped"),
             // A committed walk stalled mid-path (something blocked it) and gave up short of its spot.
             D("WorldStoppedShort", "stopped short"),
+            // The walk reaches its spot only by a two-leg detour: the character first walks beside one
+            // of the game's self-opening passages (which opens once they stand next to it), then on.
+            // Appended to a "moving" line on committing such a walk, and to a bookmark row whose
+            // spot needs one; a short phrase.
+            D("WorldDetour", "detour required"),
             // A world action was refused because an unresolved thought or paralyzer orb pins the
             // character in place; full clause telling the player to interact with the orb to get free.
             D("WorldOrbHolds", "held by an orb, interact with it to continue"),
@@ -1516,6 +1521,10 @@ namespace NonVisualCalculus.Core.Strings
         /// <summary>Spoken when a committed walk stalls mid-path and gives up short of its spot, so a
         /// "moving" is never left dangling in silence.</summary>
         public static string WorldStoppedShort => T("WorldStoppedShort");
+
+        /// <summary>Spoken after a "moving" line, or on a bookmark row, when the spot is reached only by
+        /// walking beside one of the game's self-opening passages first, then on.</summary>
+        public static string WorldDetour => T("WorldDetour");
 
         /// <summary>Spoken when a world action is refused because a paralyzer or unresolved thought orb
         /// holds the character in place (the game's own movement block, whose orb also holds the input

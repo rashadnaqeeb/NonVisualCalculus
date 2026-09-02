@@ -359,6 +359,7 @@ WorldUnreachable = не добраться
 WorldTriggerRefusedNamed = {0}, сейчас не активируется
 WorldStopped = остановлено
 WorldStoppedShort = остановлено на полпути
+WorldDetour = нужен обход
 WorldOrbHolds = удерживает сфера, взаимодействуйте с ней, чтобы продолжить
 WorldNoControl = идёт катсцена
 WorldContainerClosed = контейнер закрыт

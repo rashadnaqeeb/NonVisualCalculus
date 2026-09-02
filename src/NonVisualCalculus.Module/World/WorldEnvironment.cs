@@ -330,7 +330,7 @@ namespace NonVisualCalculus.Module.World
         }
 
         // NavMesh.AllAreas (-1, every area in the mask); the const isn't surfaced on the interop proxy.
-        private const int AllAreas = -1;
+        internal const int AllAreas = -1;
 
         // The visible-frame inset: content exactly on the frame border streams unreliably, so the cursor's
         // world ends a little inside it.

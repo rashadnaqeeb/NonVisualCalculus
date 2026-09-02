@@ -371,6 +371,7 @@ WorldUnreachable = 도달 불가
 WorldTriggerRefusedNamed = {0}, 지금은 작동 불가
 WorldStopped = 정지함
 WorldStoppedShort = 도중에 멈춤
+WorldDetour = 우회 필요
 WorldOrbHolds = 구체에 붙잡힘, 계속하려면 구체와 상호작용하십시오
 WorldNoControl = 컷신 재생 중
 WorldContainerClosed = 보관함 닫힘

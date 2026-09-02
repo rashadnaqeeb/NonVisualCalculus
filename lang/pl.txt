@@ -361,6 +361,7 @@ WorldUnreachable = nie można dojść
 WorldTriggerRefusedNamed = {0}, nie można teraz aktywować
 WorldStopped = zatrzymano
 WorldStoppedShort = zatrzymano w połowie drogi
+WorldDetour = wymagane obejście
 WorldOrbHolds = trzyma cię sfera, użyj jej, aby kontynuować
 WorldNoControl = trwa przerywnik filmowy
 WorldContainerClosed = pojemnik zamknięty

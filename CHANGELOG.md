@@ -4,6 +4,11 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 ## Unreleased
 
+New Features and improvements:
+
+- Walks to a spot behind a passage the game opens only up close (the yard path to the coast) now detour through it instead of refusing.
+- Bookmark rows say "detour required" when the walk there goes through such a passage first, and the walking-direction key points along that first leg.
+
 ## V1.2.1
 
 Bug fixes:

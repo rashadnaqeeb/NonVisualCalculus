@@ -106,11 +106,12 @@ namespace NonVisualCalculus.Module.Nav
         // ---- what the cells read and do (live reads; the screen holds no copy of game state) ----
 
         /// <summary>A bookmark row's spoken line: name, walking distance from the character, and
-        /// "can't reach" when no navmesh path connects - all read live at announce time.</summary>
+        /// "detour" when the walk there goes through a self-opening gate first, "can't reach" when no path
+        /// connects - all read live at announce time.</summary>
         internal string RowLine(Bookmark mark)
         {
             int meters = (int)Math.Round(Geo.Distance(mark.Position, _world.PlayerPosition));
-            return BookmarkAnnouncer.Compose(mark.Name, meters, _world.CanReach(mark.Position));
+            return BookmarkAnnouncer.Compose(mark.Name, meters, _world.Reach(mark.Position));
         }
 
         /// <summary>A preset row's spoken line: as <see cref="RowLine"/> with the preset marker, the
@@ -118,7 +119,7 @@ namespace NonVisualCalculus.Module.Nav
         internal string RowLine(PresetBookmark preset)
         {
             int meters = (int)Math.Round(Geo.Distance(preset.Position, _world.PlayerPosition));
-            return BookmarkAnnouncer.Compose(preset.Name(), meters, _world.CanReach(preset.Position), preset: true);
+            return BookmarkAnnouncer.Compose(preset.Name(), meters, _world.Reach(preset.Position), preset: true);
         }
 
         /// <summary>Walk the character to a stored point: close the menu (back to the world) and drive

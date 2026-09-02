@@ -51,6 +51,7 @@ namespace NonVisualCalculus.Module.World
         private readonly SonarSystem _sonar;
         private readonly WorldModel _model;
         private readonly WalkInteract _walk;
+        private readonly GateDetour _gates;
         private readonly Scanner _scanner;
         private bool _engaged;
         private Snv _lastPlayer; // character position last in-world frame, to catch a reposition (load/teleport)
@@ -110,7 +111,8 @@ namespace NonVisualCalculus.Module.World
             _sonar.BindRest(() => host.Settings.SonarRest.Value / 1000f);
             _sonar.BindVolume(() => host.Settings.SonarVolume.Fraction);
             _overlay.With(_sonar);
-            _walk = new WalkInteract(host);
+            _gates = new GateDetour(_env);
+            _walk = new WalkInteract(host, _gates);
             // The review cursor: browses the same live registry the cursor senses, scoped by the same env
             // (in-frame, unfogged), anchored to the PLAYER - membership always measures from where the
             // character stands, since the walk a scanned thing supports starts there. Its selection is a
@@ -322,9 +324,15 @@ namespace NonVisualCalculus.Module.World
         /// the post-2 AM time lock releases), gating day-bound preset bookmarks.</summary>
         public int CurrentDay => SunshineClock.Singleton.Time.DayCounter;
 
-        /// <summary>Whether a complete navmesh path connects the character to a stored point, for a
-        /// bookmark row's spoken reachability.</summary>
-        public bool CanReach(Snv point) => _env.PathComplete(_env.PlayerPosition, point);
+        /// <summary>How the character can walk to a stored point, for a bookmark row's spoken route: a
+        /// complete navmesh path, a detour through a self-opening gate (see <see cref="GateDetour"/>), or
+        /// none.</summary>
+        public WalkRoute Reach(Snv point)
+        {
+            Snv player = _env.PlayerPosition;
+            if (_env.PathComplete(player, point)) return WalkRoute.Direct;
+            return _gates.TryFindVia(player, point, out _, out _) ? WalkRoute.Detour : WalkRoute.None;
+        }
 
         /// <summary>Walk to a stored point (a bookmark): the same bare-ground move as the Walk verb.
         /// Outside the free-roam world (the bookmarks menu also opens over a game menu or a
@@ -378,7 +386,11 @@ namespace NonVisualCalculus.Module.World
             IWorldItem target = _scanner.Selected;
             if (target == null) { _host.Speech.Speak(Strings.WorldScanNothing, interrupt: true); return; }
             Snv cursor = _overlay.Cursor.Position;
-            if (!_env.NextPathLeg(cursor, target.InteractionPoint(cursor), out Snv corner))
+            Snv point = target.InteractionPoint(cursor);
+            // No path: the thing may sit behind a self-opening gate, in which case the walk there starts
+            // with the leg to the gate spot, so that is the direction to give.
+            if (!_env.NextPathLeg(cursor, point, out Snv corner)
+                && !(_gates.TryFindVia(cursor, point, out Snv via, out _) && _env.NextPathLeg(cursor, via, out corner)))
             {
                 _host.Speech.Speak(Strings.WorldUnreachable(target.Name), interrupt: true);
                 return;

@@ -376,6 +376,7 @@ WorldUnreachable = ulaşılamıyor
 WorldTriggerRefusedNamed = {0}, şu anda tetiklenemiyor
 WorldStopped = durdu
 WorldStoppedShort = yolda durdu
+WorldDetour = dolambaçlı yol gerekli
 WorldOrbHolds = bir küre tutuyor, devam etmek için onunla etkileşim kur
 WorldNoControl = ara sahne oynuyor
 WorldContainerClosed = kap kapatıldı
