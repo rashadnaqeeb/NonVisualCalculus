@@ -4,6 +4,8 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 ## Unreleased
 
+## V1.2.2
+
 New Features and improvements:
 
 - Pathfinding to a spot behind a passage the game opens only up close (the apartment courtyard gate) now detour through it instead of refusing.
