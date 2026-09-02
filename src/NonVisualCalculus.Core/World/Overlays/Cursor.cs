@@ -130,7 +130,11 @@ namespace NonVisualCalculus.Core.World.Overlays
             if (block == GlideBlock.None || _unrestricted())
             {
                 Position = traced;
-                return new GlideOutcome(Moved(cur, traced), GlideBlock.None, default);
+                bool moved = Moved(cur, traced);
+                // A wall stop is no block (silent), but the point the stroke aimed at is still reported, so
+                // the overlay can ask whether the ground past that edge carries a spoken rule.
+                return new GlideOutcome(moved, GlideBlock.None,
+                                        moved ? default : new Vector3(cur.X + dx * step, cur.Y, cur.Z + dz * step));
             }
 
             // The full step is refused: slide on whichever single axis still passes (held diagonal against

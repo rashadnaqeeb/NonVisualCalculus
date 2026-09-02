@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NonVisualCalculus.Core.World;
 using UnityEngine;
 using UnityEngine.AI;
 using Snv = System.Numerics.Vector3;
@@ -80,6 +81,48 @@ namespace NonVisualCalculus.Module.World
                 }
             }
             return gate != null;
+        }
+
+        /// <summary>The spoken reason a point is sealed off, when it lies inside a RULE gate's blocker: a
+        /// blocker enabled while a Lua boolean is false that no trigger box flips, so the player has to meet
+        /// the rule instead (the Doomed Commercial Area's dark rooms, walkable once the flashlight is held).
+        /// <paramref name="margin"/> widens the blocker's box in metres: the mesh is carved out a stride
+        /// beyond the box (the agent radius), so a cursor bumping into that edge stops short of the box
+        /// itself. Null for a point no rule gate seals, or one sealed by a rule with no known reason
+        /// (<see cref="GateReasons"/>).</summary>
+        public static string RuleReasonAt(Vector3 point, float margin)
+        {
+            ColliderBooleanSwitcher[] triggers = UnityEngine.Object.FindObjectsOfType<ColliderBooleanSwitcher>();
+            foreach (LuaBlockerSwitcher sw in UnityEngine.Object.FindObjectsOfType<LuaBlockerSwitcher>())
+            {
+                if (!sw.invertBoolean || !sw.isActiveAndEnabled) continue;
+                string reason = GateReasons.For(sw.booleanName);
+                if (reason == null) continue;
+                bool selfOpening = false;
+                foreach (ColliderBooleanSwitcher trigger in triggers)
+                    if (trigger.BooleanName == sw.booleanName) { selfOpening = true; break; }
+                if (selfOpening) continue;
+                foreach (NavMeshObstacle ob in sw.obstacles)
+                {
+                    if (ob == null || !ob.enabled || !ob.carving || !ob.gameObject.activeInHierarchy) continue;
+                    if (Inside(ob, point, margin)) return reason;
+                }
+            }
+            return null;
+        }
+
+        // Whether a world point lies within a box obstacle's footprint, widened by margin metres on each
+        // side, judged in the obstacle's own frame (the dark-room blockers are rotated with their rooms).
+        private static bool Inside(NavMeshObstacle ob, Vector3 point, float margin)
+        {
+            Transform t = ob.transform;
+            Vector3 scale = t.lossyScale;
+            if (scale.x <= 0f || scale.y <= 0f || scale.z <= 0f) return false;
+            Vector3 local = t.InverseTransformPoint(point) - ob.center;
+            Vector3 half = ob.size * 0.5f;
+            return Mathf.Abs(local.x) <= half.x + margin / scale.x
+                && Mathf.Abs(local.z) <= half.z + margin / scale.z
+                && Mathf.Abs(local.y) <= half.y + margin / scale.y;
         }
 
         // A gate worth walking up to: its obstacle is sealing the mesh right now (otherwise the direct path

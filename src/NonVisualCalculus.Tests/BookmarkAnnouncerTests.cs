@@ -37,6 +37,13 @@ namespace NonVisualCalculus.Tests
         }
 
         [Fact]
+        public void Compose_UnreachableWithReason_SpeaksTheReasonInsteadOfCantReach()
+        {
+            Assert.Equal("dark storeroom, 9 meters, requires a flashlight",
+                         BookmarkAnnouncer.Compose("dark storeroom", 9, WalkRoute.None, reason: "requires a flashlight"));
+        }
+
+        [Fact]
         public void Compose_Preset_MarksAfterDistance()
         {
             Assert.Equal("church, 40 meters, preset", BookmarkAnnouncer.Compose("church", 40, WalkRoute.Direct, preset: true));

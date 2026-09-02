@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using NonVisualCalculus.Core.Audio;
 using NonVisualCalculus.Core.Speech;
 
@@ -34,6 +35,7 @@ namespace NonVisualCalculus.Core.World.Overlays
         private readonly MotionTracker _motion = new MotionTracker();
         private bool _wasBlocked; // last stroke frame ended pinned - the bump fires on the transition
         private bool _wasOutside; // unrestricted cursor was beyond the senses - the fog cues fire on the transitions
+        private Vector3? _pushedInto; // ground a held stroke is pinned against by a wall stop; its rule speaks on release
 
         public Cursor Cursor { get; }
 
@@ -83,6 +85,7 @@ namespace NonVisualCalculus.Core.World.Overlays
             _motion.Reset();
             _wasBlocked = false;
             _wasOutside = false;
+            _pushedInto = null;
             // Leaving the world drops the remembered spot: when the view reopens (a conversation ends, a
             // menu closes), the cursor is back on the character, where the next action starts from.
             Cursor.Reset();
@@ -125,6 +128,20 @@ namespace NonVisualCalculus.Core.World.Overlays
                            _ => ImpassableVolume,
                            ImpassablePanWidth);
             _wasBlocked = blocked;
+
+            // A wall stop is silent by touch, and a boundary the game keeps by a rule the player can meet
+            // (the dark rooms that need a flashlight) feels exactly like one - so the ground the stroke was
+            // pushing into is remembered while the key is held against it, and the rule is spoken when the
+            // key is lifted: the natural "what was that?" moment, after the wall tone has had its say.
+            if (intent)
+                _pushedInto = driven && !outcome.Moved && outcome.Block == GlideBlock.None
+                              ? outcome.BlockedToward : (Vector3?)null;
+            else if (_pushedInto is Vector3 edge)
+            {
+                _pushedInto = null;
+                string? reason = _env.BlockReason(edge);
+                if (reason != null) _speech.Speak(reason, interrupt: true);
+            }
 
             // The unrestricted cursor's boundary sense: crossing out past the edge of the senses (off the
             // visible frame or onto fogged ground - exactly where a restricted glide refuses and bumps)

@@ -61,6 +61,12 @@ namespace NonVisualCalculus.Module.World
         /// navmesh and a COMPLETE path between them (the entity reachability gate's oracle, for a bare
         /// stored point such as a bookmark). A point whose ground was never walkable, or that a later
         /// game state severed, reads unreachable.</summary>
+        /// <summary>The spoken rule behind a boundary the cursor bumped into, when the ground past it is
+        /// sealed by a rule gate the game explains (see <see cref="GateDetour.RuleReasonAt"/>); null for
+        /// an ordinary wall or mesh edge.</summary>
+        public string BlockReason(Snv toward)
+            => GateDetour.RuleReasonAt(WorldConvert.ToUnity(toward), BumpReasonMargin);
+
         public bool PathComplete(Snv from, Snv to)
         {
             if (!NavMesh.SamplePosition(WorldConvert.ToUnity(from), out NavMeshHit start, PathSnapRadius, AllAreas))
@@ -342,6 +348,10 @@ namespace NonVisualCalculus.Module.World
         // point was captured on the mesh, so a small tolerance covers drift, while a large one would
         // "reach" the wrong floor of a stacked interior.
         private const float PathSnapRadius = 1.5f;
+        // How far outside a rule gate's blocker box a bumped point still counts as bumping into it: the
+        // mesh is carved out an agent radius (~0.5 m) past the box, and a stroke's intended point lands a
+        // stride past the edge, so this spans both.
+        private const float BumpReasonMargin = 1.5f;
         // Cursor debris-skip tuning (see TrySkipBoundary). Chosen by profiling Martinaise's navmesh: at a ~1 m
         // gap the boundaries are still thin seams and genuinely small debris (all measuring a tight sub-1.8
         // detour), while a detour within 2x the straight hop separates that debris from a thin wall with ground

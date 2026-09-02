@@ -119,7 +119,7 @@ namespace NonVisualCalculus.Module.World
                         _host.Speech.Speak(SpokenLine.Join(Strings.WorldMovingTo(target.Name), Strings.WorldDetour), interrupt: true);
                         return true;
                     }
-                    _host.Speech.Speak(Strings.WorldUnreachable(target.Name), interrupt: true);
+                    _host.Speech.Speak(Refusal(target.Approach(from, out _), target.Name), interrupt: true);
                     return false;
                 }
                 // A drawn orb's click acts in place - Open floats its clue this same frame, and nothing but
@@ -141,6 +141,7 @@ namespace NonVisualCalculus.Module.World
                     _host.Speech.Speak(SpokenLine.Join(Strings.WorldMovingTo(target.Name), Strings.WorldDetour), interrupt: true);
                     return true;
                 }
+                _host.Speech.Speak(Refusal(stand, target.Name), interrupt: true);
                 return false;
             }
             _target = target;
@@ -181,13 +182,23 @@ namespace NonVisualCalculus.Module.World
                     _host.Speech.Speak(SpokenLine.Join(announcement, Strings.WorldDetour), interrupt: true);
                     return true;
                 }
-                _host.Speech.Speak(Strings.WorldUnreachable(null), interrupt: true);
+                _host.Speech.Speak(Refusal(point, null), interrupt: true);
                 return false;
             }
             _target = null;
             _label = "ground";
             _host.Speech.Speak(announcement, interrupt: true);
             return true;
+        }
+
+        // The spoken refusal of a walk to <paramref name="point"/>: the rule that seals it when the game
+        // has one the player can meet ("requires a flashlight" for the dark rooms), else the plain
+        // can't-reach; named after the target when there is one.
+        private static string Refusal(Snv point, string name)
+        {
+            string reason = GateDetour.RuleReasonAt(WorldConvert.ToUnity(point), 0f);
+            if (reason == null) return Strings.WorldUnreachable(name);
+            return string.IsNullOrEmpty(name) ? reason : SpokenLine.Join(name, reason);
         }
 
         // Commit the first leg of a two-leg detour to <paramref name="final"/> (a bare spot, or the

@@ -752,6 +752,10 @@ namespace NonVisualCalculus.Core.Strings
             // Appended to a "moving" line on committing such a walk, and to a bookmark row whose
             // spot needs one; a short phrase.
             D("WorldDetour", "detour required"),
+            // The game seals the dark rooms of the Doomed Commercial Area until the flashlight is held.
+            // Spoken when the cursor bumps into that darkness, on a bookmark row inside it, and when a
+            // walk into it is refused; a short phrase, in place of "can't reach".
+            D("GateNeedsFlashlight", "requires a flashlight"),
             // A world action was refused because an unresolved thought or paralyzer orb pins the
             // character in place; full clause telling the player to interact with the orb to get free.
             D("WorldOrbHolds", "held by an orb, interact with it to continue"),
@@ -1525,6 +1529,11 @@ namespace NonVisualCalculus.Core.Strings
         /// <summary>Spoken after a "moving" line, or on a bookmark row, when the spot is reached only by
         /// walking beside one of the game's self-opening passages first, then on.</summary>
         public static string WorldDetour => T("WorldDetour");
+
+        /// <summary>Spoken for ground the game seals until the flashlight is held (the Doomed Commercial
+        /// Area's dark rooms): at the cursor's bump into it, on a bookmark row inside it, and on a refused
+        /// walk into it. See <see cref="World.GateReasons"/>.</summary>
+        public static string GateNeedsFlashlight => T("GateNeedsFlashlight");
 
         /// <summary>Spoken when a world action is refused because a paralyzer or unresolved thought orb
         /// holds the character in place (the game's own movement block, whose orb also holds the input

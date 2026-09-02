@@ -69,6 +69,7 @@ namespace NonVisualCalculus.Tests
             public bool InView(Vector3 point) => ViewFn(point);
             public Vector3 ClampToView(Vector3 point) => point;
             public bool IsFogged(Vector3 point) => FogFn(point);
+            public string? BlockReason(Vector3 toward) => null;
         }
 
         private static (Scanner scanner, FakeModel model, FakeBackend speech, FakeAudioEngine audio, FakeEnv env) Build()

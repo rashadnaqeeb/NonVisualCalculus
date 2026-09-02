@@ -370,6 +370,7 @@ WorldTriggerRefusedNamed = {0}, gerade nicht auslösbar
 WorldStopped = angehalten
 WorldStoppedShort = vorzeitig angehalten
 WorldDetour = Umweg nötig
+GateNeedsFlashlight = Taschenlampe erforderlich
 WorldOrbHolds = von einem Orb festgehalten, interagiere mit ihm, um fortzufahren
 WorldNoControl = Zwischensequenz läuft
 WorldContainerClosed = Behälter geschlossen

@@ -62,6 +62,7 @@ namespace NonVisualCalculus.Tests
             public bool InView(Vector3 point) => true;
             public Vector3 ClampToView(Vector3 point) => point;
             public bool IsFogged(Vector3 point) => false;
+            public string? BlockReason(Vector3 toward) => null;
         }
 
         private sealed class FakeBackend : ISpeechBackend

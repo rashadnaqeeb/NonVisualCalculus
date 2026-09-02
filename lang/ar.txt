@@ -361,6 +361,7 @@ WorldTriggerRefusedNamed = {0}، لا يمكن التشغيل الآن
 WorldStopped = توقف
 WorldStoppedShort = توقف قبل الوصول
 WorldDetour = يلزم الالتفاف
+GateNeedsFlashlight = يتطلب مصباحًا يدويًا
 WorldOrbHolds = كرة تمنع الحركة، تفاعل معها للمتابعة
 WorldNoControl = مشهد سينمائي قيد العرض
 WorldContainerClosed = أغلقت الحاوية

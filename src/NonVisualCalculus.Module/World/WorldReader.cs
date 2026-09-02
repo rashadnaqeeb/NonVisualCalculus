@@ -2,6 +2,7 @@ using System;
 using NonVisualCalculus.Core.Audio;
 using NonVisualCalculus.Core.Modularity;
 using NonVisualCalculus.Core.Strings;
+using NonVisualCalculus.Core.Text;
 using NonVisualCalculus.Core.World;
 using NonVisualCalculus.Core.World.Overlays;
 using NonVisualCalculus.Core.World.Overlays.Systems;
@@ -327,11 +328,15 @@ namespace NonVisualCalculus.Module.World
         /// <summary>How the character can walk to a stored point, for a bookmark row's spoken route: a
         /// complete navmesh path, a detour through a self-opening gate (see <see cref="GateDetour"/>), or
         /// none.</summary>
-        public WalkRoute Reach(Snv point)
+        public WalkRoute Reach(Snv point, out string reason)
         {
+            reason = null;
             Snv player = _env.PlayerPosition;
             if (_env.PathComplete(player, point)) return WalkRoute.Direct;
-            return _gates.TryFindVia(player, point, out _, out _) ? WalkRoute.Detour : WalkRoute.None;
+            if (_gates.TryFindVia(player, point, out _, out _)) return WalkRoute.Detour;
+            // Sealed: say the rule when the game has one (the spot lies in the dark rooms).
+            reason = GateDetour.RuleReasonAt(WorldConvert.ToUnity(point), 0f);
+            return WalkRoute.None;
         }
 
         /// <summary>Walk to a stored point (a bookmark): the same bare-ground move as the Walk verb.
@@ -392,7 +397,9 @@ namespace NonVisualCalculus.Module.World
             if (!_env.NextPathLeg(cursor, point, out Snv corner)
                 && !(_gates.TryFindVia(cursor, point, out Snv via, out _) && _env.NextPathLeg(cursor, via, out corner)))
             {
-                _host.Speech.Speak(Strings.WorldUnreachable(target.Name), interrupt: true);
+                string reason = GateDetour.RuleReasonAt(WorldConvert.ToUnity(point), 0f);
+                _host.Speech.Speak(reason != null ? SpokenLine.Join(target.Name, reason) : Strings.WorldUnreachable(target.Name),
+                                   interrupt: true);
                 return;
             }
             _host.Speech.Speak(SpatialReadout.Describe(cursor, corner), interrupt: true);

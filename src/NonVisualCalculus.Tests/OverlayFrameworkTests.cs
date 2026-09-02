@@ -32,6 +32,8 @@ namespace NonVisualCalculus.Tests
             public bool InView(Vector3 point) => ViewFn(point);
             public Vector3 ClampToView(Vector3 point) => ClampFn(point);
             public bool IsFogged(Vector3 point) => FogFn(point);
+            public Func<Vector3, string?> ReasonFn = _ => null;
+            public string? BlockReason(Vector3 toward) => ReasonFn(toward);
         }
 
         private sealed class FakeBackend : ISpeechBackend
@@ -159,6 +161,54 @@ namespace NonVisualCalculus.Tests
             overlay.Tick(1f, 1f, 0f, speed: 4f);
             Assert.Equal(env.Player, overlay.Cursor.Position);
             Assert.Equal(AudioCue.CursorImpassable, Assert.Single(audio.Cues));
+        }
+
+        [Fact]
+        public void Glide_PushedIntoRuleGatedWall_SpeaksTheReasonOnRelease()
+        {
+            // A wall stop the environment explains (the dark rooms that need a flashlight): silent while the
+            // key is held against it, no bump (a wall is not a block), and the rule speaks once the key lifts.
+            var env = new FakeEnv { Wall = new Vector3(0f, 0f, 0f), ReasonFn = _ => "requires a flashlight" };
+            var backend = new FakeBackend();
+            var audio = new FakeAudioEngine();
+            var overlay = NewOverlay(env, backend, audio);
+
+            overlay.Tick(1f, 1f, 0f, speed: 4f);
+            overlay.Tick(1f, 1f, 0f, speed: 4f);
+            Assert.Empty(backend.Spoken);
+            Assert.Empty(audio.Cues);
+
+            overlay.Tick(0.1f, 0f, 0f, speed: 4f); // released
+            Assert.Equal(new[] { "requires a flashlight" }, backend.Spoken);
+
+            overlay.Tick(0.1f, 0f, 0f, speed: 4f); // staying released repeats nothing
+            Assert.Single(backend.Spoken);
+        }
+
+        [Fact]
+        public void Glide_PushedIntoPlainWall_SpeaksNothingOnRelease()
+        {
+            var env = new FakeEnv { Wall = new Vector3(0f, 0f, 0f) };
+            var backend = new FakeBackend();
+            var overlay = NewOverlay(env, backend);
+
+            overlay.Tick(1f, 1f, 0f, speed: 4f);
+            overlay.Tick(0.1f, 0f, 0f, speed: 4f);
+            Assert.Empty(backend.Spoken);
+        }
+
+        [Fact]
+        public void Glide_MovedThenReleased_SpeaksNoReason()
+        {
+            // Open ground: the stroke moved, so a release has nothing to explain even if the environment
+            // would name a rule for the ground ahead.
+            var env = new FakeEnv { ReasonFn = _ => "requires a flashlight" };
+            var backend = new FakeBackend();
+            var overlay = NewOverlay(env, backend);
+
+            overlay.Tick(1f, 1f, 0f, speed: 4f);
+            overlay.Tick(0.1f, 0f, 0f, speed: 4f);
+            Assert.Empty(backend.Spoken);
         }
 
         [Fact]

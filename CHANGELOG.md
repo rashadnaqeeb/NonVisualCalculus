@@ -6,8 +6,9 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 New Features and improvements:
 
-- Walks to a spot behind a passage the game opens only up close (the yard path to the coast) now detour through it instead of refusing.
+- Pathfinding to a spot behind a passage the game opens only up close (the apartment courtyard gate) now detour through it instead of refusing.
 - Bookmark rows say "detour required" when the walk there goes through such a passage first, and the walking-direction key points along that first leg.
+- The dark rooms of the Doomed Commercial Area now say "requires a flashlight" when the cursor bumps into them and when a walk into them is refused.
 
 ## V1.2.1
 

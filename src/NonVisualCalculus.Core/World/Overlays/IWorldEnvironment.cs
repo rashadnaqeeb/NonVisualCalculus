@@ -46,5 +46,10 @@ namespace NonVisualCalculus.Core.World.Overlays
         /// zone volumes, the game's own point-to-zone idiom; zones only exist in physics while their area
         /// is loaded, which is the only time such ground can be in frame.</summary>
         bool IsFogged(Vector3 point);
+        /// <summary>Why ground at <paramref name="toward"/> refuses the cursor, when the game has a spoken
+        /// reason: the point lies inside a passage the game keeps sealed by a rule the player can meet
+        /// (the rooms that need a flashlight), so the bump against its edge can say so instead of reading
+        /// as a wall. Null for an ordinary boundary. The Module asks the game's rule-gated blockers.</summary>
+        string? BlockReason(Vector3 toward);
     }
 }

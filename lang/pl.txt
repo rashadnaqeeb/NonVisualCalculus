@@ -362,6 +362,7 @@ WorldTriggerRefusedNamed = {0}, nie można teraz aktywować
 WorldStopped = zatrzymano
 WorldStoppedShort = zatrzymano w połowie drogi
 WorldDetour = wymagane obejście
+GateNeedsFlashlight = wymaga latarki
 WorldOrbHolds = trzyma cię sfera, użyj jej, aby kontynuować
 WorldNoControl = trwa przerywnik filmowy
 WorldContainerClosed = pojemnik zamknięty

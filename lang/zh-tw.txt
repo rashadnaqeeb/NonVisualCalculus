@@ -368,6 +368,7 @@ WorldTriggerRefusedNamed = {0}，現在無法觸發
 WorldStopped = 已停止
 WorldStoppedShort = 中途停下
 WorldDetour = 需繞行
+GateNeedsFlashlight = 需要手電筒
 WorldOrbHolds = 被球體困住，與它互動才能繼續
 WorldNoControl = 過場動畫播放中
 WorldContainerClosed = 容器已關閉

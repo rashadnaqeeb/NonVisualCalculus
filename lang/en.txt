@@ -360,6 +360,7 @@ WorldTriggerRefusedNamed = {0}, can't trigger now
 WorldStopped = stopped
 WorldStoppedShort = stopped short
 WorldDetour = detour required
+GateNeedsFlashlight = requires a flashlight
 WorldOrbHolds = held by an orb, interact with it to continue
 WorldNoControl = cutscene playing
 WorldContainerClosed = container closed
