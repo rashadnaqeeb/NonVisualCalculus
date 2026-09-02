@@ -41,6 +41,7 @@ namespace NonVisualCalculus.Module.World
         public const string OpenInventory = "world.inventory";
         public const string OpenCharacterSheet = "world.charsheet";
         public const string OpenJournal = "world.journal";
+        public const string OpenMap = "world.map";
         public const string OpenThoughtCabinet = "world.thoughtcabinet";
         public const string Pause = "world.pause";
         public const string Help = "world.help";

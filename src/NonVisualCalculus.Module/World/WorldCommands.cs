@@ -32,6 +32,8 @@ namespace NonVisualCalculus.Module.World
         public void OpenInventory() { if (MayAct()) PressGameKey(Actions.Inventory); }
         public void OpenCharacterSheet() { if (MayAct()) PressGameKey(Actions.CharacterSheet); }
         public void OpenJournal() { if (MayAct()) PressGameKey(Actions.Journal); }
+        // The game's own map key: the journal opened on its map tab.
+        public void OpenMap() { if (MayAct()) PressGameKey(Actions.Map); }
         public void OpenThoughtCabinet() { if (MayAct()) PressGameKey(Actions.ThoughtCabinet); }
         public void OpenHelp() { if (MayAct()) PressGameKey(Actions.Help); }
 

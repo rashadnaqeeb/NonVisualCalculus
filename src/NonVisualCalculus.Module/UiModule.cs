@@ -213,11 +213,12 @@ namespace NonVisualCalculus.Module
 
             // Information screens: the game's own hotkey letter under Ctrl, so the bare letters stay free for
             // the cursor/status keys (C recenters, T/M read time/money). They open the game's view; our screen
-            // reader then drives it, and Escape (the screen's Back) closes it. The map has no standalone view
-            // (it is a tab inside the journal, reachable via Ctrl+J), so it gets no key of its own.
+            // reader then drives it, and Escape (the screen's Back) closes it. The map is a tab inside the
+            // journal; Ctrl+M hands the game its own map key, which opens the journal on that tab.
             _input.Register(WorldActions.OpenInventory, Strings.InputWorldInventory, InputCategory.World, () => _commands.OpenInventory()).AddBinding(new KeyboardBinding(KeyCode.I, ctrl: true));
             _input.Register(WorldActions.OpenCharacterSheet, Strings.InputWorldCharacterSheet, InputCategory.World, () => _commands.OpenCharacterSheet()).AddBinding(new KeyboardBinding(KeyCode.C, ctrl: true));
             _input.Register(WorldActions.OpenJournal, Strings.InputWorldJournal, InputCategory.World, () => _commands.OpenJournal()).AddBinding(new KeyboardBinding(KeyCode.J, ctrl: true));
+            _input.Register(WorldActions.OpenMap, Strings.InputWorldMap, InputCategory.World, () => _commands.OpenMap()).AddBinding(new KeyboardBinding(KeyCode.M, ctrl: true));
             _input.Register(WorldActions.OpenThoughtCabinet, Strings.InputWorldThoughtCabinet, InputCategory.World, () => _commands.OpenThoughtCabinet()).AddBinding(new KeyboardBinding(KeyCode.T, ctrl: true));
             _input.Register(WorldActions.Pause, Strings.InputWorldPause, InputCategory.World, () => _commands.Escape()).AddBinding(new KeyboardBinding(KeyCode.Escape));
             _input.Register(WorldActions.Help, Strings.InputWorldHelp, InputCategory.World, () => _commands.OpenHelp()).AddBinding(new KeyboardBinding(KeyCode.F1));

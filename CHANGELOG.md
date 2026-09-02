@@ -9,6 +9,8 @@ New Features and improvements:
 - Pathfinding to a spot behind a passage the game opens only up close (the apartment courtyard gate) now detour through it instead of refusing.
 - Bookmark rows say "detour required" when the walk there goes through such a passage first, and the walking-direction key points along that first leg.
 - The dark rooms of the Doomed Commercial Area now say "requires a flashlight" when the cursor bumps into them and when a walk into them is refused.
+- The journal's map tab has a "map description" stop that describes the map picture, one paragraph per arrow press.
+- Ctrl+M opens the journal on its map tab, like the game's M key.
 
 ## V1.2.1
 

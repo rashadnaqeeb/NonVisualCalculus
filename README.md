@@ -63,7 +63,7 @@ Scanner: Page Down and Page Up cycle, Ctrl+Page Down and Ctrl+Page Up switch cat
 
 Status: M for money, H for health, T for time, R for the map you are on (also announced automatically when it changes), X for experience and skill points.
 
-Game: Ctrl+C character sheet, Ctrl+I inventory, Ctrl+T thought cabinet, Ctrl+J journal (the map is a tab inside it), F1 game help. Left arrow heals health, right arrow heals morale. 1 and 2 use the items in your left and right hands. F5 or Alt+S quicksaves, F8 or Alt+L quickloads. Escape opens the pause menu. Ctrl+L switches the game language to the secondary language, used for language learning.
+Game: Ctrl+C character sheet, Ctrl+I inventory, Ctrl+T thought cabinet, Ctrl+J journal, Ctrl+M the journal's map tab (which also carries a spoken description of the map picture), F1 game help. Left arrow heals health, right arrow heals morale. 1 and 2 use the items in your left and right hands. F5 or Alt+S quicksaves, F8 or Alt+L quickloads. Escape opens the pause menu. Ctrl+L switches the game language to the secondary language, used for language learning.
 
 Mod: F12 settings, Ctrl+B bookmarks, Shift+F1 key help.
 

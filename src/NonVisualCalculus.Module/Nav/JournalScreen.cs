@@ -16,8 +16,9 @@ namespace NonVisualCalculus.Module.Nav
     /// same pattern the options screen uses), then the content of whichever tab is shown. On the tasks tab
     /// that is the active/done filter (the game's own two view toggles, again as <see cref="OptionTab"/>s),
     /// the task list, the focused task's detail read line by line, and the officer profile; on the map tab it
-    /// is the found white checks and the quicktravel points. Entry lands on the tab list; Tab moves across
-    /// the stops, arrows move within a list, Enter activates (switch tab/filter, fast-travel), Escape closes.
+    /// is the found white checks, the quicktravel points, and the authored description of the map picture,
+    /// read a paragraph per arrow-stop. Entry lands on the tab list; Tab moves across the stops, arrows move
+    /// within a list, Enter activates (switch tab/filter, fast-travel), Escape closes.
     ///
     /// The tab and filter lists and the detail-line cells are built once and persist, so switching a tab or
     /// filter rebuilds only the affected list contents in place while focus stays on the cell that triggered
@@ -48,6 +49,8 @@ namespace NonVisualCalculus.Module.Nav
         // no rebuild. The content lists are refilled in place.
         private JournalDetail _holder;
         private Container _tabs;
+        private OptionTab _tasksTab;
+        private OptionTab _mapTab;
         private Container _filter;
         private Container _detailList;
         private Container _taskList;
@@ -55,6 +58,7 @@ namespace NonVisualCalculus.Module.Nav
         private Container _whiteChecks;
         private Container _fastTravel;
         private Container _mapStatus;
+        private Container _mapDescription;
 
         public override Container BuildRoot(IModHost host)
         {
@@ -70,8 +74,12 @@ namespace NonVisualCalculus.Module.Nav
             _whiteChecks = new Container(ContainerShape.VerticalList, Strings.JournalWhiteChecksLabel);
             _fastTravel = new Container(ContainerShape.VerticalList, Strings.JournalFastTravelLabel);
             _mapStatus = new Container(ContainerShape.VerticalList);
+            _mapDescription = BuildMapDescription();
             _builtSig = -1;
             Restructure();
+            // Entry lands on the tab the game opened (its map key opens straight to the map tab), not
+            // always on the first tab.
+            _tabs.SetFocusedChild(OnMap ? _mapTab : _tasksTab);
             return _root;
         }
 
@@ -91,13 +99,19 @@ namespace NonVisualCalculus.Module.Nav
             if (_jc == null)
                 return tabs;
             if (_jc.tasksToggle != null)
-                tabs.Add(new OptionTab(_jc.tasksToggle,
+            {
+                _tasksTab = new OptionTab(_jc.tasksToggle,
                     () => _jc.tasksTab != null && _jc.tasksTab.activeInHierarchy,
-                    () => _jc.tasksToggle.isOn = true));
+                    () => _jc.tasksToggle.isOn = true);
+                tabs.Add(_tasksTab);
+            }
             if (_jc.checksToggle != null)
-                tabs.Add(new OptionTab(_jc.checksToggle,
+            {
+                _mapTab = new OptionTab(_jc.checksToggle,
                     () => _jc.checksTab != null && _jc.checksTab.activeInHierarchy,
-                    () => _jc.checksToggle.isOn = true));
+                    () => _jc.checksToggle.isOn = true);
+                tabs.Add(_mapTab);
+            }
             return tabs;
         }
 
@@ -131,6 +145,19 @@ namespace NonVisualCalculus.Module.Nav
             return detail;
         }
 
+        // The authored description of the map picture, one paragraph per line so the player arrows through
+        // it at their own pace. The cells read the strings table live, so a language switch is picked up.
+        private static Container BuildMapDescription()
+        {
+            var description = new Container(ContainerShape.VerticalList, Strings.JournalMapDescriptionLabel);
+            for (int i = 1; i <= Strings.JournalMapDescriptionParagraphs; i++)
+            {
+                int paragraph = i;
+                description.Add(new ReadonlyTextCell(() => Strings.JournalMapDescription(paragraph)));
+            }
+            return description;
+        }
+
         // Lay out the root for the active tab, refilling the content lists from live state. The tab list is
         // always first; the rest follow for the tasks tab or the map tab. Reusing the persistent cells (not
         // rebuilding them) keeps focus put when only list contents changed.
@@ -144,16 +171,22 @@ namespace NonVisualCalculus.Module.Nav
 
             if (OnMap)
             {
-                // Fast travel first, then the white checks; the map-incomplete notice (if any) last. The
-                // fast-travel and status lists are added only when they have something to show, so an empty
-                // section never appears.
+                // Fast travel first, then the white checks, then the map description; the map-incomplete
+                // notice (if any) last. The fast-travel and status lists are added only when they have
+                // something to show, so an empty section never appears, and the description only while the
+                // game draws the map (the map item acquired), so nothing is described that is not shown.
                 FillFastTravel();
                 FillWhiteChecks();
                 FillMapStatus();
                 if (_fastTravel.Children.Count > 0)
                     _root.Add(_fastTravel);
                 _root.Add(_whiteChecks);
-                if (_mapStatus.Children.Count > 0)
+                if (MapShown)
+                    _root.Add(_mapDescription);
+                // The notice is read only while the map itself is not drawn: when the journal opens straight
+                // to the map tab (the game's map key), the game leaves the notice active under the drawn map,
+                // a stale ghost a sighted player sees through and ignores.
+                if (_mapStatus.Children.Count > 0 && !MapShown)
                     _root.Add(_mapStatus);
             }
             else
@@ -168,6 +201,9 @@ namespace NonVisualCalculus.Module.Nav
         }
 
         private bool OnMap => _jc.checksTab != null && _jc.checksTab.activeInHierarchy;
+
+        // The game draws the map picture only once the map item is acquired (else the incomplete notice).
+        private bool MapShown => _jc.map != null && _jc.map.activeInHierarchy;
 
         private void FillTaskList()
         {
@@ -298,7 +334,8 @@ namespace NonVisualCalculus.Module.Nav
                 bool avail = qc != null && qc.IsQuicktravelAvailable();
                 int ft = avail ? DiscoveredDestinationCount(qc) : 0;
                 int missing = _jc.mapMissing != null && _jc.mapMissing.activeInHierarchy ? 1 : 0;
-                return 2_000_000 + missing * 200_000 + (avail ? 1 : 0) * 100_000 + ft * 1_000 + wc;
+                int shown = MapShown ? 1 : 0;
+                return 2_000_000 + shown * 400_000 + missing * 200_000 + (avail ? 1 : 0) * 100_000 + ft * 1_000 + wc;
             }
             int done = _jc.showDoneToggle != null && _jc.showDoneToggle.isOn ? 1 : 0;
             int profile = CopotypeVisualizer.IsProfileDiscovered() ? 1 : 0;

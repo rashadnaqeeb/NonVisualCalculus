@@ -300,6 +300,118 @@ namespace NonVisualCalculus.Core.Strings
             D("JournalWhiteChecksLabel", "white checks"),
             // Match I2 JOURNAL_OFFICER_PROFILE_TITLE ("Officer profile").
             D("JournalOfficerProfileLabel", "officer profile"),
+            // The map tab's Tab-stop holding the authored description of the map picture, one paragraph
+            // per arrow-stop. Noun phrase.
+            D("JournalMapDescriptionLabel", "map description"),
+            // The map description: prose describing the journal's map picture (the game's own tourist
+            // map art of the district) for a player who cannot see it, one key per paragraph, spoken in
+            // order. Present tense, plain words, the same restraint as the cutscene descriptions. The
+            // place names are the game's own and must match its localization: Martinaise, Jamrock and
+            // Revachol (I2 Buttons/JOURNAL_MAP_LABEL_TEXT, whose full text is the caption quoted in the
+            // first paragraph and is spoken as the game prints it), Terminal B and the harbour (Area
+            // Names/Secretary-int "Harbour"), Capeside Apartments (Area Names/Capeside-apartments-int),
+            // the Doomed Commercial Area (Area Names/Doomed-commerce-int-f2), the Whirling-in-Rags (Area
+            // Names/Whirling-int-f1), Rue de Saint-Ghislaine and Roundabout North (the plaza street
+            // signs, Conversation/0x0100000400011DD1/Description), the Frittte (Area Names/Kiosque-int),
+            // the pawnshop (Area Names/Pawnshop-int), the fishing village (Area Names/FV-house-int), the
+            // washerwoman (Actors 0x0100002F0000DF43), the Dolorian Church of Humanity (Conversation/
+            // 0x01000089000009FD/Description), the Boardwalk (the coast's boardwalk, Conversation/0x0100002100000EBD/Description), the Feld
+            // building (Area Names/Feld-int), Land's End (Actors 0x0100002900000A52 "Trap: Land's End"),
+            // the sea fortress islet (Area Names/Sea-fortress-int), the tenements (Actors
+            // 0x01000057000166F8), and the 8/81 motorway (Thoughts/the_way_home/Description names it).
+            D("JournalMapDescription1",
+                "This is the map of Martinaise as a design studio drew it in '48, for a tourist campaign that "
+                + "never happened. It is a promotional drawing rather than a survey. Some of what it shows exists, "
+                + "some existed once, and some was never built. The whole thing is sepia pen and ink on pale paper, "
+                + "every surface hatched and cross-hatched like an old engraving. Thin white crosshairs sit in the "
+                + "four corners, and a dark caption block in the bottom left reads MARTINAISE DISTRICT in JAMROCK "
+                + "QUARTER of REVACHOL ZONE OF CONTROL, above a segmented scale bar."),
+            D("JournalMapDescription2",
+                "The bay is the centre of the picture. It opens into the sea along the northern edge, and land "
+                + "wraps around it on the other three sides: the built-up waterfront and harbour on the east, a "
+                + "band of city along the south, and a low wooden coast on the west. The water is pale, lit by long "
+                + "vertical streaks that fall from above. The whole northern sky is filled with storm clouds."),
+            D("JournalMapDescription3",
+                "The north-east corner is the harbour, Terminal B. Shipping containers are stacked into steep "
+                + "walls under two lattice cranes, one of them reaching a long horizontal boom out over the cargo. "
+                + "Near the top edge the containers leave their stacks and tumble upward into the black sky, with "
+                + "boards and white fragments flying among them. A quay road runs south out of the stacks through "
+                + "a low gate, with a wall along its bay side, and comes down to the plaza."),
+            D("JournalMapDescription4",
+                "West of the containers, on the bay's north-eastern shore, stands Capeside Apartments, a tall "
+                + "building with a great arch through it, roofless and wrapped in scaffolding, with boats tied up "
+                + "below its walls. From its foot, the Doomed Commercial Area curves along the shore, a long "
+                + "building on arches that sweeps south-west toward the water."),
+            D("JournalMapDescription5",
+                "South of the Doomed Commercial Area, on Rue de Saint-Ghislaine, stands the Whirling-in-Rags, "
+                + "drawn as a flat-roofed modern block with broad gridded windows and a square opening cut through "
+                + "its roof. The opening is the enclosed backyard. East of the hostel is Roundabout North, a circle "
+                + "of concentric stepped rings with a rope barrier on posts around it. On the rings stands a "
+                + "monument of a rider on a rearing horse, both lifted high on a tangle of thin metal rods and "
+                + "exposed rebar, with no plinth beneath. From the roundabout, Rue Saint-Cispare runs north-east "
+                + "toward the harbour gate, and the Frittte stands on it. East of the roundabout a street runs "
+                + "between tenements, a long building with a row of arched windows and taller blocks with many "
+                + "windows behind it."),
+            D("JournalMapDescription6",
+                "South of the roundabout the ground breaks off. A chasm of rubble and broken paving runs along "
+                + "the south side of the plaza, and a thread of white water flows along its floor with a small "
+                + "sailboat on it. On the near edge of the break stands an enormous cube, translucent and brighter "
+                + "than anything around it, with fine vertical lines running through its interior. White light "
+                + "spills over the rubble at its base and washes out the nearby streets. Nothing like it exists in "
+                + "the modern district. East of the cube the tenements continue, and at the far eastern edge the "
+                + "buildings and road surfaces break into floating pieces, white splinters against black. That is "
+                + "where Martinaise ends and the rest of the city begins."),
+            D("JournalMapDescription7",
+                "West of the roundabout the shore becomes a broad promenade of wooden planks. Four potted trees stand at its eastern end, two "
+                + "narrow cypresses and two round-topped, and a small kiosk with a pointed roof stands farther "
+                + "along. North of the kiosk, beyond the trees, a small round pavilion with a tree inside it is the "
+                + "pawnshop. Beside the promenade a large rectangular pit enclosed by railings sinks below the "
+                + "planks, with steps leading down into it, and a narrow strip of water runs south from it with a "
+                + "single small sailboat on it. West of the pit the promenade widens and holds about a dozen round "
+                + "café tables and their chairs, all empty. A dark stone arch stands at the tables' north-east "
+                + "corner, opening toward the eastern streets. West of the tables a two-seat swing stands alone, "
+                + "and beyond it the promenade ends in a beach where two dozen small round-topped shapes stand on "
+                + "the sand in rows, umbrellas or loungers."),
+            D("JournalMapDescription8",
+                "The southern edge belongs to the 8/81 motorway, a raised road on a long arcade of repeating "
+                + "arches running the full width of the map from east to west. It is the district's southern "
+                + "boundary. South of it is Jamrock: gabled rooftops pressed together, chimneys between them, a "
+                + "billboard above one roof, and in the south-west corner a grand symmetrical building with a clock "
+                + "in its central gable and arched glass roofs on either side. None of that is part of the playable "
+                + "district."),
+            D("JournalMapDescription9",
+                "West of the beach the coast becomes the fishing village. At its southern end a sphere the size "
+                + "of a house rises out of the ground. Its surface is smooth and heavily shaded, and a jagged hole "
+                + "has been torn through its upper side, opening into blackness like a cracked egg. Nothing like it "
+                + "exists in the modern district. North of the sphere, a wooden pier runs out into the bay with "
+                + "five or six tiny silhouettes walking along it, the only people drawn anywhere on the map. Behind "
+                + "the pier stands a boxy building with a fenced yard, the washerwoman's coastal shack, and west "
+                + "of that a tall stilt house leans over the shore under a loose tarp, its wall the one scattered "
+                + "with bullet holes in the modern day. Along the far western edge, a narrow channel runs south "
+                + "between rough banks and leaves the map."),
+            D("JournalMapDescription10",
+                "North of the village, a narrow spit reaches east into the bay, and at its tip stands the "
+                + "Dolorian Church of Humanity, a tall wooden building on stilts with a slender spire. A wooden "
+                + "walkway leads back over rocks and low islets to the land. A single vertical beam of light falls "
+                + "on the church from the clouds."),
+            D("JournalMapDescription11",
+                "North-west of the church the shore is a mudflat of rocks and reeds, with a small pale hut at "
+                + "the water's edge and a dark rounded shape beside it, an overturned hull or the mouth of a pipe. "
+                + "This is the Boardwalk. Behind it a row of long open-sided sheds on stilts runs along the shore, "
+                + "and north of the sheds stands a rectangular block on wooden posts, the Feld building. A bright "
+                + "oval has been cut through the storm cloud above it, and inside the oval a ferris wheel stands on "
+                + "an A-frame over the block, seen face on, every spoke drawn against the light. No wheel stands "
+                + "there in the game. North-east of the wheel, at the northernmost point of the land, a narrow dark "
+                + "spike rises from the ragged shore. In the game this is Land's End."),
+            D("JournalMapDescription12",
+                "North of Land's End the map is cloud. The storm rolls over itself in dense folds, its edges "
+                + "curling white like surf, and closes over the north-west corner. Out in the northern middle of "
+                + "the bay, a craggy islet rises from the water with a ruined fort on its summit and pale streaks "
+                + "running down its cliffs. Faint concentric arcs pass through the cloud above it like the trace of "
+                + "a rainbow. Small boats are scattered across the water around it, two larger sailing boats "
+                + "heading south toward the church and dinghies drifting north toward the sea. Over the "
+                + "north-eastern water the sky is full of pale triangles that are sails near the water and "
+                + "lengthen into shards higher up, until they disappear into the dark above the harbour cranes."),
 
             // Screen names, spoken once when a screen opens; noun phrases. Where the game titles the
             // same screen, match its word (noted per key).
@@ -1172,6 +1284,12 @@ namespace NonVisualCalculus.Core.Strings
         public static string JournalFastTravelLabel => T("JournalFastTravelLabel");
         public static string JournalWhiteChecksLabel => T("JournalWhiteChecksLabel");
         public static string JournalOfficerProfileLabel => T("JournalOfficerProfileLabel");
+        public static string JournalMapDescriptionLabel => T("JournalMapDescriptionLabel");
+        /// <summary>How many paragraphs the map description has (keys JournalMapDescription1..N).</summary>
+        public const int JournalMapDescriptionParagraphs = 12;
+        /// <summary>One paragraph of the map description, 1-based.</summary>
+        public static string JournalMapDescription(int paragraph)
+            => T("JournalMapDescription" + paragraph.ToString(CultureInfo.InvariantCulture));
 
         // Screen names, spoken when a screen opens; mapped from the live view enum in ScreenAdapter.
         public static string ScreenMap => T("ScreenMap");
