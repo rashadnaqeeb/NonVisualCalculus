@@ -6,7 +6,7 @@ appearance, painted details) anchored to the world and spoken through the existi
 This is the build plan agreed on 2026-09-02. It follows the model of the WOTR accessibility mod's
 environmental-description feature, adapted where Disco differs.
 
-The WOTR source is available for reference at `C:\Users\rashadnaqeeb\Documents\wotr-access`
+The WOTR source is available for reference at `C:\Users\rashadnaqeeb\Documents\access-mods\wotr-access`
 (synced with origin/main on 2026-09-02). The files that matter:
 
 - `src/Exploration/RoomMap.cs`: the navmesh watershed segmentation, exits, and curation loader.
