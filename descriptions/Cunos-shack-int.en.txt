@@ -1,0 +1,2 @@
+zone.shack.title = Cuno's shack
+zone.shack.body = A dim hut of rough planks with a dirt floor, a torn mattress and a heap of junk in one corner, a workbench of boards against the wall with bottles and tins on it, a cable strung across the room with a bare bulb, and a crude painting of a shark's jaws on the wall by the door. A ladder of nailed boards climbs to a hatch in the roof.
