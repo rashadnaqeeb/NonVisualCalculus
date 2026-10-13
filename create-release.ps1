@@ -1,7 +1,8 @@
 # Publish a GitHub release for an existing, pushed tag: uploads the mod zip, the compat zip
 # (the same release under the pre-rename asset name, which is all a Whirling in Words-era
-# installer exe recognizes), and the installer exe from releases\ with notes taken from the
-# tag's CHANGELOG.md section. Run build_release.ps1 and build-installer.ps1 first.
+# installer exe recognizes), the installer exe, and the macOS zip from releases\ with notes taken
+# from the tag's CHANGELOG.md section. Run build_release.ps1 and build-installer.ps1 first, and
+# build_release.sh on a Mac (the macOS zip compiles against interop generated from the Mac game).
 
 param(
     [Parameter(Mandatory = $true, Position = 0)]
@@ -94,6 +95,8 @@ $changelogPath = Join-Path $scriptDir "CHANGELOG.md"
 $zipPath = Join-Path $releaseDir "NonVisualCalculus-$VersionTag.zip"
 $compatZipPath = Join-Path $releaseDir "WhirlingInWords-$VersionTag.zip"
 $installerPath = Join-Path $releaseDir "NonVisualCalculusInstaller.exe"
+# The asset name is the contract a macOS installer will match: NonVisualCalculus-macOS-v<maj>.<min>.<patch>.zip.
+$macZipPath = Join-Path $releaseDir "NonVisualCalculus-macOS-$VersionTag.zip"
 $releaseTitle = "V$($VersionTag.Substring(1))"
 
 Push-Location $scriptDir
@@ -115,6 +118,10 @@ try {
         Fail "Installer not found: $installerPath"
     }
 
+    if (-not (Test-Path -LiteralPath $macZipPath -PathType Leaf)) {
+        Fail "macOS zip not found: $macZipPath (build it with build_release.sh on a Mac)"
+    }
+
     $null = & git ls-remote --exit-code --tags origin "refs/tags/$VersionTag"
     if ($LASTEXITCODE -ne 0) {
         Fail "Tag '$VersionTag' does not exist on remote 'origin'."
@@ -132,7 +139,7 @@ try {
         }
 
         Invoke-Checked "GitHub release creation" {
-            & gh.exe release create $VersionTag $zipPath $compatZipPath $installerPath --title $releaseTitle --notes-file $notesFile
+            & gh.exe release create $VersionTag $zipPath $compatZipPath $installerPath $macZipPath --title $releaseTitle --notes-file $notesFile
         }
     }
     finally {
