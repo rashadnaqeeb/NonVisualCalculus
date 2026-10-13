@@ -1,0 +1,2 @@
+# The pawnshop interior. Mod world frame.
+zone shop 5.62 0.11 -9.66
