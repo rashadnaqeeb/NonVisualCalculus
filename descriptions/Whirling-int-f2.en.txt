@@ -1,0 +1,10 @@
+zone.gallery.title = the gallery
+zone.gallery.body = A curved corridor of worn green tiles running around an open well that looks down on the café floor below, with an iron railing along the drop. The guest-room doors open off the inner wall, which is tiled in white and blue chevrons and hung with framed notices and a fire extinguisher, with pot plants beside the doors. A stair comes up from the bar at one end and the balcony door opens at the other.
+zone.room1.title = room one
+zone.room1.body = A guest room with a sagging orange sofa under a ceiling fan, a radiator under the window and a glass-walled corner looking out over the plaza. A low cabinet holds a tape player and a mirror on hexagon-patterned wallpaper, a coat rack stands by the door, and a bathroom with a clawfoot tub opens off the back.
+zone.room2.title = room two
+zone.room2.body = A narrow guest room with a single bed under a window of frosted glass, a desk heaped with papers and a reading lamp, a bookshelf, and a chest of drawers, on a floor of patterned tiles; a connecting door leads to the room beside it.
+zone.room3.title = room three
+zone.room3.body = A corner guest room with a desk against the wall under two swing-arm lamps, a vase of flowers and a bottle on it, a yellow sofa with cushions by the stair, framed portraits on the plaster, and a bathroom with a curtained shower opening off the back wall.
+zone.stairfoot.title = the stair to the third floor
+zone.stairfoot.body = The foot of a wooden stair climbing out of room three through a doorway papered in black and gold hexagons, beside the yellow sofa.

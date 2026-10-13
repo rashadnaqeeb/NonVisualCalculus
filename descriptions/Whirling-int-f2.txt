@@ -1,0 +1,6 @@
+# Whirling-in-Rags, second floor: the gallery and the three guest rooms. Mod world frame.
+zone gallery 0.63 3.63 -1.52
+zone room1 -6.37 3.63 -0.27
+zone room2 -1.62 3.64 3.23
+zone room3 3.88 3.64 5.23
+zone stairfoot 1.13 3.64 8.73

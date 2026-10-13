@@ -1,0 +1,8 @@
+zone.atticdoor.title = the attic door
+zone.atticdoor.body = A narrow landing at the attic's door, a green-painted door with a round ventilation fan beside it, where the glass-walled stair enclosure meets the bedroom's plaster wall.
+zone.atticstair.title = the attic stair
+zone.atticstair.body = The top of a wooden stair boxed in by a glass partition with a steel frame, opening through a glass door onto the attic's bare concrete floor.
+zone.atticbedroom.title = the attic bedroom
+zone.atticbedroom.body = A small bedroom under the roof with an unmade bed against the wall, a bedside lamp, a shelf of books and a framed picture on the plaster, red threads strung across the room between pins, and a blanket chest at the bed's foot.
+zone.atticworkshop.title = the attic workshop
+zone.atticworkshop.body = A storeroom behind the bedroom crammed with shelves of jars, tins and boxes, a desk under a lamp heaped with papers, a window with a wire grille, a boiler with fat pipes in the corner, and crates and junk piled across the floor.
