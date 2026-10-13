@@ -1,0 +1,12 @@
+# The Feld building's shore floor and the old sewer channel beneath it. Mod world frame.
+zone pumproom -4.31 4.26 -50.83
+zone bunkstep 12.94 3.37 -48.33
+zone channelmouth 6.94 4.07 -48.33
+zone bunkroom 14.44 2.3 -44.83
+zone pumppassage 2.44 4.26 -44.33
+zone channel 10.19 4.2 -34.33
+zone channelbend 17.94 4.21 -25.58
+zone channelnarrows 10.94 4.19 -25.33
+zone channelhollow 2.94 4.18 -21.58
+zone paintingsgallery 6.69 4.35 -12.08
+zone campbeach 7.94 4.25 -5.83
