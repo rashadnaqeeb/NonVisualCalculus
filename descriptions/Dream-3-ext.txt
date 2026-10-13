@@ -1,0 +1,24 @@
+# The sea-fort dream's exterior: the islet as dreamt. Same ground as Martinaise's islet. Mod world frame.
+zone tetrapods -25.14 0.35 192.84
+zone winchplatform -60.64 0.68 195.09
+zone slipway -34.64 2.04 196.84
+zone cliffbeach -52.14 0 197.34
+zone deadtree -29.39 0.94 198.34
+zone isletice -11.39 0.25 198.84
+zone winchstair -57.89 2.73 199.34
+zone isletmeadow -22.89 0.87 202.34
+zone winchdeck -55.14 6.05 204.34
+zone fortressdoor -45.64 7.55 207.59
+zone fortresspath -35.39 3.04 212.09
+zone chainshore -26.89 0.23 212.84
+zone chainice -20.64 0.27 218.84
+zone ruinstair -32.39 5.19 219.09
+zone birchgap -37.89 4.1 220.09
+zone fortresshole -50.89 1.41 228.09
+zone bunkerpath -51.14 0.59 234.09
+zone ruincorner -35.89 0.16 237.34
+zone islettop -48.64 0.79 241.84
+zone desertercamp -39.14 0.33 248.59
+zone clifffoot -54.14 0.62 199.34
+zone loosefloe -15.64 0.18 207.09
+zone boatchannel -0.39 0.06 217.84
