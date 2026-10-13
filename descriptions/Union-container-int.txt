@@ -1,0 +1,2 @@
+# The cargo container in the harbour yard. Mod world frame.
+zone container -5.03 0.13 0.47

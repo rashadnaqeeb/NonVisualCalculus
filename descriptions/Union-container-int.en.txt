@@ -1,0 +1,2 @@
+zone.container.title = the cargo container
+zone.container.body = The inside of a shipping container, a narrow box of yellow steel ribs with mesh walls, its floor striped with yellow hazard paint, where a blinding pale light pours in through the far end and the mesh seems to twist and ripple around it.
