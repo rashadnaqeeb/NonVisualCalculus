@@ -1,0 +1,6 @@
+zone.workshop.title = the basement workshop
+zone.workshop.body = A dark cellar of brick and timber under the old building, with wooden steps coming down into it, a workbench with an orange lamp and a camping stove, barrels and crates stacked against the walls, a breaker box by the far door, and a string of pennant flags hanging from the beams.
+zone.pipealcove.title = the pipe alcove
+zone.pipealcove.body = A cramped recess at the cellar's end where fat black pipes run along the wall, a red cloth hangs from a hook and tools lie on a shelf in the dark.
+zone.bearcellar.title = the ice bear cellar
+zone.bearcellar.body = A wide, dim cellar lit by a single cold lamp, where a huge white refrigerator shaped like a polar bear stands in the middle of the floor. Pipes and wires cross the brick walls, a stove and crates stand in the corner, a dome-shaped glass tank glows in an alcove by a big boiler, and planks lie heaped by a stair up to the floor above.

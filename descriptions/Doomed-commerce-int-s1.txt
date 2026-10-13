@@ -1,0 +1,4 @@
+# The Doomed Commercial Area's basement. Mod world frame.
+zone workshop 0.59 0.67 -47.7
+zone pipealcove -8.41 0.67 -40.2
+zone bearcellar -0.41 0.65 -33.2
