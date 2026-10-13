@@ -1,0 +1,2 @@
+zone.shop.title = the Frittte
+zone.shop.body = A small bright shop with a worn tiled floor. A glass counter and chilled display cases run along the back under shelves of bottles, with a tare machine and a cash register on the counter; a drinks fridge and a rack of snacks stand by the door, posters cover the wall, and the front windows are full of flowers and pot plants.

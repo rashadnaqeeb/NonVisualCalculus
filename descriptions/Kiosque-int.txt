@@ -1,0 +1,2 @@
+# The Frittte kiosk interior. Mod world frame.
+zone shop -6.67 0.38 5.05
