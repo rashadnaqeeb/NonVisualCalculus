@@ -181,3 +181,15 @@ zone clifffoot -54.14 0.62 199.34
 zone loosefloe -15.64 0.18 207.09
 zone boatchannel -0.39 0.06 217.84
 zone meshcage 50.11 4.27 65.09
+# Painted details: things that exist only as paint, placed on walkable ground beside them.
+detail statue 36.61 4.87 70.59
+detail plazaletters 16.86 4.28 81.09
+detail quayrosette -1.64 3.61 114.34
+detail towergraffiti 4.11 3.07 125.84
+detail feldmural -107.89 4.75 94.84
+detail skullmural 2.11 7.48 138.59
+detail harbourbanners 52.11 4.27 95.84
+detail fountain -8.89 3.2 89.34
+detail hangedtree 22.61 3.72 110.84
+detail wreckedcarriage -32.64 0.49 66.09
+detail allezvousen -54.64 3.39 49.34
