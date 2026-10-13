@@ -241,6 +241,16 @@ namespace NonVisualCalculus.Tests
         }
 
         [Fact]
+        public void TheOnlyGroundStaysAZoneHoweverSmall()
+        {
+            var r = Plan(4f, 4f);
+            Fill(r, 1f, 1f, 1.5f, 1.5f); // a 2 by 2 cell standing spot, nothing else
+            var map = Build(r);
+            Assert.Single(map.Zones);
+            Assert.NotNull(map.ZoneAt(new Vector3(1.25f, 0f, 1.25f)));
+        }
+
+        [Fact]
         public void ZoneAtResolvesNearWallsAndRejectsOtherLevelsAndOutside()
         {
             var map = Build(TwoRooms());

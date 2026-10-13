@@ -338,6 +338,9 @@ namespace NonVisualCalculus.Core.World.Zoning
                         foreach (var kv in border)
                             if (kv.Value > best) { best = kv.Value; target = kv.Key; }
                     if (target < 0 && size[rid] * cell * cell >= options.MinIslandArea) continue;
+                    // The only ground there is stays a zone however small: a scene whose whole mesh is one
+                    // standing spot (the tent) must not leave the character in "no zone".
+                    if (target < 0 && IsOnlyRegion(size, rid)) continue;
                     for (int i = 0; i < n; i++) if (label[i] == rid) label[i] = target; // -1 drops a speck
                     if (target < 0) { size[rid] = 0; changed = true; continue; }
                     size[target] += size[rid];
@@ -436,6 +439,12 @@ namespace NonVisualCalculus.Core.World.Zoning
             var map = new ZoneMap(raster, label, zones, options.LevelGap);
             map.BuildExits(options);
             return map;
+        }
+
+        private static bool IsOnlyRegion(int[] size, int rid)
+        {
+            for (int r = 0; r < size.Length; r++) if (r != rid && size[r] > 0) return false;
+            return true;
         }
 
         private static int Find(int[] parent, int a)
