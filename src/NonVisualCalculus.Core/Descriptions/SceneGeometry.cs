@@ -41,6 +41,7 @@ namespace NonVisualCalculus.Core.Descriptions
     /// object &lt;key&gt; = &lt;entity GameObject name&gt;
     /// wall [@&lt;elevation&gt;] &lt;x&gt;,&lt;z&gt; &lt;x&gt;,&lt;z&gt; ...
     /// merge &lt;x&gt;,&lt;y&gt;,&lt;z&gt; &lt;x&gt;,&lt;y&gt;,&lt;z&gt; ...
+    /// drop &lt;x&gt; &lt;y&gt; &lt;z&gt;
     /// </code>
     /// Blank lines and lines starting with # are ignored. Numbers use the invariant culture.
     /// </summary>
@@ -71,6 +72,7 @@ namespace NonVisualCalculus.Core.Descriptions
             var objects = new List<ObjectEntry>();
             var walls = new List<CurationWall>();
             var merges = new List<IReadOnlyList<Vector3>>();
+            var drops = new List<Vector3>();
             string[] lines = text.Replace("\r\n", "\n").Split('\n');
             for (int n = 0; n < lines.Length; n++)
             {
@@ -117,6 +119,9 @@ namespace NonVisualCalculus.Core.Descriptions
                             walls.Add(new CurationWall(pts, elevation));
                             break;
                         }
+                        case "drop":
+                            drops.Add(Point3(tok, 1));
+                            break;
                         case "merge":
                         {
                             var pts = new List<Vector3>();
@@ -139,7 +144,7 @@ namespace NonVisualCalculus.Core.Descriptions
                     errors.Add("line " + (n + 1) + ": " + e.Message);
                 }
             }
-            return new SceneGeometry(zones, details, objects, new ZoneCuration(walls, merges));
+            return new SceneGeometry(zones, details, objects, new ZoneCuration(walls, merges, drops));
         }
 
         private static float Num(string s) => float.Parse(s, NumberStyles.Float, CultureInfo.InvariantCulture);

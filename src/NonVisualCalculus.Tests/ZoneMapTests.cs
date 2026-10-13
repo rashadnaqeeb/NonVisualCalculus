@@ -166,6 +166,16 @@ namespace NonVisualCalculus.Tests
         }
 
         [Fact]
+        public void CurationDropRemovesAZone()
+        {
+            var curation = new ZoneCuration(new CurationWall[0], new Vector3[0][], new[] { new Vector3(13f, 0f, 4f) });
+            var map = Build(TwoRooms(), curation);
+            Assert.Single(map.Zones);
+            Assert.Null(map.ZoneAt(new Vector3(13f, 0f, 4f)));
+            Assert.Empty(map.Zones[0].Exits);
+        }
+
+        [Fact]
         public void HeightStepSeparatesZonesWithoutAnExit()
         {
             var r = Plan(16f, 8f);

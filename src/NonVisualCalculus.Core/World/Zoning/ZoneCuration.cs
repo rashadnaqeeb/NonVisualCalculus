@@ -31,15 +31,22 @@ namespace NonVisualCalculus.Core.World.Zoning
     /// </summary>
     public sealed class ZoneCuration
     {
-        public static readonly ZoneCuration None = new ZoneCuration(new CurationWall[0], new Vector3[0][]);
+        public static readonly ZoneCuration None = new ZoneCuration(new CurationWall[0], new Vector3[0][], new Vector3[0]);
 
         public IReadOnlyList<CurationWall> Walls { get; }
         public IReadOnlyList<IReadOnlyList<Vector3>> Merges { get; }
+        /// <summary>Anchors whose zone is removed from the map: navmesh the character can never stand on
+        /// (a stray patch at the scene origin where the game parks disabled things).</summary>
+        public IReadOnlyList<Vector3> Drops { get; }
 
         public ZoneCuration(IReadOnlyList<CurationWall> walls, IReadOnlyList<IReadOnlyList<Vector3>> merges)
+            : this(walls, merges, new Vector3[0]) { }
+
+        public ZoneCuration(IReadOnlyList<CurationWall> walls, IReadOnlyList<IReadOnlyList<Vector3>> merges, IReadOnlyList<Vector3> drops)
         {
             Walls = walls;
             Merges = merges;
+            Drops = drops;
         }
     }
 }

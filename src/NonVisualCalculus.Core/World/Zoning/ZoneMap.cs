@@ -368,6 +368,16 @@ namespace NonVisualCalculus.Core.World.Zoning
                 for (int i = 0; i < n; i++) if (members.Contains(label[i])) label[i] = target;
             }
 
+            // 7b) Curated drops: the region holding each anchor leaves the map.
+            foreach (var a in curation.Drops)
+            {
+                int gx = (int)Math.Floor((a.X - raster.OriginX) / cell);
+                int gz = (int)Math.Floor((a.Z - raster.OriginZ) / cell);
+                int l = LabelNear(label, raster, gx, gz, a.Y, options.LevelGap);
+                if (l < 0) continue;
+                for (int i = 0; i < n; i++) if (label[i] == l) label[i] = -1;
+            }
+
             // 8) Stable numbering (centroid order) and classification.
             var cellsOf = new Dictionary<int, List<int>>();
             for (int i = 0; i < n; i++)

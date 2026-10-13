@@ -1,0 +1,9 @@
+# Doomed Commercial Area, second floor: the gym, the dark landings and the dicemaker's tower. Mod world frame.
+zone gym 2.32 2.45 -66.36
+zone gymstairs 1.07 3.37 -61.36
+zone darklanding -2.68 4.64 -61.11
+zone fireplace -4.18 4.64 -42.61
+zone towerfoot 7.07 7.66 -41.11
+zone darkhall 3.57 7.59 -40.36
+zone towerstep 7.32 7.68 -38.61
+zone workshop 10.32 8.35 -38.36

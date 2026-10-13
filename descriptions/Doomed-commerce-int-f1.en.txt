@@ -1,0 +1,10 @@
+zone.counter.title = the bookstore counter
+zone.counter.body = The front of the shop by the sales counter, a long glass-fronted case of books and papers with a marble bust at its end, on a floor of worn green and white hexagonal tiles. A spinning rack of postcards and a wooden crate stand at the foot of the stair, and a stone arch hung with a yellow curtain opens into the dark back room.
+zone.entrance.title = the bookstore entrance
+zone.entrance.body = The shop's entrance between two bay windows, their shelves stacked with books, magazines and bright paperbacks facing the street. The street door stands in the corner, a cast-iron column rises from the tiled floor, and a round display table of books sits under a green lamp.
+zone.backroom.title = the shrouded back room
+zone.backroom.body = A dark room behind the yellow curtain, its furniture draped in white dust sheets, cables snaking across a cracked tile floor. A large portrait of a pale-faced figure leans against the wall, and a door papered with notes stands at the back.
+zone.stairs.title = the bookstore stairs
+zone.stairs.body = A curving stair with a wrought-iron banister climbing from the counter to the gallery above, carpeted in faded red, with a round rug at its top and shelves of books lining the wall.
+zone.boardgames.title = the board games corner
+zone.boardgames.body = The west side of the shop under the iron gallery, where a round table heaped with board games stands beside a cast-iron column and a green lamp, with tall shelves of books along the window wall and plants trailing over the railing overhead.

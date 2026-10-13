@@ -1,0 +1,6 @@
+# Doomed Commercial Area, ground floor: the bookstore. Mod world frame.
+zone counter 2.51 0.02 -4.9
+zone entrance -3.24 0.02 -2.15
+zone backroom 6.76 0.33 -0.4
+zone stairs 3.01 2.36 -0.15
+zone boardgames -1.99 0.02 2.6

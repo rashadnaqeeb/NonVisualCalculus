@@ -31,7 +31,9 @@ namespace NonVisualCalculus.Module.World
         private const float DefaultCell = 0.25f;
         private const float MaxCells = 6e6f;      // raster budget before the cell coarsens
         private const float StepReach = 1.0f;     // sample radius around a neighbour's elevation
-        private const float SeedReach = 3f;       // sample radius for the coarse island sweep
+        private const float SeedReach = 1.4f;     // sample radius for the coarse island sweep (under the ladder step)
+        private const float SeedSpan = 15f;       // the sweep's elevation ladder reaches this far above and below the character
+        private const float SeedStep = 2.5f;      // rungs of that ladder
         private const int SeedStride = 4;         // cells between coarse sweep samples
         private const float RetrySameElevation = 0.5f; // a rejected cell is retried only from a neighbour this much higher or lower
         private const int RetryFrames = 30;       // between attempts while the mesh is not answering
@@ -148,17 +150,23 @@ namespace NonVisualCalculus.Module.World
             queue.Enqueue(si);
             Flood(queue, walk, elev, tried, triedAny, w, h, cell, x0, z0, StepReach);
 
-            // Islands the fill could not reach (ground joined only by an off-mesh link or a scripted
-            // move): a coarse sweep seeds each one and floods from it.
+            // Islands the fill could not reach (ground joined only by an off-mesh link, a scripted
+            // move, or a door's carve): a coarse sweep seeds each one and floods from it. Sampled at
+            // a ladder of elevations around the character's, since an unreached island may be a
+            // whole storey up (the Doomed Commercial Area's upper room sits 5 m over its stair).
             for (int gz = 0; gz < h; gz += SeedStride)
                 for (int gx = 0; gx < w; gx += SeedStride)
                 {
                     int i = gz * w + gx;
                     if (walk[i]) continue;
-                    if (!TrySample(gx, gz, seed.position.y, SeedReach, cell, x0, z0, out float y)) continue;
-                    walk[i] = true; elev[i] = y;
-                    queue.Enqueue(i);
-                    Flood(queue, walk, elev, tried, triedAny, w, h, cell, x0, z0, StepReach);
+                    for (float dy = -SeedSpan; dy <= SeedSpan; dy += SeedStep)
+                    {
+                        if (!TrySample(gx, gz, seed.position.y + dy, SeedReach, cell, x0, z0, out float y)) continue;
+                        walk[i] = true; elev[i] = y;
+                        queue.Enqueue(i);
+                        Flood(queue, walk, elev, tried, triedAny, w, h, cell, x0, z0, StepReach);
+                        break;
+                    }
                 }
 
             // Crop to the walkable extent plus a one-cell unwalkable border.
