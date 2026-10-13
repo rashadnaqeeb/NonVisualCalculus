@@ -89,6 +89,8 @@
       <_ThingCueAsset Include="$(RepoRoot)assets\audio\interactables\*.wav" />
       <!-- Authored-string translation files (en.txt is the translator template); resolved at lang beside the plugin. -->
       <_LangFile Include="$(RepoRoot)lang\*.txt" />
+      <!-- Authored scene descriptions (zone names and prose, details, objects); resolved at descriptions beside the plugin. -->
+      <_DescriptionFile Include="$(RepoRoot)descriptions\*.txt" />
     </ItemGroup>
     <MakeDir Directories="$(PluginDeployDir)" />
     <!-- Retries=0: when iterating with the game running, the host/Roslyn DLLs are locked; fail fast
@@ -112,6 +114,9 @@
           SkipUnchangedFiles="true" ContinueOnError="true" />
     <Copy SourceFiles="@(_LangFile)"
           DestinationFolder="$(PluginDeployDir)\lang"
+          SkipUnchangedFiles="true" ContinueOnError="true" />
+    <Copy SourceFiles="@(_DescriptionFile)"
+          DestinationFolder="$(PluginDeployDir)\descriptions"
           SkipUnchangedFiles="true" ContinueOnError="true" />
     <!-- macOS: the launcher beside disco.app (the script, and the app bundle Steam's launch option names). -->
     <Exec Condition="'$(IsMac)' == 'true'" ContinueOnError="true"

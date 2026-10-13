@@ -226,6 +226,7 @@ namespace NonVisualCalculus.Core.World
                 case WorldTaxonomy.Interactable: return WorldScanInteractables;
                 case WorldTaxonomy.Container: return WorldScanContainers;
                 case WorldTaxonomy.Orb: return WorldScanOrbs;
+                case WorldTaxonomy.Detail: return WorldScanDetails;
                 default: return WorldScanExits;
             }
         }

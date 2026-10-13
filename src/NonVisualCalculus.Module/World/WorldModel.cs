@@ -26,9 +26,12 @@ namespace NonVisualCalculus.Module.World
         // order of seconds. A tenth of a second of membership lag is imperceptible and cuts the scan rate ~6x.
         private const float PollInterval = 0.1f;
 
-        private readonly Dictionary<int, IWorldItem> _items = new Dictionary<int, IWorldItem>();
-        private readonly HashSet<int> _present = new HashSet<int>();
-        private readonly List<int> _gone = new List<int>();
+        // Keyed by a boxed native instance id for game objects, and by the proxy itself for the mod's own
+        // items (the authored details), which have no game object.
+        private readonly Dictionary<object, IWorldItem> _items = new Dictionary<object, IWorldItem>();
+        private readonly HashSet<object> _present = new HashSet<object>();
+        private readonly List<object> _gone = new List<object>();
+        private IReadOnlyList<IWorldItem> _details = new IWorldItem[0];
         private readonly Action<string> _log; // handed to each proxy for its self-diagnostics
         private float _sincePoll = PollInterval; // poll on the first tick
 
@@ -38,6 +41,14 @@ namespace NonVisualCalculus.Module.World
 
         public event Action<IWorldItem> Added;
         public event Action<IWorldItem> Removed;
+
+        /// <summary>The mod's own items for the current scene (the authored painted details), folded into
+        /// the registry beside the game's entities on the next poll; an empty list drops the old ones.</summary>
+        public void SetDetails(IReadOnlyList<IWorldItem> details)
+        {
+            _details = details;
+            _sincePoll = PollInterval;
+        }
 
         /// <summary>Poll the game's pools and diff against the held set (throttled to <see cref="PollInterval"/>),
         /// building a proxy only for a genuinely new object and dropping any that despawned or left when the
@@ -71,11 +82,14 @@ namespace NonVisualCalculus.Module.World
                 Track(orb, () => new OrbProxy(orb, _log));
             }
 
+            foreach (IWorldItem detail in _details)
+                Track(detail, () => detail);
+
             _gone.Clear();
-            foreach (int key in _items.Keys) if (!_present.Contains(key)) _gone.Add(key);
+            foreach (object key in _items.Keys) if (!_present.Contains(key)) _gone.Add(key);
             for (int i = 0; i < _gone.Count; i++)
             {
-                int key = _gone[i];
+                object key = _gone[i];
                 IWorldItem item = _items[key];
                 _items.Remove(key);
                 Removed?.Invoke(item);
@@ -84,16 +98,17 @@ namespace NonVisualCalculus.Module.World
 
         // Mark a game object present, building (and announcing) a proxy only the first time it is seen. Keyed
         // by the native instance id (stable across the fresh wrappers FindObjectsOfType returns each poll).
-        private void Track(Object key, Func<IWorldItem> make)
+        private void Track(Object key, Func<IWorldItem> make) => Track((object)key.GetInstanceID(), make);
+
+        private void Track(object key, Func<IWorldItem> make)
         {
-            int id = key.GetInstanceID();
-            if (!_items.ContainsKey(id))
+            if (!_items.ContainsKey(key))
             {
                 IWorldItem item = make();
-                _items[id] = item;
+                _items[key] = item;
                 Added?.Invoke(item);
             }
-            _present.Add(id);
+            _present.Add(key);
         }
     }
 }

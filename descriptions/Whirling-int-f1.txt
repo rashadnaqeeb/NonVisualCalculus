@@ -1,0 +1,9 @@
+# Whirling-in-Rags, ground floor. Coordinates in the mod's world frame (x east, z north).
+# Zone anchors sit on open floor inside the zone they name.
+zone tables -2.3 0 -6.8
+zone bar 5.4 0 -1.0
+zone archway -1.4 0 -0.4
+zone corner -6.3 0 0.4
+zone backdoor 3.9 0 5.2
+zone kitchen -0.8 0 6.5
+zone backroom 7.4 0.4 9.4

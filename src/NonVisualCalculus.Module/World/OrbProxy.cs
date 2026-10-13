@@ -13,7 +13,7 @@ namespace NonVisualCalculus.Module.World
     /// from its clue text (<see cref="OrbNaming"/>), and the Enter verb walks the character into range and
     /// triggers it. Everything reads live off the orb (the "never cache game state" rule).
     /// </summary>
-    internal sealed class OrbProxy : IWalkTarget
+    internal sealed class OrbProxy : IWalkTarget, IKeyedWorldItem
     {
         // The footprint disc for any orb is its small drawn body - the thing a sighted player sees and
         // clicks - never its InteractionRadius trigger range (up to 16 m): a footprint that wide reads
@@ -36,6 +36,9 @@ namespace NonVisualCalculus.Module.World
         private float _footprintRadius = -1f;
 
         public OrbProxy(SenseOrb orb, System.Action<string> log) { _orb = orb; _log = log; }
+
+        /// <summary>The orb's GameObject name, the key the authored object descriptions address.</summary>
+        public string Key => _orb.name;
 
         public string Name => OrbNaming.Resolve(_orb.textOverride, MorselText(), _orb.conversation,
             RidesPlayer, GameLocalization.IsEnglish);

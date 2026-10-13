@@ -1,11 +1,13 @@
 using System;
 using NonVisualCalculus.Core.Audio;
+using NonVisualCalculus.Core.Descriptions;
 using NonVisualCalculus.Core.Modularity;
 using NonVisualCalculus.Core.Strings;
 using NonVisualCalculus.Core.Text;
 using NonVisualCalculus.Core.World;
 using NonVisualCalculus.Core.World.Overlays;
 using NonVisualCalculus.Core.World.Overlays.Systems;
+using NonVisualCalculus.Core.World.Zoning;
 using Sunshine.Views;
 using UnityEngine;
 using PlayMode = NonVisualCalculus.Core.World.Overlays.PlayMode; // disambiguate from UnityEngine.PlayMode
@@ -55,6 +57,8 @@ namespace NonVisualCalculus.Module.World
         private readonly GateDetour _gates;
         private readonly Scanner _scanner;
         private readonly ZoneTracker _zones;
+        private readonly DescriptionStore _descriptions;
+        private Zone _announcedZone; // the zone last spoken by the zone-change announcement
         private bool _engaged;
         private Snv _lastPlayer; // character position last in-world frame, to catch a reposition (load/teleport)
         private string _lastScene; // scene last in-world frame - a change is a reposition regardless of distance
@@ -126,14 +130,27 @@ namespace NonVisualCalculus.Module.World
             // readouts - the cursor, the same ear the sonar already listens from.
             _scanner.BindMeasureFrom(() => host.Settings.ScannerFromCursor.Value
                 ? _overlay.Cursor.Position : _env.PlayerPosition);
-            // The scene's zones, rebuilt per scene from the navmesh; nothing reads it yet beyond the
-            // dev hooks (the zone readouts land with the description store).
+            // The scene's zones, rebuilt per scene from the navmesh, and the authored descriptions that
+            // name and describe them (and place the painted details into the registry).
             _zones = new ZoneTracker(host);
+            _descriptions = new DescriptionStore(host, _zones, _model, _env);
             Active = this;
         }
 
         /// <summary>The scene's live zone map (orientation zones from the navmesh).</summary>
         public ZoneTracker Zones => _zones;
+
+        /// <summary>The active scene's authored descriptions.</summary>
+        public DescriptionStore Descriptions => _descriptions;
+
+        /// <summary>The live registry of world things (the dev survey reads it).</summary>
+        internal WorldModel Model => _model;
+
+        /// <summary>The host (the dev survey logs through it).</summary>
+        internal IModHost Host => _host;
+
+        /// <summary>The engine adapter (the dev survey reads it).</summary>
+        internal WorldEnvironment Environment => _env;
 
         /// <summary>The movement cursor's position in the mod's world frame.</summary>
         public Snv CursorPosition => _overlay.Cursor.Position;
@@ -216,6 +233,10 @@ namespace NonVisualCalculus.Module.World
             // are a different map's). Unpin the cursor back onto the character.
             Snv player = _overlay.Cursor.PlayerPosition;
             string scene = SceneName();
+            // The zone map and the descriptions first, so a scene change below speaks the new scene's
+            // zone, never the previous map's (the tracker drops its map the frame the scene name moves).
+            _zones.Tick(scene, WorldConvert.ToUnity(player));
+            _descriptions.Tick(scene);
             // The jump also invalidates any still-playing cue tails (their listener just moved across the
             // map, or reads as the origin while the character is despawned mid-load) - stop tracking them.
             if (_hasLastPlayer && (scene != _lastScene || Snv.Distance(player, _lastPlayer) > RepositionJump))
@@ -233,7 +254,7 @@ namespace NonVisualCalculus.Module.World
 
             float dt = Time.unscaledDeltaTime;
             _model.Tick(dt); // the sonar/scanner data layer, kept current whether or not we drive
-            _zones.Tick(scene, WorldConvert.ToUnity(player));
+            AnnounceZoneChange();
             // The audio systems mute when we aren't the live keyboard owner (a conversation, a cutscene, or a
             // menu floating over the in-world view); they keep their voices and resume on return.
             _overlay.InputActive = _ownsKeyboard;
@@ -272,13 +293,57 @@ namespace NonVisualCalculus.Module.World
 
         // Speak the current location: the map's spoken name, the game's own localized area name with
         // hyphens read as spaces ("Whirling in Rags"), plus the floor word for a numbered interior level
-        // so stacked scenes are distinguishable.
+        // so stacked scenes are distinguishable, then the zone the cursor stands in when the map has one
+        // (right after a scene change the zone map is not built yet; the zone-change announcement then
+        // follows on its own a frame later).
         private void SpeakLocation(bool interrupt)
         {
             string scene = SceneName();
             string localized = GameLocalization.Translate("Area Names/" + scene);
             string map = (string.IsNullOrEmpty(localized) ? scene : localized).Replace('-', ' ');
-            _host.Speech.Speak(Strings.WorldLocation(map, EntityNaming.LevelLabel(scene)), interrupt: interrupt);
+            string line = Strings.WorldLocation(map, EntityNaming.LevelLabel(scene));
+            Zone zone = _zones.ZoneAt(_overlay.Cursor.Position);
+            if (zone != null)
+            {
+                line = Strings.WorldLocationZone(line, ZoneSpeech.Name(_descriptions.Current, _zones.Map, zone));
+                _announcedZone = zone;
+            }
+            _host.Speech.Speak(line, interrupt: interrupt);
+        }
+
+        // The zone-change announcement: when the cursor (which rides the character while unpinned)
+        // resolves to a different zone than last spoken, say the zone's name, queued behind whatever is
+        // playing. Instant, no dwell: a zone boundary is a doorway or a street mouth, where flapping is
+        // rare, and a late line would misplace the player. Off by the setting.
+        private void AnnounceZoneChange()
+        {
+            if (!_ownsKeyboard || _zones.Map == null || !_host.Settings.AnnounceZones.Value) return;
+            Zone zone = _zones.ZoneAt(_overlay.Cursor.Position);
+            if (zone == null || ReferenceEquals(zone, _announcedZone)) return;
+            _announcedZone = zone;
+            _host.Speech.Speak(ZoneSpeech.Name(_descriptions.Current, _zones.Map, zone), interrupt: false);
+        }
+
+        /// <summary>Speak the mod's authored description of the scanned thing (X): a detail's body or an
+        /// entity's appearance text, else the nothing-described line. Never game text.</summary>
+        public void DescribeObject()
+        {
+            IWorldItem selected = _scanner.Selected;
+            if (selected == null) { _host.Speech.Speak(Strings.WorldScanNothing, interrupt: true); return; }
+            string text = null;
+            if (selected is DetailProxy detail) text = detail.Body;
+            else if (selected is IKeyedWorldItem keyed) text = _descriptions.Current?.ObjectText(keyed.Key);
+            _host.Speech.Speak(string.IsNullOrEmpty(text) ? Strings.WorldDescribeNone : text, interrupt: true);
+        }
+
+        /// <summary>Speak the mod's authored description of the zone under the cursor (Shift+X): its title
+        /// and body, else the nothing-described line.</summary>
+        public void DescribeZone()
+        {
+            Snv at = _overlay.Cursor.Position;
+            Zone zone = _zones.ZoneAt(at);
+            if (zone == null) { _host.Speech.Speak(Strings.WorldDescribeNone, interrupt: true); return; }
+            _host.Speech.Speak(ZoneSpeech.Describe(_descriptions.Current, _zones.Map, zone, at), interrupt: true);
         }
 
         private static string SceneName() => UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;

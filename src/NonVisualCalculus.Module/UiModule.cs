@@ -251,7 +251,10 @@ namespace NonVisualCalculus.Module
             _input.Register(WorldActions.ReadMoney, Strings.InputWorldReadMoney, InputCategory.Status, () => _commands.ReadMoney()).AddBinding(new KeyboardBinding(KeyCode.M));
             _input.Register(WorldActions.ReadHealth, Strings.InputWorldReadHealth, InputCategory.Status, () => _commands.ReadHealth()).AddBinding(new KeyboardBinding(KeyCode.H));
             _input.Register(WorldActions.ReadLocation, Strings.InputWorldReadLocation, InputCategory.Status, () => _world.ReadLocation()).AddBinding(new KeyboardBinding(KeyCode.R));
-            _input.Register(WorldActions.ReadExperience, Strings.InputWorldReadExperience, InputCategory.Status, () => _commands.ReadExperience()).AddBinding(new KeyboardBinding(KeyCode.X));
+            _input.Register(WorldActions.ReadExperience, Strings.InputWorldReadExperience, InputCategory.Status, () => _commands.ReadExperience()).AddBinding(new KeyboardBinding(KeyCode.E));
+            // The mod's authored descriptions (never game text): X the scanned thing, Shift+X the zone.
+            _input.Register(WorldActions.DescribeObject, Strings.InputWorldDescribeObject, InputCategory.Status, () => _world.DescribeObject()).AddBinding(new KeyboardBinding(KeyCode.X));
+            _input.Register(WorldActions.DescribeZone, Strings.InputWorldDescribeZone, InputCategory.Status, () => _world.DescribeZone()).AddBinding(new KeyboardBinding(KeyCode.X, shift: true));
 
             // Ctrl+L is the game's language quick-switch (primary/secondary swap), global (the world and
             // menus), since the game's bare-key bindings are killed by type-ahead in our migrated screens.

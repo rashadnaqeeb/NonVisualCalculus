@@ -53,6 +53,10 @@ namespace NonVisualCalculus.Core.Settings
         public ToggleSetting SonarContainers { get; }
         public ToggleSetting SonarOrbs { get; }
         public ToggleSetting SonarExits { get; }
+        public ToggleSetting SonarDetails { get; }
+
+        /// <summary>Speak a zone's name as the cursor (else the character) enters a different one.</summary>
+        public ToggleSetting AnnounceZones { get; }
 
         /// <summary>When on (the default), the scanner's readout - the spoken bearing and distance, the
         /// review ping's ear, and the browse order - measures from the cursor instead of the character (the
@@ -122,6 +126,12 @@ namespace NonVisualCalculus.Core.Settings
             SonarExits = Add(new ToggleSetting(
                 "sonar_exit", () => SettingSonarExits, defaultValue: true, store,
                 () => SettingDescSonarExits));
+            SonarDetails = Add(new ToggleSetting(
+                "sonar_detail", () => SettingSonarDetails, defaultValue: true, store,
+                () => SettingDescSonarDetails));
+            AnnounceZones = Add(new ToggleSetting(
+                "announce_zones", () => SettingAnnounceZones, defaultValue: true, store,
+                () => SettingDescAnnounceZones));
             ScannerFromCursor = Add(new ToggleSetting(
                 "scanner_from_cursor", () => SettingScannerFromCursor, defaultValue: true, store,
                 () => SettingDescScannerFromCursor));
@@ -154,6 +164,7 @@ namespace NonVisualCalculus.Core.Settings
                 case World.WorldTaxonomy.Container: return SonarContainers.Value;
                 case World.WorldTaxonomy.Orb: return SonarOrbs.Value;
                 case World.WorldTaxonomy.Exit: return SonarExits.Value;
+                case World.WorldTaxonomy.Detail: return SonarDetails.Value;
                 default: return true; // an unmapped category is never silently dropped
             }
         }

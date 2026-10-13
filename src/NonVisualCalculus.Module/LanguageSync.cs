@@ -89,14 +89,21 @@ namespace NonVisualCalculus.Module
         // sanitized language name. Null when neither exists (the shipped state for most languages).
         private static string FindFile(string dir, string language)
         {
-            string code = LocalizationManager.CurrentLanguageCode;
-            if (!string.IsNullOrEmpty(code))
+            foreach (string stem in FileStems(language))
             {
-                string byCode = Path.Combine(dir, code.ToLowerInvariant() + ".txt");
-                if (File.Exists(byCode)) return byCode;
+                string path = Path.Combine(dir, stem + ".txt");
+                if (File.Exists(path)) return path;
             }
-            string byName = Path.Combine(dir, SanitizeName(language) + ".txt");
-            return File.Exists(byName) ? byName : null;
+            return null;
+        }
+
+        /// <summary>The file stems a language's data may be filed under, in lookup order: the I2 code
+        /// ("fr"), then the sanitized name ("french"). Shared by every per-language file the mod reads.</summary>
+        public static IEnumerable<string> FileStems(string language)
+        {
+            string code = LocalizationManager.CurrentLanguageCode;
+            if (!string.IsNullOrEmpty(code)) yield return code.ToLowerInvariant();
+            if (!string.IsNullOrEmpty(language)) yield return SanitizeName(language);
         }
 
         // A language name as a file stem: lowercased, letter/digit runs kept, everything else folded to

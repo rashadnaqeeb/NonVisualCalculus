@@ -61,5 +61,7 @@ namespace NonVisualCalculus.Module.World
         public const string ReadHealth = "world.read.health";
         public const string ReadLocation = "world.read.location";
         public const string ReadExperience = "world.read.experience";
+        public const string DescribeObject = "world.describe.object";
+        public const string DescribeZone = "world.describe.zone";
     }
 }

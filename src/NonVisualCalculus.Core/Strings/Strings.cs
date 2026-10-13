@@ -128,6 +128,10 @@ namespace NonVisualCalculus.Core.Strings
             D("InputWorldReadHealth", "Read health"),
             D("InputWorldReadLocation", "Read location"),
             D("InputWorldReadExperience", "Read experience"),
+            // The describe keys: the mod's own authored description of the scanned thing (X) and of the
+            // zone the cursor stands in (Shift+X).
+            D("InputWorldDescribeObject", "Describe scanned thing"),
+            D("InputWorldDescribeZone", "Describe zone"),
             // Opens the mod's key-help screen: the list of every key live in the current context.
             D("InputKeyHelp", "Key help"),
             // Dialogue viewer only: a number-row digit moves the cursor to that numbered response.
@@ -513,6 +517,11 @@ namespace NonVisualCalculus.Core.Strings
             // the menu and the scanner call a category the same thing.
             D("SettingSonarCategory", "Sonar {0}"),
             D("SettingDescSonarCategory", "Includes {0} in the sonar sweep."),
+            // Toggle: speak a zone's name whenever the cursor (or the character, when the cursor rides it)
+            // enters a different zone of the map.
+            D("SettingAnnounceZones", "Announce zones"),
+            D("SettingDescAnnounceZones",
+                "Speaks the name of each zone as the cursor or your character enters it."),
             // Toggle: the scanner speaks each thing's direction and distance measured from the cursor's
             // position instead of the character's. "Readouts" = those spoken direction-and-distance lines.
             D("SettingScannerFromCursor", "Scanner readouts from cursor"),
@@ -685,6 +694,27 @@ namespace NonVisualCalculus.Core.Strings
             D("WorldScanOrbs", "orbs"),
             // Doors, stairs, and other ways out of the current area.
             D("WorldScanExits", "exits"),
+            // Painted details the mod describes: murals, graffiti, wrecks, signs - things that exist only
+            // as scene art, with no game object behind them.
+            D("WorldScanDetails", "details"),
+
+            // The zones the mod divides each map into for orientation. A zone's spoken name is its authored
+            // title; these are the words for a zone no title has been written for yet (a development
+            // state): {0} = the zone's number, {1} = its shape word from the list below.
+            D("WorldZoneUnnamed", "zone {0}, {1}"),
+            // The zone shape words (singular nouns): an ordinary room-sized space, a small one, a large
+            // open one (a hall indoors, a square or yard outdoors), a narrow passage, a corridor, a staircase.
+            D("WorldZoneClassRoom", "room"),
+            D("WorldZoneClassSmall", "small room"),
+            D("WorldZoneClassHall", "large open area"),
+            D("WorldZoneClassPassage", "narrow passage"),
+            D("WorldZoneClassCorridor", "corridor"),
+            D("WorldZoneClassStairs", "stairs"),
+            // The location readout with the zone appended; {0} = the location line (area and floor),
+            // {1} = the zone's name.
+            D("WorldLocationZone", "{0}, {1}"),
+            // The describe keys' answer when the mod has no authored text for the scanned thing or the zone.
+            D("WorldDescribeNone", "nothing described"),
             // The quick-nav groups' labels, spoken only when a group key finds nothing ("items, none").
             D("WorldScanPeopleGroup", "people and interactables"),
             D("WorldScanItemsGroup", "items"),
@@ -1136,6 +1166,8 @@ namespace NonVisualCalculus.Core.Strings
         public static string InputWorldReadHealth => T("InputWorldReadHealth");
         public static string InputWorldReadLocation => T("InputWorldReadLocation");
         public static string InputWorldReadExperience => T("InputWorldReadExperience");
+        public static string InputWorldDescribeObject => T("InputWorldDescribeObject");
+        public static string InputWorldDescribeZone => T("InputWorldDescribeZone");
         public static string InputKeyHelp => T("InputKeyHelp");
         public static string InputDialogueNumberJump => T("InputDialogueNumberJump");
 
@@ -1353,6 +1385,10 @@ namespace NonVisualCalculus.Core.Strings
         public static string SettingSonarContainers => F("SettingSonarCategory", WorldScanContainers);
         public static string SettingSonarOrbs => F("SettingSonarCategory", WorldScanOrbs);
         public static string SettingSonarExits => F("SettingSonarCategory", WorldScanExits);
+        public static string SettingSonarDetails => F("SettingSonarCategory", WorldScanDetails);
+        public static string SettingDescSonarDetails => F("SettingDescSonarCategory", WorldScanDetails);
+        public static string SettingAnnounceZones => T("SettingAnnounceZones");
+        public static string SettingDescAnnounceZones => T("SettingDescAnnounceZones");
         public static string SettingScannerFromCursor => T("SettingScannerFromCursor");
         public static string SettingRunToDestinations => T("SettingRunToDestinations");
         public static string SettingUnrestrictCursor => T("SettingUnrestrictCursor");
@@ -1520,6 +1556,19 @@ namespace NonVisualCalculus.Core.Strings
         public static string WorldScanContainers => T("WorldScanContainers");
         public static string WorldScanOrbs => T("WorldScanOrbs");
         public static string WorldScanExits => T("WorldScanExits");
+        public static string WorldScanDetails => T("WorldScanDetails");
+
+        /// <summary>A zone without an authored title: its number and shape word (development only).</summary>
+        public static string WorldZoneUnnamed(int id, string classWord) => F("WorldZoneUnnamed", id, classWord);
+        public static string WorldZoneClassRoom => T("WorldZoneClassRoom");
+        public static string WorldZoneClassSmall => T("WorldZoneClassSmall");
+        public static string WorldZoneClassHall => T("WorldZoneClassHall");
+        public static string WorldZoneClassPassage => T("WorldZoneClassPassage");
+        public static string WorldZoneClassCorridor => T("WorldZoneClassCorridor");
+        public static string WorldZoneClassStairs => T("WorldZoneClassStairs");
+        /// <summary>The location line with the zone's name appended.</summary>
+        public static string WorldLocationZone(string location, string zone) => F("WorldLocationZone", location, zone);
+        public static string WorldDescribeNone => T("WorldDescribeNone");
         // The quick-nav groups' labels, spoken only when a group key finds nothing ("items, none").
         public static string WorldScanPeopleGroup => T("WorldScanPeopleGroup");
         public static string WorldScanItemsGroup => T("WorldScanItemsGroup");

@@ -324,11 +324,16 @@ namespace NonVisualCalculus.Module.World
         /// a dialogue or cutscene zoom sequence is never fought.</summary>
         public void PinZoom()
         {
+            if (ZoomPinSuspended) return;
             CameraController cam = CameraController.Current;
             if (cam == null) return;
             float max = cam.GetZoomLimiters().y;
             if (Mathf.Abs(cam.ZoomFactor - max) > 0.001f) cam.ZoomFactor = max;
         }
+
+        /// <summary>Set by the dev survey while it frames captures: the per-frame zoom pin would undo
+        /// its zoom. Never set in play.</summary>
+        public static bool ZoomPinSuspended;
 
         private static Camera GameCamera
         {

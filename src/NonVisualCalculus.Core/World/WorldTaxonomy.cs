@@ -20,12 +20,14 @@ namespace NonVisualCalculus.Core.World
         public const string Container = "container";
         public const string Orb = "orb";
         public const string Interactable = "interactable";
+        /// <summary>A painted detail the mod describes (scene art with no game object behind it).</summary>
+        public const string Detail = "detail";
 
         /// <summary>Every fine classification a proxy can report, in readout order.</summary>
-        public static readonly IReadOnlyList<string> All = new[] { Npc, Door, Exit, Container, Orb, Interactable };
+        public static readonly IReadOnlyList<string> All = new[] { Npc, Door, Exit, Container, Orb, Interactable, Detail };
 
         /// <summary>The browse categories the scanner cycles (and the sonar lists), in cycle order.</summary>
-        public static readonly IReadOnlyList<string> Scan = new[] { Npc, Interactable, Container, Orb, Exit };
+        public static readonly IReadOnlyList<string> Scan = new[] { Npc, Interactable, Container, Orb, Detail, Exit };
 
         /// <summary>The browse category a thing lists under: its own classification, except a door, which
         /// lists as an exit.</summary>
@@ -43,7 +45,7 @@ namespace NonVisualCalculus.Core.World
         }
 
         private static readonly IReadOnlyList<string> PeopleCategories = new[] { Npc, Interactable };
-        private static readonly IReadOnlyList<string> ItemCategories = new[] { Container, Orb };
+        private static readonly IReadOnlyList<string> ItemCategories = new[] { Container, Orb, Detail };
         private static readonly IReadOnlyList<string> ExitCategories = new[] { Exit };
     }
 

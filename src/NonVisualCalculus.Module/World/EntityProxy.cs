@@ -13,7 +13,7 @@ namespace NonVisualCalculus.Module.World
     /// prop). Reads everything live and classifies by the game's own <see cref="Interactable"/> subclass
     /// tree via <c>TryCast</c> (not GetType, which the interop boxes to BasicEntity).
     /// </summary>
-    internal sealed class EntityProxy : IWalkTarget
+    internal sealed class EntityProxy : IWalkTarget, IKeyedWorldItem
     {
         // A footprint half-width is capped here so a pathological oversized renderer (an area-wide effect, a
         // skybox quad parented to an entity) can't become a footprint that swallows the cursor everywhere.
@@ -36,6 +36,9 @@ namespace NonVisualCalculus.Module.World
         private bool _footprintResolved;
 
         public EntityProxy(BasicEntity e, System.Action<string> log) { _e = e; _log = log; }
+
+        /// <summary>The exact GameObject name, the key the authored object descriptions address.</summary>
+        public string Key => _e.name;
 
         // The spoken name, composed by Core from the raw fields plus the game's authored display name for this
         // thing (see AuthoredName): the destination area for an exit, else the actor that voices its examine
