@@ -1,0 +1,4 @@
+# The union boss's container office. Mod world frame.
+zone waitingroom -5.72 1.01 -9.24
+zone office -4.22 3.57 -3.99
+zone officestep -6.47 2.99 -2.99
