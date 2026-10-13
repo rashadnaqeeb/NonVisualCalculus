@@ -67,6 +67,10 @@ namespace NonVisualCalculus.Module
             {
                 if (sound == LockedSound && !__instance.ignoreNextSoundPlay)
                     self._lockedPending = true;
+                // Any other door sound is the door moving: its navmesh carve changes walkability and
+                // connectivity, so the zone map rebuilds once the swing settles.
+                else if (sound != LockedSound)
+                    World.ZoneTracker.Active?.InvalidateSoon();
             }
             catch (Exception e)
             {

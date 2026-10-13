@@ -54,6 +54,7 @@ namespace NonVisualCalculus.Module.World
         private readonly WalkInteract _walk;
         private readonly GateDetour _gates;
         private readonly Scanner _scanner;
+        private readonly ZoneTracker _zones;
         private bool _engaged;
         private Snv _lastPlayer; // character position last in-world frame, to catch a reposition (load/teleport)
         private string _lastScene; // scene last in-world frame - a change is a reposition regardless of distance
@@ -125,8 +126,17 @@ namespace NonVisualCalculus.Module.World
             // readouts - the cursor, the same ear the sonar already listens from.
             _scanner.BindMeasureFrom(() => host.Settings.ScannerFromCursor.Value
                 ? _overlay.Cursor.Position : _env.PlayerPosition);
+            // The scene's zones, rebuilt per scene from the navmesh; nothing reads it yet beyond the
+            // dev hooks (the zone readouts land with the description store).
+            _zones = new ZoneTracker(host);
             Active = this;
         }
+
+        /// <summary>The scene's live zone map (orientation zones from the navmesh).</summary>
+        public ZoneTracker Zones => _zones;
+
+        /// <summary>The movement cursor's position in the mod's world frame.</summary>
+        public Snv CursorPosition => _overlay.Cursor.Position;
 
         /// <summary>Whether the world owns the keyboard this frame (the input layer gates the World category
         /// on it). Set by <see cref="ResolveOwnership"/> before input is polled.</summary>
@@ -223,6 +233,7 @@ namespace NonVisualCalculus.Module.World
 
             float dt = Time.unscaledDeltaTime;
             _model.Tick(dt); // the sonar/scanner data layer, kept current whether or not we drive
+            _zones.Tick(scene, WorldConvert.ToUnity(player));
             // The audio systems mute when we aren't the live keyboard owner (a conversation, a cutscene, or a
             // menu floating over the in-world view); they keep their voices and resume on return.
             _overlay.InputActive = _ownsKeyboard;
@@ -452,6 +463,7 @@ namespace NonVisualCalculus.Module.World
             if (_engaged) { _overlay.OnExit(); _engaged = false; }
             _devTones?.Dispose();
             _devTones = null;
+            if (ZoneTracker.Active == _zones) ZoneTracker.Active = null;
             if (Active == this) Active = null;
         }
 

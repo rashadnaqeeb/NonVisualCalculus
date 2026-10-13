@@ -211,21 +211,38 @@ edges only as a fallback, so nothing is lost. Whether openings become scan items
 category is decided in phase 2; the immediate use is naming, so a door or opening speaks the zone
 it leads into.
 
-### Tuning for Disco
+### Tuning for Disco (phase 1 result, 2026-10-13)
 
-WOTR's thresholds were chosen by eye on WOTR maps. Disco's interiors are small and crowded, its
-streets are narrow and stepped, and the coast is wide open ground. The DEBUG grid dump and a port
-of `rooms_render.py` let us look at a floor plan offline before touching a threshold; the two
-tuning scenes are the Whirling ground floor and Martinaise. Expected adjustments:
+Built and tuned live on the Whirling ground floor, the Capeside apartments, the Doomed Commercial
+Area's second floor and Martinaise, looking at `tools/zones_render.py` floor plans of each. What
+changed from WOTR's values and rules, and why:
 
-- Furniture island size and minimum zone area down for interiors, so a bar counter or a bed does
-  not merge a room away and a bathroom survives as a zone.
-- Persistence up outdoors, so a street does not split at every lamppost pinch.
-- Slope gating checked against Martinaise's many stairs: a stepped street should read as one
-  street with stair zones between its levels, not as a stack of slivers.
-- Curated walls for the plaza, the harbour yard, the coast and the shoreline where open ground
-  honestly holds several places, and a wall along each interior fog volume's edge where the
-  watershed misses a doorway the painting shows.
+- Persistence 0.5 m instead of 0.7. At 0.7 the Whirling's café, bar and dining room were one
+  117 square metre zone; at 0.5 they split where the glass partitions pinch the floor, giving
+  seven zones for the floor (dining room, bar side, hall, kitchen, union room, entrance, and the
+  sealed patch behind the closed kitchen door). At 0.4 the hall fragments. Martinaise has 129
+  zones at 0.7 and 153 at 0.5, with the plaza and the big yards still whole; that count is the
+  naming workload.
+- Interior fog volumes are partition seeds, done per cell: the tracker casts the game's own
+  fog probe (a ray up on the fog layer) from every walkable cell and records the volume's id, and
+  the segmentation treats a change of id between neighbours as a wall. The volumes' colliders are
+  unreadable meshes and the rooms sit rotated, so a bounding box would not do. This is what
+  carves the union room out of the café; the kitchen's arch already split on its own.
+- Narrow ground that seeds no basin (the Doomed Commercial Area's balcony, the kitchen's aisles
+  between counters) is no longer flooded into a neighbour across a partition line or left
+  unlabelled: every leftover walkable component becomes its own zone, and a small zone with no
+  neighbour to merge into stays a zone down to one square metre, below which it is sampling noise
+  and drops. WOTR dropped every isolated tiny region, which in Disco left the character standing in
+  "no zone".
+- Doors behind which the mesh is carved come out as sealed zones with no exit (three of the nine
+  Capeside flats, the kitchen back door), which is correct until the door opens and the rebuild
+  joins them. The dark room in the Doomed Commercial Area is a 4 square metre island for the same
+  reason: its darkness seals the rest of the floor, and the game's own paths agree.
+- Everything else kept WOTR's values: furniture islands up to 12 square metres, minimum zone
+  area 12, stair detection, the class-word thresholds.
+
+Curated walls and merges remain the tool for the plaza, the harbour yard, the coast and any
+street the heuristic splits oddly; none were needed to get here.
 
 ### What the game cannot give us
 
@@ -305,9 +322,10 @@ live, at speak time, never stored as zone ids.
 - Zone-change announcement from the world tick: when the cursor (else the player) resolves to a
   different zone, speak the zone line, queued, behind a setting on by default. The hook sits in
   `WorldReader.Tick` beside the existing scene-change reposition check.
-- Bare letter keys free in the world today, read from the bindings in `UiModule`: E, F, G, K, N,
-  O, Q, U, V, Y, Z. Proposal: V for describe object, Shift+V for describe zone, so X stays
-  read-experience and R stays location. The choice is the user's.
+- Keys, decided by the user: X describes the focused object and Shift+X describes the zone, the
+  WOTR binding. X is read-experience today, so that readout moves to a free letter when the
+  describe keys land in phase 3 (E, F, G, K, N, O, Q, U, V, Y and Z are free; E is the natural
+  home for experience, pending the user's say).
 - Every framing word (the nothing-described line, the class words, the "Room N" template, the
   category name "details") goes in the strings table. The prose lives in the description files.
 
@@ -386,9 +404,11 @@ agents verbatim.
 
 ## Part 8. Phases
 
-1. Zone map. Core algorithm with tests, the sampling adapter, the door rebuild hook, the DEBUG
-   grid dump and the offline renderer. Tune on the Whirling ground floor and Martinaise until
-   walking them sounds right. Deliverable: zones resolve at the cursor in both scenes.
+1. Zone map. Done 2026-10-13: `NonVisualCalculus.Core.World.Zoning` (the segmentation, with 14
+   tests on synthetic plans), the module's `ZoneTracker` (flood-fill navmesh sampling, fog
+   partitions, door rebuild hook), the `DevZones` hooks and `tools/zones_render.py`. Zones
+   resolve at the character and the cursor in every scene visited. The dev REPL now compiles
+   against the live module assembly, so module classes are callable from `/eval` by name.
 2. Zone naming and surfacing. The title store and loader first, then a naming pass over the
    Whirling and Martinaise from the floor-plan render and room shots; zone in the location
    readout and arrival line, zone-change announcement with its toggle, doors and openings named

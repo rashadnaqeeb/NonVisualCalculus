@@ -42,6 +42,12 @@ namespace NonVisualCalculus.Modularity
         /// driver whether the bytes a reload picked up are the build it just made).</summary>
         public string ModulePath => _modulePath;
 
+        /// <summary>The live module assembly and the exact bytes it was loaded from, so the dev REPL can
+        /// compile against the module's metadata and bind to the in-memory assembly rather than loading
+        /// a second copy from disk. Null while no module is loaded.</summary>
+        public Assembly ModuleAssembly => Module?.GetType().Assembly;
+        public byte[] ModuleBytes { get; private set; }
+
         /// <summary>Load the module from its current bytes. Returns false (and logs) on any failure.</summary>
         public bool Load()
         {
@@ -77,6 +83,7 @@ namespace NonVisualCalculus.Modularity
                 DisposeCurrent();
                 _alc = candidateAlc;
                 Module = module;
+                ModuleBytes = bytes;
                 Generation++;
                 _log.LogInfo("ModuleLoader: loaded " + type.FullName + " (generation " + Generation + ")");
                 return true;
@@ -119,6 +126,7 @@ namespace NonVisualCalculus.Modularity
                     _log.LogError("ModuleLoader: module Dispose threw: " + ex);
                 }
                 Module = null;
+                ModuleBytes = null;
             }
 
             if (_alc != null)

@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.CodeAnalysis.Scripting.Hosting;
 
 namespace NonVisualCalculus.Dev
 {
@@ -22,14 +23,20 @@ namespace NonVisualCalculus.Dev
     /// </summary>
     internal sealed class CSharpEvaluator
     {
+        private readonly Modularity.ModuleLoader _loader;
         private ScriptState<object> _state;
         private ScriptOptions _options;
+        private InteractiveAssemblyLoader _assemblyLoader;
+
+        public CSharpEvaluator(Modularity.ModuleLoader loader) { _loader = loader; }
 
         /// <summary>Drop REPL state so the next Eval rebuilds it (picks up freshly reloaded module types).</summary>
         public void Reset()
         {
             _state = null;
             _options = null;
+            _assemblyLoader?.Dispose();
+            _assemblyLoader = null;
         }
 
         private void Initialize()
@@ -87,6 +94,20 @@ namespace NonVisualCalculus.Dev
                 }
             }
 
+            // The module itself is loaded from bytes into a collectible context, so it has no file to
+            // reference and the default context cannot resolve it. Compile against the exact bytes the
+            // loader read and register the live assembly with the script loader, so evaluated code binds
+            // to the running module (its statics, its dev hooks) instead of a second copy from disk.
+            // Reset() on reload rebuilds this for the new generation.
+            _assemblyLoader = new InteractiveAssemblyLoader();
+            Assembly module = _loader.ModuleAssembly;
+            byte[] moduleBytes = _loader.ModuleBytes;
+            if (module != null && moduleBytes != null)
+            {
+                refs.Add(MetadataReference.CreateFromImage(moduleBytes));
+                _assemblyLoader.RegisterDependency(module);
+            }
+
             _options = ScriptOptions.Default
                 .WithReferences(refs)
                 .WithImports("System", "System.Linq", "System.Reflection",
@@ -104,9 +125,7 @@ namespace NonVisualCalculus.Dev
                 Initialize();
             try
             {
-                _state = _state == null
-                    ? CSharpScript.RunAsync("(System.Func<bool>)(() => (" + expression + "))", _options).GetAwaiter().GetResult()
-                    : _state.ContinueWithAsync("(System.Func<bool>)(() => (" + expression + "))", _options).GetAwaiter().GetResult();
+                _state = Run("(System.Func<bool>)(() => (" + expression + "))");
                 predicate = _state.ReturnValue as Func<bool>;
                 return predicate != null ? null : "[error] expression did not yield a bool predicate\n";
             }
@@ -118,6 +137,15 @@ namespace NonVisualCalculus.Dev
             {
                 return "[exception] " + e + "\n";
             }
+        }
+
+        // Run one submission in the session: the first creates the script on the session's assembly
+        // loader (so the module dependency registration applies), later ones continue the state.
+        private ScriptState<object> Run(string code)
+        {
+            if (_state == null)
+                return CSharpScript.Create(code, _options, null, _assemblyLoader).RunAsync().GetAwaiter().GetResult();
+            return _state.ContinueWithAsync(code, _options).GetAwaiter().GetResult();
         }
 
         /// <summary>Compile and run <paramref name="code"/>; return output + result/errors.</summary>
@@ -138,9 +166,7 @@ namespace NonVisualCalculus.Dev
             Console.SetError(output);
             try
             {
-                _state = _state == null
-                    ? CSharpScript.RunAsync(code, _options).GetAwaiter().GetResult()
-                    : _state.ContinueWithAsync(code, _options).GetAwaiter().GetResult();
+                _state = Run(code);
                 if (_state.ReturnValue != null)
                 {
                     value = _state.ReturnValue;

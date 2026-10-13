@@ -82,7 +82,7 @@ namespace NonVisualCalculus.Dev
         private readonly ManualLogSource _log;
         private readonly LineLog _speech = new LineLog();
         private readonly LineLog _logLines = new LineLog();
-        private readonly CSharpEvaluator _evaluator = new CSharpEvaluator();
+        private readonly CSharpEvaluator _evaluator;
         private readonly ConcurrentQueue<Job> _jobs = new ConcurrentQueue<Job>();
         private readonly List<WaitJob> _waits = new List<WaitJob>(); // guarded by lock(_waits)
         private DevHttpServer _http;
@@ -95,6 +95,7 @@ namespace NonVisualCalculus.Dev
         {
             _loader = loader;
             _log = log;
+            _evaluator = new CSharpEvaluator(loader);
         }
 
         /// <summary>Stand up the loopback server unless NVC_NO_DEV=1.</summary>

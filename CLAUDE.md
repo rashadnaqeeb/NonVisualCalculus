@@ -156,6 +156,18 @@ Endpoints (loopback; drive with `curl`):
 - `GET /screenshot` - capture a PNG of the current frame; returns the file path to `Read`.
 - `GET /health` - liveness.
 
+**The REPL sees the module.** Evaluated code compiles against the live module assembly (the
+evaluator registers the byte-loaded module with Roslyn's assembly loader), so module types are
+callable by name, e.g. `NonVisualCalculus.Module.World.DevZones.Stats()`; a `/reload` rebinds to
+the new generation. A submission that throws or fails to compile is rolled back whole, including
+the variables it declared.
+
+**Zones (orientation zones from the navmesh).** `ZoneTracker` segments the active scene's walkable
+ground (Core `World/Zoning`); `DevZones.Stats()`, `.Here()`, `.At(x,y,z)` (mod world frame),
+`.Dump()` (a text dump to the temp dir) and `.Options`/`.Rebuild()` drive it from `/eval`, and
+`python3 tools/zones_render.py <dump.txt> out.png` renders the floor plan for tuning and curation.
+Design and tuning notes: `docs/zones-and-descriptions-plan.md`.
+
 **REPL calls exercise Harmony patches.** A proxy method called from `/eval` hits the same detour the
 game's own call does, so a patch can be smoke-tested without gameplay: call the patched method, expect
 the announcement. If it does not fire from the REPL, the patch is **not applied** - check `/module`,
