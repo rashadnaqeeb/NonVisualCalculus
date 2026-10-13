@@ -1,0 +1,2 @@
+zone.coalroom.title = the coal room
+zone.coalroom.body = A cellar of grimy brick with a floor of cracked slabs, a round iron drain grate in its middle, where a rusted boiler with two round doors stands against the back wall under a tangle of pipes. A heap of coal lies in the corner with a shovel stuck in it, rusted oil drums and sacks stand by the wall, and a stone stair climbs out to the pier.
