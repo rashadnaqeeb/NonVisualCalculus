@@ -1,0 +1,3 @@
+# The Feld building's upper floor: the ruined stairwell. Mod world frame.
+zone windowfloor -5.15 2.26 -3.98
+zone brokenstair -7.15 4.6 -1.23
