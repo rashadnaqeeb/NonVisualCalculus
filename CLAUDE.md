@@ -162,11 +162,17 @@ callable by name, e.g. `NonVisualCalculus.Module.World.DevZones.Stats()`; a `/re
 the new generation. A submission that throws or fails to compile is rolled back whole, including
 the variables it declared.
 
-**Zones (orientation zones from the navmesh).** `ZoneTracker` segments the active scene's walkable
-ground (Core `World/Zoning`); `DevZones.Stats()`, `.Here()`, `.At(x,y,z)` (mod world frame),
-`.Dump()` (a text dump to the temp dir) and `.Options`/`.Rebuild()` drive it from `/eval`, and
-`python3 tools/zones_render.py <dump.txt> out.png` renders the floor plan for tuning and curation.
-Design and tuning notes: `docs/zones-and-descriptions-plan.md`.
+**Zones and authored descriptions.** `ZoneTracker` segments the active scene's walkable ground
+(Core `World/Zoning`); `DevZones.Stats()`, `.Here()`, `.At(x,y,z)` (mod world frame), `.Dump()`
+(a text dump to the temp dir) and `.Options`/`.Rebuild()` drive it from `/eval`, and
+`python3 tools/zones_render.py <dump.txt> out.png` renders the floor plan. Zone names, zone bodies,
+painted details and object appearance live in `descriptions/<scene>.txt` (geometry, keys) and
+`descriptions/<scene>.en.txt` (prose; other languages beside it), deployed beside the plugin and
+loaded by `DescriptionStore` per scene; after editing a file, copy it into the deployed
+`descriptions/` folder and call `WorldReader.Active.Descriptions.Reload()`. `dotnet test`
+validates every scene's files. `python3 tools/survey.py zones|objects|shot|entities` captures the
+material to author from (HUD hidden, fog lifted, zone outlines drawn). Rules for the prose:
+`docs/description-rules.md`; design and tuning: `docs/zones-and-descriptions-plan.md`.
 
 **REPL calls exercise Harmony patches.** A proxy method called from `/eval` hits the same detour the
 game's own call does, so a patch can be smoke-tested without gameplay: call the patched method, expect

@@ -155,6 +155,25 @@ namespace NonVisualCalculus.Module.World
             return Ser(new { scene = scene.name, entities = list });
         }
 
+        /// <summary>Every exit and door the registry knows in the active scene, with its zone: the
+        /// survey's route table for visiting the interiors.</summary>
+        public static string Exits()
+        {
+            if (Reader == null) return Err("no world reader");
+            var map = Zones?.Map;
+            var rows = new List<object>();
+            foreach (IWorldItem it in Reader.Model.Items)
+            {
+                if (it.Category != WorldTaxonomy.Exit && it.Category != WorldTaxonomy.Door) continue;
+                Snv p; string name, key;
+                try { p = it.Position; name = it.Name; key = (it as IKeyedWorldItem)?.Key; }
+                catch (Exception e) { Reader.Host.LogWarning("DevSurvey.Exits: a proxy threw: " + e.Message); continue; }
+                rows.Add(new { name, key, category = it.Category, accessible = it.IsAccessible, visible = it.IsVisible,
+                               zone = map?.ZoneAt(p)?.Id ?? 0, x = R(p.X), y = R(p.Y), z = R(p.Z) });
+            }
+            return Ser(new { exits = rows });
+        }
+
         /// <summary>Why each registry thing is or is not offered by the scanner from the character's
         /// spot: the gate flags the scan scope reads.</summary>
         public static string ScanDiag()

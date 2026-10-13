@@ -409,21 +409,22 @@ agents verbatim.
    partitions, door rebuild hook), the `DevZones` hooks and `tools/zones_render.py`. Zones
    resolve at the character and the cursor in every scene visited. The dev REPL now compiles
    against the live module assembly, so module classes are callable from `/eval` by name.
-2. Zone naming and surfacing. The title store and loader first, then a naming pass over the
-   Whirling and Martinaise from the floor-plan render and room shots; zone in the location
-   readout and arrival line, zone-change announcement with its toggle, doors and openings named
-   by destination zone, the decision on openings as exit items. Deliverable: walking Martinaise
-   names the places as you enter them, by their real names.
-3. Store, keys and rules. File formats, loader, state variants, describe keys, the detail
-   category and its sonar setting, strings-table entries, the offline validator, the rules file.
-   Deliverable: a hand-written test entry in each channel speaks in the live game.
-4. Survey tooling. `DevSurvey` and the driver, all four modes, the paint-settle check, HUD hide,
-   fog forcing and restore. Deliverable: a complete survey of the Whirling ground floor and the
-   plaza, reviewed shot by shot for settle problems.
-5. Content pass. The Whirling and the plaza first, review with the user, fix the register, then
-   scene by scene through Martinaise, the coast, and the interiors. Names first for a scene (done
-   in phase 2 for the first two), then zone bodies, then details, then objects. Each scene lands
-   as its own commit with its validate run clean.
+2. Zone naming and surfacing. Done 2026-10-14: the description store, the zone in the location
+   readout and the arrival line, the zone-change announcement with its toggle, and names for
+   every zone of the Whirling's ground floor and Martinaise (153). Openings as exit items are
+   not built: doors and scene exits already name their destination, and the zone-change line
+   covers the opening itself.
+3. Store, keys and rules. Done 2026-10-14: `descriptions/<scene>.txt` and `<scene>.<lang>.txt`,
+   the loader following scene and language, story-state variants, X and Shift+X, the details
+   category with its sonar toggle, the strings, the offline validator in the test suite, and
+   `docs/description-rules.md`.
+4. Survey tooling. Done 2026-10-14: `DevSurvey` and `tools/survey.py` with zones (outlined
+   captures), objects, shot, entities and status modes; HUD hide, fog lift, zoom-pin suspend and
+   the streamer settle check; `GroundAt` to place a detail from a capture's pixel.
+5. Content pass. In progress: the Whirling's ground floor has zones, details and objects;
+   Martinaise has every zone named and described. Remaining, in order: the interiors' zones, then
+   Martinaise's painted details and objects, then the interiors' details and objects. Each scene
+   lands as its own commit with the validator clean.
 
 ## Part 9. Verified live (2026-10-13, end-game save, day 8)
 

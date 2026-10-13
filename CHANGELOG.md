@@ -6,6 +6,9 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 New Features and improvements:
 
+- Every map is divided into named zones (the plaza, the fountain circle, the kitchen); the zone is spoken on arrival, as you move between zones, and after the area in the location readout. The announcement has a toggle in the mod menu.
+- Shift+X describes the zone the cursor is in: a short authored picture of the painted surroundings. X describes the scanned thing. Read experience moves to E.
+- A new scanner category, details, lists painted things with no game object behind them (a mosaic, a mural, a chalkboard); they cycle with the items keys, can be walked to, and X reads their description.
 - The mod runs on the Mac version of the game on Apple Silicon Macs; see the macOS install guide.
 - On a Mac, speech goes through a screen reader with a Prism plugin, else the system voice, or VoiceOver if chosen in settings.
 
