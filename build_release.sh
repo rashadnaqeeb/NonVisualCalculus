@@ -37,6 +37,10 @@ mkdir -p "$plugin" "$repo/releases"
 
 unzip -q "$loader_zip" -d "$game"
 cp "$host_out/"*.dll "$module_out/NonVisualCalculus.Module.dll" "$prism/libprism.dylib" "$plugin/"
+# NAudio's Windows parts (the winmm output, WASAPI, ASIO, MIDI and the umbrella assembly's decoders)
+# never load on a Mac: the mod uses NAudio.Core there, with its own AudioQueue output.
+rm -f "$plugin/NAudio.dll" "$plugin/NAudio.WinMM.dll" "$plugin/NAudio.Wasapi.dll" "$plugin/NAudio.Asio.dll" \
+    "$plugin/NAudio.Midi.dll"
 for set in cursor interactables walltones/1; do
     mkdir -p "$plugin/assets/audio/$set"
     cp "$repo/assets/audio/$set/"*.wav "$plugin/assets/audio/$set/"

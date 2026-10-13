@@ -62,7 +62,7 @@ namespace NonVisualCalculus.Audio
                 if (OperatingSystem.IsMacOS())
                     _out = macOut = new MacAudioQueueOutput(desiredLatencyMs: 100, bufferCount: 4);
                 else
-                    _out = new WaveOutEvent { DesiredLatency = 100, NumberOfBuffers = 4 };
+                    _out = CreateWindowsOutput();
                 // A device dying mid-session (unplugged headphones, driver error) stops playback with an
                 // exception; flag it so Available turns false - consumers (the tracked-source list) stand
                 // down instead of feeding voices whose Read will never run again. A deliberate Stop/Dispose
@@ -87,6 +87,11 @@ namespace NonVisualCalculus.Audio
                 return false;
             }
         }
+
+        // Its own method so the JIT only loads NAudio.WinMM on Windows; the macOS release leaves it out.
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        private static IWavePlayer CreateWindowsOutput() =>
+            new WaveOutEvent { DesiredLatency = 100, NumberOfBuffers = 4 };
 
         internal void Add(ISampleProvider p) { if (EnsureStarted()) _mixer.AddMixerInput(p); }
         internal void Remove(ISampleProvider p)
@@ -160,9 +165,11 @@ namespace NonVisualCalculus.Audio
 
         private static float[] DecodeMono(string path)
         {
-            using (var reader = new AudioFileReader(path))
+            // NAudio.Core's WAV reader: the cues are all WAV, and AudioFileReader would pull in NAudio's
+            // Windows-only decoders.
+            using (var reader = new WaveFileReader(path))
             {
-                ISampleProvider sp = reader;
+                ISampleProvider sp = reader.ToSampleProvider();
                 if (sp.WaveFormat.SampleRate != Rate) sp = new WdlResamplingSampleProvider(sp, Rate);
                 int channels = sp.WaveFormat.Channels;
 

@@ -10,8 +10,9 @@
 #   ./install.sh "/path/to/Disco Elysium"
 #
 # It copies the loader, the mod and the launcher into the game folder, clears the quarantine flag
-# macOS puts on downloaded libraries, and prints the launch option to paste into Steam. Running it
-# again over an existing install updates the mod and keeps your settings.
+# macOS puts on downloaded libraries, and puts the launch option to paste into Steam on the
+# clipboard, printing it too. Running it again over an existing install updates the mod and keeps
+# your settings.
 set -eu
 
 here=$(cd "$(dirname "$0")" && pwd)
@@ -41,12 +42,18 @@ chmod 755 "$game_dir/run-modded.sh" "$game_dir/NonVisualCalculus.app/Contents/Ma
 # the game may load the libraries. Harmless where nothing is flagged.
 xattr -dr com.apple.quarantine "$game_dir" 2>/dev/null || true
 
+launch_option="\"$game_dir/NonVisualCalculus.app\" %command%"
+copied=""
+if printf '%s' "$launch_option" | pbcopy 2>/dev/null; then
+    copied=" It is on the clipboard."
+fi
+
 echo ""
 echo "Installed. One step remains, in Steam:"
 echo "right-click Disco Elysium, Properties, General, Launch Options, and paste this line"
-echo "(including the quotes):"
+echo "(including the quotes).$copied"
 echo ""
-echo "\"$game_dir/NonVisualCalculus.app\" %command%"
+echo "$launch_option"
 echo ""
 echo "Then launch from Steam. The first modded launch prepares the mod for your copy of the game,"
 echo "which takes a minute or two with a black screen; after that the mod announces itself at the"

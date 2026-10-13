@@ -4,8 +4,8 @@ The mod runs on the Mac version of Disco Elysium: The Final Cut from Steam, on a
 
 ## Installing
 
-1. Download the macOS release zip (`NonVisualCalculus-macOS-v<version>.zip`), unzip it anywhere, and in Terminal run `./install.sh` from the unzipped folder. It copies the mod loader, the mod and its launcher into the game folder (the one containing `disco.app`), clears the quarantine flag macOS puts on downloaded libraries, and prints the exact launch option line. If the game is not in Steam's default library, pass the game folder as the argument: `./install.sh "/path/to/Disco Elysium"`.
-2. In Steam, open the game's Properties, General, Launch Options, and paste the line the installer printed: `"<game folder>/NonVisualCalculus.app" %command%`, quotes included.
+1. Download the macOS release zip (`NonVisualCalculus-macOS-v<version>.zip`), unzip it anywhere, and in Terminal run `./install.sh` from the unzipped folder. It copies the mod loader, the mod and its launcher into the game folder (the one containing `disco.app`), clears the quarantine flag macOS puts on downloaded libraries, and puts the exact launch option line on the clipboard (and prints it). If the game is not in Steam's default library, pass the game folder as the argument: `./install.sh "/path/to/Disco Elysium"`.
+2. In Steam, open the game's Properties, General, Launch Options, and paste the line from the clipboard: `"<game folder>/NonVisualCalculus.app" %command%`, quotes included.
 3. Launch from Steam. The first modded launch prepares the mod for your copy of the game, which takes a minute or two with a black screen. After that the mod announces itself at the main menu.
 
 To update, unzip the new release and run its `install.sh` again; your settings are kept. To play without the mod, clear the launch option.
