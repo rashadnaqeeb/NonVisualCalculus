@@ -1,0 +1,2 @@
+zone.flat.title = the students' flat
+zone.flat.body = A wrecked room behind the harbour wall with its plaster fallen away to brick and timber, a railing of iron bars along the open side, a sagging sofa under a red blanket on a worn red rug, a desk and folding chairs among the rubble, a blackboard chalked with slogans and posters pinned to the broken wall.

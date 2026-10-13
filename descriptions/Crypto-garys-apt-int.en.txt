@@ -1,0 +1,4 @@
+zone.bedroomdoor.title = the bedroom doorway
+zone.bedroomdoor.body = The doorway between the apartment's main room and a small bedroom, where a brass bed with crumpled sheets stands under a hanging lamp and an open trunk sits at its foot.
+zone.apartment.title = Gary's apartment
+zone.apartment.body = A low vaulted basement room of brick and plaster lit by a cluster of lamps, with a desk and a blue table under the arch heaped with books and papers, a bookcase, a sofa draped with a green blanket, a yellow banner on the wall, a chequered tile floor by the door and a small bathroom with a sink behind a partition.
