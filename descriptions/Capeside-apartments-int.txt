@@ -1,0 +1,12 @@
+# Capeside apartments, ground and upper floors. Mod world frame.
+zone entrancehall 28.07 2.29 -40.73
+zone apartment12 31.32 2.7 -33.73
+zone backstair 23.57 1.92 -32.23
+zone bathroom12 36.07 2.7 -31.23
+zone zebrabedroom 25.82 1.93 -27.73
+zone cunosdadflat 31.32 2.7 -25.98
+zone landing10 17.32 1.93 -25.98
+zone apartment10 22.32 1.93 -21.98
+zone graffiticorridor 9.07 1.93 -21.23
+zone sharedbathroom 10.07 1.93 -14.23
+zone derelictflat 5.07 1.93 -12.73
