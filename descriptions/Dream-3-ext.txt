@@ -22,3 +22,7 @@ zone desertercamp -39.14 0.33 248.59
 zone clifffoot -54.14 0.62 199.34
 zone loosefloe -15.64 0.18 207.09
 zone boatchannel -0.39 0.06 217.84
+zone slipwaytop -32.64 1.61 189.09
+zone pillboxledge -37.14 2.5 201.59
+zone chainfloe -19.64 0.28 214.84
+zone islethollow -49.64 1.37 244.34
