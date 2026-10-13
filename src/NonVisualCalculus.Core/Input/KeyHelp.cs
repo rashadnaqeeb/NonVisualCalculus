@@ -113,12 +113,15 @@ namespace NonVisualCalculus.Core.Input
             return string.Join(" ", tokens);
         }
 
+        /// <summary>Speak the Alt modifier by its Mac name, Option. Set by the host on macOS.</summary>
+        public static bool MacKeyNames { get; set; }
+
         // Delegates, not resolved strings, so a language switch reads through to the live table.
         private static readonly Dictionary<string, Func<string>> TokenNames = new Dictionary<string, Func<string>>
         {
             ["Ctrl"] = () => Strings.Strings.KeyControl,
             ["Shift"] = () => Strings.Strings.KeyShift,
-            ["Alt"] = () => Strings.Strings.KeyAlt,
+            ["Alt"] = () => MacKeyNames ? Strings.Strings.KeyOption : Strings.Strings.KeyAlt,
             ["UpArrow"] = () => Strings.Strings.KeyUpArrow,
             ["DownArrow"] = () => Strings.Strings.KeyDownArrow,
             ["LeftArrow"] = () => Strings.Strings.KeyLeftArrow,

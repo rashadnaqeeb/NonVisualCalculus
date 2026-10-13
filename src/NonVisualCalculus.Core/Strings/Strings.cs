@@ -142,6 +142,8 @@ namespace NonVisualCalculus.Core.Strings
             D("KeyControl", "Control"),
             D("KeyShift", "Shift"),
             D("KeyAlt", "Alt"),
+            // The same key on a Mac keyboard, where it is labelled Option.
+            D("KeyOption", "Option"),
             D("KeyUpArrow", "Up arrow"),
             D("KeyDownArrow", "Down arrow"),
             D("KeyLeftArrow", "Left arrow"),
@@ -534,6 +536,11 @@ namespace NonVisualCalculus.Core.Strings
             // the installed mod is older (up to date stays silent).
             D("SettingCheckForUpdates", "Check for updates at launch"),
             D("SettingDescCheckForUpdates", "Announces a newer mod release at launch."),
+            // Toggle, macOS only: speak through VoiceOver (when it is running) instead of a screen
+            // reader's Prism plugin or the system voice. VoiceOver cannot queue, so lines may cut each other off.
+            D("SettingSpeakThroughVoiceOver", "Speak through VoiceOver"),
+            D("SettingDescSpeakThroughVoiceOver",
+                "Speaks through VoiceOver while it is running. VoiceOver cannot queue speech, so one line can cut off the next."),
             // Toggle: list the mod's built-in location bookmarks in the bookmarks menu. Off by
             // default; the place names can reveal locations the player has not discovered yet.
             D("SettingShowPresetBookmarks", "Show preset bookmarks"),
@@ -1138,6 +1145,7 @@ namespace NonVisualCalculus.Core.Strings
         public static string KeyControl => T("KeyControl");
         public static string KeyShift => T("KeyShift");
         public static string KeyAlt => T("KeyAlt");
+        public static string KeyOption => T("KeyOption");
         public static string KeyUpArrow => T("KeyUpArrow");
         public static string KeyDownArrow => T("KeyDownArrow");
         public static string KeyLeftArrow => T("KeyLeftArrow");
@@ -1367,6 +1375,8 @@ namespace NonVisualCalculus.Core.Strings
         public static string SettingDescRunToDestinations => T("SettingDescRunToDestinations");
         public static string SettingDescUnrestrictCursor => T("SettingDescUnrestrictCursor");
         public static string SettingDescCheckForUpdates => T("SettingDescCheckForUpdates");
+        public static string SettingSpeakThroughVoiceOver => T("SettingSpeakThroughVoiceOver");
+        public static string SettingDescSpeakThroughVoiceOver => T("SettingDescSpeakThroughVoiceOver");
         public static string SettingDescShowPresetBookmarks => T("SettingDescShowPresetBookmarks");
 
         // The navigable affordance that advances a conversation when there are no response choices

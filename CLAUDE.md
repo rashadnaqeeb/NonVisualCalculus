@@ -179,6 +179,43 @@ After a game update, relaunch once through Steam to regenerate `BepInEx/interop/
 `decompiled/dummydll` and `decompiled/src` with `tools/re/dump-cpp2il.sh`, and rebuild the Ghidra
 reference with `tools/re/refresh.sh`.
 
+### macOS (Apple Silicon)
+
+The mod also runs on the Mac version of the game, natively as arm64 (never under Rosetta). The Mac
+build is the same Unity 2020.3.12f1 IL2CPP game in `disco.app` (universal binaries; game data in
+`Contents/Resources/Data`, `GameAssembly.dylib` in `Contents/Frameworks`), but its
+`global-metadata.dat` differs from the Windows one, so `BepInEx/interop` is generated on the Mac and
+never copied from Windows. Player-facing details are in `macos/README.md`.
+
+- **Game folder:** `~/Library/Application Support/Steam/steamapps/common/Disco Elysium` (the folder
+  holding `disco.app`; the loader, `run-modded.sh` and `NonVisualCalculus.app` sit beside it).
+  `Directory.Build.props` finds it. A Mac build writes `bin/mac` and `obj/mac`, so the Windows VM and
+  the Mac can build this shared checkout without handing each other their outputs.
+- **Loader:** BepInEx does not support IL2CPP on macOS upstream. `third_party/bepinex-macos/` vendors
+  a patched BepInEx 6 (bleeding edge) + Il2CppInterop + Dobby + UnityDoorstop + the official .NET 6
+  osx-arm64 runtime; `macos/loader/build-loader.sh` rebuilds it from pinned upstream commits and
+  `macos/loader/patches/` (its header lists what each patch does). `macos/setup-bepinex.sh` installs
+  it and the launcher. The Windows build stays on BepInEx 6.0.0-pre.2; the plugin source compiles
+  against both.
+- **Launch / kill:** `"<game>/run-modded.sh"` with Steam running (it opens the game's arm64 slice
+  with Doorstop's environment; `--open` goes through LaunchServices the way Steam's launch option
+  does, and forwards `Steam*` and `NVC_*` variables). Quit with `POST /eval`
+  `UnityEngine.Application.Quit();`; `pkill` (SIGTERM) crashes Unity's teardown and leaves a crash
+  report, so use `pkill -9 -f "MacOS/Disco Elysium"` when the game is wedged.
+- **Host differences:** speech is `MacSpeechBackend` (a screen reader's Prism plugin from
+  `~/Library/Application Support/*/prism/`, else the mod's own gapless system voice in
+  `Speech/Mac/`, or VoiceOver by setting; never Prism's "best" backend, which can launch VoiceOver).
+  `libprism.dylib` (Prism 0.18, `third_party/prism/macos`) deploys beside the plugin. The spatial
+  audio plays through `MacAudioQueueOutput` instead of winmm. Everything else, the dev server
+  included, is the same code.
+- **arm64 caveats:** Il2CppInterop's x86 xref scanning has an arm64 replacement (`Arm64Code` in the
+  patch) that covers class injection; `ScanMethodRefs` is off on arm64, so `XrefScanner` cached
+  results are unavailable. A Harmony patch on a game method that returns a struct larger than 16
+  bytes is broken on arm64: Il2CppInterop passes the return buffer as the first argument, where
+  arm64 passes it in x8. Check the signature before patching such a method.
+- **Release:** `build_release.sh` builds `releases/NonVisualCalculus-macOS-v<version>.zip`
+  (`install.sh`, the macOS README, and `game/` for beside `disco.app`).
+
 ## Architecture
 
 Four projects, the Hand-of-Fate split adapted to IL2CPP, with the engine-coupled side split again

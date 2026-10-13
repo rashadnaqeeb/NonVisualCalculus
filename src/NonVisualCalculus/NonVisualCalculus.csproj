@@ -67,7 +67,8 @@
   <!--
     Auto-deploy on build (Debug only): copy the host + Core + Roslyn deps (everything in the output:
     the game/loader refs are Private=false so they never land there) plus the module DLL into
-    BepInEx/plugins/NonVisualCalculus, and prism.dll next to disco.exe, so a plain `dotnet build` is all
+    BepInEx/plugins/NonVisualCalculus, and prism.dll next to disco.exe (libprism.dylib beside the plugin
+    on macOS), so a plain `dotnet build` is all
     that's needed. ContinueOnError keeps a locked file (game running) a warning and lets the compile
     succeed; close the game and rebuild to deploy. The module DLL is overwrite-safe at runtime (the
     host loads it from bytes, leaving the file unlocked); BepInEx's chainloader ignores it since it
@@ -76,7 +77,7 @@
   <Target Name="DeployToGame" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
     <PropertyGroup>
       <PluginDeployDir>$(BepInExDir)\plugins\NonVisualCalculus</PluginDeployDir>
-      <ModuleDll>$(RepoRoot)src\NonVisualCalculus.Module\bin\$(Configuration)\$(TargetFramework)\NonVisualCalculus.Module.dll</ModuleDll>
+      <ModuleDll>$(RepoRoot)src\NonVisualCalculus.Module\$(NvcBinDir)$(Configuration)\$(TargetFramework)\NonVisualCalculus.Module.dll</ModuleDll>
     </PropertyGroup>
     <ItemGroup>
       <_DeployDll Include="$(TargetDir)*.dll" />
@@ -95,8 +96,11 @@
          DeployModule for the hot loop; this full copy is for closed-game / first deploys.) -->
     <Copy SourceFiles="@(_DeployDll);$(ModuleDll)"
           DestinationFolder="$(PluginDeployDir)" ContinueOnError="true" Retries="0" />
-    <Copy SourceFiles="$(RepoRoot)third_party\prism\prism.dll"
+    <Copy SourceFiles="$(RepoRoot)third_party\prism\prism.dll" Condition="'$(IsMac)' != 'true'"
           DestinationFolder="$(GameDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
+    <!-- macOS: libprism.dylib beside the plugin, where the runtime's probe for the "prism" import looks first. -->
+    <Copy SourceFiles="$(RepoRoot)third_party\prism\macos\libprism.dylib" Condition="'$(IsMac)' == 'true'"
+          DestinationFolder="$(PluginDeployDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
     <Copy SourceFiles="@(_WallToneAsset)"
           DestinationFolder="$(PluginDeployDir)\assets\audio\walltones\1"
           SkipUnchangedFiles="true" ContinueOnError="true" />
@@ -109,6 +113,9 @@
     <Copy SourceFiles="@(_LangFile)"
           DestinationFolder="$(PluginDeployDir)\lang"
           SkipUnchangedFiles="true" ContinueOnError="true" />
+    <!-- macOS: the launcher beside disco.app (the script, and the app bundle Steam's launch option names). -->
+    <Exec Condition="'$(IsMac)' == 'true'" ContinueOnError="true"
+          Command="install -m 755 &quot;$(RepoRoot)macos/run-modded.sh&quot; &quot;$(GameDir)/run-modded.sh&quot; &amp;&amp; rm -rf &quot;$(GameDir)/NonVisualCalculus.app&quot; &amp;&amp; cp -R &quot;$(RepoRoot)macos/NonVisualCalculus.app&quot; &quot;$(GameDir)/NonVisualCalculus.app&quot;" />
     <Message Importance="high" Text="NonVisualCalculus deployed -> $(PluginDeployDir)" />
   </Target>
 

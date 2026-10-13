@@ -21,6 +21,9 @@ namespace NonVisualCalculus.Host
         internal static DevServer DevServer;
 #endif
         internal static ModuleLoader Loader;
+        // macOS only: the speech backend that needs a per-frame drive, and the settings it follows.
+        internal static Speech.MacSpeechBackend MacSpeech;
+        internal static Core.Settings.ModSettings MacSettings;
 
         private static bool _legacyChecked;
 
@@ -63,6 +66,24 @@ namespace NonVisualCalculus.Host
             }
 #endif
 
+            if (MacSpeech != null)
+            {
+                try
+                {
+                    bool voiceOver = MacSettings.SpeakThroughVoiceOver.Value;
+                    if (voiceOver != MacSpeech.PrefersVoiceOver)
+                        MacSpeech.Reinitialize(voiceOver);
+                    // A screen reader cuts its own speech on a key press; the system voice has nobody
+                    // else to, so a key press silences it before the module speaks the key's response.
+                    if (MacSpeech.StopsOnAnyKey && UnityEngine.Input.anyKeyDown)
+                        Core.Speech.SpeechPipeline.Instance?.Stop();
+                }
+                catch (Exception ex)
+                {
+                    Plugin.Logger?.LogWarning("Mac speech: " + ex);
+                }
+            }
+
             try
             {
                 Loader?.Module?.Tick();
@@ -71,6 +92,18 @@ namespace NonVisualCalculus.Host
             {
                 // Full exception (with stack); a per-frame Tick failure is otherwise unlocatable.
                 Plugin.Logger?.LogWarning("Module.Tick: " + ex);
+            }
+
+            if (MacSpeech != null)
+            {
+                try
+                {
+                    MacSpeech.Update();
+                }
+                catch (Exception ex)
+                {
+                    Plugin.Logger?.LogWarning("Mac speech update: " + ex);
+                }
             }
 
 #if DEBUG

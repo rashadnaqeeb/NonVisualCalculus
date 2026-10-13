@@ -10,8 +10,8 @@ The only thing that does not work is the game's collage mode, which is used to t
 
 ## Requirements
 
-- Disco Elysium: The Final Cut on **Windows**, from Steam, GOG, or Epic. The console and macOS versions cannot load mods.
-- A screen reader (NVDA, JAWS, and others) or the built-in Windows voices.
+- Disco Elysium: The Final Cut on **Windows**, from Steam, GOG, or Epic, or on an **Apple Silicon Mac** from Steam. The console versions cannot load mods.
+- A screen reader (NVDA, JAWS, and others) or the built-in Windows voices. On a Mac, a screen reader with a Prism plugin, VoiceOver, or the system voice.
 
 ## Install and update
 
@@ -20,6 +20,8 @@ The only thing that does not work is the game's collage mode, which is used to t
 3. Launch the game through Steam, GOG Galaxy, or the Epic Games Launcher. The first launch takes a few minutes while the mod loader generates files, so be patient if it seems frozen. This is only a one-time issue.
 
 To **update** later, run the installer again.
+
+On a Mac, follow the [macOS guide](macos/README.md) instead: it installs from a zip with `install.sh` and one Steam launch option.
 
 ## How the mod works
 

@@ -79,7 +79,11 @@ namespace NonVisualCalculus.Core.Settings
         /// it takes effect next launch.</summary>
         public ToggleSetting CheckForUpdates { get; }
 
-        public ModSettings(ISettingsStore store)
+        /// <summary>macOS only (null elsewhere): speak through VoiceOver while it runs, instead of a screen
+        /// reader's Prism plugin or the system voice. Off by default because VoiceOver cannot queue.</summary>
+        public ToggleSetting? SpeakThroughVoiceOver { get; }
+
+        public ModSettings(ISettingsStore store, bool isMac = false)
         {
             // Labels and explanations are providers, not captured strings: the settings outlive module
             // reloads and a language switch, so each resolves through the strings table at speak time.
@@ -133,6 +137,10 @@ namespace NonVisualCalculus.Core.Settings
             CheckForUpdates = Add(new ToggleSetting(
                 "check_for_updates", () => SettingCheckForUpdates, defaultValue: true, store,
                 () => SettingDescCheckForUpdates));
+            if (isMac)
+                SpeakThroughVoiceOver = Add(new ToggleSetting(
+                    "speak_through_voiceover", () => SettingSpeakThroughVoiceOver, defaultValue: false, store,
+                    () => SettingDescSpeakThroughVoiceOver));
         }
 
         /// <summary>Whether the sonar should sound the given <see cref="World.WorldTaxonomy.Scan"/> browse

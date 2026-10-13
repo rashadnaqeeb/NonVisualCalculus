@@ -9,3 +9,7 @@
 *.lib binary
 *.zip binary
 *.wav binary
+
+# Loader patches carry the patched files' own line endings (Dobby's CMake files are CRLF)
+*.patch -text
+*.dylib binary

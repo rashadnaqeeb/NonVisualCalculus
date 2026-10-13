@@ -1,0 +1,338 @@
+diff --git a/BepInEx.Core/Paths.cs b/BepInEx.Core/Paths.cs
+index a1a44eb..d2569f2 100644
+--- a/BepInEx.Core/Paths.cs
++++ b/BepInEx.Core/Paths.cs
+@@ -124,6 +124,9 @@ public static class Paths
+             GameDataPath = Path.Combine(GameRootPath, $"{ProcessName}_Data");
+             if (!Directory.Exists(GameDataPath))
+                 GameDataPath = Path.Combine(GameRootPath, "Data");
++            // macOS keeps data inside the app bundle.
++            if (!Directory.Exists(GameDataPath) && PlatformHelper.Is(Platform.MacOS))
++                GameDataPath = Utility.CombinePaths(Utility.ParentDirectory(executablePath, 2), "Resources", "Data");
+         }
+         
+         if (string.IsNullOrEmpty(GameDataPath) || !Directory.Exists(GameDataPath))
+diff --git a/BepInEx.Preloader.Core/PlatformUtils.cs b/BepInEx.Preloader.Core/PlatformUtils.cs
+index 917a7a8..215b9ce 100644
+--- a/BepInEx.Preloader.Core/PlatformUtils.cs
++++ b/BepInEx.Preloader.Core/PlatformUtils.cs
+@@ -99,7 +99,8 @@ internal static class PlatformUtils
+         else
+             current |= IntPtr.Size >= 8 ? Platform.Bits64 : 0;
+ 
+-        if ((current.Is(Platform.MacOS) || current.Is(Platform.Linux)) && Type.GetType("Mono.Runtime") != null)
++        // The GetPEKind fallback below never matches arm64.
++        if (current.Is(Platform.MacOS) || current.Is(Platform.Linux))
+         {
+             string arch;
+             IntPtr result;
+diff --git a/BepInEx.Preloader.Core/RuntimeFixes/AppleSiliconDetourFix.cs b/BepInEx.Preloader.Core/RuntimeFixes/AppleSiliconDetourFix.cs
+new file mode 100644
+index 0000000..38e6d90
+--- /dev/null
++++ b/BepInEx.Preloader.Core/RuntimeFixes/AppleSiliconDetourFix.cs
+@@ -0,0 +1,115 @@
++﻿using System;
++using System.Runtime.InteropServices;
++using MonoMod.RuntimeDetour;
++using MonoMod.RuntimeDetour.Platforms;
++using MonoMod.Utils;
++
++namespace BepInEx.Preloader.RuntimeFixes;
++
++/// <summary>
++///     Lets MonoMod write detours when the game runs as a native arm64 process on Apple Silicon.
++/// </summary>
++/// <remarks>
++///     Unity's code sits in a MAP_JIT region, which refuses <c>mprotect</c> with EACCES and
++///     <c>mach_vm_write</c> with KERN_INVALID_ADDRESS. Only <c>pthread_jit_write_protect_np</c> gets in, and
++///     managed code cannot call it: it drops execute permission for the calling thread, which is running
++///     JIT-compiled code. Doorstop's <c>doorstop_jit_memcpy</c> keeps the toggle and the write in one frame.
++/// </remarks>
++public static class AppleSiliconDetourFix
++{
++    /// <summary>Why the fix could not install. Logged once the preloader has a logger.</summary>
++    public static Exception Exception { get; private set; }
++
++    /// <summary>Whether this process is 64-bit arm64 macOS.</summary>
++    public static bool Applies =>
++        IntPtr.Size == 8 && PlatformHelper.Is(Platform.MacOS) && PlatformHelper.Is(Platform.ARM);
++
++    /// <summary>Installs the platform. Call before any <see cref="DetourHelper" /> read.</summary>
++    public static void Apply()
++    {
++        if (!Applies)
++            return;
++
++        try
++        {
++            DetourHelper.Native = new AppleSiliconNativePlatform(new DetourNativeARMPlatform());
++        }
++        catch (Exception e)
++        {
++            Exception = e;
++        }
++    }
++
++    /// <summary>Replaces the write operations only; the inner platform still encodes.</summary>
++    private sealed class AppleSiliconNativePlatform : IDetourNativePlatform
++    {
++        private const string LibSystem = "/usr/lib/libSystem.dylib";
++
++        /// <summary>RTLD_DEFAULT: every loaded image.</summary>
++        private static readonly IntPtr RtldDefault = new(-2);
++
++        /// <summary>Mirrors private DetourNativeARMPlatform.DetourSizes (MonoMod 22.7.31.1).</summary>
++        private static readonly uint[] DetourSizes = { 4 + 4, 4 + 2 + 2 + 4, 4 + 4, 4 + 4 + 4, 4 + 4 + 8 };
++
++        private readonly IDetourNativePlatform inner;
++        private readonly JitMemCpy jitMemCpy;
++
++        public AppleSiliconNativePlatform(IDetourNativePlatform inner)
++        {
++            this.inner = inner;
++
++            var symbol = dlsym(RtldDefault, "doorstop_jit_memcpy");
++
++            if (symbol == IntPtr.Zero)
++                throw new NotSupportedException(
++                    "doorstop_jit_memcpy is not exported by any loaded image. Detours cannot be written on " +
++                    "arm64 macOS without it. Update UnityDoorstop, or run the game under Rosetta.");
++
++            jitMemCpy = (JitMemCpy) Marshal.GetDelegateForFunctionPointer(symbol, typeof(JitMemCpy));
++        }
++
++        // doorstop_jit_memcpy handles permissions and icache.
++        public void MakeWritable(IntPtr src, uint size) { }
++        public void MakeReadWriteExecutable(IntPtr src, uint size) { }
++        public void MakeExecutable(IntPtr src, uint size) { }
++        public void FlushICache(IntPtr src, uint size) { }
++
++        public void Apply(NativeDetourData detour)
++        {
++            // Position independent, so encode then copy whole.
++            var scratch = new byte[detour.Size];
++            var pin = GCHandle.Alloc(scratch, GCHandleType.Pinned);
++
++            try
++            {
++                var staging = detour;
++                staging.Method = pin.AddrOfPinnedObject();
++                inner.Apply(staging);
++                jitMemCpy(detour.Method, staging.Method, (UIntPtr) detour.Size);
++            }
++            finally
++            {
++                pin.Free();
++            }
++        }
++
++        public void Copy(IntPtr src, IntPtr dst, byte type)
++        {
++            if (type >= DetourSizes.Length)
++                throw new NotSupportedException($"Unknown detour type {type}");
++
++            jitMemCpy(dst, src, (UIntPtr) DetourSizes[type]);
++        }
++
++        public NativeDetourData Create(IntPtr from, IntPtr to, byte? type) => inner.Create(from, to, type);
++        public void Free(NativeDetourData detour) => inner.Free(detour);
++        public IntPtr MemAlloc(uint size) => inner.MemAlloc(size);
++        public void MemFree(IntPtr ptr) => inner.MemFree(ptr);
++
++        [DllImport(LibSystem)]
++        private static extern IntPtr dlsym(IntPtr handle, string symbol);
++
++        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
++        private delegate void JitMemCpy(IntPtr dst, IntPtr src, UIntPtr n);
++    }
++}
+diff --git a/Runtimes/Unity/BepInEx.Unity.IL2CPP/BepInEx.Unity.IL2CPP.csproj b/Runtimes/Unity/BepInEx.Unity.IL2CPP/BepInEx.Unity.IL2CPP.csproj
+index 1fcd6e4..e19461e 100644
+--- a/Runtimes/Unity/BepInEx.Unity.IL2CPP/BepInEx.Unity.IL2CPP.csproj
++++ b/Runtimes/Unity/BepInEx.Unity.IL2CPP/BepInEx.Unity.IL2CPP.csproj
+@@ -15,10 +15,10 @@
+     <ItemGroup>
+         <PackageReference Include="HarmonyX" Version="2.10.2" />
+         <PackageReference Include="Iced" Version="1.21.0" />
+-        <PackageReference Include="Il2CppInterop.Generator" Version="1.5.3" />
+-        <PackageReference Include="Il2CppInterop.HarmonySupport" Version="1.5.3" />
++        <PackageReference Include="Il2CppInterop.Generator" Version="1.5.4-nvc.1" />
++        <PackageReference Include="Il2CppInterop.HarmonySupport" Version="1.5.4-nvc.1" />
+         <PackageReference Include="Il2CppInterop.ReferenceLibs" Version="1.0.0" IncludeAssets="compile" PrivateAssets="all" />
+-        <PackageReference Include="Il2CppInterop.Runtime" Version="1.5.3" />
++        <PackageReference Include="Il2CppInterop.Runtime" Version="1.5.4-nvc.1" />
+         <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" IncludeAssets="compile" PrivateAssets="all" />
+         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" IncludeAssets="compile" PrivateAssets="all" />
+         <PackageReference Include="MonoMod.RuntimeDetour" Version="22.7.31.1" />
+diff --git a/Runtimes/Unity/BepInEx.Unity.IL2CPP/Hook/INativeDetour.cs b/Runtimes/Unity/BepInEx.Unity.IL2CPP/Hook/INativeDetour.cs
+index 61ec72c..63c33c8 100644
+--- a/Runtimes/Unity/BepInEx.Unity.IL2CPP/Hook/INativeDetour.cs
++++ b/Runtimes/Unity/BepInEx.Unity.IL2CPP/Hook/INativeDetour.cs
+@@ -58,6 +58,11 @@ public interface INativeDetour : IDetour
+     private static nint FollowExportThunks(nint func)
+     {
+         if (func == 0) return func;
++        // arm64 exports are often a lone "b imm26"; the x86 opcodes below would misread arm64 code.
++        if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
++            return Il2CppInterop.Common.XrefScans.Arm64Code.FollowBranchThunks(func);
++        if (RuntimeInformation.ProcessArchitecture is not (Architecture.X86 or Architecture.X64))
++            return func;
+         var fn = func;
+         for (var hops = 0; hops < 8; hops++)
+         {
+diff --git a/Runtimes/Unity/BepInEx.Unity.IL2CPP/IL2CPPChainloader.cs b/Runtimes/Unity/BepInEx.Unity.IL2CPP/IL2CPPChainloader.cs
+index 5fcdb35..0d938fb 100644
+--- a/Runtimes/Unity/BepInEx.Unity.IL2CPP/IL2CPPChainloader.cs
++++ b/Runtimes/Unity/BepInEx.Unity.IL2CPP/IL2CPPChainloader.cs
+@@ -58,7 +58,9 @@ public class IL2CPPChainloader : BaseChainloader<BasePlugin>
+         base.Initialize(gameExePath);
+         Instance = this;
+ 
+-        if (!NativeLibrary.TryLoad("GameAssembly", typeof(IL2CPPChainloader).Assembly, null, out var il2CppHandle))
++        // Fallback: macOS bundles are off the search path.
++        if (!NativeLibrary.TryLoad("GameAssembly", typeof(IL2CPPChainloader).Assembly, null, out var il2CppHandle)
++            && !NativeLibrary.TryLoad(Il2CppInteropManager.GameAssemblyPath, out il2CppHandle))
+         {
+             Logger.Log(LogLevel.Fatal,
+                        "Could not locate Il2Cpp game assembly (GameAssembly.dll, UserAssembly.dll or libil2cpp.so). The game might be obfuscated or use a yet unsupported build of Unity.");
+diff --git a/Runtimes/Unity/BepInEx.Unity.IL2CPP/Il2CppInteropManager.cs b/Runtimes/Unity/BepInEx.Unity.IL2CPP/Il2CppInteropManager.cs
+index fe9de89..fadb4d0 100644
+--- a/Runtimes/Unity/BepInEx.Unity.IL2CPP/Il2CppInteropManager.cs
++++ b/Runtimes/Unity/BepInEx.Unity.IL2CPP/Il2CppInteropManager.cs
+@@ -75,7 +75,8 @@ internal static partial class Il2CppInteropManager
+ 
+     private static readonly ConfigEntry<bool> ScanMethodRefs = ConfigFile.CoreConfig.Bind(
+      "IL2CPP", "ScanMethodRefs",
+-     Environment.Is64BitProcess,
++     // The scan decodes the game's code as x86; an arm64 GameAssembly cannot be scanned.
++     Environment.Is64BitProcess && System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture != System.Runtime.InteropServices.Architecture.Arm64,
+      "If enabled, Il2CppInterop will use xref to find dead methods and generate CallerCount attributes.");
+ 
+     private static readonly ConfigEntry<bool> DumpDummyAssemblies = ConfigFile.CoreConfig.Bind(
+@@ -119,8 +120,20 @@ internal static partial class Il2CppInteropManager
+     private static bool initialized;
+ 
+     public static string GameAssemblyPath => Environment.GetEnvironmentVariable("BEPINEX_GAME_ASSEMBLY_PATH") ??
+-                                             Path.Combine(Paths.GameRootPath,
+-                                                          "GameAssembly." + PlatformHelper.LibrarySuffix);
++                                             DefaultGameAssemblyPath;
++
++    private static string DefaultGameAssemblyPath
++    {
++        get
++        {
++            var fileName = "GameAssembly." + PlatformHelper.LibrarySuffix;
++            var path = Path.Combine(Paths.GameRootPath, fileName);
++            // macOS bundles libraries in Contents/Frameworks.
++            if (!File.Exists(path) && PlatformHelper.Is(Platform.MacOS))
++                path = Path.Combine(Utility.ParentDirectory(Paths.ExecutablePath, 2), "Frameworks", fileName);
++            return path;
++        }
++    }
+ 
+     private static string HashPath => Path.Combine(IL2CPPInteropAssemblyPath, "assembly-hash.txt");
+ 
+diff --git a/Runtimes/Unity/BepInEx.Unity.IL2CPP/Preloader.cs b/Runtimes/Unity/BepInEx.Unity.IL2CPP/Preloader.cs
+index 690d4ef..9dfd1c8 100644
+--- a/Runtimes/Unity/BepInEx.Unity.IL2CPP/Preloader.cs
++++ b/Runtimes/Unity/BepInEx.Unity.IL2CPP/Preloader.cs
+@@ -25,6 +25,8 @@ public static class Preloader
+     {
+         try
+         {
++            // Must precede any DetourHelper.Runtime read.
++            AppleSiliconDetourFix.Apply();
+             HarmonyBackendFix.Initialize();
+             ConsoleSetOutFix.Apply();
+             UnityInfo.Initialize(Paths.ExecutablePath, Paths.GameDataPath);
+@@ -44,6 +46,10 @@ public static class Preloader
+ 
+             ChainloaderLogHelper.PrintLogInfo(Log);
+ 
++            if (AppleSiliconDetourFix.Exception != null)
++                Logger.Log(LogLevel.Warning,
++                           $"Could not enable arm64 macOS detours, patching will fail: {AppleSiliconDetourFix.Exception.Message}");
++
+             Logger.Log(LogLevel.Info, $"Running under Unity {UnityInfo.Version}");
+             Logger.Log(LogLevel.Info, $"Runtime version: {Environment.Version}");
+             Logger.Log(LogLevel.Info, $"Runtime information: {RuntimeInformation.FrameworkDescription}");
+diff --git a/Runtimes/Unity/BepInEx.Unity.Mono.Preloader/RuntimeFixes/XTermFix.cs b/Runtimes/Unity/BepInEx.Unity.Mono.Preloader/RuntimeFixes/XTermFix.cs
+index ab33789..74bf13f 100644
+--- a/Runtimes/Unity/BepInEx.Unity.Mono.Preloader/RuntimeFixes/XTermFix.cs
++++ b/Runtimes/Unity/BepInEx.Unity.Mono.Preloader/RuntimeFixes/XTermFix.cs
+@@ -2,6 +2,7 @@
+ using System.Collections.Generic;
+ using System.Linq;
+ using System.Reflection.Emit;
++using BepInEx.Preloader.RuntimeFixes;
+ using HarmonyLib;
+ using MonoMod.RuntimeDetour;
+ using MonoMod.RuntimeDetour.Platforms;
+@@ -29,9 +30,13 @@ internal static class XTermFix
+         // Apparently on older Unity versions (4.x), using Process.Start can run Console..cctor
+         // And since MonoMod's PlatformHelper (used by DetourHelper.Native) runs Process.Start to determine ARM/x86 platform,
+         // this causes a crash owing to TermInfoReader running before it can be patched and fixed
+-        // Because Doorstop does not support ARM at the moment, we can get away with just forcing x86 detour platform.
++        // so we can get away with just forcing the x86 detour platform.
+         // TODO: Figure out a way to detect ARM on Unix without running Process.Start
+-        DetourHelper.Native = new DetourNativeX86Platform();
++        // Apple Silicon really is ARM, so keep its platform.
++        var previousNative = DetourHelper.Native;
++
++        if (!AppleSiliconDetourFix.Applies)
++            DetourHelper.Native = new DetourNativeX86Platform();
+ 
+         var harmony = new Harmony("com.bepinex.xtermfix");
+ 
+@@ -47,7 +52,7 @@ internal static class XTermFix
+         harmony.Patch(AccessTools.Method("System.TermInfoReader:GetStringBytes", new[] { AccessTools.TypeByName("System.TermInfoStrings") }),
+                       transpiler: new HarmonyMethod(typeof(XTermFix), nameof(GetTermInfoStringsTranspiler)));
+ 
+-        DetourHelper.Native = null;
++        DetourHelper.Native = AppleSiliconDetourFix.Applies ? previousNative : null;
+     }
+ 
+     public static int GetInt32(byte[] buffer, int offset)
+diff --git a/Runtimes/Unity/BepInEx.Unity.Mono.Preloader/UnityPreloader.cs b/Runtimes/Unity/BepInEx.Unity.Mono.Preloader/UnityPreloader.cs
+index 6cc3b33..13a1191 100644
+--- a/Runtimes/Unity/BepInEx.Unity.Mono.Preloader/UnityPreloader.cs
++++ b/Runtimes/Unity/BepInEx.Unity.Mono.Preloader/UnityPreloader.cs
+@@ -66,6 +66,11 @@ internal static class UnityPreloader
+             Log.Log(LogLevel.Debug, $"Unity Managed directory: {Paths.ManagedPath}");
+             Log.Log(LogLevel.Debug, $"BepInEx root path: {Paths.BepInExRootPath}");
+ 
++            if (AppleSiliconDetourFix.Exception != null)
++                Log.Log(LogLevel.Warning,
++                        "Failed to install the Apple Silicon detour platform, so no Harmony patch will apply. "
++                        + $"Error message: {AppleSiliconDetourFix.Exception.Message}");
++
+             if (runtimePatchException != null)
+                 Log.Log(LogLevel.Warning,
+                         $"Failed to apply runtime patches for Mono. See more info in the output log. Error message: {runtimePatchException.Message}");
+diff --git a/Runtimes/Unity/BepInEx.Unity.Mono.Preloader/UnityPreloaderRunner.cs b/Runtimes/Unity/BepInEx.Unity.Mono.Preloader/UnityPreloaderRunner.cs
+index 0f063da..fca4fcb 100644
+--- a/Runtimes/Unity/BepInEx.Unity.Mono.Preloader/UnityPreloaderRunner.cs
++++ b/Runtimes/Unity/BepInEx.Unity.Mono.Preloader/UnityPreloaderRunner.cs
+@@ -46,6 +46,9 @@ internal static class UnityPreloaderRunner
+     {
+         PlatformUtils.SetPlatform();
+ 
++        // After SetPlatform, before any DetourHelper read.
++        AppleSiliconDetourFix.Apply();
++
+         var bepinPath = Utility.ParentDirectory(Path.GetFullPath(EnvVars.DOORSTOP_INVOKE_DLL_PATH), 2);
+ 
+         Paths.SetExecutablePath(EnvVars.DOORSTOP_PROCESS_PATH,
+diff --git a/nuget.config b/nuget.config
+index 5e67f2a..02e0a87 100644
+--- a/nuget.config
++++ b/nuget.config
+@@ -1,6 +1,7 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <configuration>
+   <packageSources>
++        <add key="nvc-local" value="../feed" />
+     <add key="BepInEx" value="https://nuget.bepinex.dev/v3/index.json" />
+     <add key="Samboy" value="https://nuget.samboy.dev/v3/index.json" />
+   </packageSources>

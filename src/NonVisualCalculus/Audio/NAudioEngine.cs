@@ -10,8 +10,9 @@ namespace NonVisualCalculus.Audio
 {
     /// <summary>
     /// Our own stereo audio backend for the spatial soundscape, independent of the game's audio so the cues
-    /// aren't colored by its mixer/DSP. ONE shared <see cref="MixingSampleProvider"/> feeds ONE
-    /// <see cref="WaveOutEvent"/>; every voice (one-shots, wall tones) is an input on that single mixer.
+    /// aren't colored by its mixer/DSP. ONE shared <see cref="MixingSampleProvider"/> feeds ONE output
+    /// device (<see cref="WaveOutEvent"/> on Windows, <see cref="MacAudioQueueOutput"/> on macOS); every
+    /// voice (one-shots, wall tones) is an input on that single mixer.
     /// Lives in the permanent host (the device is a native handle) and is lent to the module through
     /// <c>IModHost.Audio</c>. The device opens lazily on first use and self-disables on failure, so a machine
     /// with no audio device never crashes the mod. Ported from the WOTR exploration mod's NAudio engine; the
@@ -56,7 +57,12 @@ namespace NonVisualCalculus.Audio
             {
                 _mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(Rate, 2)) { ReadFully = true };
                 var limiter = new SoftLimiter(_mixer);
-                _out = new WaveOutEvent { DesiredLatency = 100, NumberOfBuffers = 4 };
+                // winmm's WaveOutEvent on Windows; an AudioQueue on the default output device on macOS.
+                MacAudioQueueOutput macOut = null;
+                if (OperatingSystem.IsMacOS())
+                    _out = macOut = new MacAudioQueueOutput(desiredLatencyMs: 100, bufferCount: 4);
+                else
+                    _out = new WaveOutEvent { DesiredLatency = 100, NumberOfBuffers = 4 };
                 // A device dying mid-session (unplugged headphones, driver error) stops playback with an
                 // exception; flag it so Available turns false - consumers (the tracked-source list) stand
                 // down instead of feeding voices whose Read will never run again. A deliberate Stop/Dispose
@@ -67,7 +73,10 @@ namespace NonVisualCalculus.Audio
                     _failed = true;
                     _log?.LogWarning("[audio] output stopped (" + e.Exception.Message + "); spatial cues disabled");
                 };
-                _out.Init(limiter);
+                if (macOut != null)
+                    macOut.Init(limiter);
+                else
+                    _out.Init(limiter);
                 _out.Play();
                 return true;
             }

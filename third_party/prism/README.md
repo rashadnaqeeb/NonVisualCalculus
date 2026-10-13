@@ -12,5 +12,11 @@ License: MPL-2.0 (see `LICENSES/prism__mpl-2.0.txt`; bundled-dependency licenses
 ## Consuming it
 Mirror WOTR's `src/Speech/PrismNative.cs`: `[DllImport("prism", EntryPoint="prism_...")]`. Core flow: `prism_init` -> `prism_registry_create_best` -> `prism_backend_initialize` -> `prism_backend_output(text, interrupt)` / `prism_backend_stop` -> `prism_backend_free` -> `prism_shutdown`.
 
+## macOS
+`macos/` holds **v0.18.2**, macOS universal, dynamic release build (`prism-macos-universal.zip`):
+`libprism.dylib` (deployed beside the plugin), its `include/` headers, `LICENSES/` and `NOTICE`. The
+Mac speech backend needs 0.18's registry builder to load screen readers' Prism plugins. The same
+P/Invoke layer binds both libraries; the 0.18-only calls are made on macOS alone.
+
 ## Updating
 Download a new `prism-windows-x64.zip` from the releases page; copy `dynamic/release/bin/prism.dll`, `include/prism.h`, and `LICENSES/` + `NOTICE` here. Bump the version above.

@@ -1,0 +1,20 @@
+diff --git a/cmake/EarlyGlobals.cmake b/cmake/EarlyGlobals.cmake
+index 5a492ac..1728ac3 100644
+--- a/cmake/EarlyGlobals.cmake
++++ b/cmake/EarlyGlobals.cmake
+@@ -37,12 +37,9 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "^macOS")
+   set(SYSTEM.macOS 1)
+   set(SYSTEM.Darwin 1)
+ elseif(CMAKE_SYSTEM_NAME MATCHES "^Darwin")
+-  if(PROCESSOR.AARCH64 OR PROCESSOR.ARM)
+-    set(CMAKE_SYSTEM_NAME "iOS")
+-    set(SYSTEM.iOS 1)
+-  elseif(PROCESSOR.X86 OR PROCESSOR.X86_64)
+-    set(SYSTEM.macOS 1)
+-  endif()
++  # Darwin means macOS, on every architecture. Apple Silicon made the old
++  # "Darwin + arm64 implies iOS" guess wrong. Set CMAKE_SYSTEM_NAME=iOS for iOS.
++  set(SYSTEM.macOS 1)
+   set(SYSTEM.Darwin 1)
+ else()
+   message (FATAL_ERROR "System ${CMAKE_SYSTEM_NAME} not configured")

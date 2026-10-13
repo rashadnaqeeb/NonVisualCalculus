@@ -42,22 +42,42 @@ namespace NonVisualCalculus
             Log.LogInfo($"{Name} {Version} loading");
 
             // Headless/overnight dev runs set NVC_NO_SPEECH=1 so an unattended session doesn't
-            // depend on a running screen reader. We skip Prism init (so it never logs a spurious "no
-            // backend" and never touches NVDA) but still mute via the pipeline; spoken text is captured
-            // for /speech regardless, since the dev tap is upstream of the backend.
+            // depend on a running screen reader. We skip backend init (so it never logs a spurious "no
+            // backend" and never touches the screen reader) but still mute via the pipeline; spoken text
+            // is captured for /speech regardless, since the dev tap is upstream of the backend.
             bool muteSpeech = System.Environment.GetEnvironmentVariable("NVC_NO_SPEECH") == "1";
-            _prism = new PrismBackend(Log);
-            if (muteSpeech)
-                Log.LogInfo("Speech muted (NVC_NO_SPEECH=1); spoken text still captured for /speech");
-            else
-                _prism.Initialize();
-
-            SpeechPipeline.Instance = new SpeechPipeline(_prism) { Muted = muteSpeech };
+            bool isMac = System.OperatingSystem.IsMacOS();
+            Core.Input.KeyHelp.MacKeyNames = isMac;
 
             // Settings persist through our BepInEx config file and are owned here (permanent) so they
-            // survive a module hot-reload; the module reads them through IModHost.Settings.
+            // survive a module hot-reload; the module reads them through IModHost.Settings. Built before
+            // speech, which reads the macOS backend preference.
             LegacyMigration.Run(BepInEx.Paths.ConfigPath, Config, Log);
-            var settings = new ModSettings(new BepInExSettingsStore(Config));
+            var settings = new ModSettings(new BepInExSettingsStore(Config), isMac);
+
+            ISpeechBackend backend;
+            if (isMac)
+            {
+                var mac = new MacSpeechBackend(Log, settings.SpeakThroughVoiceOver.Value);
+                if (!muteSpeech)
+                {
+                    mac.Initialize();
+                    HostPump.MacSpeech = mac;
+                    HostPump.MacSettings = settings;
+                }
+                backend = mac;
+            }
+            else
+            {
+                _prism = new PrismBackend(Log);
+                if (!muteSpeech)
+                    _prism.Initialize();
+                backend = _prism;
+            }
+            if (muteSpeech)
+                Log.LogInfo("Speech muted (NVC_NO_SPEECH=1); spoken text still captured for /speech");
+
+            SpeechPipeline.Instance = new SpeechPipeline(backend) { Muted = muteSpeech };
 
             // The spatial-audio backend (sonar, wall tones). Native device, so it lives here in the host
             // beside Prism; the device opens lazily on first sound and self-disables if none is available.

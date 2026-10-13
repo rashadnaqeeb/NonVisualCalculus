@@ -4,6 +4,21 @@
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>disable</ImplicitUsings>
     <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+    <IsMac>$([MSBuild]::IsOSPlatform('OSX'))</IsMac>
+  </PropertyGroup>
+
+  <!-- This checkout is built from the Mac it lives on and from a Windows VM sharing the folder, so a
+       macOS build keeps its outputs apart: obj/ records absolute paths, and each side would otherwise
+       hand the other its files. NvcBinDir is the per-project output root either way. -->
+  <PropertyGroup Condition="'$(IsMac)' == 'true'">
+    <BaseIntermediateOutputPath>obj/mac/</BaseIntermediateOutputPath>
+    <BaseOutputPath>bin/mac/</BaseOutputPath>
+    <NvcBinDir>bin/mac/</NvcBinDir>
+    <!-- The Windows build's obj/ and bin/ sit beside these and must not be globbed as sources. -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsMac)' != 'true'">
+    <NvcBinDir>bin/</NvcBinDir>
   </PropertyGroup>
 
   <!-- Optional machine-specific overrides (gitignored). Drop a GameDir here if auto-detect misses. -->
@@ -14,7 +29,7 @@
       1. -p:GameDir=... on the CLI, or GameDir in Directory.Build.local.props (imported above)
       2. the DISCO_ELYSIUM_DIR environment variable
       3. Steam's main library, located via the registry (Windows)
-      4. a couple of default install locations
+      4. a couple of default install locations (on macOS, Steam's default library)
     For an install outside Steam's main library, set GameDir via the env var or local props.
   -->
   <PropertyGroup>
@@ -26,6 +41,10 @@
     <GameDir Condition="'$(GameDir)' == '' and '$(_SteamGameDir)' != '' and Exists('$(_SteamGameDir)')">$(_SteamGameDir)</GameDir>
 
     <GameDir Condition="'$(GameDir)' == '' and Exists('C:\Program Files (x86)\Steam\steamapps\common\Disco Elysium')">C:\Program Files (x86)\Steam\steamapps\common\Disco Elysium</GameDir>
+
+    <!-- macOS: the folder holding disco.app, where BepInEx sits beside the bundle. -->
+    <_MacSteamGameDir Condition="'$(IsMac)' == 'true'">$(HOME)/Library/Application Support/Steam/steamapps/common/Disco Elysium</_MacSteamGameDir>
+    <GameDir Condition="'$(GameDir)' == '' and '$(IsMac)' == 'true' and Exists('$(_MacSteamGameDir)')">$(_MacSteamGameDir)</GameDir>
 
     <BepInExDir>$(GameDir)\BepInEx</BepInExDir>
     <InteropDir>$(BepInExDir)\interop</InteropDir>

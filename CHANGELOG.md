@@ -4,6 +4,11 @@ Release notes for Non-Visual Calculus. Ongoing work is recorded under the Unrele
 
 ## Unreleased
 
+New Features and improvements:
+
+- The mod runs on the Mac version of the game on Apple Silicon Macs; see the macOS install guide.
+- On a Mac, speech goes through a screen reader with a Prism plugin, else the system voice, or VoiceOver if chosen in settings.
+
 ## V1.2.2
 
 New Features and improvements:
