@@ -1,0 +1,2 @@
+zone.shack.title = the fishing shack
+zone.shack.body = A dark hut of grey weathered planks with gaps of light between the boards, a dirt floor, a plain wooden chair against the wall and a few boxes in the corner, with a window of small panes beside the door.

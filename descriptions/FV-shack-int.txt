@@ -1,0 +1,2 @@
+# The fishing village shack. Mod world frame.
+zone shack -5.03 1.2 2.45
