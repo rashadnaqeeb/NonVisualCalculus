@@ -1,0 +1,2 @@
+zone.house.title = the net picker's house
+zone.house.body = A single warm room of plank walls and bare boards, lit by two windows hung with yellow curtains. Shelves of jars and tins line the wall over a long table under the windows, a bunk bed with blue blankets stands in the corner behind a yellow curtain, and a stove with a kettle and a chimney of brick fills the far wall.

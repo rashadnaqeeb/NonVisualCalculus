@@ -1,0 +1,2 @@
+# The net picker's house, fishing village. Mod world frame.
+zone house 6.58 1.12 -14.08
