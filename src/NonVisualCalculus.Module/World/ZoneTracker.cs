@@ -39,6 +39,7 @@ namespace NonVisualCalculus.Module.World
         private const int RetryFrames = 30;       // between attempts while the mesh is not answering
         private const int FailureBackoff = 300;   // after a throwing build
         private const float DoorSettle = 2f;      // seconds after a door toggle before the rebuild (its carve settles first)
+        private const float LoadSettle = 4f;      // seconds after a scene's first build before the one settle rebuild
         private const float BackdropHeight = 100f; // renderers taller than this are backdrop planes, not scene bounds
         private const float BackdropWidth = 2000f;
 
@@ -46,6 +47,7 @@ namespace NonVisualCalculus.Module.World
         private string _builtFor;
         private int _retry;
         private float _invalidateAt;
+        private bool _settled; // the scene's settle rebuild has been scheduled
 
         /// <summary>The segmentation thresholds, held here so a dev session can retune and rebuild without
         /// a reload. Disco's values: a shallower persistence dip than WOTR's 0.7 m, chosen on the Whirling's
@@ -87,6 +89,7 @@ namespace NonVisualCalculus.Module.World
                 _builtFor = scene;
                 Map = null;
                 _retry = 0;
+                _settled = false;
             }
             if (Map != null || --_retry > 0) return;
             _retry = RetryFrames;
@@ -96,7 +99,18 @@ namespace NonVisualCalculus.Module.World
                 Map = Build(scene, playerUnity);
                 LastBuildMs = sw.ElapsedMilliseconds;
                 if (Map != null)
+                {
                     _host.LogInfo($"ZoneTracker: {scene}: {Map.Zones.Count} zones over {WalkableArea(Map):0} m2 in {LastBuildMs} ms");
+                    // The navmesh keeps changing after a scene loads: parked vehicles and props carve
+                    // it with NavMeshObstacles over the following frames, and a map built before they
+                    // settle joins ground they divide (Martinaise's plaza ran into its road zones). One
+                    // rebuild a few seconds after the first build sees the settled mesh.
+                    if (!_settled)
+                    {
+                        _settled = true;
+                        _invalidateAt = Time.unscaledTime + LoadSettle;
+                    }
+                }
             }
             catch (Exception e)
             {
