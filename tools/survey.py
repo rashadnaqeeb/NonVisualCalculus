@@ -73,7 +73,7 @@ def downscale(path, max_width):
         return max_width / im.width
 
 
-def frame_and_shoot(dev, dest, x, y, z, zoom, settle, max_width):
+def frame_and_shoot(dev, dest, x, y, z, zoom, settle, max_width, outline_zone=None):
     dev.call(f"{NS}Frame({x}f, {y}f, {z}f, {zoom}f)")
     time.sleep(settle)
     # The painting streams in around the camera: wait for its page streamer to go idle (bounded).
@@ -86,7 +86,31 @@ def frame_and_shoot(dev, dest, x, y, z, zoom, settle, max_width):
     for l in labels["labels"]:
         l["sx"] = round(l["sx"] * scale)
         l["sy"] = round(l["sy"] * scale)
+    if outline_zone is not None:
+        draw_outline(dest, dev.call(f"{NS}ZoneOutline({outline_zone})"), scale, outline_zone)
     return labels
+
+
+def draw_outline(path, outline, scale, zone_id):
+    """Mark the zone on its capture: red dots along its boundary, white rings at its exits with the
+    destination zone's id, and the zone's own id in the middle of the marks."""
+    from PIL import Image, ImageDraw
+    with Image.open(path) as im:
+        im = im.convert("RGB")
+        draw = ImageDraw.Draw(im)
+        pts = [(round(p[0] * scale), round(p[1] * scale)) for p in outline["points"]]
+        for x, y in pts:
+            draw.ellipse([x - 2, y - 2, x + 2, y + 2], fill=(255, 40, 40))
+        for ex in outline["exits"]:
+            x, y = round(ex[0] * scale), round(ex[1] * scale)
+            draw.ellipse([x - 9, y - 9, x + 9, y + 9], outline=(255, 255, 255), width=3)
+            draw.text((x + 11, y - 7), str(ex[2]), fill=(255, 255, 255))
+        if pts:
+            cx = sum(p[0] for p in pts) // len(pts)
+            cy = sum(p[1] for p in pts) // len(pts)
+            draw.rectangle([cx - 16, cy - 10, cx + 16, cy + 10], fill=(0, 0, 0))
+            draw.text((cx - 10, cy - 7), str(zone_id), fill=(255, 255, 0))
+        im.save(path)
 
 
 def survey_zones(dev, args, scene, out_dir):
@@ -103,7 +127,8 @@ def survey_zones(dev, args, scene, out_dir):
         shots = []
         for pi, pt in enumerate(zone["points"]):
             name = f"p{pi}.png"
-            labels = frame_and_shoot(dev, zone_dir / name, pt["x"], pt["y"], pt["z"], args.zoom, args.settle, args.max_width)
+            labels = frame_and_shoot(dev, zone_dir / name, pt["x"], pt["y"], pt["z"], args.zoom, args.settle, args.max_width,
+                                     outline_zone=zid)
             shots.append({"file": name, "point": pt, "zoom": args.zoom, "screen": {"w": labels["w"], "h": labels["h"]},
                           "labels": labels["labels"]})
         contents = dev.call(f"{NS}Contents({zid})")

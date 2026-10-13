@@ -155,6 +155,31 @@ namespace NonVisualCalculus.Module.World
             return Ser(new { scene = scene.name, entities = list });
         }
 
+        /// <summary>Why each registry thing is or is not offered by the scanner from the character's
+        /// spot: the gate flags the scan scope reads.</summary>
+        public static string ScanDiag()
+        {
+            if (Reader == null) return Err("no world reader");
+            Snv from = Reader.PlayerPosition;
+            var env = Reader.Environment;
+            var rows = new List<object>();
+            foreach (IWorldItem it in Reader.Model.Items)
+            {
+                try
+                {
+                    Snv nearest = it.Bounds.NearestPoint(from);
+                    rows.Add(new
+                    {
+                        name = it.Name, category = it.Category, accessible = it.IsAccessible, visible = it.IsVisible,
+                        inView = env.InView(nearest), reach = it.ReachableFrom(from).ToString(),
+                        offered = ScanScope.Offered(it, from, env), x = R(it.Position.X), y = R(it.Position.Y), z = R(it.Position.Z),
+                    });
+                }
+                catch (Exception e) { rows.Add(new { name = "(threw) " + e.Message }); }
+            }
+            return Ser(new { from = Pt(from), items = rows });
+        }
+
         // ---- camera, HUD and fog (stateful) ----
 
         private static bool _saved;
@@ -283,6 +308,42 @@ namespace NonVisualCalculus.Module.World
             bool onMesh = UnityEngine.AI.NavMesh.SamplePosition(hit, out UnityEngine.AI.NavMeshHit nav, 2f, -1);
             Snv core = WorldConvert.ToSnv(hit), snapped = onMesh ? WorldConvert.ToSnv(nav.position) : core;
             return Ser(new { x = R(core.X), y = R(core.Y), z = R(core.Z), onMesh, nearest = Pt(snapped), zone = Zones?.ZoneAt(snapped)?.Id ?? 0 });
+        }
+
+        /// <summary>A zone's outline in the current frame: its boundary cells (cells with a neighbour in
+        /// another zone or off the ground) and its exits, projected to image coordinates (origin top-left),
+        /// so the survey can draw where the zone runs on its capture. Off-screen points are dropped.</summary>
+        public static string ZoneOutline(int zoneId)
+        {
+            var map = Zones?.Map;
+            var cam = Camera.main;
+            if (map == null || cam == null) return Err("no zone map or camera");
+            var r = map.Raster;
+            int lbl = zoneId - 1;
+            var pts = new List<int[]>();
+            for (int gz = 0; gz < r.Height; gz++)
+                for (int gx = 0; gx < r.Width; gx++)
+                {
+                    if (map.LabelAt(gx, gz) != lbl) continue;
+                    bool edge = gx == 0 || gz == 0 || gx == r.Width - 1 || gz == r.Height - 1
+                        || map.LabelAt(gx - 1, gz) != lbl || map.LabelAt(gx + 1, gz) != lbl
+                        || map.LabelAt(gx, gz - 1) != lbl || map.LabelAt(gx, gz + 1) != lbl;
+                    if (!edge) continue;
+                    Vector3 sp = cam.WorldToScreenPoint(WorldConvert.ToUnity(new Snv(r.CenterX(gx), r.Elevation[r.Index(gx, gz)], r.CenterZ(gz))));
+                    if (sp.z <= 0f || sp.x < 0f || sp.y < 0f || sp.x > Screen.width || sp.y > Screen.height) continue;
+                    pts.Add(new[] { (int)sp.x, Screen.height - (int)sp.y });
+                }
+            var exits = new List<int[]>();
+            Zone zone = null;
+            foreach (var z in map.Zones) if (z.Id == zoneId) zone = z;
+            if (zone != null)
+                foreach (var e in zone.Exits)
+                {
+                    Vector3 sp = cam.WorldToScreenPoint(WorldConvert.ToUnity(e.Position));
+                    if (sp.z <= 0f || sp.x < 0f || sp.y < 0f || sp.x > Screen.width || sp.y > Screen.height) continue;
+                    exits.Add(new[] { (int)sp.x, Screen.height - (int)sp.y, e.To.Id });
+                }
+            return Ser(new { w = Screen.width, h = Screen.height, points = pts, exits });
         }
 
         /// <summary>Undo the survey session: fog, HUD, zoom pin, camera.</summary>
