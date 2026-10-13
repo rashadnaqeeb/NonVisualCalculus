@@ -1,0 +1,4 @@
+zone.kitchen.title = apartment 28's kitchen
+zone.kitchen.body = A small kitchen with a sink and a stove under a wall of yellow cupboards and a pegboard hung with pans, a round table with cups and a plate on it, a red stool and a pot plant by the doorway.
+zone.bedroom.title = apartment 28's bedroom
+zone.bedroom.body = A bedroom with a four-poster bed draped in a teal canopy under a window of frosted panes, an armchair by the door with an open book on it, a patterned rug on the boards, a clothes rail with a yellow coat and a dressing table against the far wall, and a lamp with a fringed shade in the corner.
