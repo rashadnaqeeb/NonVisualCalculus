@@ -1,0 +1,2 @@
+zone.room.title = the stilt house room
+zone.room.body = A snug one-room house of planks: a bed with a striped pillow under the window, a small table and chair by the lamp, a washbasin and a mirror in the far corner under a yellow stovepipe, and shelves of bottles and tins along the back wall.
