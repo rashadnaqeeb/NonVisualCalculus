@@ -238,8 +238,15 @@ namespace NonVisualCalculus.Module.World
             if (_cameraSpaceCanvas != null) _cameraSpaceCanvas.enabled = false;
             FOWController.SetVisible(false, true);
             foreach (var kv in _savedUnseen)
-                if (kv.Key != null && kv.Key.status == Sunshine.Unseen.Zone.Status.UNSEEN)
-                    kv.Key.status = Sunshine.Unseen.Zone.Status.ACTIVE;
+            {
+                // A zone the scene keeps inactive throws on the status write; it hides nothing, so skip it.
+                try
+                {
+                    if (kv.Key != null && kv.Key.status == Sunshine.Unseen.Zone.Status.UNSEEN)
+                        kv.Key.status = Sunshine.Unseen.Zone.Status.ACTIVE;
+                }
+                catch (Exception e) { Reader?.Host.LogWarning("DevSurvey.Frame: fog zone " + kv.Key?.name + ": " + e.Message); }
+            }
             cam.IsSlaved = false;
             Vector3 u = WorldConvert.ToUnity(new Snv(x, y, z));
             cam.SetFocus(u, new Il2CppSystem.Nullable<float>(zoom), true);
@@ -368,21 +375,33 @@ namespace NonVisualCalculus.Module.World
         /// <summary>Undo the survey session: fog, HUD, zoom pin, camera.</summary>
         public static string Restore()
         {
+            // Each step restores on its own: a throw in one (a fog zone whose object the scene has
+            // since destroyed) must not leave the camera or the HUD in the survey's state.
+            var problems = new List<string>();
             WorldEnvironment.ZoomPinSuspended = false;
-            if (_uiCamera != null) _uiCamera.enabled = true;
-            if (_cameraSpaceCanvas != null) _cameraSpaceCanvas.enabled = true;
-            FOWController.SetVisible(true, true);
-            if (!_saved) return Ser(new { ok = true, note = "nothing saved" });
-            foreach (var kv in _savedUnseen) if (kv.Key != null) kv.Key.status = kv.Value;
+            try { if (_uiCamera != null) _uiCamera.enabled = true; } catch (Exception e) { problems.Add("ui camera: " + e.Message); }
+            try { if (_cameraSpaceCanvas != null) _cameraSpaceCanvas.enabled = true; } catch (Exception e) { problems.Add("canvas: " + e.Message); }
+            try { FOWController.SetVisible(true, true); } catch (Exception e) { problems.Add("fog: " + e.Message); }
+            if (!_saved) return Ser(new { ok = problems.Count == 0, note = "nothing saved", problems });
             var cam = CameraController.Current;
             if (cam != null)
             {
-                cam.SetFocus(_savedFocus, new Il2CppSystem.Nullable<float>(_savedZoom), true);
-                cam.IsSlaved = _savedSlaved;
+                try
+                {
+                    cam.SetFocus(_savedFocus, new Il2CppSystem.Nullable<float>(_savedZoom), true);
+                    cam.IsSlaved = _savedSlaved;
+                }
+                catch (Exception e) { problems.Add("camera: " + e.Message); }
+            }
+            foreach (var kv in _savedUnseen)
+            {
+                try { if (kv.Key != null) kv.Key.status = kv.Value; }
+                catch (Exception e) { problems.Add("unseen zone: " + e.Message); }
             }
             _saved = false;
             _savedUnseen.Clear();
-            return Ser(new { ok = true });
+            foreach (string pr in problems) Reader?.Host.LogWarning("DevSurvey.Restore: " + pr);
+            return Ser(new { ok = problems.Count == 0, problems });
         }
 
         // ---- helpers ----
