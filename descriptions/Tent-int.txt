@@ -1,0 +1,2 @@
+# The blue tarpaulin tent on the beach. Mod world frame.
+zone tent -7.59 0 6.92

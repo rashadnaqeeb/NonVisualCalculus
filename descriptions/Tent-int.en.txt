@@ -1,0 +1,2 @@
+zone.tent.title = inside the tent
+zone.tent.body = The inside of the tarpaulin tent, a cramped triangle of blue canvas on poles lit by a lantern hung from the ridge, with a patterned rug on the sand, a stack of radios and a tape deck against one side, a crate and a bucket, a sheet draped over a heap of belongings and a pot plant by the flap.
