@@ -180,3 +180,4 @@ zone unionroof 56.86 11.81 142.84
 zone clifffoot -54.14 0.62 199.34
 zone loosefloe -15.64 0.18 207.09
 zone boatchannel -0.39 0.06 217.84
+zone meshcage 50.11 4.27 65.09

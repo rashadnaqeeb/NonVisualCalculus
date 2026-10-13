@@ -354,3 +354,5 @@ zone.loosefloe.title = the loose floe
 zone.loosefloe.body = A single sheet of ice grounded off the islet's shore among the tetrapods, with open water on three sides.
 zone.boatchannel.title = the boat channel
 zone.boatchannel.body = Open dark water off the islet, the channel the fishing boat crosses, with reeds and ice floes along its edges.
+zone.meshcage.title = the mesh cage
+zone.meshcage.body = The inside of a yellow steel cage of mesh fencing standing on the road among parked lorries, a container-sized frame open at one end.
