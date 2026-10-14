@@ -193,3 +193,26 @@ detail fountain -8.89 3.2 89.34
 detail hangedtree 22.61 3.72 110.84
 detail wreckedcarriage -32.64 0.49 66.09
 detail allezvousen -54.64 3.39 49.34
+# Objects: interactable entities with appearance text, by exact GameObject name.
+object mailbox = Mailbox Prefab
+object kineema = Kineema
+object plazabench = Plaza Bench Kim
+object trash = Trash
+object cabin = Cabin
+object renephoto = martinaise-east-photo-of-rene
+object gatecrate = crate_1 gate
+object fortcanister = SF canister
+object doorbell = Electronic Doorbell
+object lorrycab = Bulldyke Cabin
+object monument = Monument
+object whirlingdoor = waterfront-door-whirling
+object fritttedoor = jam-door-kiosque
+object bookstoredoor = waterfront-door-doomed
+object tiretracks = Plaza Tiretracks
+object courtyardtracks = gold_outline_tracks_courtyard
+object balconydoor = waterfront-door-balcony
+object roofdoor = waterfront-door-rooftop
+object basementdoor = waterfront-door-doomed-2
+object shackdoor = courtyard-door-cunos-shack
+object felddoor = instigators-lair
+object secretarydoor = jam-door-secretary
