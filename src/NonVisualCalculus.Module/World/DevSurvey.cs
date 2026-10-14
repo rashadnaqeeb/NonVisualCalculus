@@ -500,10 +500,42 @@ namespace NonVisualCalculus.Module.World
             return Ser(new { ok = false, error = "no entity named " + name });
         }
 
+        // Entities moved for a scheduled-spot capture, with where they stood; RestoreEntities moves
+        // them back before switching them off.
+        private static readonly List<(Transform t, Vector3 pos)> _moved = new List<(Transform, Vector3)>();
+
+        /// <summary>Move an entity to a point (mod frame): a person's schedule places them at a spot
+        /// that is not where their object is parked, so a capture of them stands them there.</summary>
+        public static string PlaceEntity(string name, float x, float y, float z)
+        {
+            var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            foreach (var e in Resources.FindObjectsOfTypeAll<BasicEntity>())
+            {
+                if (e == null || e.gameObject.scene != scene || e.name != name) continue;
+                _moved.Add((e.transform, e.transform.position));
+                Vector3 u = WorldConvert.ToUnity(new Snv(x, y, z));
+                var agent = e.GetComponent<UnityEngine.AI.NavMeshAgent>();
+                if (agent != null && agent.enabled && agent.isOnNavMesh) agent.Warp(u); else e.transform.position = u;
+                return Ser(new { ok = true, at = Pt(WorldConvert.ToSnv(e.transform.position)) });
+            }
+            return Ser(new { ok = false, error = "no entity named " + name });
+        }
+
         /// <summary>Switch off everything <see cref="ActivateEntity"/> switched on.</summary>
         public static string RestoreEntities()
         {
             int n = 0;
+            for (int i = _moved.Count - 1; i >= 0; i--)
+            {
+                try
+                {
+                    if (_moved[i].t == null) continue;
+                    var agent = _moved[i].t.GetComponent<UnityEngine.AI.NavMeshAgent>();
+                    if (agent != null && agent.enabled && agent.isOnNavMesh) agent.Warp(_moved[i].pos); else _moved[i].t.position = _moved[i].pos;
+                }
+                catch (Exception e) { Reader?.Host.LogWarning("DevSurvey.RestoreEntities: move back: " + e.Message); }
+            }
+            _moved.Clear();
             for (int i = _activated.Count - 1; i >= 0; i--)
             {
                 try { if (_activated[i] != null) { _activated[i].SetActive(false); n++; } }
