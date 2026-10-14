@@ -1,6 +1,6 @@
 zone.waitingroom.title = the container waiting room
 zone.waitingroom.body = The inside of a shipping container with a yellow steel frame, draped with red cloth along one side, a floor of scuffed boards, a row of folding chairs and a stand of steel urns against the wall, with a stair of boards climbing to the office above.
-zone.office.title = the union boss's office
+zone.office.title = the container office
 zone.office.body = A container furnished as an office, red banners hanging around its mesh walls: a heavy wooden desk heaped with papers and a lamp, a patterned rug on the floor, a wall of filing cabinets with a stuffed fish mounted above them, pot plants in the corners and crates by the stair.
 zone.officestep.title = the office step
 zone.officestep.body = The top of the board stair from the waiting room, at the office's door.

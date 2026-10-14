@@ -249,6 +249,14 @@ namespace NonVisualCalculus.Module.World
         private static bool _savedSlaved;
         private static Camera _uiCamera;
         private static Canvas _cameraSpaceCanvas;
+        // The day-night visual: a capture is lit as noon so the paint reads the same at any game hour.
+        private static bool _savedDaytime;
+        private static float _savedVisualTime, _savedVisualDesired;
+        private static bool _savedVisualAttach, _savedVisualLock;
+        private const int NoonTiming = 3; // index into DaytimeVisualController.daytimeTimings
+        // Where the character stood before the first Teleport; Restore warps back there.
+        private static bool _savedPlayer;
+        private static Vector3 _savedPlayerPos;
         private static readonly List<KeyValuePair<Sunshine.Unseen.Zone, Sunshine.Unseen.Zone.Status>> _savedUnseen
             = new List<KeyValuePair<Sunshine.Unseen.Zone, Sunshine.Unseen.Zone.Status>>();
 
@@ -276,6 +284,7 @@ namespace NonVisualCalculus.Module.World
                     if (c.isRootCanvas && c.name == "Camera Space Canvas") _cameraSpaceCanvas = c;
             }
             WorldEnvironment.ZoomPinSuspended = true;
+            ForceNoon();
             if (_uiCamera != null) _uiCamera.enabled = false;
             if (_cameraSpaceCanvas != null) _cameraSpaceCanvas.enabled = false;
             FOWController.SetVisible(false, true);
@@ -451,7 +460,42 @@ namespace NonVisualCalculus.Module.World
             return Ser(new { ok = true, restored = n });
         }
 
-        /// <summary>Undo the survey session: fog, HUD, zoom pin, camera.</summary>
+        /// <summary>Light the scene as noon for the captures: the visual controller follows the game
+        /// clock and locks its refresh, so both are suspended and the noon timing applied at once.</summary>
+        private static void ForceNoon()
+        {
+            var v = DaytimeVisualController.Singleton;
+            if (v == null) return;
+            if (!_savedDaytime)
+            {
+                _savedDaytime = true;
+                _savedVisualTime = v.time;
+                _savedVisualDesired = v.desiredTime;
+                _savedVisualAttach = v.attachToSunshineClock;
+                _savedVisualLock = DaytimeVisualController.lockVisuals;
+            }
+            v.attachToSunshineClock = false;
+            DaytimeVisualController.lockVisuals = false;
+            DaytimeVisualController.SetDesiredTime(NoonTiming, true);
+        }
+
+        /// <summary>Warp the character to a point (mod frame) on the navmesh, so the game cuts away
+        /// the roofs and lifts the room fog around it the way it does in play; the camera is not
+        /// moved. Saves the previous spot on first use; <see cref="Restore"/> warps back.</summary>
+        public static string Teleport(float x, float y, float z)
+        {
+            var player = Party.Player.Main;
+            if (player == null) return Err("no player");
+            var agent = player.GetComponent<UnityEngine.AI.NavMeshAgent>();
+            Vector3 u = WorldConvert.ToUnity(new Snv(x, y, z));
+            if (!UnityEngine.AI.NavMesh.SamplePosition(u, out UnityEngine.AI.NavMeshHit hit, 4f, UnityEngine.AI.NavMesh.AllAreas))
+                return Err("no navmesh within 4 m of the point");
+            if (!_savedPlayer) { _savedPlayer = true; _savedPlayerPos = player.transform.position; }
+            if (agent != null) agent.Warp(hit.position); else player.transform.position = hit.position;
+            return Ser(new { ok = true, at = Pt(WorldConvert.ToSnv(hit.position)), moved = R(Vector3.Distance(u, hit.position)) });
+        }
+
+        /// <summary>Undo the survey session: fog, HUD, zoom pin, camera, lighting, the character's spot.</summary>
         public static string Restore()
         {
             // Each step restores on its own: a throw in one (a fog zone whose object the scene has
@@ -461,6 +505,34 @@ namespace NonVisualCalculus.Module.World
             try { if (_uiCamera != null) _uiCamera.enabled = true; } catch (Exception e) { problems.Add("ui camera: " + e.Message); }
             try { if (_cameraSpaceCanvas != null) _cameraSpaceCanvas.enabled = true; } catch (Exception e) { problems.Add("canvas: " + e.Message); }
             try { FOWController.SetVisible(true, true); } catch (Exception e) { problems.Add("fog: " + e.Message); }
+            if (_savedDaytime)
+            {
+                try
+                {
+                    var v = DaytimeVisualController.Singleton;
+                    if (v != null)
+                    {
+                        v.time = _savedVisualTime;
+                        v.desiredTime = _savedVisualDesired;
+                        DaytimeVisualController.RefreshVisual();
+                        v.attachToSunshineClock = _savedVisualAttach;
+                        DaytimeVisualController.lockVisuals = _savedVisualLock;
+                    }
+                }
+                catch (Exception e) { problems.Add("daytime: " + e.Message); }
+                _savedDaytime = false;
+            }
+            if (_savedPlayer)
+            {
+                try
+                {
+                    var player = Party.Player.Main;
+                    var agent = player?.GetComponent<UnityEngine.AI.NavMeshAgent>();
+                    if (agent != null) agent.Warp(_savedPlayerPos); else if (player != null) player.transform.position = _savedPlayerPos;
+                }
+                catch (Exception e) { problems.Add("player: " + e.Message); }
+                _savedPlayer = false;
+            }
             if (!_saved) return Ser(new { ok = problems.Count == 0, note = "nothing saved", problems });
             var cam = CameraController.Current;
             if (cam != null)

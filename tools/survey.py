@@ -21,8 +21,8 @@ Modes:
              survey/<scene>/variants/<LOCATION>/<state>.png + index.json. The game is left in its
              original states; never save during or after a variants run.
 
-Captures hide the HUD and lift every fog; the camera, HUD and fog are restored at the end (also on
-Ctrl+C). Shots are downscaled to --max-width for review. Coordinates are the mod's world frame.
+Captures hide the HUD, lift every fog and light the scene as noon; the camera, HUD, fog, lighting
+and (after --teleport) the character's spot are restored at the end (also on Ctrl+C). Shots are downscaled to --max-width for review. Coordinates are the mod's world frame.
 """
 import argparse
 import json
@@ -173,6 +173,14 @@ def survey_objects(dev, args, scene, out_dir):
         dest = obj_dir / f"{safe}.png"
         if not args.force and dest.is_file():
             continue
+        if args.teleport:
+            # Stand the character beside the thing so the game cuts the roof away and lifts the
+            # room fog, as it does in play; the capture settles after the move.
+            try:
+                dev.call(f"{NS}Teleport({e['x']}f, {e['y']}f, {e['z']}f)")
+            except RuntimeError as ex:
+                print(f"  {e['name']}: teleport skipped: {ex}")  # off the mesh; shot from where we stand
+            time.sleep(0.5)
         if args.inactive:
             r = dev.call(f'{NS}ActivateEntity({json.dumps(e["name"])})')
             if not r.get("ok"):
@@ -270,6 +278,8 @@ def main():
     ap.add_argument("--out", default=str(REPO / "survey"))
     ap.add_argument("--zone", type=int, action="append", help="zones mode: only these zone ids")
     ap.add_argument("--name", action="append", help="objects mode: only these entity names")
+    ap.add_argument("--teleport", action="store_true",
+                    help="objects mode: warp the character to each entity first (roofed and fogged spots); Restore warps back")
     ap.add_argument("--inactive", action="store_true",
                     help="objects mode: capture the inactive early-game twins instead, switching each on for its shot")
     ap.add_argument("--at", help="shot mode: X,Z (mod frame); Y from the character")
