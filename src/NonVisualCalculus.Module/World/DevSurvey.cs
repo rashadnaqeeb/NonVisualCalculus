@@ -251,7 +251,6 @@ namespace NonVisualCalculus.Module.World
         private static string _savedScene;
         private static Vector3 _savedFocus;
         private static float _savedZoom;
-        private static bool _savedSlaved;
         private static Camera _uiCamera;
         private static Canvas _cameraSpaceCanvas;
         // The day-night visual: a capture is lit as noon so the paint reads the same at any game hour.
@@ -287,7 +286,6 @@ namespace NonVisualCalculus.Module.World
                 _savedScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
                 _savedFocus = cam.Focus;
                 _savedZoom = cam.ZoomFactor;
-                _savedSlaved = cam.IsSlaved;
                 _savedUnseen.Clear();
                 foreach (var zone in UnityEngine.Object.FindObjectsOfType<Sunshine.Unseen.Zone>(true))
                     if (zone.gameObject.scene == UnityEngine.SceneManagement.SceneManager.GetActiveScene())
@@ -535,7 +533,8 @@ namespace NonVisualCalculus.Module.World
                 if (sw.booleanName == FlashlightBoolean) sw.BooleanChanged(FlashlightBoolean);
             foreach (var sw in UnityEngine.Object.FindObjectsOfType<LuaGameObjectsSwitcher>(true))
                 if (sw.booleanName == FlashlightBoolean) sw.BooleanChanged(FlashlightBoolean);
-            Zones?.InvalidateSoon();
+            // The zone map is left alone: a rebuild would flood from wherever the character has been
+            // warped to, and the survey's zone ids must stay those of the map the scene built on entry.
         }
 
         /// <summary>Warp the character to a point (mod frame) on the navmesh, so the game cuts away
@@ -612,7 +611,9 @@ namespace NonVisualCalculus.Module.World
                 try
                 {
                     cam.SetFocus(_savedFocus, new Il2CppSystem.Nullable<float>(_savedZoom), true);
-                    cam.IsSlaved = _savedSlaved;
+                    // Always back to the game's play state: a survey never runs inside a cutscene, and a
+                    // saved "unslaved" would only ever be an earlier survey's leftover.
+                    cam.IsSlaved = true;
                 }
                 catch (Exception e) { problems.Add("camera: " + e.Message); }
             }
