@@ -2,6 +2,7 @@
 zone gunhall 11.54 5.58 -21.23
 zone eastdoor 4.54 7.86 -20.23
 zone turntable 10.79 5.55 -13.98
+zone upperdeck 11.29 7.86 -14.98
 zone entrycorridor 4.29 5.64 -12.73
 zone darktunnel -11.21 7.86 -5.48
 zone upperstair 6.54 6.95 -8.23
@@ -10,3 +11,7 @@ zone holepassage -1.96 4.42 -6.73
 zone tunnelend 18.79 8.56 2.02
 object exiteast = exit-east
 object exithole = exit-hole
+# The lower half of the gun hall, by the hatch and the short staircase, segments off on its own; it is the same hall.
+merge 14.79,5.56,-24.48 11.04,5.59,-20.23
+# A sliver of passage by the east door that joins only the rock tunnel.
+merge -0.96,7.87,-26.27 -9.46,7.87,-3.27
