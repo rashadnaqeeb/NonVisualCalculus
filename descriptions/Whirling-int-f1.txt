@@ -11,6 +11,7 @@ zone backroom 7.4 0.4 9.4
 detail mosaic 4.49 0 -0.47
 detail chalkboard 2.05 0 7.54
 detail arches 8.54 0.41 9.11
+detail pinballhorse -5.92 0 -3.16
 object stove = Industrial Stove
 object microphone = Microphone
 object window = Window

@@ -1,5 +1,7 @@
 zone.gym.title = the gym
 zone.gym.body = A boxing gym on bare floorboards: a weights bench and a barbell on the floor, a rack of dumbbells, a punching bag hanging in the corner by a sloping ramp, and wall bars along the side under lamps in wire cages. Posters hang on the plaster wall by a dark doorway, and a patch of patterned tiles covers the floor at the far end.
+zone.gym.body@DOOMED_DOOR:intact = A boxing gym on bare floorboards: a weights bench and a barbell on the floor, a rack of dumbbells, a punching bag hanging in the corner by a sloping ramp, and wall bars along the side under lamps in wire cages. Posters hang on the plaster wall by a dark doorway, a patch of patterned tiles covers the floor at the far end, and a dark panelled door papered with white notes stands shut in the end wall.
+zone.gym.body@DOOMED_DOOR:broken = A boxing gym on bare floorboards: a weights bench and a barbell on the floor, a rack of dumbbells, a punching bag hanging in the corner by a sloping ramp, and wall bars along the side under lamps in wire cages. Posters hang on the plaster wall by a dark doorway, a patch of patterned tiles covers the floor at the far end, and the door in the end wall has been smashed in, its panels splintered and the notes that papered it scattered on the boards.
 zone.gymstairs.title = the gym's back stair
 zone.gymstairs.body = A short flight of steps through a dark doorway in the gym's wall, leading up out of the lamplight into the unlit floor above.
 zone.darklanding.title = the dark landing
