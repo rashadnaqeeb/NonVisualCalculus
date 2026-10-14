@@ -3,3 +3,4 @@ zone house 6.58 1.12 -14.08
 object exit = netpicker_door
 object bedbox = Bed Box
 object grouse = Taxidermy Grouse
+object lily = lily

@@ -10,3 +10,5 @@ object shelves = Shelves
 object box = Box
 object windowtrivial = Klaasje Window Trivial
 object windowclear = Klaasje Window Difficult
+object door2 = whirl3-door-whirl2
+object klaasjeroofdoor = whirl3-door-klaasje-roof

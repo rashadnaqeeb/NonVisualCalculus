@@ -6,3 +6,4 @@ zone.officestep.title = the office step
 zone.officestep.body = The top of the board staircase from the waiting room, at the office's door.
 object.exit = The doorway at the container's end, hung with red cloth, with boards laid down across its sill.
 object.coffeetable = A red-topped table against the mesh wall holding two steel urns with taps, stacks of white paper cups and a cardboard box, with folding chairs in green and olive stacked and scattered around it.
+object.evrart = A heavy wooden desk heaped with papers, folders, a lamp, a cup and bottles, a leather chair behind it and the patterned rug beyond.

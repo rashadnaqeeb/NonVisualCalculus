@@ -52,3 +52,6 @@ object.beer12 = By the bathroom doorway in room one, the radiator and the ceilin
 object.beer13 = On the diamond rug by room one's brown sofa, the glass-walled corner and its yellow chair beside.
 object.beer14 = On the diamond rug by room one's brown sofa and the radiator, under the ceiling fan.
 object.beer15 = On the diamond rug by room one's brown sofa, the glass-walled corner and its yellow chair beside.
+object.klaasje = The gallery's curved iron railing over the café floor, the chequered tiles and the long tables below.
+object.moneyman2 = The gallery's floor by a framed picture and a tall plant in a white pot, the hexagon wallpaper behind.
+object.rosemary2 = A woman in an orange jacket seen through the glass partition of room one's corner, a radio and a hat on the sill.

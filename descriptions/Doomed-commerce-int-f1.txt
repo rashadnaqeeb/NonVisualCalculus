@@ -20,3 +20,9 @@ object displaylower = clickable_display_lower2
 object shortwave = Shortwave-radio
 # A two-square-metre speck of navmesh on the gallery level, joined to nothing.
 drop -2.24 3.32 4.85
+object annette = Annette
+object plaisance = Plaisance
+object upstairsdoorwrong = doomed-2nd-floor-door-wrong
+object upstairsdoorafter = bookstore-door-after-trib
+object upstairsdoortest = test
+object upstairsdoor2 = bookstore-door

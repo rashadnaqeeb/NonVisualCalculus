@@ -5,3 +5,4 @@ zone.bedroom.body = A bedroom with a four-poster bed draped in a teal canopy und
 object.exit = A door in the flat's wall below a padded grey armchair with an open book on its seat, the lamplight falling across the plaster.
 object.bed = A bed with white sheets in the corner of the lamplit flat, a padded grey armchair with an open magazine at its foot.
 object.closet = A wardrobe standing open in the dark corner of the flat, a few coats and shirts hanging inside, a green chair beside it.
+object.sponsor = A man in a dark suit standing by the window, a pipe and a newspaper on the low table beside him among cups and bottles.

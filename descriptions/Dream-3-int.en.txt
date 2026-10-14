@@ -16,3 +16,4 @@ zone.holepassage.title = the hole passage
 zone.holepassage.body = A passage of broken concrete slabs from the ragged hole in the fortress wall, rubble and a bowl on the floor, daylight falling in long shafts through the gap and rusted iron bars propped across it.
 object.exiteast = A rusted steel door with heavy hinge blocks in the concrete wall, lit violet.
 object.exithole = A ragged hole in the rock wall of the passage propped with rusted iron bars, boulders heaped in it and an orange and pink glow pouring through.
+object.exitmain = A doorway in the rusted concrete wall, an orange and pink glow pouring through it.

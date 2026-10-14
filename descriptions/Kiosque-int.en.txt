@@ -7,3 +7,5 @@ object.exit = A doorway in the shop's wall between two windows full of potted fl
 object.knicknacks = A glass display counter with an orange steel frame, pastries and bottles on its shelves, yellow price tags stuck to the glass, on the tiled floor by the step.
 object.liquorpodium = A glass counter by the shop's window with bottles and boxes under its top, a wicker chair and a potted palm beside it and a pot of pencils on the glass.
 object.cigarettes = The glass counters by the clerk's till, pastries and bottles under their tops, a pot of pencils and a lamp on the glass.
+object.jamdoor = The shop's glass door between the windows, pot plants on the sill outside.
+object.clerk = A young woman with dark hair in a purple top, standing behind the glass counter with an open book in her hands.

@@ -35,3 +35,7 @@ object.redshoes = A pair of red shoes lying on a perforated steel plate across t
 object.antennabox = A reel of cable and a stack of crates on the planks beside the mixing deck's wire frames.
 object.money = Folding chairs on the vestibule's boards, cobwebs strung across the beam beside them.
 object.clothesbox = The east gallery's boards behind the posts, green laser lines crossing them, a perforated steel plate on the rail.
+object.noid = A man in a dark jacket leaning over the mixing desk with his hands on its edge, under the green laser beams.
+object.andre = A young man with a spiky green crest of hair, in a blue jacket and trousers, standing with one hand on his hip on the nave's planks.
+object.acele = A young woman crouched over a speaker case on the nave's planks, dark hair over an orange and brown jacket.
+object.soona = A woman with dark hair in a blue jacket, bent over a keyboard on the mixing deck among the console's screens and cables.

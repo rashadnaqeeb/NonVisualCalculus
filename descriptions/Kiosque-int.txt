@@ -7,3 +7,5 @@ object exit = int-door-outline
 object knicknacks = Knicknacks Shelf
 object liquorpodium = Liquor Podium
 object cigarettes = Cigarette Holder
+object jamdoor = kiosque-door-jam
+object clerk = FritteClerk

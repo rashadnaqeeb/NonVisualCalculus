@@ -34,3 +34,12 @@ object box3 = clickable_apps-box-3
 object westshelf = clickable_west_shelf
 object clothesline = clickable_apps-clothline
 detail graffitiwall 12.0 1.93 -21.2
+object door10locked = Door Apartment 10 Locked
+object door10open = Door Apartment 10 Open
+object pierdoor1 = apartments-door-pier-1
+object pierdoor2 = apartments-door-pier-2
+object lockeddoor3 = Locked-door_capeside-3
+object lockeddoor2 = Locked-door_capeside-2
+object lockeddoor1 = Locked-door_capeside-1
+object emptyroomdoor = Door Apartment no dialogue(empty room)
+object cleaninglady = CleaningLady

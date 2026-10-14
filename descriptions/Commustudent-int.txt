@@ -3,3 +3,4 @@ zone flat -4.17 1.14 -7.24
 object exit = int-door-outline
 object jacket1 = Saramirizian Jacket Prefab
 object jacket2 = Reflective Jacket Prefab
+object steban = steban

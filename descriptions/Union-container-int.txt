@@ -1,3 +1,6 @@
 # The cargo container in the harbour yard. Mod world frame.
 zone container -5.03 0.13 0.47
 object exit = container-exit
+object vicquemare = Vicquemare
+object lightbender = Mega Rich Light Bending Guy (1)
+object lightbender2 = Mega Rich Light Bending Guy

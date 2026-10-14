@@ -52,3 +52,6 @@ zone.chainfloe.title = the chain floe
 zone.chainfloe.body = A grounded sheet of ice at the islet's shore where the rusted anchor chain comes down to the water, among tetrapods and boulders.
 zone.islethollow.title = the hollow on the islet top
 zone.islethollow.body = A dark hollow in the islet's crown, a pocket of sand between the pines where the dream's light does not reach.
+object.holedoor = A pale shape half sunk in the dark water at the islet's foot, lit pink, where the hole in the rock opens.
+object.maindoor = A doorway in the fortress's concrete wall washed in violet light, figures standing in the haze before it.
+object.eastdoor = A rusted iron doorway in the fortress's concrete, the wall streaked with orange and lit blue.

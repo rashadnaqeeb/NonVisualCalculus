@@ -4,3 +4,4 @@ zone bedroom 9 1.04 -9.66
 object exit = int-door-default
 object bed = Bed
 object closet = Closet
+object sponsor = sponsor
