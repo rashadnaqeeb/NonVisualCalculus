@@ -1,5 +1,5 @@
 zone.coalroom.title = the coal room
-zone.coalroom.body = A cellar of grimy brick with a floor of cracked slabs, a round iron drain grate in its middle, where a rusted boiler with two round doors stands against the back wall under a tangle of pipes. A heap of coal lies in the corner with a shovel stuck in it, rusted oil drums and sacks stand by the wall, and a stone stair climbs out to the pier.
+zone.coalroom.body = A cellar of grimy brick with a floor of cracked slabs, a round iron drain grate in its middle, where a rusted boiler with two round doors stands against the back wall under a tangle of pipes. A heap of coal lies in the corner with a shovel stuck in it, rusted oil drums and sacks stand by the wall, and a stone staircase climbs out to the pier.
 object.exit = A doorway at the foot of a few concrete steps beside a pipe on the wall, loose papers on the floor and a shaft of light falling in.
 object.grate = A heavy iron pipe with a flanged joint running along the dark wall of the coal chamber.
 object.coalbox = A heap of coal in the corner of the green-tiled chamber with a shovel stuck in it, an orange fuse box on the wall above and fat pipes running overhead.
