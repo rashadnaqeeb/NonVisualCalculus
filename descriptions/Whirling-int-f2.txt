@@ -4,3 +4,18 @@ zone room1 -6.37 3.63 -0.27
 zone room2 -1.62 3.64 3.23
 zone room3 3.88 3.64 5.23
 zone stairfoot 1.13 3.64 8.73
+object stairs3 = Stairs_Klaasje
+object door1 = Whirling Door Tequila
+object door2 = Whirling Door Kitsuragi
+object balcony = Balcony
+object paperwork = Kims Paperwork
+object bathdoor2 = Whirling Door Bathroom Kitsuragi
+object mirror = Bathroom Mirror
+object bath = Bath
+object door3 = Whirling Door Klaasje
+object bathdoor3 = Whirling Door Bathroom Klaasje
+object bed = Tequilas bed cleaned
+object stairs1 = Stairs
+object tape = whirling2nd_tape
+object fan = Ceiling Fan
+object shelves = Shelves

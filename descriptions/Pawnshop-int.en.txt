@@ -1,3 +1,8 @@
 zone.shop.title = the pawnshop
 zone.shop.body = A cramped shop lit by a few hanging lamps, every wall stacked to the ceiling with junk: shelves of radios, boomboxes and tape decks, racks of second-hand clothes, a stuffed animal head, pictures and mirrors in heavy frames. A glass counter runs across the middle with a cash register and trays of small goods, and a sawn-off street lamp leans against the shelves by the door.
 zone.shop.body@PAWNSHOP_SIGN:on = A cramped shop lit by a few hanging lamps, every wall stacked to the ceiling with junk: shelves of radios, boomboxes and tape decks, racks of second-hand clothes, a stuffed animal head, pictures and mirrors in heavy frames. A glass counter runs across the middle with a cash register and trays of small goods, and a sawn-off street lamp leans against the shelves by the door with a red sign lettered in white hung on it.
+object.exit = The shop's street door in its wooden frame, the sawn-off street lamp leaning against the shelves beside it.
+object.boomboxes = A wall of shelves stacked with grey loudspeakers, tape decks and a yellow reel-to-reel player, above a glass counter of watches, cameras and a typewriter.
+object.figurines = A glass case crowded with small white figurines, a chess set and jars, beside an orange jukebox and a glass counter of trinkets.
+object.streetlight = A cast-iron street lamp sawn off at the base, leaning against the shop's shelves with its lantern lit, beside a green coat on a hanger and a counter of lamps and a green glass globe.
+object.uniforms = A rack of second-hand coats on hangers, a green checked overcoat among them, with cardboard boxes stacked on the floor beneath.

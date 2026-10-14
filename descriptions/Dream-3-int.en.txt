@@ -16,3 +16,5 @@ zone.holepassage.title = the hole passage
 zone.holepassage.body = A dark passage from the hole in the fortress wall into the entry corridor, with a bowl and scattered junk on the floor.
 zone.tunnelend.title = the tunnel's end
 zone.tunnelend.body = The far end of the dark tunnel behind the fortress, where it turns back toward the deserter's room.
+object.exiteast = A rusted steel door with heavy hinge blocks in the concrete wall, lit violet.
+object.exithole = A ragged hole in the islet's rock propped with rusted iron bars, boulders heaped in it and an orange and pink glow pouring through.

@@ -1,2 +1,4 @@
 # Cuno's shack interior. Mod world frame.
 zone shack -5.5 0.67 1.81
+object roofhatch = cunos-shack-door-roof
+object exit = cunos-shack-door-courtyard

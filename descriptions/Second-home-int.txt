@@ -1,2 +1,7 @@
 # The second home, the stilt house in the fishing village. Mod world frame.
 zone room -5.21 0.44 1.81
+object bed = Bed
+object washbasin = Washbasin
+object floorboard = Bullet
+object exit = int-door-default
+object mirror = Mirror

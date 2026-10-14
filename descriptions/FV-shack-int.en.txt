@@ -1,2 +1,5 @@
 zone.shack.title = the fishing shack
 zone.shack.body = A dark hut of grey weathered planks with gaps of light between the boards, a dirt floor, a plain wooden chair against the wall and a few boxes in the corner, with a window of small panes beside the door.
+object.exit = The shack's plank door with a small window beside it, sunlight and the village's colours showing through the gap.
+object.box = A shelf of boards in the corner of the dark shack holding a bottle and a few papers, a coil of rope hanging from a nail on the planks beside it.
+object.postcard = A pale card pinned to the grey planks of the shack's wall above the shelf, beside a small ring hung from a nail.

@@ -1,3 +1,4 @@
 # Apartment 28, the smoker on the balcony's flat. Mod world frame.
 zone kitchen 3.5 1.04 -10.66
 zone bedroom 9 1.04 -9.66
+object exit = int-door-default

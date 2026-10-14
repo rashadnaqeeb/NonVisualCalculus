@@ -2,3 +2,4 @@
 zone kitchen 2.94 0.5 -6.16
 zone mainroom 7.44 0.5 -5.66
 zone childrensroom 11.44 0.5 -2.91
+object exit = exit

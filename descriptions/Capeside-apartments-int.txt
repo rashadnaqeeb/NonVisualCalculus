@@ -10,3 +10,8 @@ zone apartment10 22.32 1.93 -21.98
 zone graffiticorridor 9.07 1.93 -21.23
 zone sharedbathroom 10.07 1.93 -14.23
 zone derelictflat 5.07 1.93 -12.73
+object bathroomdoor = Door Apartment no dialogue(bathroom)
+object courtyarddoor1 = apartments-door-courtyard-1
+object door10 = Door Apartment 10
+object courtyarddoor2 = apartments-door-courtyard-2
+object door12 = Door Apartment 12

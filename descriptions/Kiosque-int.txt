@@ -1,2 +1,7 @@
 # The Frittte kiosk interior. Mod world frame.
 zone shop -6.67 0.38 5.05
+object apothecary = Apothecary
+object taremachine = Tare Machine
+object alcohol = Glorious Wall of Alcohol
+object exit = int-door-outline
+object knicknacks = Knicknacks Shelf

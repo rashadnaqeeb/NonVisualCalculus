@@ -7,3 +7,7 @@ zone towerfoot 7.07 7.66 -41.11
 zone darkhall 3.57 7.59 -40.36
 zone towerstep 7.32 7.68 -38.61
 zone workshop 10.32 8.35 -38.36
+object barbell = Barbell
+object bookstoredoor = doomed-1st-floor-door
+object curtains = Safety Curtains Opened
+object flashlight = Flashlight container

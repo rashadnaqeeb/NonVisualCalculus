@@ -4,3 +4,4 @@ zone.mainroom.title = the flat's main room
 zone.mainroom.body = A yellow-walled room with a big bed under a window of many small panes, pot plants on the sill, a trunk at the bed's foot, a tall bookshelf and a cabinet against the back wall, a worn armchair by the door with a desk lamp beside it, and a small toilet opening off the corner.
 zone.childrensroom.title = the children's room
 zone.childrensroom.body = A small green room with two low beds under a blinded window, a teal blanket on one and a yellow patchwork quilt on the other, a bedside table with a lamp and children's drawings pinned on the wall.
+object.exit = A grey door with flaking paint in the flat's wall, a yellow armchair and a lamp on a side table across the rug from it and a wire laundry rack by the window.

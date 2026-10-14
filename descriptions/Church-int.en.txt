@@ -18,3 +18,6 @@ zone.chancelstep.title = the chancel step
 zone.chancelstep.body = A short step up at the nave's north end, beside the speaker cage, where the floor rises toward the painted canvas.
 zone.mixingdeck.title = the mixing deck
 zone.mixingdeck.body = A platform of boards at the church's north end under the painted canvas, holding a mixing desk and tangles of cable, with a tall speaker cage hanging from the roof beside it and a blue banner draped from a post.
+object.exit = A plank door with iron hinges standing open in the church's side wall, with a short wooden stair down inside and the vestibule's red lamp glowing beyond.
+object.waterbasins = Two white dishes set on the nave's planks beside a yellow cable snaking across the boards, beams of green light slanting past them.
+object.stainedglass = A tall window at the church's north end filled with a vast painted canvas of pale blue, a towering figure with raised arms and a shattered skyline, with the mixing desk and its speaker cage standing in front of it.

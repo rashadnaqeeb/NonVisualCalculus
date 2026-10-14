@@ -10,3 +10,6 @@ zone channelnarrows 10.94 4.19 -25.33
 zone channelhollow 2.94 4.18 -21.58
 zone paintingsgallery 6.69 4.35 -12.08
 zone campbeach 7.94 4.25 -5.83
+object exit = instigators-exit
+object pipe = clickable_pipe-1
+object felddoor = instigators-feld

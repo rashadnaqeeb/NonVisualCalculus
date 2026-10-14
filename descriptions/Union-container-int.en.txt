@@ -1,2 +1,3 @@
 zone.container.title = the cargo container
 zone.container.body = The inside of a shipping container, a narrow box of yellow steel ribs with mesh walls, its floor striped with yellow hazard paint, where a blinding pale light pours in through the far end and the mesh seems to twist and ripple around it.
+object.exit = The container's open end, a doorway of yellow steel ribs striped with hazard paint, its mesh wall rippling with the pale light that pours in.

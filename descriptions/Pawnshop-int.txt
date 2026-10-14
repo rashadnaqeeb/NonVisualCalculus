@@ -1,2 +1,7 @@
 # The pawnshop interior. Mod world frame.
 zone shop 5.62 0.11 -9.66
+object exit = pawnshop-door-waterfront
+object boomboxes = Shelf of Boomboxes
+object figurines = Table of Figurines
+object streetlight = Sawed-off Streetlight
+object uniforms = Uniform Rack

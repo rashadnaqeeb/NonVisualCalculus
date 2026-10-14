@@ -8,3 +8,5 @@ zone upperstair 6.54 6.95 -8.23
 zone desertersroom 12.29 8.56 -8.23
 zone holepassage -1.96 4.42 -6.73
 zone tunnelend 18.79 8.56 2.02
+object exiteast = exit-east
+object exithole = exit-hole

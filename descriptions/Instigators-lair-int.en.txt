@@ -20,3 +20,6 @@ zone.paintingsgallery.title = the paintings
 zone.paintingsgallery.body = A sandy cave where canvases stand propped against the earth walls and timber props, bright abstract paintings in blues, golds and reds, with a camera on a tripod among them and more canvases stacked under an arch of poles.
 zone.campbeach.title = the sea cave camp
 zone.campbeach.body = A beach of sand at the channel's end where it opens onto the brown water, with a tarpaulin tent pitched on poles, an oil drum, a barrel and boxes beside it, a fence of poles along the water and painted canvases propped against the cave wall.
+object.exit = The channel's mouth onto the shore, where tall dry reeds and sunlit grass grow between wooden posts and the sand runs out into the light.
+object.pipe = A rusted pipe curving out of the sand under a drape of grey tarpaulin, an oil drum and a barrel beside it and a timber prop leaning across.
+object.felddoor = A doorway of rusted iron set in the pump room's brick wall, piled with rubble, with a battered steel door hanging open beside it and big pipes running overhead.

@@ -1,2 +1,3 @@
 zone.tent.title = inside the tent
 zone.tent.body = The inside of the tarpaulin tent, a cramped triangle of blue canvas on poles lit by a lantern hung from the ridge, with a patterned rug on the sand, a stack of radios and a tape deck against one side, a crate and a bucket, a sheet draped over a heap of belongings and a pot plant by the flap.
+object.exit = The tent's flap beside a stove with a kettle, a glass carboy and a patterned rug on the sand, daylight pouring in.

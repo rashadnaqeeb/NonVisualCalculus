@@ -64,3 +64,4 @@ zone.waterstairfoot.title = the foot of the water stairs
 zone.waterstairfoot.body = The bottom of the water stairs at the canal basin, lost in fog and darkness.
 zone.shackcorner.title = the corner by Cuno's shack
 zone.shackcorner.body = The patch of yard outside Cuno's shack, lost in fog and darkness.
+object.exit = A stretch of the plaza's mosaic paving beside a manhole cover, dissolving into drifting pale fog.

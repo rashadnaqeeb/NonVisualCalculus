@@ -8,3 +8,16 @@ zone upperstair 6.54 6.95 -8.23
 zone desertersroom 12.29 8.56 -8.23
 zone holepassage -1.96 4.42 -6.73
 zone tunnelend 18.79 8.56 2.02
+object books = Reading Materials
+object blastdoor = Revolving Lock Door
+object clothes2 = ext_seafort-clothes-2
+object exiteast = exit-east
+object exitmain = exit-main
+object console = Feld Insular Console
+object generator = Microgrid Generator
+object mattress = Spring Mattress
+object exithole = exit-hole
+object clothes1 = ext_seafort-clothes-1
+object locker2 = Locker 2
+object locker1 = Locker 1
+object stairs = Stairs container
