@@ -5,3 +5,5 @@ object taremachine = Tare Machine
 object alcohol = Glorious Wall of Alcohol
 object exit = int-door-outline
 object knicknacks = Knicknacks Shelf
+object liquorpodium = Liquor Podium
+object cigarettes = Cigarette Holder

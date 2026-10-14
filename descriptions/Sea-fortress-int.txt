@@ -21,3 +21,4 @@ object clothes1 = ext_seafort-clothes-1
 object locker2 = Locker 2
 object locker1 = Locker 1
 object stairs = Stairs container
+object boxes = Boxes

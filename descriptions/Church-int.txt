@@ -11,3 +11,17 @@ zone mixingdeck 1.3 2.81 -32.54
 object exit = church_door_martinese-ext
 object waterbasins = Waterbasins
 object stainedglass = Viscal (Stained Glass Window)
+object auxwire = AuxWire
+object djcontroller = DjController
+object mainframe = Mainframe
+object plates = PlatesOnTheFloor
+object druglab = Druglab
+object speakers = Speakers
+object beer2 = empty_beer 2
+object money2 = Church Money 2
+object beer = empty_beer
+object redscarf = Red Scarf
+object redshoes = Red Shoes
+object antennabox = antenna_cardboard-container
+object money = Church Money
+object clothesbox = box_1 clothes

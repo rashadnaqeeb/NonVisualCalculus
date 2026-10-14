@@ -29,3 +29,4 @@ object.locker2 = Two tall grey steel lockers with vented doors against the wall 
 object.locker1 = Two tall grey steel lockers with vented doors against the wall at the foot of the iron stair, their doors standing open on hanging rags.
 object.stairs = A short iron stair with pipe rails climbing from the gun hall's cracked slabs to the railed turntable above, fallen concrete heaped beside it.
 object.exithole = A ragged gap in the rock at the end of the dark tunnel, pale daylight filtering in through the haze.
+object.boxes = A dark corner at the foot of the iron stair, beside the rust-streaked window frame.

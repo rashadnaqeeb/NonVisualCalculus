@@ -6,3 +6,7 @@ zone atticworkshop 6.56 4.05 -11.02
 object elevator = whirl3-elevator-whirl1
 object roofdoor = whirl3-door-roof
 object footprints = Footprints In The Dust
+object shelves = Shelves
+object box = Box
+object windowtrivial = Klaasje Window Trivial
+object windowclear = Klaasje Window Difficult

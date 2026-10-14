@@ -4,3 +4,4 @@ zone.brokenstair.title = the broken stair
 zone.brokenstair.body = A concrete stair with rusted iron rails zigzagging up the cracked wall of the ruined building, its lower flight ending on the window floor and its upper landing opening toward the boardwalk door.
 object.exit = The top landing of the concrete stair with its rusted iron rails, where a doorway opens out toward the boardwalk.
 object.lairdoor = A doorway in the cracked tiled floor's corner at the foot of the stair, among bent iron railings and scattered papers, leading down to the shore floor.
+object.postcard = Rubble heaped on the cracked tiles of the window floor, a rusted iron bar jutting from it.

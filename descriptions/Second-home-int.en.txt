@@ -5,3 +5,4 @@ object.washbasin = A white basin on a rusted iron stand in the far corner under 
 object.floorboard = A patch of the bare plank floor between the bed and the table, by a cyan chair, where sunlight from the window falls across the boards.
 object.exit = A brown wooden door with a brass handle in the plank wall, across the boards from the bed.
 object.mirror = A small mirror on the plank wall above the washbasin in the far corner, beside a cup on a shelf and the yellow stovepipe.
+object.clothbox = The narrow bed under the window with its white quilt and striped pillow, a dark box at its foot.

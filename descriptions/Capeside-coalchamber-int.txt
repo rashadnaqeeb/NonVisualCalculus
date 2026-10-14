@@ -1,3 +1,6 @@
 # The coal room under the Capeside tenements. Mod world frame.
 zone coalroom 7.24 1.18 -12.41
 object exit = coalchamber-door-pier
+object grate = Coal Grate
+object coalbox = Coal Box
+object coaldoor = Coal Door

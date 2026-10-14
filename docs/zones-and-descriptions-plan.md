@@ -337,9 +337,11 @@ WOTR's, with four modes.
   anchor candidates, the live `Location` state, and screen-projected labels for every entity in
   frame. Labels say where entities are; they never name paint.
 - Details: coordinates chosen while reading the zone shots, one tighter shot each.
-- Objects: one framed shot per entity. Inactive story twins and gated entities are enabled for
-  the shot and restored, nothing written to the save; safe because the prose is pure appearance
-  and only ever spoken once the game has made the object focusable.
+- Objects: one framed shot per entity. Inactive story twins (`objects --inactive`: the
+  containers this save has looted and the props its story removed, props and containers only,
+  one capture per distinct name) are switched on for the shot and off again, nothing written to
+  the save; safe because the prose is pure appearance and only ever spoken once the game has
+  made the object focusable.
 - Validate: offline, every anchor and detail key has prose in every shipped language, every
   object name exists in the survey list, no orphan keys, no duplicates; live, every anchor
   resolves to a zone, every zone in a curated scene has a title (an untitled zone next to titled
@@ -417,12 +419,15 @@ agents verbatim.
    category with its sonar toggle, the strings, the offline validator in the test suite, and
    `docs/description-rules.md`.
 4. Survey tooling. Done 2026-10-14: `DevSurvey` and `tools/survey.py` with zones (outlined
-   captures), objects, shot, entities and status modes; HUD hide, fog lift, zoom-pin suspend and
-   the streamer settle check; `GroundAt` to place a detail from a capture's pixel.
-5. Content pass. In progress: the Whirling's ground floor has zones, details and objects;
-   Martinaise has every zone named and described. Remaining, in order: the interiors' zones, then
-   Martinaise's painted details and objects, then the interiors' details and objects. Each scene
-   lands as its own commit with the validator clean.
+   captures), objects (active entities, and the inactive early-game twins with `--inactive`),
+   shot, entities, states and variants modes; HUD hide, fog lift, zoom-pin suspend and the
+   streamer settle check; `GroundAt` to place a detail from a capture's pixel.
+5. Content pass. Done 2026-10-14 for every zone of all 31 scenes (named and described), the
+   painted details and object descriptions of Martinaise and every interior, and the story-state
+   variants where the paint changes (Martinaise and the interiors, from the variants captures).
+   Remaining: object descriptions for the inactive early-game twins (captured with
+   `objects --inactive`), then the listening review of register. Each scene lands as its own
+   commit with the validator clean.
 
 ## Part 9. Verified live (2026-10-13, end-game save, day 8)
 

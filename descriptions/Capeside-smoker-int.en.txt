@@ -3,3 +3,5 @@ zone.kitchen.body = A small kitchen with a sink and a stove under a wall of yell
 zone.bedroom.title = apartment 28's bedroom
 zone.bedroom.body = A bedroom with a four-poster bed draped in a teal canopy under a window of frosted panes, an armchair by the door with an open book on it, a patterned rug on the boards, a clothes rail with a yellow coat and a dressing table against the far wall, and a lamp with a fringed shade in the corner.
 object.exit = A plain door with a brass handle in the flat's wall, across the room from a table set with cups, bottles and a tray and a padded armchair.
+object.bed = A padded grey armchair by a round table with an open book and a cup on it, on a rug in the lamplit room, a cabinet of bottles against the wall.
+object.closet = A wardrobe standing open in the dark corner of the flat, a few coats and shirts hanging inside, a green chair beside it.

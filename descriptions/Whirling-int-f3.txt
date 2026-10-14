@@ -7,3 +7,6 @@ object door2 = whirl3-door-whirl2
 object roofdoor = whirl3-door-klaasje-roof
 object windowtrivial = Klaasje Window Trivial
 object windowclear = Klaasje Window Difficult
+object shelves = Shelves
+object box = Box
+object footprints = Footprints In The Dust

@@ -9,3 +9,7 @@ zone.atticworkshop.body = A storeroom behind the bedroom crammed with shelves of
 object.elevator = A lift cage with a folding iron grille behind a dark red door standing open in the attic's wall, beside a steel rack of tins, jars and boxes.
 object.roofdoor = A dark wooden door with a glass pane in the attic's end wall, a round grilled ventilation fan beside it and two squat black air ducts on the concrete in front.
 object.footprints = A few bare wooden steps dropping from the attic's door into the workshop, cardboard boxes heaped at their foot and papers pinned to the plaster beside them.
+object.shelves = A dark shelf with a pot plant above a row of framed pictures on the attic bedroom's wall, red threads pinned beside it.
+object.box = Cardboard boxes stacked under the workshop's window beside a bucket and a basin hung from a rope, by the attic's door.
+object.windowtrivial = Glass panes in dark steel frames walling in the wooden stair, a white egg chair with a rust-red seat behind them and red threads strung across the room above.
+object.windowclear = Glass panes in dark steel frames walling in the wooden stair, a white egg chair with a rust-red seat behind them and red threads strung across the room above.

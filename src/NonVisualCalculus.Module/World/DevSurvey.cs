@@ -414,6 +414,43 @@ namespace NonVisualCalculus.Module.World
             return Ser(new { w = Screen.width, h = Screen.height, points = pts, exits });
         }
 
+        // Objects switched on for an inactive-twin capture, innermost last, so RestoreEntities puts
+        // them back in reverse. Never saved: the game must not be saved during a survey.
+        private static readonly List<GameObject> _activated = new List<GameObject>();
+
+        /// <summary>Switch on an inactive entity (and the inactive ancestors that hide it) so the
+        /// object survey can capture the early-game twin of a looted container or story prop; the
+        /// first match by name wins. <see cref="RestoreEntities"/> switches them back off.</summary>
+        public static string ActivateEntity(string name)
+        {
+            var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            foreach (var e in Resources.FindObjectsOfTypeAll<BasicEntity>())
+            {
+                if (e == null || e.gameObject.scene != scene || e.name != name) continue;
+                if (e.gameObject.activeInHierarchy) return Ser(new { ok = true, switched = 0 });
+                var chain = new List<GameObject>();
+                for (Transform tr = e.transform; tr != null; tr = tr.parent)
+                    if (!tr.gameObject.activeSelf) chain.Add(tr.gameObject);
+                chain.Reverse();
+                foreach (var go in chain) { go.SetActive(true); _activated.Add(go); }
+                return Ser(new { ok = true, switched = chain.Count, active = e.gameObject.activeInHierarchy });
+            }
+            return Ser(new { ok = false, error = "no entity named " + name });
+        }
+
+        /// <summary>Switch off everything <see cref="ActivateEntity"/> switched on.</summary>
+        public static string RestoreEntities()
+        {
+            int n = 0;
+            for (int i = _activated.Count - 1; i >= 0; i--)
+            {
+                try { if (_activated[i] != null) { _activated[i].SetActive(false); n++; } }
+                catch (Exception e) { Reader?.Host.LogWarning("DevSurvey.RestoreEntities: " + e.Message); }
+            }
+            _activated.Clear();
+            return Ser(new { ok = true, restored = n });
+        }
+
         /// <summary>Undo the survey session: fog, HUD, zoom pin, camera.</summary>
         public static string Restore()
         {

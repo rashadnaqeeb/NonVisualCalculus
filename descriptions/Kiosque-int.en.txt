@@ -5,3 +5,5 @@ object.taremachine = A tall green vending machine against the shop's wall with a
 object.alcohol = A kitchen counter of green cabinets with a steel sink, rows of green and brown bottles standing along its back with yellow price tags, and a glass case of goods above.
 object.exit = The shop's glass door between the windows, pot plants on the sill outside.
 object.knicknacks = A glass display counter with an orange steel frame, pastries and bottles on its shelves, standing on the tiled floor by the step.
+object.liquorpodium = A glass counter by the shop's window with bottles and boxes under its top, a white chair and a potted palm beside it, rows of bottles along the green cabinets behind.
+object.cigarettes = A kitchen counter of green cabinets with a steel sink, a drum of red and white packets mounted above it and rows of brown bottles with yellow tags on the shelf, a model sailing ship on the rack beside.

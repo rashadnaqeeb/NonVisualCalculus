@@ -12,6 +12,9 @@ Modes:
   shot       One capture at --at X,Z (mod frame) with --zoom; prints the file. For details.
   entities   Dump every entity of the scene (inactive twins included) to survey/<scene>/entities.json.
   objects    One tight capture per accessible entity (or --name ...), survey/<scene>/objects/.
+             With --inactive, one capture per distinct name among the inactive props and containers
+             (the early-game twins this save has looted or removed), each switched on for its shot
+             and off again, to survey/<scene>/objects-inactive/. Never save after such a run.
   states     List the game's location state machines with their switchers' positions.
   variants   For each location machine with switchers in this scene (or --location ...), switch
              through every state, capture at the switchers' spot, and switch back. Output:
@@ -145,16 +148,41 @@ def survey_zones(dev, args, scene, out_dir):
 
 def survey_objects(dev, args, scene, out_dir):
     entities = dev.call(f"{NS}Entities()")["entities"]
-    todo = [e for e in entities if e["active"] and (not args.name or e["name"] in args.name)]
+    if args.inactive:
+        # The early-game twins: containers looted or props removed by this save's story. One
+        # capture per distinct name (the description is keyed by name), props and containers only,
+        # never a character, trigger or outline, which may run story logic when switched on.
+        seen = {e["name"] for e in entities if e["active"]}  # an active namesake is captured already
+        todo = []
+        for e in entities:
+            if e["active"] or e["type"] not in ("BasicEntity", "ContainerSource"):
+                continue
+            if any(w in e["name"] for w in ("Trigger", "outline", "Perception", "Trap", "Viscal")):
+                continue
+            if e["name"] in seen or (args.name and e["name"] not in args.name):
+                continue
+            seen.add(e["name"])
+            todo.append(e)
+    else:
+        todo = [e for e in entities if e["active"] and (not args.name or e["name"] in args.name)]
     print(f"{len(todo)} entities to capture in {scene}")
-    obj_dir = out_dir / "objects"
+    obj_dir = out_dir / ("objects-inactive" if args.inactive else "objects")
     index = []
     for e in todo:
         safe = "".join(c if c.isalnum() or c in "._-" else "_" for c in e["name"])
         dest = obj_dir / f"{safe}.png"
         if not args.force and dest.is_file():
             continue
-        labels = frame_and_shoot(dev, dest, e["x"], e["y"], e["z"], args.object_zoom, args.settle, args.max_width)
+        if args.inactive:
+            r = dev.call(f'{NS}ActivateEntity({json.dumps(e["name"])})')
+            if not r.get("ok"):
+                print(f"  {e['name']}: {r}")
+                continue
+        try:
+            labels = frame_and_shoot(dev, dest, e["x"], e["y"], e["z"], args.object_zoom, args.settle, args.max_width)
+        finally:
+            if args.inactive:
+                dev.call(f"{NS}RestoreEntities()")
         index.append({**e, "file": dest.name, "labels": labels["labels"]})
         print(f"  {e['name']} ({e['type']}, zone {e['zone']})")
     idx_path = obj_dir / "index.json"
@@ -242,6 +270,8 @@ def main():
     ap.add_argument("--out", default=str(REPO / "survey"))
     ap.add_argument("--zone", type=int, action="append", help="zones mode: only these zone ids")
     ap.add_argument("--name", action="append", help="objects mode: only these entity names")
+    ap.add_argument("--inactive", action="store_true",
+                    help="objects mode: capture the inactive early-game twins instead, switching each on for its shot")
     ap.add_argument("--at", help="shot mode: X,Z (mod frame); Y from the character")
     ap.add_argument("--zoom", type=float, default=1.0, help="zone/shot zoom factor, 1 = widest")
     ap.add_argument("--object-zoom", type=float, default=0.3, help="objects mode zoom factor")
