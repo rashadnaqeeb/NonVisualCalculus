@@ -445,6 +445,10 @@ namespace NonVisualCalculus.Module.World
         // Objects switched on for an inactive-twin capture, innermost last, so RestoreEntities puts
         // them back in reverse. Never saved: the game must not be saved during a survey.
         private static readonly List<GameObject> _activated = new List<GameObject>();
+        // An absent person's DeactivatableObject switches them straight back off in OnEnable unless
+        // its three visibility flags all hold; the flags are raised for the capture and put back after.
+        private static readonly List<(Sunshine.DeactivatableObject d, bool area, bool sched, bool dev)> _shown
+            = new List<(Sunshine.DeactivatableObject, bool, bool, bool)>();
 
         /// <summary>Switch on an inactive entity (and the inactive ancestors that hide it) so the
         /// object survey can capture the early-game twin of a looted container or story prop; the
@@ -481,7 +485,16 @@ namespace NonVisualCalculus.Module.World
                 if (deep)
                     foreach (var tr in e.GetComponentsInChildren<Transform>(true))
                         if (tr != e.transform && !tr.gameObject.activeSelf) chain.Add(tr.gameObject);
-                foreach (var go in chain) { go.SetActive(true); _activated.Add(go); }
+                foreach (var go in chain)
+                {
+                    var d = go.GetComponent<Sunshine.DeactivatableObject>();
+                    if (d != null)
+                    {
+                        _shown.Add((d, d.areastateVisible, d.schedulerVisible, d.developerVisible));
+                        d.SetAreaStateVisible(true); d.SetSchedulerVisible(true); d.SetDeveloperVisible(true);
+                    }
+                    go.SetActive(true); _activated.Add(go);
+                }
                 return Ser(new { ok = true, switched = chain.Count, active = e.gameObject.activeInHierarchy });
             }
             return Ser(new { ok = false, error = "no entity named " + name });
@@ -497,6 +510,13 @@ namespace NonVisualCalculus.Module.World
                 catch (Exception e) { Reader?.Host.LogWarning("DevSurvey.RestoreEntities: " + e.Message); }
             }
             _activated.Clear();
+            for (int i = _shown.Count - 1; i >= 0; i--)
+            {
+                var s = _shown[i];
+                try { if (s.d != null) { s.d.SetAreaStateVisible(s.area); s.d.SetSchedulerVisible(s.sched); s.d.SetDeveloperVisible(s.dev); } }
+                catch (Exception e) { Reader?.Host.LogWarning("DevSurvey.RestoreEntities: visibility flags: " + e.Message); }
+            }
+            _shown.Clear();
             return Ser(new { ok = true, restored = n });
         }
 

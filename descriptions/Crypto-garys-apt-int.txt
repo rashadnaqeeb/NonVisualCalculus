@@ -4,3 +4,4 @@ zone apartment 5.06 0.42 -11.87
 object shelf = Crypto Shelf
 object luggage = Crypto Luggage
 object books = Crypto Books
+object plaisance = Plaisance

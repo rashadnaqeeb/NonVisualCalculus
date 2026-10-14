@@ -5,3 +5,4 @@ zone.apartment.body = A low vaulted basement room of brick and plaster lit by a 
 object.shelf = A wooden desk with a lamp, an open book and a rack of folders, a swivel chair before it, under a shelf hung with a striped flag, by the bedroom door.
 object.luggage = An open suitcase packed with clothes on a stand at the foot of the bed, a yellow blanket and a lamp beside it.
 object.books = A shelf of books on the blue wall by the open door, a coat hanging on the door's inside, seen past the curve of the ribbed vault.
+object.plaisance = A woman with dark hair pinned up, in a black waistcoat over a white shirt, standing by the coats hung on the apartment's wall.

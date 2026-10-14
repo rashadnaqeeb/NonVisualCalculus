@@ -7,3 +7,4 @@ object.exit = A doorway in the railing of iron bars at the open side of the flat
 object.jacket1 = The cracked stone floor by the chalked blackboard, paint spattered over the slabs beside the red rug.
 object.jacket2 = A heap of red bricks spilled across the stone floor among folding chairs with perforated seats, beside a table of books and papers on the red rug.
 object.steban = A young man in a pale shirt sitting at the end of the sofa under its red blanket, a folding table with pans and cups beside him.
+object.echomaker = A young man with dark hair in a brown jacket sitting at the end of the sofa under its red blanket, a cup in his hands, cushions piled behind him.
