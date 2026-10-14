@@ -219,3 +219,22 @@ object felddoor = instigators-lair
 object secretarydoor = jam-door-secretary
 detail shacketernite 34.2 4.3 109.1
 detail icebridge -54.1 0.5 94.9
+object plazagraffito = martinaise-east-graffito
+object klaasjeroofdoor = waterfront-door-klaasje_roof
+object scarfbox = Landsend Scarf Box
+object phasmidnest = Phasmid Nest Container
+object leopardsuit = Leopard Suit
+object pierbox = Box_Tare pier
+object piertrash = Pier Trash Can
+object piertrash2 = Pier Trash Can 2
+object crashedcarriage = police-motor-carriage container
+object coastboulder = Coast Money
+object buoyanet = Buoya Container
+object piercrate = Pier Crate 
+object fishinghuts = Buoya Money
+object waterlocktrash = Waterlock Trash Can
+object rubblecan = crate_1 plaza rubble
+object jambundle = Jam Cigars
+object boardwalktree = Morell Money
+object boardwalkbox = box_1 broadwalk
+object eternitedoor = Eternite_door
