@@ -421,7 +421,16 @@ agents verbatim.
 4. Survey tooling. Done 2026-10-14: `DevSurvey` and `tools/survey.py` with zones (outlined
    captures), objects (active entities, and the inactive early-game twins with `--inactive`),
    shot, entities, states and variants modes; HUD hide, fog lift, zoom-pin suspend and the
-   streamer settle check; `GroundAt` to place a detail from a capture's pixel.
+   streamer settle check; `GroundAt` to place a detail from a capture's pixel. A capture is lit
+   as noon (the day-night visual is unlocked and set, then put back), every `Unseen.Zone` is
+   forced ACTIVE (INACTIVE, an entered-and-left room, draws black too), the level designers'
+   inactive "GRAND LIGHT FOR LEVEL EDITING" is switched on where a scene has one, the flashlight
+   gate's Lua boolean is set so the dark floors uncover, and the frame's focus sits at the game's
+   own focus height (a floor-height focus puts the camera into the floor). `--teleport` warps the
+   character beside each entity first, so the game cuts the roof away as in play, and frames on
+   the character's navmesh spot rather than the entity's transform (a wall shelf's own position
+   aims the camera into the void behind the wall). Everything is restored by `Restore`, and the
+   saved state is dropped on a scene change.
 5. Content pass. Done 2026-10-14 for every zone of all 31 scenes (named and described), the
    painted details and object descriptions of Martinaise and every interior, and the story-state
    variants where the paint changes (Martinaise and the interiors, from the variants captures).

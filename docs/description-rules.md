@@ -7,8 +7,13 @@ pass verbatim. Design background: `zones-and-descriptions-plan.md` (same folder)
 ## Ground truth
 
 - Author from the survey captures of the live game only: `python3 tools/survey.py zones` for the
-  zone shots with the zone's outline drawn on them, `objects` for one tight shot per entity,
-  `shot --at X,Z` for a detail. Never from the game's asset files, which carry no story state.
+  zone shots with the zone's outline drawn on them, `objects --teleport` for one tight shot per
+  entity (`--inactive` for the early-game twins), `shot --at X,Z` for a detail. Never from the
+  game's asset files, which carry no story state.
+- A capture that comes out black or dim is not a licence to write less: the survey lights every
+  scene as noon, uncovers every room and warps the character beside the thing; if a capture still
+  does not show the subject, find out what hides it and recapture. Review tight crops on a
+  contact sheet with auto-levels per tile; a room lit by one lamp reads once stretched.
 - Every claim needs a capture that shows it inside the outlined zone. The isometric painting shows
   the neighbouring zone in the same frame; the red outline says what is in this one. Nothing is
   inferred from the corner of a wide shot or invented to fit a name.
