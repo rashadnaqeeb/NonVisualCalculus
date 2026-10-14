@@ -6,4 +6,4 @@ object.alcohol = A kitchen counter of green cabinets with a steel sink, rows of 
 object.exit = The shop's glass door between the windows, pot plants on the sill outside.
 object.knicknacks = A glass display counter with an orange steel frame, pastries and bottles on its shelves, yellow price tags stuck to the glass, on the tiled floor by the step.
 object.liquorpodium = A glass counter by the shop's window with bottles and boxes under its top, a wicker chair and a potted palm beside it and a pot of pencils on the glass.
-object.cigarettes = A kitchen counter of green cabinets with a steel sink, a drum of red and white packets mounted above it and rows of brown bottles with yellow tags on the shelf, a model sailing ship on the rack beside.
+object.cigarettes = The glass counters by the clerk's till, pastries and bottles under their tops, a pot of pencils and a lamp on the glass.
