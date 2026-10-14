@@ -53,6 +53,7 @@ namespace NonVisualCalculus.Module
         // Speaks the locked-door refusal, likewise marked with sound alone, via a Harmony feeder drained
         // from the pump. Owns no native handle; its patch rides _harmony.
         private DoorReader _doors;
+        private World.ZoneRebuildHooks _zoneHooks;
         // Speaks the literary quote the game shows as a baked full-screen image (new game start and the
         // intro) via Harmony feeders drained from the pump. Owns no native handle; its patches ride _harmony.
         private QuoteReader _quotes;
@@ -128,6 +129,9 @@ namespace NonVisualCalculus.Module
             // Speak the locked-door refusal; likewise on this load's Harmony.
             _doors = new DoorReader(_host);
             _doors.Apply(_harmony);
+            // Rebuild the zone map after a story-state switch or a Lua blocker toggle; likewise on this load's Harmony.
+            _zoneHooks = new World.ZoneRebuildHooks(_host);
+            _zoneHooks.Apply(_harmony);
             // Speak the baked-image quote when the game displays it; likewise on this load's Harmony.
             _quotes = new QuoteReader(_host);
             _quotes.Apply(_harmony);
@@ -656,6 +660,7 @@ namespace NonVisualCalculus.Module
             _barks?.Dispose(); // likewise drop the bark feeder's back-reference before unpatching
             _containers?.Dispose(); // and the container feeder's
             _doors?.Dispose(); // and the door feeder's
+            _zoneHooks?.Dispose(); // and the zone rebuild hooks'
             _quotes?.Dispose(); // and the quote feeder's
             _loadingTips?.Dispose(); // and the tip feeder's
             _cutscenes?.Dispose(); // and the cutscene feeder's
@@ -673,6 +678,7 @@ namespace NonVisualCalculus.Module
             _barks = null;
             _containers = null;
             _doors = null;
+            _zoneHooks = null;
             _quotes = null;
             _loadingTips = null;
             _cutscenes = null;

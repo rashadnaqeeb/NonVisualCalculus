@@ -10,6 +10,7 @@ New Features and improvements:
 - Shift+E describes the zone the cursor is in: a short authored picture of the painted surroundings. E describes the scanned thing.
 - A new scanner category, details, lists painted things with no game object behind them (a mosaic, a mural, a chalkboard); they cycle with the items keys, can be walked to, and E reads their description.
 - Every zone of every map has a name and a description, and E describes every scanned door, container and prop; descriptions follow the story (the hanged man, the graffiti wall, the pinball machine, the bedroom).
+- Zones rebuild when the story changes the ground (a gate repaired, boards raised, a blocked passage cleared), not only when a door moves.
 - The mod runs on the Mac version of the game on Apple Silicon Macs; see the macOS install guide.
 - On a Mac, speech goes through a screen reader with a Prism plugin, else the system voice, or VoiceOver if chosen in settings.
 
