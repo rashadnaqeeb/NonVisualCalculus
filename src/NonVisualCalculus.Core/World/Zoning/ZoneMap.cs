@@ -21,6 +21,9 @@ namespace NonVisualCalculus.Core.World.Zoning
     /// Distances in metres, areas in square metres.</summary>
     public sealed class ZoneMapOptions
     {
+        /// <summary>A copy for a build to read on another thread while this instance may be retuned.</summary>
+        public ZoneMapOptions MemberwiseCloneForBuild() => (ZoneMapOptions)MemberwiseClone();
+
         /// <summary>How far the clearance must dip between two basins for them to stay separate zones.</summary>
         public float Persist = 0.7f;
         /// <summary>Flat regions smaller than this merge into their largest neighbour.</summary>

@@ -59,6 +59,7 @@ namespace NonVisualCalculus.Module.World
         private readonly ZoneTracker _zones;
         private readonly DescriptionStore _descriptions;
         private Zone _announcedZone; // the zone last spoken by the zone-change announcement
+        private string _announcedZoneName; // its spoken name (mod output, not game state), for the dedupe across rebuilds
         private bool _engaged;
         private Snv _lastPlayer; // character position last in-world frame, to catch a reposition (load/teleport)
         private string _lastScene; // scene last in-world frame - a change is a reposition regardless of distance
@@ -319,9 +320,14 @@ namespace NonVisualCalculus.Module.World
         {
             if (!_ownsKeyboard || _zones.Map == null || !_host.Settings.AnnounceZones.Value) return;
             Zone zone = _zones.ZoneAt(_overlay.Cursor.Position);
-            if (zone == null || ReferenceEquals(zone, _announcedZone)) return;
+            if (zone == null) return;
+            // Deduped on the spoken name, not the Zone instance: a rebuild (the settle pass, a door, a
+            // story switch) replaces every instance while the player stands still, which must stay silent.
+            string name = ZoneSpeech.Name(_descriptions.Current, _zones.Map, zone);
+            if (ReferenceEquals(zone, _announcedZone) || name == _announcedZoneName) { _announcedZone = zone; return; }
             _announcedZone = zone;
-            _host.Speech.Speak(ZoneSpeech.Name(_descriptions.Current, _zones.Map, zone), interrupt: false);
+            _announcedZoneName = name;
+            _host.Speech.Speak(name, interrupt: false);
         }
 
         /// <summary>Speak the mod's authored description of the scanned thing (X): a detail's body or an

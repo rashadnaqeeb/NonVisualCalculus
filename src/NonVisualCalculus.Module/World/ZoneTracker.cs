@@ -77,6 +77,12 @@ namespace NonVisualCalculus.Module.World
         /// <summary>The scene the map belongs to.</summary>
         public string Scene => _builtFor;
 
+        /// <summary>Dev only: while set, no build starts or resumes and no scheduled rebuild fires, so a
+        /// survey's zone ids stay those of the map the scene built on entry (its own state switches and
+        /// blocker toggles would otherwise rebuild through the hooks). The survey sets it on its first
+        /// Frame or Teleport and clears it in Restore.</summary>
+        public bool HoldRebuilds { get; set; }
+
         /// <summary>Whether a build is in flight (the map, if any, is the previous one meanwhile).</summary>
         public bool Building => _job != null;
 
@@ -109,6 +115,7 @@ namespace NonVisualCalculus.Module.World
                 Map = cached;
                 if (_settled) _invalidateAt = Time.unscaledTime + LoadSettle;
             }
+            if (HoldRebuilds) return;
             if (_invalidateAt > 0f && Time.unscaledTime >= _invalidateAt)
             {
                 // A scheduled rebuild is due: the current map keeps answering while the new one builds.
@@ -155,6 +162,9 @@ namespace NonVisualCalculus.Module.World
         {
             string sig = Signature(curation);
             Curation = curation;
+            // A job started this frame (the scene-change tick runs before the store's) carries the
+            // previous scene's curation; it is dropped whatever the signature says.
+            if (_job != null && !ReferenceEquals(_job.Curation, curation)) { Rebuild(); return; }
             if (_builtFor != null && _curationSig.TryGetValue(_builtFor, out string built) && built == sig) return;
             if (_builtFor != null) _curationSig[_builtFor] = sig;
             Rebuild();
@@ -163,7 +173,12 @@ namespace NonVisualCalculus.Module.World
         private static string Signature(ZoneCuration c)
         {
             var sb = new System.Text.StringBuilder();
-            foreach (var w in c.Walls) sb.Append('w').Append(w.ToString());
+            var inv = System.Globalization.CultureInfo.InvariantCulture;
+            foreach (var w in c.Walls)
+            {
+                sb.Append('w').Append(w.Elevation.HasValue ? w.Elevation.Value.ToString("0.##", inv) : "-");
+                foreach (var pt in w.Points) sb.Append(' ').Append(pt.X.ToString("0.##", inv)).Append(',').Append(pt.Y.ToString("0.##", inv));
+            }
             foreach (var m in c.Merges) { sb.Append('m'); foreach (var a in m) sb.Append(a.ToString()); }
             foreach (var d in c.Drops) sb.Append('d').Append(d.ToString());
             return sb.ToString();
@@ -231,7 +246,7 @@ namespace NonVisualCalculus.Module.World
             {
                 Scene = scene, Phase = Phase.Flood, W = w, H = h, Cell = cell, X0 = x0, Z0 = z0, SeedY = seed.position.y,
                 Walk = new bool[n], Elev = new float[n], Tried = new float[n], TriedAny = new bool[n],
-                Options = Options, Curation = Curation,
+                Options = (ZoneMapOptions)Options.MemberwiseCloneForBuild(), Curation = Curation,
             };
             Snv seedCore = WorldConvert.ToSnv(seed.position);
             int sgx = (int)Math.Floor((seedCore.X - x0) / cell), sgz = (int)Math.Floor((seedCore.Z - z0) / cell);
@@ -270,6 +285,9 @@ namespace NonVisualCalculus.Module.World
                                 job.FillMs = job.MainMs + (long)sw.ElapsedMilliseconds - job.FloodMs - job.SweepMs;
                                 var raster = job.Raster; var options = job.Options; var curation = job.Curation;
                                 job.Segment = Task.Run(() => ZoneMap.Build(raster, options, curation));
+                                // A build this tracker later abandons is never observed through Advance; its failure must still be logged.
+                                var host = _host; string sceneName = job.Scene;
+                                job.Segment.ContinueWith(tk => host.LogError($"ZoneTracker: segmenting {sceneName} failed: {tk.Exception?.GetBaseException()}"), TaskContinuationOptions.OnlyOnFaulted);
                                 job.Phase = Phase.Segment;
                             }
                             break;

@@ -140,7 +140,8 @@ namespace NonVisualCalculus.Module.World
                 Vector3 u = e.transform.position;
                 Snv p = WorldConvert.ToSnv(u);
                 bool accessible = false;
-                try { accessible = e.IsAccessible; } catch (Exception) { }
+                try { accessible = e.IsAccessible; }
+                catch (Exception ex) { Reader?.Host.LogWarning("DevSurvey.Entities: IsAccessible threw for " + e.name + ": " + ex.Message); }
                 var zone = map?.ZoneAt(p);
                 list.Add(new
                 {
@@ -280,6 +281,7 @@ namespace NonVisualCalculus.Module.World
             var cam = CameraController.Current;
             if (cam == null) return Err("no camera controller");
             ForgetOtherScene();
+            if (Zones != null) Zones.HoldRebuilds = true;
             if (!_saved)
             {
                 _saved = true;
@@ -348,6 +350,7 @@ namespace NonVisualCalculus.Module.World
             }
             catch (Exception e)
             {
+                Reader?.Host.LogWarning("DevSurvey.Settled: reading the page streamer failed, reporting settled: " + e.Message);
                 return Ser(new { settled = true, error = e.Message });
             }
         }
@@ -631,9 +634,28 @@ namespace NonVisualCalculus.Module.World
         {
             string scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
             if (_savedScene == null || _savedScene == scene) return;
-            Reader?.Host.LogWarning("DevSurvey: scene changed from " + _savedScene + " to " + scene + " with survey state saved; dropping it unrestored");
+            Reader?.Host.LogWarning("DevSurvey: scene changed from " + _savedScene + " to " + scene + " with survey state saved; restoring what outlives a scene, dropping the rest");
+            // The flashlight boolean and the day-night visual are global and outlive the scene: put back.
+            try { if (_savedFlashlight && !_savedFlashlightValue) SetFlashlight(false); } catch (Exception e) { Reader?.Host.LogWarning("DevSurvey: flashlight restore: " + e.Message); }
+            try { RestoreDaytime(); } catch (Exception e) { Reader?.Host.LogWarning("DevSurvey: daytime restore: " + e.Message); }
+            if (Zones != null) Zones.HoldRebuilds = false;
+            if (_moved.Count > 0 || _shown.Count > 0 || _forced.Count > 0 || _activated.Count > 0)
+                Reader?.Host.LogWarning("DevSurvey: entities activated, moved or scheduled in " + _savedScene + " could not be restored after the scene changed");
             _saved = false; _savedUnseen.Clear(); _savedDaytime = false; _savedPlayer = false; _savedFlashlight = false;
-            _workLights.Clear(); _activated.Clear(); _savedScene = null;
+            _workLights.Clear(); _activated.Clear(); _moved.Clear(); _shown.Clear(); _forced.Clear(); _savedScene = null;
+        }
+
+        private static void RestoreDaytime()
+        {
+            if (!_savedDaytime) return;
+            _savedDaytime = false;
+            var v = DaytimeVisualController.Singleton;
+            if (v == null) return;
+            v.time = _savedVisualTime;
+            v.desiredTime = _savedVisualDesired;
+            DaytimeVisualController.RefreshVisual();
+            v.attachToSunshineClock = _savedVisualAttach;
+            DaytimeVisualController.lockVisuals = _savedVisualLock;
         }
 
         private static void LightTheDark()
@@ -661,8 +683,8 @@ namespace NonVisualCalculus.Module.World
                 if (sw.booleanName == FlashlightBoolean) sw.BooleanChanged(FlashlightBoolean);
             foreach (var sw in UnityEngine.Object.FindObjectsOfType<LuaGameObjectsSwitcher>(true))
                 if (sw.booleanName == FlashlightBoolean) sw.BooleanChanged(FlashlightBoolean);
-            // The zone map is left alone: a rebuild would flood from wherever the character has been
-            // warped to, and the survey's zone ids must stay those of the map the scene built on entry.
+            // The rebuild hooks fire on this call; the tracker's HoldRebuilds (set by Frame and Teleport)
+            // keeps the survey's zone ids those of the map the scene built on entry.
         }
 
         /// <summary>Warp the character to a point (mod frame) on the navmesh, so the game cuts away
@@ -673,6 +695,7 @@ namespace NonVisualCalculus.Module.World
             var player = Party.Player.Main;
             if (player == null) return Err("no player");
             ForgetOtherScene();
+            if (Zones != null) Zones.HoldRebuilds = true;
             if (_savedScene == null) _savedScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
             var agent = player.GetComponent<UnityEngine.AI.NavMeshAgent>();
             Vector3 u = WorldConvert.ToUnity(new Snv(x, y, z));
@@ -694,23 +717,7 @@ namespace NonVisualCalculus.Module.World
             try { if (_uiCamera != null) _uiCamera.enabled = true; } catch (Exception e) { problems.Add("ui camera: " + e.Message); }
             try { if (_cameraSpaceCanvas != null) _cameraSpaceCanvas.enabled = true; } catch (Exception e) { problems.Add("canvas: " + e.Message); }
             try { FOWController.SetVisible(true, true); } catch (Exception e) { problems.Add("fog: " + e.Message); }
-            if (_savedDaytime)
-            {
-                try
-                {
-                    var v = DaytimeVisualController.Singleton;
-                    if (v != null)
-                    {
-                        v.time = _savedVisualTime;
-                        v.desiredTime = _savedVisualDesired;
-                        DaytimeVisualController.RefreshVisual();
-                        v.attachToSunshineClock = _savedVisualAttach;
-                        DaytimeVisualController.lockVisuals = _savedVisualLock;
-                    }
-                }
-                catch (Exception e) { problems.Add("daytime: " + e.Message); }
-                _savedDaytime = false;
-            }
+            try { RestoreDaytime(); } catch (Exception e) { problems.Add("daytime: " + e.Message); }
             foreach (var go in _workLights)
             {
                 try { if (go != null) go.SetActive(false); } catch (Exception e) { problems.Add("work light: " + e.Message); }
@@ -732,7 +739,8 @@ namespace NonVisualCalculus.Module.World
                 catch (Exception e) { problems.Add("player: " + e.Message); }
                 _savedPlayer = false;
             }
-            if (!_saved) return Ser(new { ok = problems.Count == 0, note = "nothing saved", problems });
+            if (Zones != null) Zones.HoldRebuilds = false;
+            if (!_saved) { _savedScene = null; return Ser(new { ok = problems.Count == 0, note = "nothing saved", problems }); }
             var cam = CameraController.Current;
             if (cam != null)
             {
