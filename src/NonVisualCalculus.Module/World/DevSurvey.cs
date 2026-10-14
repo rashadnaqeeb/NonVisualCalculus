@@ -243,6 +243,7 @@ namespace NonVisualCalculus.Module.World
 
         // ---- camera, HUD and fog (stateful) ----
 
+        private const float FocusHeight = 1.9f;
         private static bool _saved;
         // The scene the saved state belongs to: a scene change throws it away, since the objects and
         // the character's spot it refers to are gone (a warp to another scene's coordinates would
@@ -305,16 +306,21 @@ namespace NonVisualCalculus.Module.World
             FOWController.SetVisible(false, true);
             foreach (var kv in _savedUnseen)
             {
-                // A zone the scene keeps inactive throws on the status write; it hides nothing, so skip it.
+                // ACTIVE is the status of a room the character stands in (an observer inside); UNSEEN
+                // is never entered and INACTIVE is entered and left, both drawn black. Every zone is
+                // forced ACTIVE for the capture. A zone the scene keeps disabled throws on the status
+                // write; it hides nothing, so skip it.
                 try
                 {
-                    if (kv.Key != null && kv.Key.status == Sunshine.Unseen.Zone.Status.UNSEEN)
+                    if (kv.Key != null && kv.Key.status != Sunshine.Unseen.Zone.Status.ACTIVE)
                         kv.Key.status = Sunshine.Unseen.Zone.Status.ACTIVE;
                 }
                 catch (Exception e) { Reader?.Host.LogWarning("DevSurvey.Frame: fog zone " + kv.Key?.name + ": " + e.Message); }
             }
             cam.IsSlaved = false;
-            Vector3 u = WorldConvert.ToUnity(new Snv(x, y, z));
+            // The game's slaved focus sits about two metres above the character's feet; a focus at
+            // floor height puts the near-horizontal camera into the floor and the frame goes black.
+            Vector3 u = WorldConvert.ToUnity(new Snv(x, y + FocusHeight, z));
             cam.SetFocus(u, new Il2CppSystem.Nullable<float>(zoom), true);
             cam.ZoomFactor = zoom;
             return Ser(new { ok = true, focus = Pt(WorldConvert.ToSnv(cam.Focus)), zoomFactor = R(cam.ZoomFactor), limits = new { min = R(cam.GetZoomLimiters().x), max = R(cam.GetZoomLimiters().y) } });

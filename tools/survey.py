@@ -173,11 +173,15 @@ def survey_objects(dev, args, scene, out_dir):
         dest = obj_dir / f"{safe}.png"
         if not args.force and dest.is_file():
             continue
+        fx, fy, fz = e["x"], e["y"], e["z"]
         if args.teleport:
             # Stand the character beside the thing so the game cuts the roof away and lifts the
-            # room fog, as it does in play; the capture settles after the move.
+            # room fog, as it does in play; the capture settles after the move. The shot is framed
+            # on the character's spot, the nearest floor: a thing's own transform (a wall shelf, a
+            # prop set behind a wall) aims the camera over the wall into the void behind it.
             try:
-                dev.call(f"{NS}Teleport({e['x']}f, {e['y']}f, {e['z']}f)")
+                at = dev.call(f"{NS}Teleport({e['x']}f, {e['y']}f, {e['z']}f)")["at"]
+                fx, fy, fz = at["x"], at["y"], at["z"]
             except RuntimeError as ex:
                 print(f"  {e['name']}: teleport skipped: {ex}")  # off the mesh; shot from where we stand
             time.sleep(0.5)
@@ -187,7 +191,7 @@ def survey_objects(dev, args, scene, out_dir):
                 print(f"  {e['name']}: {r}")
                 continue
         try:
-            labels = frame_and_shoot(dev, dest, e["x"], e["y"], e["z"], args.object_zoom, args.settle, args.max_width)
+            labels = frame_and_shoot(dev, dest, fx, fy, fz, args.object_zoom, args.settle, args.max_width)
         finally:
             if args.inactive:
                 dev.call(f"{NS}RestoreEntities()")
