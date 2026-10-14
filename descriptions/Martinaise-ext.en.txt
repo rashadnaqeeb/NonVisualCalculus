@@ -632,3 +632,6 @@ object.cindy = A woman with dark hair in a grey hooded jacket sitting on the edg
 object.easyleo = A man in a dark jacket and trousers sitting on the edge of the container cage's grating with his legs dangling, a red tarpaulin draped beside him.
 object.trantandkid = A tall man in a dark coat with one arm raised, standing on the boardwalk's planks with a small boy in a blue jacket at his side.
 object.gardenertribunal = A woman in a yellow cap and blue overalls over a white shirt, standing on the plaza's mosaic with her hands on her hips.
+object.pissflaubert = A man with blond hair in a grey and white striped jumper and striped trousers, standing on the plaza's paving beside the motor carriage's spoked wheel with his hands at his sides.
+object.fucktheworld = A figure at the top of the plaza's railed edge by a brazier on its iron stand, where the paving meets the container cage's grating.
+object.workingwoman = A woman in a shearling jacket and dark trousers with wellington boots, her hair to her shoulders, standing behind the magazine stand's stone pedestal with a book in her hands.

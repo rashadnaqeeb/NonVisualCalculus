@@ -432,3 +432,6 @@ object cindy = Cindy
 object easyleo = Easy Leo
 object trantandkid = trant and kid
 object gardenertribunal = gardenerTribunal
+object pissflaubert = pissflaubert
+object fucktheworld = fuckTheWorld
+object workingwoman = Working Woman
