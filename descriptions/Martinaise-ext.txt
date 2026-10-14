@@ -217,3 +217,5 @@ object basementdoor = waterfront-door-doomed-2
 object shackdoor = courtyard-door-cunos-shack
 object felddoor = instigators-lair
 object secretarydoor = jam-door-secretary
+detail shacketernite 34.2 4.3 109.1
+detail icebridge -54.1 0.5 94.9

@@ -199,6 +199,48 @@ namespace NonVisualCalculus.Module.World
             return Ser(new { from = Pt(from), items = rows });
         }
 
+        /// <summary>The game's location state machines: name, current state, valid states, and the
+        /// scene and mod-frame positions of the visual switchers each drives (where its paint changes).</summary>
+        public static string States()
+        {
+            var switchers = new Dictionary<string, List<object>>();
+            foreach (var sw in Resources.FindObjectsOfTypeAll<Sunshine.StateSwitcher>())
+            {
+                if (!sw.gameObject.scene.IsValid() || string.IsNullOrEmpty(sw.locationName)) continue;
+                if (!switchers.TryGetValue(sw.locationName, out var list)) { list = new List<object>(); switchers[sw.locationName] = list; }
+                Snv p = WorldConvert.ToSnv(sw.transform.position);
+                list.Add(new { scene = sw.gameObject.scene.name, name = sw.name, x = R(p.X), y = R(p.Y), z = R(p.Z), presets = sw.activePresetNames });
+            }
+            var rows = new List<object>();
+            var locs = Sunshine.AreaStateConfiguration.locations;
+            if (locs != null)
+                foreach (var l in locs)
+                {
+                    if (l == null) continue;
+                    var states = l.validStates;
+                    string cur = states != null && l.currentState >= 0 && l.currentState < states.Length ? states[l.currentState] : null;
+                    switchers.TryGetValue(l.name, out var sws);
+                    rows.Add(new { name = l.name, current = cur, states, switchers = sws ?? new List<object>() });
+                }
+            return Ser(new { locations = rows });
+        }
+
+        /// <summary>Switch a location machine to a state through the game's own path (the same call the
+        /// story's Lua makes), returning the previous state so the caller can put it back. The visual
+        /// switchers apply at once; nothing is saved.</summary>
+        public static string SetState(string location, string state)
+        {
+            var loc = Sunshine.AreaStatePlaceholder.GetLocation(location);
+            if (loc == null) return Err("no location '" + location + "'");
+            var states = loc.validStates;
+            string previous = states != null && loc.currentState >= 0 && loc.currentState < states.Length ? states[loc.currentState] : null;
+            if (!loc.HasState(state)) return Err("location '" + location + "' has no state '" + state + "'");
+            Sunshine.AreaStatePlaceholder.SwitchTo(location, state);
+            states = loc.validStates;
+            string now = states != null && loc.currentState >= 0 && loc.currentState < states.Length ? states[loc.currentState] : null;
+            return Ser(new { ok = now == state, previous, now });
+        }
+
         // ---- camera, HUD and fog (stateful) ----
 
         private static bool _saved;

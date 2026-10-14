@@ -12,6 +12,11 @@ Modes:
   shot       One capture at --at X,Z (mod frame) with --zoom; prints the file. For details.
   entities   Dump every entity of the scene (inactive twins included) to survey/<scene>/entities.json.
   objects    One tight capture per accessible entity (or --name ...), survey/<scene>/objects/.
+  states     List the game's location state machines with their switchers' positions.
+  variants   For each location machine with switchers in this scene (or --location ...), switch
+             through every state, capture at the switchers' spot, and switch back. Output:
+             survey/<scene>/variants/<LOCATION>/<state>.png + index.json. The game is left in its
+             original states; never save during or after a variants run.
 
 Captures hide the HUD and lift every fog; the camera, HUD and fog are restored at the end (also on
 Ctrl+C). Shots are downscaled to --max-width for review. Coordinates are the mod's world frame.
@@ -163,9 +168,76 @@ def survey_objects(dev, args, scene, out_dir):
         idx_path.write_text(json.dumps(merged, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
+def survey_variants(dev, args, scene, out_dir):
+    locs = dev.call(f"{NS}States()")["locations"]
+    todo = []
+    for l in locs:
+        here = [sw for sw in l["switchers"] if sw["scene"] == scene]
+        if not here or not l["states"]:
+            continue
+        if args.location and l["name"] not in args.location:
+            continue
+        todo.append((l, here))
+    print(f"{len(todo)} location machines with switchers in {scene}")
+    var_dir = out_dir / "variants"
+    index = []
+    floor_y = dev.call(f"{NS}Status()")["player"]["y"]
+    for l, here in todo:
+        # One capture per distinct switcher spot (within 6 m), skipping switchers parked at the scene
+        # origin or far off the map (FX and animation drivers); --at overrides the spots outright.
+        spots = []
+        if args.at:
+            x, z = (float(v) for v in args.at.split(","))
+            spots.append((x, floor_y, z))
+        else:
+            for sw in here:
+                if abs(sw["x"]) < 0.5 and abs(sw["z"]) < 0.5:
+                    continue
+                if any(abs(sw["x"] - sx) < 6 and abs(sw["z"] - sz) < 6 for sx, _, sz in spots):
+                    continue
+                spots.append((sw["x"], sw["y"], sw["z"]))
+        if not spots:
+            print(f"  {l['name']}: switchers carry no usable position; pass --location {l['name']} --at X,Z")
+            continue
+        original = l["current"]
+        loc_dir = var_dir / l["name"]
+        try:
+            for state in l["states"]:
+                entered = False
+                for i, (cx, cy, cz) in enumerate(spots):
+                    dest = loc_dir / (f"{state}.png" if len(spots) == 1 else f"{state}_{i}.png")
+                    if not args.force and dest.is_file():
+                        continue
+                    if not entered:
+                        r = dev.call(f'{NS}SetState("{l["name"]}", "{state}")')
+                        if not r.get("ok"):
+                            print(f"  {l['name']}: could not enter {state}: {r}")
+                            break
+                        entered = True
+                        time.sleep(0.4)
+                    frame_and_shoot(dev, dest, cx, cy, cz, args.zoom, args.settle, args.max_width)
+                    index.append({"location": l["name"], "state": state, "file": str(dest.relative_to(var_dir)),
+                                  "at": {"x": cx, "y": cy, "z": cz}, "switchers": here})
+                if entered:
+                    print(f"  {l['name']} = {state} ({len(spots)} spots)")
+        finally:
+            if original:
+                dev.call(f'{NS}SetState("{l["name"]}", "{original}")')
+    if index:
+        var_dir.mkdir(parents=True, exist_ok=True)
+        idx_path = var_dir / "index.json"
+        merged = index
+        if idx_path.is_file():
+            old = json.loads(idx_path.read_text(encoding="utf-8"))
+            keep = {(i["location"], i["state"]) for i in index}
+            merged = [o for o in old if (o["location"], o["state"]) not in keep] + index
+        idx_path.write_text(json.dumps(merged, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("mode", choices=["status", "zones", "shot", "entities", "objects"])
+    ap.add_argument("mode", choices=["status", "zones", "shot", "entities", "objects", "states", "variants"])
+    ap.add_argument("--location", action="append", help="variants mode: only these location machines")
     ap.add_argument("--url", default="http://127.0.0.1:8771")
     ap.add_argument("--out", default=str(REPO / "survey"))
     ap.add_argument("--zone", type=int, action="append", help="zones mode: only these zone ids")
@@ -198,6 +270,12 @@ def main():
             print(f"{len(data['entities'])} entities -> {out_dir / 'entities.json'}")
         elif args.mode == "objects":
             survey_objects(dev, args, scene, out_dir)
+        elif args.mode == "states":
+            for l in dev.call(f"{NS}States()")["locations"]:
+                scenes = sorted({sw["scene"] for sw in l["switchers"]})
+                print(f"{l['name']}: {l['current']} of {l['states']} switchers in {scenes}")
+        elif args.mode == "variants":
+            survey_variants(dev, args, scene, out_dir)
         elif args.mode == "shot":
             x, z = (float(v) for v in args.at.split(","))
             y = status["player"]["y"]
@@ -205,7 +283,7 @@ def main():
             frame_and_shoot(dev, dest, x, y, z, args.zoom, args.settle, args.max_width)
             print(dest)
     finally:
-        if args.mode != "entities":
+        if args.mode not in ("entities", "states"):
             dev.call(f"{NS}Restore()")
             print("camera, HUD and fog restored")
 
