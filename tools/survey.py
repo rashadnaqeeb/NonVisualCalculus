@@ -134,6 +134,13 @@ def survey_zones(dev, args, scene, out_dir):
             continue
         shots = []
         for pi, pt in enumerate(zone["points"]):
+            if args.teleport:
+                # Stand the character on the spot so the game cuts the roof away over it.
+                try:
+                    dev.call(f"{NS}Teleport({pt['x']}f, {pt['y']}f, {pt['z']}f)")
+                except RuntimeError as ex:
+                    print(f"  zone {zid} point {pi}: teleport skipped: {ex}")
+                time.sleep(0.5)
             name = f"p{pi}.png"
             labels = frame_and_shoot(dev, zone_dir / name, pt["x"], pt["y"], pt["z"], args.zoom, args.settle, args.max_width,
                                      outline_zone=zid)
@@ -283,7 +290,7 @@ def main():
     ap.add_argument("--zone", type=int, action="append", help="zones mode: only these zone ids")
     ap.add_argument("--name", action="append", help="objects mode: only these entity names")
     ap.add_argument("--teleport", action="store_true",
-                    help="objects mode: warp the character to each entity first (roofed and fogged spots); Restore warps back")
+                    help="objects and zones modes: warp the character to each spot first (roofed and fogged spots); Restore warps back")
     ap.add_argument("--inactive", action="store_true",
                     help="objects mode: capture the inactive early-game twins instead, switching each on for its shot")
     ap.add_argument("--at", help="shot mode: X,Z (mod frame); Y from the character")
