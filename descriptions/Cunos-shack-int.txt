@@ -5,3 +5,4 @@ object exit = cunos-shack-door-courtyard
 object jar = Container Jar
 detail pighead -5.3 0.62 3.6
 detail sharkjaws -6.2 0.64 0.2
+object plaisance = Plaisance

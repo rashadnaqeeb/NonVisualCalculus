@@ -4,3 +4,4 @@ object exit = coalchamber-door-pier
 object grate = Coal Grate
 object coalbox = Coal Box
 object coaldoor = Coal Door
+object plaisance = Plaisance

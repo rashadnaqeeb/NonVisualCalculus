@@ -4,3 +4,4 @@ object exit = fv-shack-door
 object box = Shack Box
 object postcard = Shack Postcard
 object pierbox = Box_1 pier
+object plaisance = Plaisance

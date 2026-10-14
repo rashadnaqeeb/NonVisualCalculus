@@ -7,3 +7,4 @@ object.exit = A brown wooden door with a brass handle in the plank wall, across 
 object.mirror = A small mirror on the plank wall above the washbasin in the far corner, beside a cup on a shelf and the yellow stovepipe.
 object.clothbox = The narrow bed under the window with its white quilt and striped pillow, a dark box at its foot.
 object.exit2 = A brown wooden door with a brass handle in the plank wall, across the boards from the bed.
+object.plaisance = A woman with dark hair pinned up, in a black waistcoat over a white shirt, standing by the coats hung on the apartment's wall.

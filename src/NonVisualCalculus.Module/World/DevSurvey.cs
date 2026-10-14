@@ -457,14 +457,19 @@ namespace NonVisualCalculus.Module.World
         /// schedules, so a capture of a person frames on where they stand now, not where the dump saw them.</summary>
         public static string EntityPosition(string name)
         {
+            // A person's schedule instantiates them from a prefab template that shares their name and
+            // lives outside the scene; the placed, active instance is the one to report when it exists.
             var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            BasicEntity best = null;
             foreach (var e in Resources.FindObjectsOfTypeAll<BasicEntity>())
             {
-                if (e == null || e.gameObject.scene != scene || e.name != name) continue;
-                Snv p = WorldConvert.ToSnv(e.transform.position);
-                return Ser(new { ok = true, x = R(p.X), y = R(p.Y), z = R(p.Z), active = e.gameObject.activeInHierarchy });
+                if (e == null || e.name != name) continue;
+                if (e.gameObject.scene == scene && e.gameObject.activeInHierarchy) { best = e; break; }
+                if (best == null && e.gameObject.scene == scene) best = e;
             }
-            return Ser(new { ok = false, error = "no entity named " + name });
+            if (best == null) return Ser(new { ok = false, error = "no entity named " + name });
+            Snv p = WorldConvert.ToSnv(best.transform.position);
+            return Ser(new { ok = true, x = R(p.X), y = R(p.Y), z = R(p.Z), active = best.gameObject.activeInHierarchy });
         }
 
         public static string ActivateEntity(string name, bool deep = false)
@@ -521,10 +526,60 @@ namespace NonVisualCalculus.Module.World
             return Ser(new { ok = false, error = "no entity named " + name });
         }
 
+        // Schedule managers the survey forced to load a person, with the entry flags they had, so
+        // RestoreEntities can unload the clone and put the flags back.
+        private static readonly List<(CharacterScheduleManager m, bool[] lua, bool[] hours, bool[] days, bool prox)> _forced
+            = new List<(CharacterScheduleManager, bool[], bool[], bool[], bool)>();
+
+        /// <summary>Load a person through their own schedule manager with every entry's time, day and
+        /// story condition waived: the manager instantiates the person at the scheduled spot exactly as
+        /// the game does on their story day. Returns the placed object's position (mod frame).</summary>
+        public static string ForceSchedule(string managerName, int entry = -1)
+        {
+            var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            foreach (var m in Resources.FindObjectsOfTypeAll<CharacterScheduleManager>())
+            {
+                if (m == null || m.gameObject.scene != scene || m.name != managerName) continue;
+                int n = m.schedule.Count;
+                var lua = new bool[n]; var hours = new bool[n]; var days = new bool[n];
+                for (int i = 0; i < n; i++)
+                {
+                    var s = m.schedule[i];
+                    lua[i] = s.checkLua; hours[i] = s.checkHours; days[i] = s.checkDays;
+                    // Only the wanted entry validates; the others keep their (failing) story condition.
+                    bool want = entry < 0 || i == entry;
+                    if (want) { s.checkLua = false; s.checkHours = false; s.checkDays = false; }
+                }
+                _forced.Add((m, lua, hours, days, m.IgnoreProximity));
+                m.IgnoreProximity = true;
+                m.LoadEntityImmediately();
+                var go = m.GetScheduledObject();
+                if (go == null) return Ser(new { ok = false, error = "manager loaded nothing" });
+                Snv p = WorldConvert.ToSnv(go.transform.position);
+                return Ser(new { ok = true, name = go.name, active = go.activeInHierarchy, x = R(p.X), y = R(p.Y), z = R(p.Z) });
+            }
+            return Ser(new { ok = false, error = "no schedule manager named " + managerName });
+        }
+
         /// <summary>Switch off everything <see cref="ActivateEntity"/> switched on.</summary>
         public static string RestoreEntities()
         {
             int n = 0;
+            for (int i = _forced.Count - 1; i >= 0; i--)
+            {
+                var f = _forced[i];
+                try
+                {
+                    if (f.m == null) continue;
+                    for (int k = 0; k < f.m.schedule.Count && k < f.lua.Length; k++)
+                    { var s = f.m.schedule[k]; s.checkLua = f.lua[k]; s.checkHours = f.hours[k]; s.checkDays = f.days[k]; }
+                    f.m.IgnoreProximity = f.prox;
+                    // Reloading under the true conditions unloads the forced clone the way a story day's end would.
+                    f.m.LoadEntityImmediately();
+                }
+                catch (Exception e) { Reader?.Host.LogWarning("DevSurvey.RestoreEntities: schedule: " + e.Message); }
+            }
+            _forced.Clear();
             for (int i = _moved.Count - 1; i >= 0; i--)
             {
                 try

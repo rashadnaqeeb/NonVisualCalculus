@@ -15,3 +15,4 @@ object.windowtrivial = Glass panes in dark steel frames walling in the wooden st
 object.windowclear = Glass panes in dark steel frames walling in the wooden staircase, a white egg chair with a rust-red seat behind them and red threads strung across the room above.
 object.door2 = A glass door in a steel frame at the foot of the glass-walled staircase, a white egg chair with a rust-red seat behind the panes.
 object.klaasjeroofdoor = A dark wooden door with a glass pane in the attic's end wall, a round grilled ventilation fan beside it and two squat black air ducts on the concrete in front.
+object.plaisance = A woman with dark hair pinned up, in a black waistcoat over a white shirt, standing by the coats hung on the apartment's wall.

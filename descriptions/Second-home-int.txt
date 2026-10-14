@@ -7,3 +7,4 @@ object exit = int-door-default
 object mirror = Mirror
 object clothbox = Cloth_box
 object exit2 = template-exit
+object plaisance = Plaisance

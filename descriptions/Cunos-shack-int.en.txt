@@ -7,3 +7,4 @@ detail.pighead.title = pig's head
 detail.pighead.body = A pig's head of pink plaster with a cross painted over each eye, set on the bench by the ladder of nailed boards, its snout toward the room.
 detail.sharkjaws.title = shark jaws painting
 detail.sharkjaws.body = A crude painting on the plank wall beside the shack's door of a shark's open jaws, rows of white teeth in a red mouth, with letters sprayed across the boards.
+object.plaisance = A woman with dark hair pinned up, in a black waistcoat over a white shirt, standing by the coats hung on the apartment's wall.

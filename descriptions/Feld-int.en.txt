@@ -5,3 +5,4 @@ zone.brokenstair.body = A concrete staircase with rusted iron rails zigzagging u
 object.exit = The top landing of the concrete staircase with its rusted iron rails, where a doorway opens out toward the boardwalk.
 object.lairdoor = A doorway in the cracked tiled floor's corner at the foot of the staircase, among bent iron railings and scattered papers, leading down to the shore floor.
 object.postcard = Rubble heaped on the cracked tiles of the window floor, a rusted iron bar jutting from it.
+object.plaisance = A woman with dark hair pinned up, in a black waistcoat over a white shirt, standing by the coats hung on the apartment's wall.

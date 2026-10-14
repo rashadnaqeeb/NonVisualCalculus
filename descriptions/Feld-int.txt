@@ -4,3 +4,4 @@ zone brokenstair -7.15 4.6 -1.23
 object exit = feld_door_martinaise
 object lairdoor = feld_door_instigators
 object postcard = postcard-martinaise
+object plaisance = Plaisance

@@ -4,3 +4,4 @@ object.exit = A doorway at the foot of a few concrete steps beside a pipe on the
 object.grate = A heavy iron pipe with a flanged joint running along the dark wall of the coal chamber.
 object.coalbox = A heap of coal in the corner of the green-tiled chamber with a shovel stuck in it, an orange fuse box on the wall above and fat pipes running overhead.
 object.coaldoor = A rusted iron boiler with round hatches and a row of barred vents along its base, set in the chamber's green-stained wall.
+object.plaisance = A woman with dark hair pinned up, in a black waistcoat over a white shirt, standing by the coats hung on the apartment's wall.
