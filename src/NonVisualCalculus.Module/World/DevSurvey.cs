@@ -449,17 +449,38 @@ namespace NonVisualCalculus.Module.World
         /// <summary>Switch on an inactive entity (and the inactive ancestors that hide it) so the
         /// object survey can capture the early-game twin of a looted container or story prop; the
         /// first match by name wins. <see cref="RestoreEntities"/> switches them back off.</summary>
-        public static string ActivateEntity(string name)
+        /// <summary>The live position (mod frame) of the first entity with this name: people move on
+        /// schedules, so a capture of a person frames on where they stand now, not where the dump saw them.</summary>
+        public static string EntityPosition(string name)
         {
             var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
             foreach (var e in Resources.FindObjectsOfTypeAll<BasicEntity>())
             {
                 if (e == null || e.gameObject.scene != scene || e.name != name) continue;
-                if (e.gameObject.activeInHierarchy) return Ser(new { ok = true, switched = 0 });
+                Snv p = WorldConvert.ToSnv(e.transform.position);
+                return Ser(new { ok = true, x = R(p.X), y = R(p.Y), z = R(p.Z), active = e.gameObject.activeInHierarchy });
+            }
+            return Ser(new { ok = false, error = "no entity named " + name });
+        }
+
+        public static string ActivateEntity(string name, bool deep = false)
+        {
+            var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            foreach (var e in Resources.FindObjectsOfTypeAll<BasicEntity>())
+            {
+                if (e == null || e.gameObject.scene != scene || e.name != name) continue;
                 var chain = new List<GameObject>();
-                for (Transform tr = e.transform; tr != null; tr = tr.parent)
-                    if (!tr.gameObject.activeSelf) chain.Add(tr.gameObject);
-                chain.Reverse();
+                if (!e.gameObject.activeInHierarchy)
+                {
+                    for (Transform tr = e.transform; tr != null; tr = tr.parent)
+                        if (!tr.gameObject.activeSelf) chain.Add(tr.gameObject);
+                    chain.Reverse();
+                }
+                // A person's body is a child the schedule switches on when they are placed; for a capture
+                // of an absent person the body is switched on with them (and off again with Restore).
+                if (deep)
+                    foreach (var tr in e.GetComponentsInChildren<Transform>(true))
+                        if (tr != e.transform && !tr.gameObject.activeSelf) chain.Add(tr.gameObject);
                 foreach (var go in chain) { go.SetActive(true); _activated.Add(go); }
                 return Ser(new { ok = true, switched = chain.Count, active = e.gameObject.activeInHierarchy });
             }

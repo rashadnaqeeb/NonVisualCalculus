@@ -27,3 +27,7 @@ object backroombox = Box Backroom
 object kitchenbox = Box
 object countermoney = Counter money
 object exit = exit-courtyard
+object garte = garte
+object smoker = Smoker
+object moneyman = Money man
+object titus = titus

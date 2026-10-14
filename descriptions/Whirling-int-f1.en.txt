@@ -39,3 +39,7 @@ object.backroombox = A red metal case sitting on a stack of wooden pallets again
 object.kitchenbox = A shelf of books and jars above a microwave on the kitchen counter, beside the green refrigerator, with a cutting board and a knife below.
 object.countermoney = A ledge of the bar's back shelf under trailing ivy, with a stack of plates on a green tray, a bottle and glasses, beside a folding wooden screen.
 object.exit = The café's front door in the glass wall by the window seats, chequered tiles on the floor inside and the plaza's snow beyond.
+object.garte = A man in a grey waistcoat over a white shirt with the sleeves rolled, dark hair slicked back, leaning both hands on the bar counter among the bottles and glasses.
+object.smoker = A young man with dark hair tied back, in a mauve jacket over a lilac shirt and blue jeans, leaning against the balcony's pillar with a cigarette at his lips.
+object.moneyman = A heavy man with a shaved head and tinted glasses, in a blue jacket with a shearling collar, sitting on the bench at the long table with one arm along its edge.
+object.titus = A broad man in a brown jacket, dark cap and pale trousers, standing with his hands in his pockets by the glass partition of the corner nook.
