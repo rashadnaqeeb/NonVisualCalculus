@@ -33,3 +33,4 @@ object plate = clickable_apps-plate
 object box3 = clickable_apps-box-3
 object westshelf = clickable_west_shelf
 object clothesline = clickable_apps-clothline
+detail graffitiwall 12.0 1.93 -21.2

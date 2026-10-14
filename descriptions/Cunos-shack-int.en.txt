@@ -3,3 +3,7 @@ zone.shack.body = A dim hut of rough planks with a dirt floor, a torn mattress a
 object.roofhatch = A ladder of nailed boards leaning on the plank wall beside a pig's head with crossed-out eyes, above the workbench of bottles and tins.
 object.exit = The shack's plank door, a bare bulb on a cable above it and a torn mattress on the dirt floor inside.
 object.jar = The workbench of boards along the shack's wall with bottles, a tin and a yellow pail on it, a plate and jars on the shelf above.
+detail.pighead.title = pig's head
+detail.pighead.body = A pig's head of pink plaster with a cross painted over each eye, set on the bench by the ladder of nailed boards, its snout toward the room.
+detail.sharkjaws.title = shark jaws painting
+detail.sharkjaws.body = A crude painting on the plank wall beside the shack's door of a shark's open jaws, rows of white teeth in a red mouth, with letters sprayed across the boards.

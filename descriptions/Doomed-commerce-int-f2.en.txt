@@ -31,3 +31,5 @@ object.tincans = A shelf on a brick pier of the unlit floor with a jar and a yel
 object.drawers1 = A tall cabinet tipped against the wall of the dark floor, a wall lamp and a stool beside it, haze drifting past.
 object.drawers2 = A steel desk of drawers among the junk of the unlit floor, mannequins standing in wire frames beside it, a wheelbarrow and broken chairs heaped around in the haze.
 object.drawers3 = A low table in the dark of the unlit floor beside a chair, a thin light falling across it.
+detail.chalkboard.title = chalked board
+detail.chalkboard.body = A big board covering the wall of the room off the landing, chalked edge to edge with grids, diagrams and scrawled notes in white, a wire cage and a tangle of chair legs on the boards before it.

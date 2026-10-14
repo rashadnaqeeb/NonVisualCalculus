@@ -434,9 +434,11 @@ agents verbatim.
 5. Content pass. Done 2026-10-14 for every zone of all 31 scenes (named and described), the
    painted details and object descriptions of Martinaise and every interior, and the story-state
    variants where the paint changes (Martinaise and the interiors, from the variants captures).
-   Remaining: object descriptions for the inactive early-game twins (captured with
-   `objects --inactive`), then the listening review of register. Each scene lands as its own
-   commit with the validator clean.
+   The inactive early-game twins are described too (captured with `objects --inactive`), and
+   every interior was recaptured lit, uncovered and roof-cut and its lines corrected against
+   those captures. The interiors' painted details are the Whirling's mosaic, chalkboard and
+   arches, the Doomed floor's chalked board, the apartments' graffiti wall and the shack's
+   pig's head and shark painting. Remaining: the listening review of register.
 
 ## Part 9. Verified live (2026-10-13, end-game save, day 8)
 

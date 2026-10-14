@@ -43,3 +43,5 @@ object.plate = A bathroom sink with brass taps on a tiled wall, a round mirror b
 object.box3 = A wooden desk with a book and a pot of pencils under a coat rack hung with jackets, an umbrella and a pair of shoes on the worn rug, framed prints of birds on the wall.
 object.westshelf = The derelict flat's rotted floorboards dusted with fallen plaster, a wooden crate and broken boards heaped against the wall.
 object.clothesline = A washing line strung across a narrow bedroom with a few garments pegged to it, above a bed heaped with stained sheets and a red pillow, shelves on the wall.
+detail.graffitiwall.title = graffiti wall
+detail.graffitiwall.body = The corridor's long wall sprayed from end to end with graffiti in red, green and blue, a doorway boarded over with planks and a door chained shut with a padlock along it, papers scattered on the floor beneath.

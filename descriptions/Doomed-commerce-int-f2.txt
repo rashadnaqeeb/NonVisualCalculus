@@ -21,3 +21,4 @@ object tincans = Tincans
 object drawers1 = Drawers 1
 object drawers2 = Drawers 2
 object drawers3 = Drawers 3
+detail chalkboard -2.47 4.64 -43.67
