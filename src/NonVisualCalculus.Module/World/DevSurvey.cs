@@ -244,6 +244,10 @@ namespace NonVisualCalculus.Module.World
         // ---- camera, HUD and fog (stateful) ----
 
         private static bool _saved;
+        // The scene the saved state belongs to: a scene change throws it away, since the objects and
+        // the character's spot it refers to are gone (a warp to another scene's coordinates would
+        // put the character off the navmesh).
+        private static string _savedScene;
         private static Vector3 _savedFocus;
         private static float _savedZoom;
         private static bool _savedSlaved;
@@ -254,6 +258,14 @@ namespace NonVisualCalculus.Module.World
         private static float _savedVisualTime, _savedVisualDesired;
         private static bool _savedVisualAttach, _savedVisualLock;
         private const int NoonTiming = 3; // index into DaytimeVisualController.daytimeTimings
+        // The level designers' own work light, left inactive in some scenes ("GRAND LIGHT FOR LEVEL
+        // EDITING"): switched on for the captures of an unlit floor and off again by Restore.
+        private static readonly List<GameObject> _workLights = new List<GameObject>();
+        // The flashlight gate: the dark floors carve their navmesh and hide their rooms until the
+        // character wields a flashlight. The survey sets the gate's Lua boolean and fires its
+        // switchers, so the character can stand there and the rooms uncover; Restore puts it back.
+        private const string FlashlightBoolean = "auto.wielding_flashlight";
+        private static bool _savedFlashlight, _savedFlashlightValue;
         // Where the character stood before the first Teleport; Restore warps back there.
         private static bool _savedPlayer;
         private static Vector3 _savedPlayerPos;
@@ -267,9 +279,11 @@ namespace NonVisualCalculus.Module.World
         {
             var cam = CameraController.Current;
             if (cam == null) return Err("no camera controller");
+            ForgetOtherScene();
             if (!_saved)
             {
                 _saved = true;
+                _savedScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
                 _savedFocus = cam.Focus;
                 _savedZoom = cam.ZoomFactor;
                 _savedSlaved = cam.IsSlaved;
@@ -285,6 +299,7 @@ namespace NonVisualCalculus.Module.World
             }
             WorldEnvironment.ZoomPinSuspended = true;
             ForceNoon();
+            LightTheDark();
             if (_uiCamera != null) _uiCamera.enabled = false;
             if (_cameraSpaceCanvas != null) _cameraSpaceCanvas.enabled = false;
             FOWController.SetVisible(false, true);
@@ -479,6 +494,44 @@ namespace NonVisualCalculus.Module.World
             DaytimeVisualController.SetDesiredTime(NoonTiming, true);
         }
 
+        /// <summary>Drop every saved value when the active scene is not the one it was saved in.</summary>
+        private static void ForgetOtherScene()
+        {
+            string scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            if (_savedScene == null || _savedScene == scene) return;
+            Reader?.Host.LogWarning("DevSurvey: scene changed from " + _savedScene + " to " + scene + " with survey state saved; dropping it unrestored");
+            _saved = false; _savedUnseen.Clear(); _savedDaytime = false; _savedPlayer = false; _savedFlashlight = false;
+            _workLights.Clear(); _activated.Clear(); _savedScene = null;
+        }
+
+        private static void LightTheDark()
+        {
+            var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            if (_workLights.Count == 0)
+                foreach (var l in Resources.FindObjectsOfTypeAll<Light>())
+                    if (l.gameObject.scene == scene && !l.gameObject.activeSelf && l.name.StartsWith("GRAND LIGHT"))
+                    {
+                        l.gameObject.SetActive(true);
+                        _workLights.Add(l.gameObject);
+                    }
+            if (!_savedFlashlight)
+            {
+                _savedFlashlight = true;
+                _savedFlashlightValue = PixelCrushers.DialogueSystem.DialogueLua.GetVariable(FlashlightBoolean).asBool;
+                if (!_savedFlashlightValue) SetFlashlight(true);
+            }
+        }
+
+        private static void SetFlashlight(bool on)
+        {
+            PixelCrushers.DialogueSystem.DialogueLua.SetVariable(FlashlightBoolean, on);
+            foreach (var sw in UnityEngine.Object.FindObjectsOfType<LuaBlockerSwitcher>(true))
+                if (sw.booleanName == FlashlightBoolean) sw.BooleanChanged(FlashlightBoolean);
+            foreach (var sw in UnityEngine.Object.FindObjectsOfType<LuaGameObjectsSwitcher>(true))
+                if (sw.booleanName == FlashlightBoolean) sw.BooleanChanged(FlashlightBoolean);
+            Zones?.InvalidateSoon();
+        }
+
         /// <summary>Warp the character to a point (mod frame) on the navmesh, so the game cuts away
         /// the roofs and lifts the room fog around it the way it does in play; the camera is not
         /// moved. Saves the previous spot on first use; <see cref="Restore"/> warps back.</summary>
@@ -486,6 +539,8 @@ namespace NonVisualCalculus.Module.World
         {
             var player = Party.Player.Main;
             if (player == null) return Err("no player");
+            ForgetOtherScene();
+            if (_savedScene == null) _savedScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
             var agent = player.GetComponent<UnityEngine.AI.NavMeshAgent>();
             Vector3 u = WorldConvert.ToUnity(new Snv(x, y, z));
             if (!UnityEngine.AI.NavMesh.SamplePosition(u, out UnityEngine.AI.NavMeshHit hit, 4f, UnityEngine.AI.NavMesh.AllAreas))
@@ -501,6 +556,7 @@ namespace NonVisualCalculus.Module.World
             // Each step restores on its own: a throw in one (a fog zone whose object the scene has
             // since destroyed) must not leave the camera or the HUD in the survey's state.
             var problems = new List<string>();
+            ForgetOtherScene();
             WorldEnvironment.ZoomPinSuspended = false;
             try { if (_uiCamera != null) _uiCamera.enabled = true; } catch (Exception e) { problems.Add("ui camera: " + e.Message); }
             try { if (_cameraSpaceCanvas != null) _cameraSpaceCanvas.enabled = true; } catch (Exception e) { problems.Add("canvas: " + e.Message); }
@@ -521,6 +577,16 @@ namespace NonVisualCalculus.Module.World
                 }
                 catch (Exception e) { problems.Add("daytime: " + e.Message); }
                 _savedDaytime = false;
+            }
+            foreach (var go in _workLights)
+            {
+                try { if (go != null) go.SetActive(false); } catch (Exception e) { problems.Add("work light: " + e.Message); }
+            }
+            _workLights.Clear();
+            if (_savedFlashlight)
+            {
+                try { if (!_savedFlashlightValue) SetFlashlight(false); } catch (Exception e) { problems.Add("flashlight: " + e.Message); }
+                _savedFlashlight = false;
             }
             if (_savedPlayer)
             {
@@ -551,6 +617,7 @@ namespace NonVisualCalculus.Module.World
             }
             _saved = false;
             _savedUnseen.Clear();
+            _savedScene = null;
             foreach (string pr in problems) Reader?.Host.LogWarning("DevSurvey.Restore: " + pr);
             return Ser(new { ok = problems.Count == 0, problems });
         }

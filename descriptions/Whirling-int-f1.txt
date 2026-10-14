@@ -26,3 +26,4 @@ object cutlery = Cutlery
 object backroombox = Box Backroom
 object kitchenbox = Box
 object countermoney = Counter money
+object exit = exit-courtyard
