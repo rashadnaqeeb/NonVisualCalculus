@@ -19,7 +19,6 @@ zone bunkerpath -51.14 0.59 234.09
 zone ruincorner -35.89 0.16 237.34
 zone islettop -48.64 0.79 241.84
 zone desertercamp -39.14 0.33 248.59
-zone clifffoot -54.14 0.62 199.34
 zone loosefloe -15.64 0.18 207.09
 zone boatchannel -0.39 0.06 217.84
 zone slipwaytop -32.64 1.61 189.09

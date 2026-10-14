@@ -70,8 +70,10 @@ namespace NonVisualCalculus.Core.Descriptions
         /// <summary>Appearance text for an entity, by its exact GameObject name; null when none is authored.</summary>
         public string? ObjectText(string entityName)
         {
+            // The file parser trims the name; a game object's name can end in a space ("Pier Crate ").
+            string wanted = entityName.Trim();
             foreach (var o in Geometry.Objects)
-                if (string.Equals(o.EntityName, entityName, StringComparison.Ordinal))
+                if (string.Equals(o.EntityName, wanted, StringComparison.Ordinal))
                     return Text("object." + o.Key);
             return null;
         }

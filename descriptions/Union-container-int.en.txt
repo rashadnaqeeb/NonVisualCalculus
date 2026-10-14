@@ -1,5 +1,5 @@
 zone.container.title = the cargo container
-zone.container.body = The inside of a shipping container, a narrow box of yellow steel ribs with mesh walls, its floor striped with yellow hazard paint, where a blinding pale light pours in through the far end and the mesh seems to twist and ripple around it.
+zone.container.body = The inside of a shipping container, a narrow box of yellow steel ribs with mesh walls, its floor striped with yellow hazard paint, where a blinding pale light pours in through the far end and the mesh twists and ripples around it.
 object.exit = The container's open end, a doorway of yellow steel ribs striped with hazard paint, its mesh wall rippling with the pale light that pours in.
 object.vicquemare = The container's rippling end, the pale light bending the steel walls into curves.
 object.lightbender = A dark shape at the heart of the blinding light at the container's end, the walls warping around it into circles.

@@ -201,5 +201,16 @@ object.pinball = A pinball machine on its side, glass cracked.
             }
             Assert.True(problems.Count == 0, string.Join("\n", problems));
         }
+
+    [Fact]
+    public void ObjectTextMatchesAnEntityNameWithATrailingSpace()
+    {
+        var geometry = SceneGeometry.Parse("object crate = Pier Crate \n", out _);
+        var prose = SceneProse.Parse("object.crate = A crate.\n", out _);
+        var d = new SceneDescriptions("S", geometry, prose, prose, _ => null);
+        Assert.Equal("A crate.", d.ObjectText("Pier Crate "));
+        Assert.Equal("A crate.", d.ObjectText("Pier Crate"));
+    }
+
     }
 }
