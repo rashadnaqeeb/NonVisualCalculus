@@ -5,3 +5,4 @@ object shelf = Crypto Shelf
 object luggage = Crypto Luggage
 object books = Crypto Books
 object plaisance = Plaisance
+object kim = Kim Kitsuragi

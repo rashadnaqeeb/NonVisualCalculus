@@ -15,3 +15,4 @@ object coins = Cellar coins
 object shelf3 = Shelf 3
 object shelf2 = Shelf 2
 object f2door = doomed-f2-door
+object kim = Kim Kitsuragi

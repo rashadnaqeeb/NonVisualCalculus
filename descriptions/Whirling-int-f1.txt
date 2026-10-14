@@ -55,3 +55,4 @@ object morell = morell
 object vicquemare = Vicquemare
 object cryptofascist = cryptofascist
 object minot = Minot
+object kim = Kim Kitsuragi

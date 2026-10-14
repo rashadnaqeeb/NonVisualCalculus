@@ -8,3 +8,4 @@ detail.pighead.body = A pig's head of pink plaster with a cross painted over eac
 detail.sharkjaws.title = shark jaws painting
 detail.sharkjaws.body = A crude painting on the plank wall beside the shack's door of a shark's open jaws, rows of white teeth in a red mouth, with letters sprayed across the boards.
 object.plaisance = A woman with dark hair pinned up, in a black waistcoat over a white shirt, standing by the coats hung on the apartment's wall.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

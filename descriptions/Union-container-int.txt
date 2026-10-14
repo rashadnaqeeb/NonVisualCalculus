@@ -4,3 +4,4 @@ object exit = container-exit
 object vicquemare = Vicquemare
 object lightbender = Mega Rich Light Bending Guy (1)
 object lightbender2 = Mega Rich Light Bending Guy
+object kim = Kim Kitsuragi

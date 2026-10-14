@@ -4,3 +4,4 @@ object exit = netpicker_door
 object bedbox = Bed Box
 object grouse = Taxidermy Grouse
 object lily = lily
+object kim = Kim Kitsuragi

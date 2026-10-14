@@ -6,3 +6,4 @@ zone.childrensroom.title = the children's room
 zone.childrensroom.body = A small green room with two low beds under a blinded window, a teal blanket on one and a yellow patchwork quilt on the other, a bedside table with a lamp and children's drawings pinned on the wall.
 object.exit = A grey door with flaking paint in the flat's wall, a yellow armchair and a lamp on a side table across the rug from it and a wire laundry rack by the window.
 object.workingwoman = A woman in a blue jacket and dark trousers sitting on the edge of the bed with her hands clasped between her knees, yellow slippers on her feet.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

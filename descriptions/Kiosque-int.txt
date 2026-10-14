@@ -9,3 +9,4 @@ object liquorpodium = Liquor Podium
 object cigarettes = Cigarette Holder
 object jamdoor = kiosque-door-jam
 object clerk = FritteClerk
+object kim = Kim Kitsuragi

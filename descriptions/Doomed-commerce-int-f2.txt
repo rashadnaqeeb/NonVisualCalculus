@@ -25,3 +25,4 @@ detail chalkboard -2.47 4.64 -43.67
 object bookstoredoorbroken = doomed-1st-floor-door broken
 object basementdoor = doomed-basement-door
 object dicemaker = Dicemaker
+object kim = Kim Kitsuragi

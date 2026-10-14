@@ -5,3 +5,4 @@ object.grate = A heavy iron pipe with a flanged joint running along the dark wal
 object.coalbox = A heap of coal in the corner of the green-tiled chamber with a shovel stuck in it, an orange fuse box on the wall above and fat pipes running overhead.
 object.coaldoor = A rusted iron boiler with round hatches and a row of barred vents along its base, set in the chamber's green-stained wall.
 object.plaisance = A woman with dark hair pinned up, in a black waistcoat over a white shirt, standing by the coats hung on the apartment's wall.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

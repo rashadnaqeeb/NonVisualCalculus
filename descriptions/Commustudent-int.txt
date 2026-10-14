@@ -5,3 +5,4 @@ object jacket1 = Saramirizian Jacket Prefab
 object jacket2 = Reflective Jacket Prefab
 object steban = steban
 object echomaker = echomaker
+object kim = Kim Kitsuragi

@@ -40,3 +40,4 @@ object.andre = A young man with a spiky green crest of hair, in a blue jacket an
 object.acele = A young woman crouched over a speaker case on the nave's planks, dark hair over an orange and brown jacket.
 object.soona = A woman with dark hair in a blue jacket, bent over a keyboard on the mixing deck among the console's screens and cables.
 object.egghead = A young man in a green hooded jacket with a crown of blond spikes, sprawled on the rug with his back against a crate, his legs stretched out.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

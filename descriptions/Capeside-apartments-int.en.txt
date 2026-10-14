@@ -54,3 +54,4 @@ object.lockeddoor2 = A brown wooden door with a steel letterbox fixed to it in t
 object.lockeddoor1 = A doorway boarded over with planks nailed across it in the corridor's wall, a small window beside it.
 object.emptyroomdoor = A brown wooden door on the landing between graffitied walls, a doormat in front of it and a sprayed drawing on the plaster beside it.
 object.cleaninglady = An old woman in a grey knitted cardigan, a striped skirt and a white headscarf, bent over sweeping the corridor's floor with a long broom.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

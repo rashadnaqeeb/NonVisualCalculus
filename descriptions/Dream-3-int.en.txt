@@ -17,3 +17,4 @@ zone.holepassage.body = A passage of broken concrete slabs from the ragged hole 
 object.exiteast = A rusted steel door with heavy hinge blocks in the concrete wall, lit violet.
 object.exithole = A ragged hole in the rock wall of the passage propped with rusted iron bars, boulders heaped in it and an orange and pink glow pouring through.
 object.exitmain = A doorway in the rusted concrete wall, an orange and pink glow pouring through it.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

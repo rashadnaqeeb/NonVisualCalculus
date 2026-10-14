@@ -5,3 +5,4 @@ object exit = feld_door_martinaise
 object lairdoor = feld_door_instigators
 object postcard = postcard-martinaise
 object plaisance = Plaisance
+object kim = Kim Kitsuragi

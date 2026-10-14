@@ -36,3 +36,4 @@ detail.chalkboard.body = A big board covering the wall of the room off the landi
 object.bookstoredoorbroken = A dark panelled door at the gym's end, smashed in, its panels splintered and the white notes that papered it scattered over the boards.
 object.basementdoor = A doorway in the tower room's brick wall beside the chalked board of diagrams, haze drifting across the floor before it.
 object.dicemaker = A woman with blonde hair in a blue jacket, sitting at the workbench under the tower's barred window with her back to the room, papers and boxes heaped around her.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

@@ -65,3 +65,4 @@ zone.waterstairfoot.body = The bottom of the water stairs at the canal basin, lo
 zone.shackcorner.title = the corner by Cuno's shack
 zone.shackcorner.body = The patch of yard outside Cuno's shack, lost in fog and darkness.
 object.exit = A stretch of the plaza's mosaic paving beside a manhole cover, dissolving into drifting pale fog.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

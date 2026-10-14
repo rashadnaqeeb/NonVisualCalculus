@@ -635,3 +635,4 @@ object.gardenertribunal = A woman in a yellow cap and blue overalls over a white
 object.pissflaubert = A man with blond hair in a grey and white striped jumper and striped trousers, standing on the plaza's paving beside the motor carriage's spoked wheel with his hands at his sides.
 object.fucktheworld = A figure at the top of the plaza's railed edge by a brazier on its iron stand, where the paving meets the container cage's grating.
 object.workingwoman = A woman in a shearling jacket and dark trousers with wellington boots, her hair to her shoulders, standing behind the magazine stand's stone pedestal with a book in her hands.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

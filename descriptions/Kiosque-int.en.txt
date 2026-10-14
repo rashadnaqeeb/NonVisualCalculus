@@ -9,3 +9,4 @@ object.liquorpodium = A glass counter by the shop's window with bottles and boxe
 object.cigarettes = The glass counters by the clerk's till, pastries and bottles under their tops, a pot of pencils and a lamp on the glass.
 object.jamdoor = The shop's glass door between the windows, pot plants on the sill outside.
 object.clerk = A young woman with dark hair in a purple top, standing behind the glass counter with an open book in her hands.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

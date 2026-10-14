@@ -4,3 +4,4 @@ object exit = tent-exit
 object egghead = egghead
 object andre = andre
 object noid = noid
+object kim = Kim Kitsuragi

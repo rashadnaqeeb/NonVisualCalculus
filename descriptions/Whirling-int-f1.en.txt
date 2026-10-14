@@ -67,3 +67,4 @@ object.morell = The bar's green counter by a stool, a cactus in a pot on it and 
 object.vicquemare = A man with grey hair in a blue jacket sitting on the end of the long table by the sunburst mosaic, bent forward with his back turned.
 object.cryptofascist = The bar counter's near end with its red-topped stools, a lamp and bottles on the counter and the beer taps behind.
 object.minot = The chequered tiles by the sunburst mosaic's edge, a tray of cups on the long table's end.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

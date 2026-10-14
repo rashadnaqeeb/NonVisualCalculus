@@ -18,3 +18,4 @@ drop -11.21 7.86 -5.48
 drop 18.79 8.56 2.02
 drop -0.96 7.87 -26.27
 object exitmain = exit-main
+object kim = Kim Kitsuragi

@@ -30,3 +30,4 @@ object.upstairsdoorwrong = A dark panelled door at the back of the shrouded room
 object.upstairsdoorafter = A dark panelled door at the back of the shrouded room, papered over with white notes, cables trailing over the cracked tiles at its foot and a chair beside it.
 object.upstairsdoortest = A dark panelled door at the back of the shrouded room, papered over with white notes, cables trailing over the cracked tiles at its foot and a chair beside it.
 object.upstairsdoor2 = A dark panelled door at the back of the shrouded room, papered over with white notes, cables trailing over the cracked tiles at its foot and a chair beside it.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

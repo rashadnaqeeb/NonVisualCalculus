@@ -8,3 +8,4 @@ object.mirror = A small mirror on the plank wall above the washbasin in the far 
 object.clothbox = The narrow bed under the window with its white quilt and striped pillow, a dark box at its foot.
 object.exit2 = A brown wooden door with a brass handle in the plank wall, across the boards from the bed.
 object.plaisance = A woman with dark hair pinned up, in a black waistcoat over a white shirt, standing by the coats hung on the apartment's wall.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

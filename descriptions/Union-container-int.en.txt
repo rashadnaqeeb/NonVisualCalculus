@@ -4,3 +4,4 @@ object.exit = The container's open end, a doorway of yellow steel ribs striped w
 object.vicquemare = The container's rippling end, the pale light bending the steel walls into curves.
 object.lightbender = A dark shape at the heart of the blinding light at the container's end, the walls warping around it into circles.
 object.lightbender2 = A dark shape at the heart of the blinding light at the container's end, the walls warping around it into circles.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

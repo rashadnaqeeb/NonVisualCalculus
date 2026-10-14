@@ -33,3 +33,4 @@ zone plazastairfoot 5.97 3.77 66.71
 zone waterstairfoot -8.28 1.43 78.96
 zone shackcorner 32.72 4.08 107.46
 object exit = template-exit
+object kim = Kim Kitsuragi

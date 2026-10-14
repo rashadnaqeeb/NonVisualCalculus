@@ -14,3 +14,4 @@ object exit = template-exit
 object elevator = whirl3-elevator-whirl1
 object roofdoor2 = whirl3-door-roof
 object plaisance = Plaisance
+object kim = Kim Kitsuragi

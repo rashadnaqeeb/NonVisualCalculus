@@ -6,3 +6,4 @@ object.exit = A door in the flat's wall below a padded grey armchair with an ope
 object.bed = A bed with white sheets in the corner of the lamplit flat, a padded grey armchair with an open magazine at its foot.
 object.closet = A wardrobe standing open in the dark corner of the flat, a few coats and shirts hanging inside, a green chair beside it.
 object.sponsor = A man in a dark suit standing by the window, a pipe and a newspaper on the low table beside him among cups and bottles.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

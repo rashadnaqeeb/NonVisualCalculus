@@ -4,3 +4,4 @@ zone mainroom 7.44 0.5 -5.66
 zone childrensroom 11.44 0.5 -2.91
 object exit = exit
 object workingwoman = Working Woman
+object kim = Kim Kitsuragi

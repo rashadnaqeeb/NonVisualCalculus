@@ -4,3 +4,4 @@ object.exit = A plank door standing open in the house's wall beside a window of 
 object.bedbox = A brown suitcase and a cardboard box on the bare boards at the foot of the bed, in the corner by the stove.
 object.grouse = A stuffed brown bird with its wings spread, mounted on the shelf above the sofa among jars and tins, a kettle and cups on the table beneath it under the yellow curtains.
 object.lily = A small girl with dark hair in a blue jacket and yellow skirt, sitting on the bench at the long table with a man in an orange jacket beside her, bowls on the table.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

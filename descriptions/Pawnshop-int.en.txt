@@ -7,3 +7,4 @@ object.figurines = A glass case crowded with small white figurines, a chess set 
 object.streetlight = A cast-iron street lamp sawn off at the base, leaning against the shop's shelves with its lantern lit, beside a green coat on a hanger and a counter of lamps and a green glass globe.
 object.uniforms = A rack of second-hand coats on hangers, a green checked overcoat among them, with cardboard boxes stacked on the floor beneath.
 object.roy = A man seen through the glass case behind the counter among lamps and clocks, a lit lantern beside him on the shelf.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

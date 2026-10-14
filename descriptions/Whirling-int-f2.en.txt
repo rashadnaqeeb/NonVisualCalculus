@@ -63,3 +63,4 @@ object.cunosdad = A man in a brown jacket seen through the gallery's glass panes
 object.clubberman5 = The gallery's curved iron railing over the café floor, the bar counter and its stools below.
 object.tequilasunset2 = The gallery's green tiles by the hexagon-papered wall and the iron railing, a cactus pot on the sill.
 object.tommy2 = A man in a grey waistcoat and dark trousers leaning on the gallery's railing with his back turned, the café's tiles below.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

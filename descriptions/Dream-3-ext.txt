@@ -29,3 +29,4 @@ zone islethollow -49.64 1.37 244.34
 object holedoor = fortress-door-hole
 object maindoor = fortress-door-main
 object eastdoor = fortress-door-east
+object kim = Kim Kitsuragi

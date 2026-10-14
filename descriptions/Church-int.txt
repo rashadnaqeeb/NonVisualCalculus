@@ -30,3 +30,4 @@ object andre = andre
 object acele = acele
 object soona = soona
 object egghead = egghead
+object kim = Kim Kitsuragi

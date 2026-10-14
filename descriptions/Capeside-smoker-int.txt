@@ -5,3 +5,4 @@ object exit = int-door-default
 object bed = Bed
 object closet = Closet
 object sponsor = sponsor
+object kim = Kim Kitsuragi

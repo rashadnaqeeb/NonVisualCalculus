@@ -55,3 +55,4 @@ zone.islethollow.body = A dark hollow in the islet's crown, a pocket of sand bet
 object.holedoor = A pale shape half sunk in the dark water at the islet's foot, lit pink, where the hole in the rock opens.
 object.maindoor = A doorway in the fortress's concrete wall washed in violet light, figures standing in the haze before it.
 object.eastdoor = A rusted iron doorway in the fortress's concrete, the wall streaked with orange and lit blue.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

@@ -28,3 +28,4 @@ object.locker1 = Two tall grey steel lockers with vented doors against the wall 
 object.stairs = A short iron staircase with pipe rails climbing from the gun hall's cracked slabs to the railed turntable above, fallen concrete heaped beside it.
 object.exithole = A ragged gap in the rock wall of the hole passage, rusted iron bars propped across it and pale daylight filtering in through the haze.
 object.boxes = A dark corner at the foot of the iron staircase, beside the rust-streaked window frame.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

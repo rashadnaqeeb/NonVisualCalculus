@@ -17,3 +17,4 @@ object.coins = A dark patch of the cellar's stone floor by the brick wall, barel
 object.shelf3 = A steel desk with its drawers pulled open and a green chair tucked under it, beside the big boiler's pipes, a few books on top and bricks scattered on the stones.
 object.shelf2 = A rack of shelves against the cellar wall with a row of blue gas cylinders stacked beneath, an orange crate beside it and a window frame propped against the bricks.
 object.f2door = A doorway at the top of the cellar's plank stair beside a fat black pipe, the polar bear refrigerator's pale head below.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

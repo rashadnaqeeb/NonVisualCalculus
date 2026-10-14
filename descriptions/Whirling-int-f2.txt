@@ -57,3 +57,4 @@ object cunosdad = Cunos Dad
 object clubberman5 = ClubberMan5
 object tequilasunset2 = Tequila Sunset2
 object tommy2 = Tommy Lhomme2
+object kim = Kim Kitsuragi

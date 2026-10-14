@@ -43,3 +43,4 @@ object lockeddoor2 = Locked-door_capeside-2
 object lockeddoor1 = Locked-door_capeside-1
 object emptyroomdoor = Door Apartment no dialogue(empty room)
 object cleaninglady = CleaningLady
+object kim = Kim Kitsuragi

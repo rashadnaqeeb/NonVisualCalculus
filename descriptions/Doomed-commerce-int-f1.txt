@@ -26,3 +26,4 @@ object upstairsdoorwrong = doomed-2nd-floor-door-wrong
 object upstairsdoorafter = bookstore-door-after-trib
 object upstairsdoortest = test
 object upstairsdoor2 = bookstore-door
+object kim = Kim Kitsuragi

@@ -6,3 +6,4 @@ object figurines = Table of Figurines
 object streetlight = Sawed-off Streetlight
 object uniforms = Uniform Rack
 object roy = Roy
+object kim = Kim Kitsuragi

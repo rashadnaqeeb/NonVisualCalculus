@@ -6,3 +6,4 @@ object.shelf = A wooden desk with a lamp, an open book and a rack of folders, a 
 object.luggage = An open suitcase packed with clothes on a stand at the foot of the bed, a yellow blanket and a lamp beside it.
 object.books = A shelf of books on the blue wall by the open door, a coat hanging on the door's inside, seen past the curve of the ribbed vault.
 object.plaisance = A woman with dark hair pinned up, in a black waistcoat over a white shirt, standing by the coats hung on the apartment's wall.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

@@ -34,3 +34,4 @@ object.box = A wooden crate on a table against the pump room's brick wall, a blu
 object.barrel3 = A rusted oil drum lying on the sand at the water's edge, a fishing rod propped beside it.
 object.canister = A rusted jerrycan on the sand beside the tarpaulin tent, a stove on legs behind it.
 object.shelf = Shelves of jars and tins on the bunk room's wall beside the ladder to the top bunk.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

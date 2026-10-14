@@ -24,3 +24,4 @@ object box = clickable_box
 object barrel3 = clickable_barrel_3
 object canister = clickable_canister
 object shelf = clickable_shelf
+object kim = Kim Kitsuragi

@@ -5,3 +5,4 @@ zone officestep -6.47 2.99 -2.99
 object exit = union-boss-exit
 object coffeetable = clickable_union-boss_water
 object evrart = evrart claire
+object kim = Kim Kitsuragi

@@ -4,3 +4,4 @@ object.exit = The tent's flap beside a wooden crate, a stack of radios and a tap
 object.egghead = A young man in a green hooded jacket with a crown of blond spikes, sprawled on the rug with his back against a crate, his legs stretched out.
 object.andre = A young man in a blue jacket sitting on a crate by the tent's radios with one knee up, a cup in his hand.
 object.noid = A man in a dark jacket standing by the stacked speakers under a bare bulb, a cloth-covered heap beside him.
+object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

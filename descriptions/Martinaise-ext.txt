@@ -435,3 +435,4 @@ object gardenertribunal = gardenerTribunal
 object pissflaubert = pissflaubert
 object fucktheworld = fuckTheWorld
 object workingwoman = Working Woman
+object kim = Kim Kitsuragi
