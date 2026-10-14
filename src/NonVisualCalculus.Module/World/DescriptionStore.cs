@@ -14,7 +14,7 @@ namespace NonVisualCalculus.Module.World
     /// per-key fallback) and <c>&lt;scene&gt;.&lt;lang&gt;.txt</c> for the game's language, found by the
     /// same language-code-or-name rule as the lang files. Reloaded when the scene or the game language
     /// changes; a module reload makes a fresh store. This is mod data, not game state, so holding it is
-    /// fine. On load the scene's curation goes to the <see cref="ZoneTracker"/> (which rebuilds) and the
+    /// fine. On load the scene's curation goes to the <see cref="ZoneTracker"/> (which rebuilds when it differs) and the
     /// details become scan items in the <see cref="WorldModel"/>. Story-state variants resolve through
     /// the game's location-state machines, read live at speak time.
     /// </summary>
@@ -85,8 +85,7 @@ namespace NonVisualCalculus.Module.World
                 _host.LogError($"DescriptionStore: loading {scene} failed: {e}");
                 Current = null;
             }
-            _zones.Curation = Current?.Geometry.Curation ?? Core.World.Zoning.ZoneCuration.None;
-            _zones.Rebuild();
+            _zones.ApplyCuration(Current?.Geometry.Curation ?? Core.World.Zoning.ZoneCuration.None);
             var details = new List<DetailProxy>();
             if (Current != null)
                 foreach (var d in Current.Geometry.Details)

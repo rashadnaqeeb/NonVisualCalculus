@@ -156,13 +156,14 @@ def survey_zones(dev, args, scene, out_dir):
 def survey_objects(dev, args, scene, out_dir):
     entities = dev.call(f"{NS}Entities()")["entities"]
     if args.inactive:
-        # The early-game twins: containers looted or props removed by this save's story. One
-        # capture per distinct name (the description is keyed by name), props and containers only,
-        # never a character, trigger or outline, which may run story logic when switched on.
+        # The early-game twins: containers looted, props removed, doors not yet opened and people
+        # not present in this save's story. One capture per distinct name (the description is keyed
+        # by name); never a trigger or outline, which may run story logic when switched on.
         seen = {e["name"] for e in entities if e["active"]}  # an active namesake is captured already
         todo = []
+        kinds = ("BasicEntity", "ContainerSource", "TransitionEntity", "RemovingTransitionEntity", "Door", "Character")
         for e in entities:
-            if e["active"] or e["type"] not in ("BasicEntity", "ContainerSource"):
+            if e["active"] or e["type"] not in kinds:
                 continue
             if any(w in e["name"] for w in ("Trigger", "outline", "Perception", "Trap", "Viscal")):
                 continue

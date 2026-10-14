@@ -11,6 +11,7 @@ New Features and improvements:
 - A new scanner category, details, lists painted things with no game object behind them (a mosaic, a mural, a chalkboard); they cycle with the items keys, can be walked to, and E reads their description.
 - Every zone of every map has a name and a description, and E describes every scanned door, container and prop; descriptions follow the story (the hanged man, the graffiti wall, the pinball machine, the bedroom).
 - Zones rebuild when the story changes the ground (a gate repaired, boards raised, a blocked passage cleared), not only when a door moves.
+- Zone maps build in the background and are kept per map for the session, so entering a map or opening a door no longer freezes the game.
 - The mod runs on the Mac version of the game on Apple Silicon Macs; see the macOS install guide.
 - On a Mac, speech goes through a screen reader with a Prism plugin, else the system voice, or VoiceOver if chosen in settings.
 

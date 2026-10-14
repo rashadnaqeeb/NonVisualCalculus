@@ -24,20 +24,43 @@ namespace NonVisualCalculus.Module.World
             _active = this;
             harmony.Patch(
                 AccessTools.Method(typeof(Sunshine.AreaStatePlaceholder), nameof(Sunshine.AreaStatePlaceholder.SwitchTo)),
-                postfix: new HarmonyMethod(typeof(ZoneRebuildHooks), nameof(OnNavmeshChanged)));
+                postfix: new HarmonyMethod(typeof(ZoneRebuildHooks), nameof(OnStateSwitched)));
             harmony.Patch(
                 AccessTools.Method(typeof(LuaBlockerSwitcher), nameof(LuaBlockerSwitcher.BooleanChanged)),
-                postfix: new HarmonyMethod(typeof(ZoneRebuildHooks), nameof(OnNavmeshChanged)));
+                postfix: new HarmonyMethod(typeof(ZoneRebuildHooks), nameof(OnBooleanChanged)));
         }
 
         public void Dispose() => _active = null;
 
-        private static void OnNavmeshChanged()
+        // Only a switch whose StateSwitchers live in the active scene can have carved its navmesh; a
+        // switch for another area (the game applies every area's state on a load) must not cost a rebuild.
+        private static void OnStateSwitched(string areaName)
         {
             ZoneRebuildHooks self = _active;
             if (self == null) return;
-            try { ZoneTracker.Active?.InvalidateSoon(); }
-            catch (Exception e) { self._host.LogWarning("ZoneRebuildHooks: scheduling a zone rebuild failed: " + e); }
+            try
+            {
+                var loc = Sunshine.AreaStatePlaceholder.GetLocation(areaName);
+                if (loc == null) return;
+                var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+                foreach (var sw in loc.stateSwitchers)
+                    if (sw != null && sw.gameObject.scene == scene) { ZoneTracker.Active?.InvalidateSoon(); return; }
+            }
+            catch (Exception e) { self._host.LogWarning("ZoneRebuildHooks: reading a state switch failed: " + e); }
+        }
+
+        // The game raises BooleanChanged on every switcher for every Lua boolean that changes; the
+        // switcher itself only acts on its own name, and only that toggles obstacles.
+        private static void OnBooleanChanged(LuaBlockerSwitcher __instance, string boolean)
+        {
+            ZoneRebuildHooks self = _active;
+            if (self == null || __instance == null) return;
+            try
+            {
+                if (__instance.booleanName == boolean && __instance.gameObject.scene == UnityEngine.SceneManagement.SceneManager.GetActiveScene())
+                    ZoneTracker.Active?.InvalidateSoon();
+            }
+            catch (Exception e) { self._host.LogWarning("ZoneRebuildHooks: reading a blocker toggle failed: " + e); }
         }
     }
 }

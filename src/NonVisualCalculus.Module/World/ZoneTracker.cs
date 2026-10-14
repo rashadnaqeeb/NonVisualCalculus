@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using NonVisualCalculus.Core.Modularity;
 using NonVisualCalculus.Core.World.Zoning;
 using UnityEngine;
@@ -18,9 +19,13 @@ namespace NonVisualCalculus.Module.World
     /// coarse sweep afterwards seeds any walkable island the fill could not reach. Only the active scene's
     /// mesh is loaded (verified live), so the raster is the scene's floor and nothing else.
     ///
-    /// Rebuilt when the active scene changes, on a retry cooldown while the mesh is not yet answering, and
-    /// a moment after an in-place door toggles (doors carve the mesh with a NavMeshObstacle, so walkability
-    /// and connectivity change with them; see <see cref="DoorReader"/>). Nothing here is spoken: the
+    /// A build never stalls a frame: the navmesh sampling and the fog-room probes (Unity calls, main
+    /// thread only) run as a resumable job that spends a few milliseconds per tick, and the segmentation
+    /// (pure Core arithmetic) runs on a worker thread; the previous map keeps answering until the new one
+    /// lands. Maps are kept per scene for the session, so re-entering a scene answers at once from the
+    /// cached map while one quiet rebuild checks it against the mesh. A rebuild is scheduled a moment
+    /// after anything that carves the mesh in place: a door toggle (<see cref="DoorReader"/>), a story-state
+    /// switch or a Lua blocker toggle (<see cref="ZoneRebuildHooks"/>). Nothing here is spoken: the
     /// consumers read <see cref="Map"/> and resolve zones at speak time.
     /// </summary>
     public sealed class ZoneTracker
@@ -42,12 +47,19 @@ namespace NonVisualCalculus.Module.World
         private const float LoadSettle = 4f;      // seconds after a scene's first build before the one settle rebuild
         private const float BackdropHeight = 100f; // renderers taller than this are backdrop planes, not scene bounds
         private const float BackdropWidth = 2000f;
+        private const double FrameBudgetMs = 4.0;  // main-thread work per tick while a job samples
+        private const int FogLayerMask = 0x2000;
+        private const float FogProbeDistance = 4f;
 
         private readonly IModHost _host;
         private string _builtFor;
         private int _retry;
         private float _invalidateAt;
         private bool _settled; // the scene's settle rebuild has been scheduled
+        private bool _due;     // a scheduled rebuild fired and no job has started for it yet
+        private BuildJob _job;
+        private readonly Dictionary<string, ZoneMap> _cache = new Dictionary<string, ZoneMap>();
+        private readonly Dictionary<string, string> _curationSig = new Dictionary<string, string>();
 
         /// <summary>The segmentation thresholds, held here so a dev session can retune and rebuild without
         /// a reload. Disco's values: a shallower persistence dip than WOTR's 0.7 m, chosen on the Whirling's
@@ -65,8 +77,13 @@ namespace NonVisualCalculus.Module.World
         /// <summary>The scene the map belongs to.</summary>
         public string Scene => _builtFor;
 
-        /// <summary>Milliseconds the last build took, sampling included (the dev stats line).</summary>
+        /// <summary>Whether a build is in flight (the map, if any, is the previous one meanwhile).</summary>
+        public bool Building => _job != null;
+
+        /// <summary>Milliseconds of main-thread work the last build took, spread over its frames.</summary>
         public long LastBuildMs { get; private set; }
+        /// <summary>Where the last build's time went (grid size, samples and milliseconds per phase).</summary>
+        public string LastBuildBreakdown { get; private set; } = "";
 
         public ZoneTracker(IModHost host)
         {
@@ -74,57 +91,93 @@ namespace NonVisualCalculus.Module.World
             Active = this;
         }
 
-        /// <summary>Keep the map current. Call once per in-world frame with the active scene's name and the
-        /// character's position (Unity frame): the flood fill seeds there.</summary>
+        /// <summary>Advance the map for the active scene: start, resume or finish a build. Called every
+        /// frame from the world reader with the character's position (Unity frame).</summary>
         public void Tick(string scene, Vector3 playerUnity)
         {
-            if (_invalidateAt > 0f && Time.unscaledTime >= _invalidateAt)
-            {
-                _invalidateAt = 0f;
-                Map = null;
-                _retry = 0;
-            }
             if (scene != _builtFor)
             {
                 _builtFor = scene;
-                Map = null;
+                _job = null;
                 _retry = 0;
-                _settled = false;
+                _invalidateAt = 0f;
+                _due = false;
+                // A cached map answers at once; the settle rebuild below then checks it against the live
+                // mesh, which may have changed while away (a state set from another area) or be still
+                // settling its obstacles.
+                _settled = _cache.TryGetValue(scene, out ZoneMap cached);
+                Map = cached;
+                if (_settled) _invalidateAt = Time.unscaledTime + LoadSettle;
             }
-            if (Map != null || --_retry > 0) return;
+            if (_invalidateAt > 0f && Time.unscaledTime >= _invalidateAt)
+            {
+                // A scheduled rebuild is due: the current map keeps answering while the new one builds.
+                _invalidateAt = 0f;
+                _job = null;
+                _retry = 0;
+                _due = true;
+            }
+            if (_job != null) { Advance(_job); return; }
+            if (Map != null && !_settled)
+            {
+                // The map just landed: one rebuild a few seconds on sees the settled mesh. The navmesh
+                // keeps changing after a scene loads: parked vehicles and props carve it with
+                // NavMeshObstacles over the following frames, and a map built before they settle joins
+                // ground they divide (Martinaise's plaza ran into its road zones).
+                _settled = true;
+                _invalidateAt = Time.unscaledTime + LoadSettle;
+                return;
+            }
+            if (Map != null && !_due) return;
+            if (--_retry > 0) return;
             _retry = RetryFrames;
             try
             {
-                var sw = System.Diagnostics.Stopwatch.StartNew();
-                Map = Build(scene, playerUnity);
-                LastBuildMs = sw.ElapsedMilliseconds;
-                if (Map != null)
-                {
-                    _host.LogInfo($"ZoneTracker: {scene}: {Map.Zones.Count} zones over {WalkableArea(Map):0} m2 in {LastBuildMs} ms");
-                    // The navmesh keeps changing after a scene loads: parked vehicles and props carve
-                    // it with NavMeshObstacles over the following frames, and a map built before they
-                    // settle joins ground they divide (Martinaise's plaza ran into its road zones). One
-                    // rebuild a few seconds after the first build sees the settled mesh.
-                    if (!_settled)
-                    {
-                        _settled = true;
-                        _invalidateAt = Time.unscaledTime + LoadSettle;
-                    }
-                }
+                _job = Start(scene, playerUnity);
+                if (_job != null) { _due = false; Advance(_job); }
             }
             catch (Exception e)
             {
-                Map = null;
+                _job = null;
                 _retry = FailureBackoff;
-                _host.LogError($"ZoneTracker: building {scene} failed: {e}");
+                _host.LogError($"ZoneTracker: starting a build of {scene} failed: {e}");
             }
         }
 
-        /// <summary>Schedule a rebuild shortly (a door opened or closed). Repeated toggles push the window out.</summary>
+        /// <summary>Schedule a rebuild shortly (a door opened or closed, the story carved the mesh).
+        /// Repeated toggles push the window out; the current map keeps answering meanwhile.</summary>
         public void InvalidateSoon() => _invalidateAt = Time.unscaledTime + DoorSettle;
 
-        /// <summary>Drop the map so the next tick rebuilds it (a dev retune).</summary>
-        public void Rebuild() { Map = null; _retry = 0; }
+        /// <summary>Take the scene's authored curation (walls, merges, drops) from the description store.
+        /// The cached map stands when it was built under the same curation; a different one (a first load
+        /// of the scene, an edited file) drops it for a fresh build.</summary>
+        public void ApplyCuration(ZoneCuration curation)
+        {
+            string sig = Signature(curation);
+            Curation = curation;
+            if (_builtFor != null && _curationSig.TryGetValue(_builtFor, out string built) && built == sig) return;
+            if (_builtFor != null) _curationSig[_builtFor] = sig;
+            Rebuild();
+        }
+
+        private static string Signature(ZoneCuration c)
+        {
+            var sb = new System.Text.StringBuilder();
+            foreach (var w in c.Walls) sb.Append('w').Append(w.ToString());
+            foreach (var m in c.Merges) { sb.Append('m'); foreach (var a in m) sb.Append(a.ToString()); }
+            foreach (var d in c.Drops) sb.Append('d').Append(d.ToString());
+            return sb.ToString();
+        }
+
+        /// <summary>Drop the map and its cache so the next tick builds afresh (a dev retune).</summary>
+        public void Rebuild()
+        {
+            Map = null;
+            _job = null;
+            _retry = 0;
+            _invalidateAt = 0f;
+            if (_builtFor != null) _cache.Remove(_builtFor);
+        }
 
         /// <summary>The zone at a point in the mod's world frame, or null.</summary>
         public Zone ZoneAt(Snv p) => Map?.ZoneAt(p);
@@ -136,9 +189,33 @@ namespace NonVisualCalculus.Module.World
             return a;
         }
 
-        // The whole raster build. Null when the scene has no renderers to bound it or the character's own
-        // spot is not on a mesh yet (the retry cooldown covers both).
-        private ZoneMap Build(string scene, Vector3 playerUnity)
+        // ---- the resumable build ----
+
+        private enum Phase { Flood, Sweep, Fill, Segment }
+
+        /// <summary>One build in flight: the grid and the cursors of whichever phase is running, so a
+        /// tick can stop at its budget and the next one carry on where it left off.</summary>
+        private sealed class BuildJob
+        {
+            public string Scene;
+            public Phase Phase;
+            public int W, H;
+            public float Cell, X0, Z0, SeedY;
+            public bool[] Walk; public float[] Elev; public float[] Tried; public bool[] TriedAny;
+            public Queue<int> Queue = new Queue<int>();
+            public int SweepGx, SweepGz;                 // the sweep's next point
+            public int MinX, MinZ, MaxX, MaxZ;            // the walkable extent, found at the end of the sweep
+            public WalkRaster Raster; public int FillGz;  // the fill's next row
+            public Task<ZoneMap> Segment;
+            public ZoneMapOptions Options; public ZoneCuration Curation;
+            public int Samples, FloodSamples, SweepSamples;
+            public long MainMs, FloodMs, SweepMs, FillMs;
+            public System.Diagnostics.Stopwatch Wall = System.Diagnostics.Stopwatch.StartNew();
+        }
+
+        // Prepare the grid and seed the flood from the character's cell. Null (and a retry) when the
+        // scene has no renderers to bound it or the mesh is not answering under the character yet.
+        private BuildJob Start(string scene, Vector3 playerUnity)
         {
             if (!SceneBounds(scene, out Bounds b)) return null;
             if (!NavMesh.SamplePosition(playerUnity, out NavMeshHit seed, StepReach, NavMesh.AllAreas)) return null;
@@ -150,61 +227,179 @@ namespace NonVisualCalculus.Module.World
             int w = (int)(b.size.x / cell) + 3, h = (int)(b.size.z / cell) + 3;
             float x0 = -b.max.x - cell, z0 = -b.max.z - cell;
             int n = w * h;
-            var walk = new bool[n];
-            var elev = new float[n];
-            var tried = new float[n];   // elevation a rejected cell was last sampled from
-            var triedAny = new bool[n];
-            var queue = new Queue<int>();
-
+            var job = new BuildJob
+            {
+                Scene = scene, Phase = Phase.Flood, W = w, H = h, Cell = cell, X0 = x0, Z0 = z0, SeedY = seed.position.y,
+                Walk = new bool[n], Elev = new float[n], Tried = new float[n], TriedAny = new bool[n],
+                Options = Options, Curation = Curation,
+            };
             Snv seedCore = WorldConvert.ToSnv(seed.position);
             int sgx = (int)Math.Floor((seedCore.X - x0) / cell), sgz = (int)Math.Floor((seedCore.Z - z0) / cell);
             if (sgx < 0 || sgz < 0 || sgx >= w || sgz >= h) return null;
             int si = sgz * w + sgx;
-            walk[si] = true; elev[si] = seed.position.y;
-            queue.Enqueue(si);
-            Flood(queue, walk, elev, tried, triedAny, w, h, cell, x0, z0, StepReach);
+            job.Walk[si] = true; job.Elev[si] = seed.position.y;
+            job.Queue.Enqueue(si);
+            return job;
+        }
 
-            // Islands the fill could not reach (ground joined only by an off-mesh link, a scripted
-            // move, or a door's carve): a coarse sweep seeds each one and floods from it. Sampled at
-            // a ladder of elevations around the character's, since an unreached island may be a
-            // whole storey up (the Doomed Commercial Area's upper room sits 5 m over its stair).
-            for (int gz = 0; gz < h; gz += SeedStride)
-                for (int gx = 0; gx < w; gx += SeedStride)
+        // One tick of work: the main-thread phases run until the frame budget is spent; the segmentation
+        // is polled. Finishing lands the map, caches it and logs the build.
+        private void Advance(BuildJob job)
+        {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            try
+            {
+                while (sw.Elapsed.TotalMilliseconds < FrameBudgetMs)
                 {
-                    int i = gz * w + gx;
-                    if (walk[i]) continue;
-                    for (float dy = -SeedSpan; dy <= SeedSpan; dy += SeedStep)
+                    switch (job.Phase)
                     {
-                        if (!TrySample(gx, gz, seed.position.y + dy, SeedReach, cell, x0, z0, out float y)) continue;
-                        walk[i] = true; elev[i] = y;
-                        queue.Enqueue(i);
-                        Flood(queue, walk, elev, tried, triedAny, w, h, cell, x0, z0, StepReach);
-                        break;
+                        case Phase.Flood:
+                            if (Flood(job, sw)) { job.FloodMs = job.MainMs + (long)sw.ElapsedMilliseconds; job.FloodSamples = job.Samples; job.Phase = Phase.Sweep; }
+                            break;
+                        case Phase.Sweep:
+                            if (Sweep(job, sw))
+                            {
+                                job.SweepMs = job.MainMs + (long)sw.ElapsedMilliseconds - job.FloodMs; job.SweepSamples = job.Samples - job.FloodSamples;
+                                if (!Crop(job)) { Finish(job, null, "no walkable cell"); return; }
+                                job.Phase = Phase.Fill;
+                            }
+                            break;
+                        case Phase.Fill:
+                            if (Fill(job, sw))
+                            {
+                                job.FillMs = job.MainMs + (long)sw.ElapsedMilliseconds - job.FloodMs - job.SweepMs;
+                                var raster = job.Raster; var options = job.Options; var curation = job.Curation;
+                                job.Segment = Task.Run(() => ZoneMap.Build(raster, options, curation));
+                                job.Phase = Phase.Segment;
+                            }
+                            break;
+                        case Phase.Segment:
+                            if (!job.Segment.IsCompleted) { job.MainMs += (long)sw.ElapsedMilliseconds; return; }
+                            if (job.Segment.IsFaulted) throw job.Segment.Exception.GetBaseException();
+                            Finish(job, job.Segment.Result, null);
+                            return;
                     }
                 }
+                job.MainMs += (long)sw.ElapsedMilliseconds;
+            }
+            catch (Exception e)
+            {
+                _job = null;
+                _retry = FailureBackoff;
+                _host.LogError($"ZoneTracker: building {job.Scene} failed: {e}");
+            }
+        }
 
-            // Crop to the walkable extent plus a one-cell unwalkable border.
-            int minX = w, minZ = h, maxX = -1, maxZ = -1;
+        private void Finish(BuildJob job, ZoneMap map, string why)
+        {
+            _job = null;
+            if (map == null)
+            {
+                _retry = RetryFrames;
+                _host.LogWarning($"ZoneTracker: {job.Scene}: no map ({why})");
+                return;
+            }
+            LastBuildMs = job.MainMs;
+            LastBuildBreakdown = $"grid {job.W}x{job.H}, flood {job.FloodSamples} samples {job.FloodMs} ms, sweep {job.SweepSamples} samples {job.SweepMs} ms, fill {job.FillMs} ms, segment off-thread, {job.Wall.ElapsedMilliseconds} ms wall";
+            Map = map;
+            _cache[job.Scene] = map;
+            _curationSig[job.Scene] = Signature(job.Curation);
+            _host.LogInfo($"ZoneTracker: {job.Scene}: {map.Zones.Count} zones over {WalkableArea(map):0} m2, {LastBuildMs} ms on the main thread ({LastBuildBreakdown})");
+        }
+
+        // Breadth-first over 4-neighbours: each is sampled at the elevation of the cell it is reached
+        // from. A rejected cell may be retried from a neighbour at a meaningfully different elevation.
+        // Returns true when the queue has drained.
+        private static bool Flood(BuildJob job, System.Diagnostics.Stopwatch sw)
+        {
+            int w = job.W, h = job.H;
+            while (job.Queue.Count > 0)
+            {
+                int i = job.Queue.Dequeue();
+                int gx = i % w, gz = i / w;
+                float e = job.Elev[i];
+                for (int k = 0; k < 4; k++)
+                {
+                    int nx = gx + (k == 0 ? 1 : k == 1 ? -1 : 0), nz = gz + (k == 2 ? 1 : k == 3 ? -1 : 0);
+                    if (nx < 0 || nz < 0 || nx >= w || nz >= h) continue;
+                    int j = nz * w + nx;
+                    if (job.Walk[j]) continue;
+                    if (job.TriedAny[j] && Math.Abs(job.Tried[j] - e) < RetrySameElevation) continue;
+                    job.TriedAny[j] = true; job.Tried[j] = e;
+                    if (!TrySample(job, nx, nz, e, StepReach, out float y)) continue;
+                    job.Walk[j] = true; job.Elev[j] = y;
+                    job.Queue.Enqueue(j);
+                }
+                if ((job.Samples & 63) == 0 && sw.Elapsed.TotalMilliseconds >= FrameBudgetMs) return false;
+            }
+            return true;
+        }
+
+        // Islands the fill could not reach (ground joined only by an off-mesh link, a scripted move,
+        // or a door's carve): a coarse sweep seeds each one and floods from it. Sampled at a ladder of
+        // elevations around the character's, since an unreached island may be a whole storey up (the
+        // Doomed Commercial Area's upper room sits 5 m over its stair). Returns true when the sweep
+        // has covered the grid.
+        private static bool Sweep(BuildJob job, System.Diagnostics.Stopwatch sw)
+        {
+            int w = job.W, h = job.H;
+            for (; job.SweepGz < h; job.SweepGz += SeedStride, job.SweepGx = 0)
+                for (; job.SweepGx < w; job.SweepGx += SeedStride)
+                {
+                    int i = job.SweepGz * w + job.SweepGx;
+                    if (!job.Walk[i])
+                        for (float dy = -SeedSpan; dy <= SeedSpan; dy += SeedStep)
+                        {
+                            if (!TrySample(job, job.SweepGx, job.SweepGz, job.SeedY + dy, SeedReach, out float y)) continue;
+                            job.Walk[i] = true; job.Elev[i] = y;
+                            job.Queue.Enqueue(i);
+                            // The island's own flood may be large; it resumes across ticks like the first.
+                            if (!Flood(job, sw)) return false;
+                            break;
+                        }
+                    if (sw.Elapsed.TotalMilliseconds >= FrameBudgetMs) { job.SweepGx += SeedStride; return false; }
+                }
+            return job.Queue.Count == 0 || Flood(job, sw);
+        }
+
+        // The walkable extent plus a one-cell unwalkable border, as the raster the segmentation reads.
+        private static bool Crop(BuildJob job)
+        {
+            int w = job.W, n = job.W * job.H;
+            int minX = w, minZ = job.H, maxX = -1, maxZ = -1;
             for (int i = 0; i < n; i++)
             {
-                if (!walk[i]) continue;
+                if (!job.Walk[i]) continue;
                 int gx = i % w, gz = i / w;
                 if (gx < minX) minX = gx; if (gx > maxX) maxX = gx;
                 if (gz < minZ) minZ = gz; if (gz > maxZ) maxZ = gz;
             }
-            if (maxX < 0) return null;
-            int cw = maxX - minX + 3, ch = maxZ - minZ + 3;
-            var raster = new WalkRaster(cw, ch, cell, x0 + (minX - 1) * cell, z0 + (minZ - 1) * cell);
-            for (int gz = minZ; gz <= maxZ; gz++)
-                for (int gx = minX; gx <= maxX; gx++)
+            if (maxX < 0) return false;
+            job.MinX = minX; job.MinZ = minZ; job.MaxX = maxX; job.MaxZ = maxZ;
+            job.Raster = new WalkRaster(maxX - minX + 3, maxZ - minZ + 3, job.Cell, job.X0 + (minX - 1) * job.Cell, job.Z0 + (minZ - 1) * job.Cell);
+            job.FillGz = minZ;
+            return true;
+        }
+
+        // Copy the walkable cells into the raster with their fog-room partition (a raycast each, so
+        // budgeted like the sampling). Returns true when every row is in.
+        private static bool Fill(BuildJob job, System.Diagnostics.Stopwatch sw)
+        {
+            var raster = job.Raster;
+            for (; job.FillGz <= job.MaxZ; job.FillGz++)
+            {
+                int gz = job.FillGz;
+                for (int gx = job.MinX; gx <= job.MaxX; gx++)
                 {
-                    int i = gz * w + gx;
-                    if (!walk[i]) continue;
-                    int rx = gx - minX + 1, rz = gz - minZ + 1;
-                    raster.Set(rx, rz, elev[i]);
-                    raster.Partition[raster.Index(rx, rz)] = FogRoomAt(raster.CenterX(rx), elev[i], raster.CenterZ(rz));
+                    int i = gz * job.W + gx;
+                    if (!job.Walk[i]) continue;
+                    int rx = gx - job.MinX + 1, rz = gz - job.MinZ + 1;
+                    raster.Set(rx, rz, job.Elev[i]);
+                    raster.Partition[raster.Index(rx, rz)] = FogRoomAt(raster.CenterX(rx), job.Elev[i], raster.CenterZ(rz));
                 }
-            return ZoneMap.Build(raster, Options, Curation);
+                if (sw.Elapsed.TotalMilliseconds >= FrameBudgetMs) { job.FillGz++; return false; }
+            }
+            return true;
         }
 
         // The game's interior fog volumes (Sunshine.Unseen.Zone, one hand-shaped volume per room) are
@@ -222,46 +417,18 @@ namespace NonVisualCalculus.Module.World
             return zone != null ? zone.GetInstanceID() : 0;
         }
 
-        // The fog volumes' physics layer and the reach of the probe, the constants FogSense casts with.
-        private const int FogLayerMask = 0x2000;
-        private const float FogProbeDistance = 4f;
-
-        // Breadth-first over 4-neighbours: each is sampled at the elevation of the cell it is reached
-        // from. A rejected cell may be retried from a neighbour at a meaningfully different elevation.
-        private static void Flood(Queue<int> queue, bool[] walk, float[] elev, float[] tried, bool[] triedAny,
-                                  int w, int h, float cell, float x0, float z0, float reach)
-        {
-            while (queue.Count > 0)
-            {
-                int i = queue.Dequeue();
-                int gx = i % w, gz = i / w;
-                float e = elev[i];
-                for (int k = 0; k < 4; k++)
-                {
-                    int nx = gx + (k == 0 ? 1 : k == 1 ? -1 : 0), nz = gz + (k == 2 ? 1 : k == 3 ? -1 : 0);
-                    if (nx < 0 || nz < 0 || nx >= w || nz >= h) continue;
-                    int j = nz * w + nx;
-                    if (walk[j]) continue;
-                    if (triedAny[j] && Math.Abs(tried[j] - e) < RetrySameElevation) continue;
-                    triedAny[j] = true; tried[j] = e;
-                    if (!TrySample(nx, nz, e, reach, cell, x0, z0, out float y)) continue;
-                    walk[j] = true; elev[j] = y;
-                    queue.Enqueue(j);
-                }
-            }
-        }
-
         // Sample the mesh under a cell centre at a given elevation. A hit counts only when it lies under
         // the centre (within half a cell planar); a hit that snapped sideways is the edge of ground that
         // does not cover this cell.
-        private static bool TrySample(int gx, int gz, float atElevation, float reach, float cell, float x0, float z0, out float y)
+        private static bool TrySample(BuildJob job, int gx, int gz, float atElevation, float reach, out float y)
         {
             y = 0f;
-            var core = new Snv(x0 + (gx + 0.5f) * cell, atElevation, z0 + (gz + 0.5f) * cell);
+            var core = new Snv(job.X0 + (gx + 0.5f) * job.Cell, atElevation, job.Z0 + (gz + 0.5f) * job.Cell);
             Vector3 p = WorldConvert.ToUnity(core);
+            job.Samples++;
             if (!NavMesh.SamplePosition(p, out NavMeshHit hit, reach, NavMesh.AllAreas)) return false;
             float dx = hit.position.x - p.x, dz = hit.position.z - p.z;
-            if (dx * dx + dz * dz > cell * cell * 0.25f) return false;
+            if (dx * dx + dz * dz > job.Cell * job.Cell * 0.25f) return false;
             y = hit.position.y;
             return true;
         }
