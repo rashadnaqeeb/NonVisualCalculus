@@ -1,14 +1,20 @@
 # Martinaise, the whole exterior. Coordinates in the mod's world frame (x east, z north).
 # Zone anchors sit on open ground inside the zone they name.
+# Merges fold slivers too small to be places into the zone beside them.
+merge -33.39,3.99,20.59 -42.64,3.96,24.59
+merge -26.39,0.7,35.59 -23.39,1.1,35.09
+merge -34.39,1.12,46.34 -34.39,1.68,52.09
+merge -28.39,0.5,62.59 -31.64,0.42,56.09
+merge -125.89,4.73,59.84 -128.39,3.85,66.59
+merge -81.89,1.63,98.09 -83.39,1.81,103.84
+merge 45.61,8.75,100.59 46.61,6.64,101.59
 zone shedyard -33.39 3.99 20.59
-zone behindshed -42.64 3.96 24.59
 zone yardgate -25.89 2.98 27.34
 zone roofstrip -49.64 3.7 30.59
 zone boilerlanding -9.39 4.24 31.59
 zone treeslope -15.89 2.93 32.34
 zone fencepath -29.14 1.47 33.59
 zone shackpath -47.89 4.25 34.09
-zone fencebank -23.39 1.1 35.09
 zone sandylot -26.39 0.7 35.59
 zone shackslope -41.89 3.23 36.59
 zone shacksteps -49.89 2.65 38.34
@@ -24,11 +30,9 @@ zone redshackyard -54.64 3.39 49.34
 zone tent -43.89 0.59 49.34
 zone pawnshopyard -3.39 2.94 50.34
 zone lorryqueue 10.86 4.29 51.84
-zone wreckbank -34.39 1.68 52.09
 zone pawnshoppath 4.11 2.94 54.09
 zone netpickerlot -75.39 2.9 54.84
 zone tentbeach -45.89 0.82 55.59
-zone iceedge -31.64 0.42 56.09
 zone lorrykerb 38.11 4.27 57.09
 zone swingset -37.89 0.49 58.84
 zone boatbeach -51.14 1.21 59.84
@@ -43,7 +47,6 @@ zone roundabout 41.86 4.27 63.59
 zone stiltramp -58.64 1.59 65.09
 zone stiltsand -54.89 0.78 65.84
 zone wreckice -32.64 0.49 66.09
-zone boardwalkstep -128.39 3.85 66.59
 zone kineemakerb 14.86 4.27 67.09
 zone stepspines 4.11 2.86 69.59
 zone statue 36.61 4.87 70.59
@@ -93,7 +96,6 @@ zone frittteroof 45.61 8.75 100.59
 zone hotelalley 17.11 3.79 101.34
 zone churchmeadow -74.89 1.21 102.09
 zone netbeach -128.14 0.37 103.09
-zone poolfoot -83.39 1.81 103.84
 zone icesteps -55.64 0.25 105.09
 zone icefield -43.39 0.36 105.09
 zone netframes -125.14 1.54 105.59
@@ -126,7 +128,7 @@ zone bunkerbeach -76.89 0.46 153.84
 zone northbeach -87.39 0.13 159.34
 zone pineice -102.14 0.09 161.34
 zone rockbar -91.14 0.38 165.09
-zone pineknolltip -96.89 1.06 165.34
+zone rockbarknoll -96.89 1.06 165.34
 zone landsend -102.89 0.34 172.59
 zone spitmiddle -93.39 0.43 174.59
 zone spitrocks -85.89 0.34 177.84
@@ -161,7 +163,6 @@ zone ruinfloor 37.11 10.45 98.59
 zone bannerwalkway 57.36 11.34 100.84
 zone ruinroofstair 38.36 11.57 101.09
 zone feldroof -104.89 13.57 101.34
-zone frittteroofstair 46.61 6.64 101.59
 zone harbourroof 43.36 13.68 107.09
 zone secretarylanding 38.61 12.02 109.59
 zone shedroof 34.36 7.84 110.84

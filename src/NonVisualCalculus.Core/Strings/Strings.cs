@@ -128,8 +128,8 @@ namespace NonVisualCalculus.Core.Strings
             D("InputWorldReadHealth", "Read health"),
             D("InputWorldReadLocation", "Read location"),
             D("InputWorldReadExperience", "Read experience"),
-            // The describe keys: the mod's own authored description of the scanned thing (X) and of the
-            // zone the cursor stands in (Shift+X).
+            // The describe keys: the mod's own authored description of the scanned thing (E) and of the
+            // zone the cursor stands in (Shift+E).
             D("InputWorldDescribeObject", "Describe scanned thing"),
             D("InputWorldDescribeZone", "Describe zone"),
             // Opens the mod's key-help screen: the list of every key live in the current context.

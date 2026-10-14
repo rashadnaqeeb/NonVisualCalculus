@@ -322,10 +322,8 @@ live, at speak time, never stored as zone ids.
 - Zone-change announcement from the world tick: when the cursor (else the player) resolves to a
   different zone, speak the zone line, queued, behind a setting on by default. The hook sits in
   `WorldReader.Tick` beside the existing scene-change reposition check.
-- Keys, decided by the user: X describes the focused object and Shift+X describes the zone, the
-  WOTR binding. X is read-experience today, so that readout moves to a free letter when the
-  describe keys land in phase 3 (E, F, G, K, N, O, Q, U, V, Y and Z are free; E is the natural
-  home for experience, pending the user's say).
+- Keys, decided by the user: E describes the focused object and Shift+E describes the zone; X
+  stays read-experience.
 - Every framing word (the nothing-described line, the class words, the "Room N" template, the
   category name "details") goes in the strings table. The prose lives in the description files.
 
@@ -415,7 +413,7 @@ agents verbatim.
    not built: doors and scene exits already name their destination, and the zone-change line
    covers the opening itself.
 3. Store, keys and rules. Done 2026-10-14: `descriptions/<scene>.txt` and `<scene>.<lang>.txt`,
-   the loader following scene and language, story-state variants, X and Shift+X, the details
+   the loader following scene and language, story-state variants, E and Shift+E, the details
    category with its sonar toggle, the strings, the offline validator in the test suite, and
    `docs/description-rules.md`.
 4. Survey tooling. Done 2026-10-14: `DevSurvey` and `tools/survey.py` with zones (outlined
