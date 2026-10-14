@@ -1,4 +1,4 @@
-zone.windowfloor.title = the window floor
+zone.windowfloor.title = the smashed-window floor
 zone.windowfloor.body = A broken floor of cracked tiles and rubble inside the Feld building, lit by a tall arched window of iron lattice with its panes smashed, the plaster walls crazed with cracks and a doorway down to the shore floor in the corner.
 zone.brokenstair.title = the broken staircase
 zone.brokenstair.body = A concrete staircase with rusted iron rails zigzagging up the cracked wall of the ruined building, its lower flight ending on the window floor and its upper landing opening toward the boardwalk door.
