@@ -1,0 +1,9 @@
+# Español de España, registro de lang/es.txt: tuteo informal, estilo neutro y conciso para lector de pantalla.
+zone.shack.title = la cabaña de pesca
+zone.shack.body = Una choza oscura de tablas grises curtidas con rendijas de luz entre las tablas, el suelo de tierra, una silla sencilla de madera contra la pared y unas pocas cajas en el rincón, con una ventana de cristales pequeños junto a la puerta.
+object.exit = La puerta de tablas de la cabaña con una ventana pequeña al lado, la luz del sol y los colores de la aldea asomando por la rendija.
+object.box = Una balda de tablas en el rincón de la cabaña oscura con una botella y unos pocos papeles, un rollo de cuerda colgado de un clavo en las tablas de al lado.
+object.postcard = Una tarjeta pálida clavada en las tablas grises de la pared de la cabaña sobre la balda, junto a una pequeña anilla colgada de un clavo.
+object.pierbox = Una silla sencilla de madera contra la pared de tablas grises de la cabaña, un rollo de cuerda en el suelo de tierra al lado.
+object.plaisance = Una mujer con el pelo oscuro recogido, con un chaleco negro sobre una camisa blanca, de pie junto a los abrigos colgados en la pared del apartamento.
+object.kim = Un hombre delgado con una cazadora bomber naranja sobre una camisa blanca y pantalones oscuros, el pelo oscuro peinado hacia atrás y gafas redondas, con una pequeña libreta abierta en una mano y un bolígrafo en la otra.

@@ -1,0 +1,10 @@
+# Español de España, registro de lang/es.txt: tuteo informal, estilo neutro y conciso para lector de pantalla.
+zone.kitchen.title = la cocina del piso
+zone.kitchen.body = Una cocina estrecha de azulejos azules con un fregadero y un fogón, sartenes colgadas en la pared sobre la encimera, tarros y botellas en las baldas y una planta en maceta junto a la puerta.
+zone.mainroom.title = la sala principal del piso
+zone.mainroom.body = Una habitación de paredes amarillas con una cama grande bajo una ventana de muchos cristales pequeños, plantas en maceta en el alféizar, un baúl a los pies de la cama, una estantería alta y un armario contra la pared del fondo, un sillón gastado junto a la puerta con una lámpara de escritorio al lado, y un pequeño retrete que se abre en la esquina.
+zone.childrensroom.title = el cuarto de los niños
+zone.childrensroom.body = Una habitación pequeña y verde con dos camas bajas bajo una ventana con persiana, una manta verde azulada en una y una colcha amarilla de retales en la otra, una mesilla con una lámpara y dibujos infantiles clavados en la pared.
+object.exit = Una puerta gris con la pintura desconchada en la pared del piso, un sillón amarillo y una lámpara sobre una mesa auxiliar al otro lado de la alfombra y un tendedero de alambre junto a la ventana.
+object.workingwoman = Una mujer con una chaqueta azul y pantalones oscuros sentada en el borde de la cama con las manos juntas entre las rodillas, zapatillas amarillas en los pies.
+object.kim = Un hombre delgado con una cazadora bomber naranja sobre una camisa blanca y pantalones oscuros, el pelo oscuro peinado hacia atrás y gafas redondas, con una pequeña libreta abierta en una mano y un bolígrafo en la otra.

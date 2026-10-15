@@ -1,0 +1,8 @@
+# Descriptions du monde en français. Registre : français écrit standard, neutre et concis, celui de lang/fr.txt ; noms de lieux et de personnes repris de la version française du jeu.
+zone.container.title = le conteneur de fret
+zone.container.body = L'intérieur d'un conteneur de transport, une boîte étroite de nervures d'acier jaune aux murs grillagés, son sol strié de peinture de signalisation jaune, où une lumière pâle aveuglante se déverse par le bout opposé et le grillage se tord et ondule autour d'elle.
+object.exit = Le bout ouvert du conteneur, une ouverture de nervures d'acier jaune striée de peinture de signalisation, son mur grillagé ondulant sous la lumière pâle qui s'y déverse.
+object.vicquemare = Le bout ondulant du conteneur, la lumière pâle courbant les murs d'acier.
+object.lightbender = Une forme sombre au cœur de la lumière aveuglante au bout du conteneur, les murs se déformant autour d'elle en cercles.
+object.lightbender2 = Une forme sombre au cœur de la lumière aveuglante au bout du conteneur, les murs se déformant autour d'elle en cercles.
+object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.

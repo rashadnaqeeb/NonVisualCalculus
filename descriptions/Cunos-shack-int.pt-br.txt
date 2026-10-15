@@ -1,0 +1,12 @@
+# Descrições do mod em português do Brasil. Registro: tratamento por você, estilo neutro e conciso de leitor de tela, como em lang/pt-br.txt.
+zone.shack.title = o barraco do Cuno
+zone.shack.body = Uma cabana mal iluminada de pranchas toscas com piso de terra, um colchão rasgado e um monte de tralha num canto, uma bancada de tábuas contra a parede com garrafas e latas em cima, um cabo esticado pelo cômodo com uma lâmpada nua, e uma pintura grosseira de mandíbulas de tubarão na parede junto à porta. Uma escada de tábuas pregadas sobe até um alçapão no telhado.
+object.roofhatch = Uma escada de tábuas pregadas encostada na parede de pranchas ao lado de uma cabeça de porco com os olhos riscados, acima da bancada de garrafas e latas.
+object.exit = A porta de pranchas do barraco, uma lâmpada nua num cabo acima dela e um colchão rasgado no piso de terra dentro.
+object.jar = A bancada de tábuas ao longo da parede do barraco com garrafas, uma lata e um balde amarelo em cima, um prato e potes na prateleira acima.
+detail.pighead.title = cabeça de porco
+detail.pighead.body = Uma cabeça de porco de gesso rosa com uma cruz pintada sobre cada olho, posta na bancada junto à escada de tábuas pregadas, o focinho virado para o cômodo.
+detail.sharkjaws.title = pintura de mandíbulas de tubarão
+detail.sharkjaws.body = Uma pintura grosseira na parede de pranchas ao lado da porta do barraco de mandíbulas de tubarão abertas, fileiras de dentes brancos numa boca vermelha, com letras pichadas a spray pelas tábuas.
+object.plaisance = Uma mulher de cabelo escuro preso, de colete preto sobre camisa branca, de pé junto aos casacos pendurados na parede do apartamento.
+object.kim = Um homem magro de jaqueta bomber laranja sobre camisa branca e calça escura, cabelo escuro penteado para trás e óculos redondos, um caderninho aberto numa mão e uma caneta na outra.

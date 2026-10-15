@@ -1,0 +1,10 @@
+# Polski. Rejestr: standardowa polszczyzna literacka, zwięzły neutralny styl czytnika ekranu, jak w lang/pl.txt.
+zone.windowfloor.title = piętro z wybitym oknem
+zone.windowfloor.body = Zrujnowane piętro z popękanych kafelków i gruzu wewnątrz budynku Felda, oświetlone wysokim łukowym oknem z żelaznej kraty z wybitymi szybami, tynkowane ściany pokryte siatką pęknięć i wejście w dół na piętro od strony brzegu w kącie.
+zone.brokenstair.title = zrujnowane schody
+zone.brokenstair.body = Betonowe schody z zardzewiałymi żelaznymi poręczami wijące się zygzakiem po popękanej ścianie zrujnowanego budynku, ich dolny bieg kończy się na piętrze z oknem, a górny podest otwiera się ku drzwiom na promenadę.
+object.exit = Górny podest betonowych schodów z zardzewiałymi żelaznymi poręczami, gdzie wejście otwiera się na promenadę.
+object.lairdoor = Wejście w kącie popękanej kafelkowej podłogi u stóp schodów, wśród wygiętych żelaznych balustrad i porozrzucanych papierów, prowadzące w dół na piętro od strony brzegu.
+object.postcard = Gruz spiętrzony na popękanych kafelkach piętra z oknem, sterczy z niego zardzewiały żelazny pręt.
+object.plaisance = Kobieta z upiętymi ciemnymi włosami, w czarnej kamizelce na białej koszuli, stojąca przy płaszczach wiszących na ścianie mieszkania.
+object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.

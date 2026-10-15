@@ -1,0 +1,9 @@
+# Türkçe: standart yazı dili, kısa ve yalın cümleler, lang/tr.txt ile aynı ölçün; yer ve kişi adları oyunun kendi Türkçe çevirisinden.
+zone.coalroom.title = kömür odası
+zone.coalroom.body = Kirli tuğladan, çatlak taş plakalarla döşeli bir bodrum, ortasında yuvarlak demir bir gider ızgarası, arka duvara dayalı iki yuvarlak kapaklı paslı bir kazan, üstünde bir boru karmaşası. Köşede içine bir kürek saplanmış bir kömür yığını duruyor, duvar dibinde paslı yağ varilleri ve çuvallar var ve taş bir merdiven iskeleye çıkıyor.
+object.exit = Duvardaki bir borunun yanında birkaç beton basamağın dibinde bir kapı aralığı, yerde gevşek kâğıtlar ve içeri düşen bir ışık huzmesi.
+object.grate = Kömür odasının karanlık duvarı boyunca uzanan, flanşlı ekli ağır demir bir boru.
+object.coalbox = Yeşil fayanslı odanın köşesinde içine kürek saplanmış bir kömür yığını, üstündeki duvarda turuncu bir sigorta kutusu ve tepede uzanan kalın borular.
+object.coaldoor = Yuvarlak kapaklı, tabanı boyunca parmaklıklı havalandırma sıralı paslı demir bir kazan, odanın yeşil lekeli duvarına yerleştirilmiş.
+object.plaisance = Siyah saçlarını topuz yapmış, beyaz gömlek üstüne siyah yelek giymiş bir kadın, dairenin duvarına asılı paltoların yanında duruyor.
+object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.

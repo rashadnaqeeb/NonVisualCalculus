@@ -1,0 +1,11 @@
+# Türkçe: standart yazı dili, kısa ve yalın cümleler, lang/tr.txt ile aynı ölçün; yer ve kişi adları oyunun kendi Türkçe çevirisinden.
+zone.waitingroom.title = konteyner bekleme odası
+zone.waitingroom.body = Sarı çelik çerçeveli bir yük konteynerinin içi, bir yanı boyunca kırmızı bezle örtülü, çizik tahtalardan bir zemin, duvara dayalı bir sıra katlanır sandalye ve çelik semaverlerden bir sehpa, tahtalardan bir merdiven yukarıdaki ofise tırmanıyor.
+zone.office.title = konteyner ofisi
+zone.office.body = Ofis olarak döşenmiş bir konteyner, tel örgü duvarlarının çevresinde asılı kırmızı pankartlar: kâğıt yığılı ve lambalı ağır ahşap bir masa, yerde desenli bir halı, üstüne içi doldurulmuş bir balık monte edilmiş bir dosya dolabı duvarı, köşelerde saksı bitkileri ve merdivenin yanında kasalar.
+zone.officestep.title = ofis basamağı
+zone.officestep.body = Bekleme odasından gelen tahta merdivenin tepesi, ofisin kapısında.
+object.exit = Konteynerin ucundaki kapı aralığı, kırmızı bezle örtülü, eşiğinin üstüne tahtalar döşenmiş.
+object.coffeetable = Tel örgü duvara dayalı, üstünde musluklu iki çelik semaver, beyaz kâğıt bardak yığınları ve bir karton kutu olan kırmızı tablalı bir masa, çevresine yığılmış ve dağılmış yeşil ve zeytin rengi katlanır sandalyeler.
+object.evrart = Kâğıtlar, dosyalar, bir lamba, bir fincan ve şişeler yığılı ağır ahşap bir masa, arkasında deri bir koltuk ve ötede desenli halı.
+object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.

@@ -1,0 +1,10 @@
+# Türkçe: standart yazı dili, kısa ve yalın cümleler, lang/tr.txt ile aynı ölçün; yer ve kişi adları oyunun kendi Türkçe çevirisinden.
+zone.kitchen.title = 28 numaralı dairenin mutfağı
+zone.kitchen.body = Sarı dolaplarla kaplı bir duvarın ve tavalar asılı delikli bir panonun altında lavabolu ve ocaklı küçük bir mutfak, üstünde fincanlar ve bir tabak olan yuvarlak bir masa, kapı aralığının yanında kırmızı bir tabure ve saksıda bir bitki.
+zone.bedroom.title = 28 numaralı dairenin yatak odası
+zone.bedroom.body = Buzlu camlı bir pencerenin altında deniz mavisi bir gölgelikle örtülü dört direkli bir yatağın durduğu bir yatak odası, kapının yanında üstünde açık bir kitap duran bir koltuk, tahta döşemede desenli bir halı, sarı bir palto asılı bir askı rayı ve karşı duvara dayalı bir tuvalet masası, köşede saçaklı abajurlu bir lamba.
+object.exit = Dairenin duvarında, oturağında açık bir kitap duran gri dolgulu bir koltuğun altında bir kapı, lamba ışığı sıvanın üstüne düşüyor.
+object.bed = Lamba ışıklı dairenin köşesinde beyaz çarşaflı bir yatak, ayak ucunda üstünde açık bir dergi duran gri dolgulu bir koltuk.
+object.closet = Dairenin karanlık köşesinde açık duran bir gardırop, içinde asılı birkaç palto ve gömlek, yanında yeşil bir sandalye.
+object.sponsor = Pencerenin yanında duran koyu takım elbiseli bir adam, yanındaki alçak masada fincanlar ve şişeler arasında bir pipo ve bir gazete.
+object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.

@@ -1,0 +1,10 @@
+# Español de España, registro de lang/es.txt: tuteo informal, estilo neutro y conciso para lector de pantalla.
+zone.kitchen.title = la cocina del apartamento 28
+zone.kitchen.body = Una cocina pequeña con un fregadero y un fogón bajo una pared de armarios amarillos y un panel perforado con sartenes colgadas, una mesa redonda con tazas y un plato encima, un taburete rojo y una planta en maceta junto a la puerta.
+zone.bedroom.title = el dormitorio del apartamento 28
+zone.bedroom.body = Un dormitorio con una cama de cuatro columnas cubierta con un dosel verde azulado bajo una ventana de cristales esmerilados, un sillón junto a la puerta con un libro abierto encima, una alfombra estampada sobre la tarima, una barra de ropa con un abrigo amarillo y un tocador contra la pared del fondo, y una lámpara con pantalla de flecos en la esquina.
+object.exit = Una puerta en la pared del piso bajo un sillón gris acolchado con un libro abierto en el asiento, la luz de la lámpara cayendo sobre el yeso.
+object.bed = Una cama con sábanas blancas en la esquina del piso iluminado por la lámpara, un sillón gris acolchado con una revista abierta a sus pies.
+object.closet = Un armario abierto en el rincón oscuro del piso, unos pocos abrigos y camisas colgados dentro, una silla verde al lado.
+object.sponsor = Un hombre con un traje oscuro de pie junto a la ventana, una pipa y un periódico en la mesa baja a su lado entre tazas y botellas.
+object.kim = Un hombre delgado con una cazadora bomber naranja sobre una camisa blanca y pantalones oscuros, el pelo oscuro peinado hacia atrás y gafas redondas, con una pequeña libreta abierta en una mano y un bolígrafo en la otra.

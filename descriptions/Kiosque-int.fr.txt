@@ -1,0 +1,13 @@
+# Descriptions du monde en français. Registre : français écrit standard, neutre et concis, celui de lang/fr.txt ; noms de lieux et de personnes repris de la version française du jeu.
+zone.shop.title = la boutique Frittte
+zone.shop.body = Une petite boutique claire au sol carrelé usé. Un comptoir vitré et des vitrines réfrigérées courent le long du fond sous des étagères de bouteilles, avec une machine à tare et une caisse enregistreuse sur le comptoir ; un réfrigérateur à boissons et un présentoir de snacks se trouvent près de la porte, des affiches couvrent le mur, et les vitrines du devant sont pleines de fleurs et de plantes en pot.
+object.apothecary = Un comptoir au fond de la boutique avec une radio grise dessus sous une affiche de lèvres rouges, une caisse blanche de bouteilles à côté et un panier en fil de fer de marchandises au sol.
+object.taremachine = Une haute machine verte contre le mur du fond de la boutique avec un panneau encadré sur sa face, une vitrine de tasses à côté et une affiche au mur.
+object.alcohol = Un plan de travail de cuisine aux placards verts avec un évier en acier, des rangées de bouteilles vertes et brunes alignées le long de son fond avec des étiquettes de prix jaunes, et une vitrine de marchandises au-dessus.
+object.exit = Une porte dans le mur de la boutique entre deux vitrines pleines de fleurs et de plantes en pot, le sol carrelé à l'intérieur strié de lumière.
+object.knicknacks = Un comptoir-vitrine à cadre d'acier orange, des pâtisseries et des bouteilles sur ses étagères, des étiquettes de prix jaunes collées sur le verre, sur le sol carrelé près de la marche.
+object.liquorpodium = Un comptoir vitré près de la vitrine de la boutique avec des bouteilles et des boîtes sous son dessus, une chaise en osier et un palmier en pot à côté et un pot à crayons sur le verre.
+object.cigarettes = Les comptoirs vitrés près de la caisse de la vendeuse, des pâtisseries et des bouteilles sous leurs dessus, un pot à crayons et une lampe sur le verre.
+object.jamdoor = La porte vitrée de la boutique entre les vitrines, des plantes en pot sur le rebord à l'extérieur.
+object.clerk = Une jeune femme aux cheveux foncés en haut violet, debout derrière le comptoir vitré un livre ouvert entre les mains.
+object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.

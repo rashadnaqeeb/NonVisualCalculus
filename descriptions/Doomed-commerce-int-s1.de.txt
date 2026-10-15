@@ -1,0 +1,21 @@
+# Deutsch. Register wie lang/de.txt: Schriftdeutsch, Du-Form, knapper neutraler Screenreader-Stil, Orts- und Personennamen aus der deutschen Spielfassung.
+zone.workshop.title = die Kellerwerkstatt
+zone.workshop.body = Ein dunkler Keller aus Backstein und Balken unter dem alten Gebäude, mit Holzstufen, die hinunterführen, einer Werkbank mit einer orangefarbenen Lampe und einem Campingkocher, Fässern und Kisten, die an den Wänden gestapelt sind, einem Sicherungskasten bei der hinteren Tür und einer Wimpelkette, die von den Balken hängt.
+zone.pipealcove.title = die Rohrnische
+zone.pipealcove.body = Eine enge Nische am Ende des Kellers, wo dicke schwarze Rohre an der Wand entlanglaufen, ein rotes Tuch an einem Haken hängt und Werkzeuge im Dunkeln auf einem Regal liegen.
+zone.bearcellar.title = der Eisbärkeller
+zone.bearcellar.body = Ein weiter, düsterer Keller, von einer einzigen kalten Lampe beleuchtet, wo ein riesiger weißer Kühlschrank in Form eines Eisbären mitten auf dem Boden steht. Rohre und Drähte kreuzen die Backsteinwände, ein Ofen und Kisten stehen in der Ecke, ein kuppelförmiger Glastank glüht in einer Nische bei einem großen Heizkessel, und Planken liegen bei einer Treppe ins Stockwerk darüber aufgehäuft.
+object.exit = Eine Türöffnung am oberen Ende der Holzstufen des Kellers, Spinnweben über die Balken daneben gespannt und ein dickes Rohr, das an der Wand entlangläuft.
+object.breaker = Ein grauer Sicherungskasten aus Stahl, offen stehend unter einem Backsteinbogen, Reihen gelber Sicherungen darin und rote Kabel, die von ihm über den Kellerboden ziehen, Spinnweben auf den Fässern dahinter.
+object.furnace = Eine gedrungene Eisenluke mit einem Kreuz aus Rippen, an einer Masse aus Backstein und genietetem Eisen angeschlagen, über einem Boden aus losen Steinen und einem Gitter.
+object.icecream = Ein roter Stahlkasten mit einem Gitter in der Seite und einem blauen Handrad obenauf, auf Rollen stehend, Kabel und Gasflaschen auf dem Boden ringsum.
+object.cache = Ein ausgefranstes Loch in der Backsteinwand der Rohrnische hinter dicken schwarzen Rohren, ein rotes Tuch hängt daneben und ein aufgesetzter Hirschkopf auf den Steinen darunter.
+object.fridge = Ein riesiger blasser Kühlschrank, als kauernder Eisbär geformt, eine Stahltür in seiner Brust, auf dem Kellerboden in kaltem Dunst stehend, Kabel schlängeln sich zu ihm hin.
+object.bookcase = Ein Stapel Planken und eine Kiste am Fuß der Holzstufen des Kellers, die Backsteinwand dahinter.
+object.bearfridge = Ein riesiger blasser Kühlschrank, als kauernder Eisbär geformt, eine Stahltür in seiner Brust, auf dem Kellerboden in kaltem Dunst stehend, Kabel schlängeln sich zu ihm hin.
+object.shelf = Ein Schrank an der Backsteinwand des Kellers unter einem Schleier von Spinnweben, am Fuß der Stufen.
+object.coins = Ein dunkler Fleck des Steinbodens im Keller bei der Backsteinwand, kaum beleuchtet.
+object.shelf3 = Ein Stahlschreibtisch mit herausgezogenen Schubladen und einem grünen Stuhl darunter, neben den Rohren des großen Heizkessels, ein paar Bücher obenauf und Ziegel auf den Steinen verstreut.
+object.shelf2 = Ein Regalgestell an der Kellerwand mit einer Reihe blauer Gasflaschen darunter gestapelt, eine orangefarbene Kiste daneben und ein Fensterrahmen an die Ziegel gelehnt.
+object.f2door = Eine Türöffnung am oberen Ende der Plankentreppe des Kellers neben einem dicken schwarzen Rohr, der blasse Kopf des Eisbärkühlschranks darunter.
+object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.

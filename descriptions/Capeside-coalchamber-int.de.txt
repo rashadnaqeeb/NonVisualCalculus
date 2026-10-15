@@ -1,0 +1,9 @@
+# Deutsch. Register wie lang/de.txt: Schriftdeutsch, Du-Form, knapper neutraler Screenreader-Stil, Orts- und Personennamen aus der deutschen Spielfassung.
+zone.coalroom.title = der Kohlenkeller
+zone.coalroom.body = Ein Keller aus schmutzigem Backstein mit einem Boden aus gesprungenen Platten, einem runden eisernen Abflussgitter in der Mitte, wo ein verrosteter Heizkessel mit zwei runden Türen unter einem Gewirr von Rohren an der Rückwand steht. Ein Kohlenhaufen liegt in der Ecke mit einer Schaufel darin, verrostete Ölfässer und Säcke stehen an der Wand, und eine Steintreppe steigt hinaus zum Bootsanleger.
+object.exit = Eine Türöffnung am Fuß einiger Betonstufen neben einem Rohr an der Wand, lose Papiere auf dem Boden und ein Lichtstrahl, der hereinfällt.
+object.grate = Ein schweres Eisenrohr mit einer Flanschverbindung, das an der dunklen Wand des Kohlenkellers entlangläuft.
+object.coalbox = Ein Kohlenhaufen in der Ecke des grün gefliesten Kellers mit einer Schaufel darin, ein orangefarbener Sicherungskasten an der Wand darüber und dicke Rohre über Kopf.
+object.coaldoor = Ein verrosteter eiserner Heizkessel mit runden Luken und einer Reihe vergitterter Lüftungsschlitze an seinem Fuß, in die grün verfärbte Wand des Kellers eingelassen.
+object.plaisance = Eine Frau mit hochgestecktem dunklem Haar, in einer schwarzen Weste über einem weißen Hemd, steht bei den Mänteln, die an der Wand der Wohnung hängen.
+object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.

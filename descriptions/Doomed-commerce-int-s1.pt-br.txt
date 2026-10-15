@@ -1,0 +1,21 @@
+# Descrições do mod em português do Brasil. Registro: tratamento por você, estilo neutro e conciso de leitor de tela, como em lang/pt-br.txt.
+zone.workshop.title = a oficina do porão
+zone.workshop.body = Um porão escuro de tijolo e madeira sob o prédio velho, com degraus de madeira descendo para dentro, uma bancada com uma luminária laranja e um fogareiro de camping, barris e caixotes empilhados contra as paredes, uma caixa de disjuntores junto à porta do fundo, e um cordão de bandeirinhas pendurado nas vigas.
+zone.pipealcove.title = o nicho dos canos
+zone.pipealcove.body = Um recesso apertado no fim do porão onde canos pretos grossos correm pela parede, um pano vermelho pende de um gancho e ferramentas estão numa prateleira no escuro.
+zone.bearcellar.title = o porão do urso de gelo
+zone.bearcellar.body = Um porão amplo e mal iluminado por uma única lâmpada fria, onde uma geladeira enorme branca em forma de urso polar fica no meio do piso. Canos e fios cruzam as paredes de tijolo, um fogão e caixotes ficam no canto, um tanque de vidro em forma de cúpula brilha num nicho junto a uma grande caldeira, e pranchas estão amontoadas junto a uma escada que sobe para o andar de cima.
+object.exit = Uma porta no alto dos degraus de madeira do porão, teias de aranha estendidas pela madeira ao lado e um cano grosso correndo pela parede.
+object.breaker = Uma caixa de disjuntores de aço cinza aberta sob um arco de tijolo, fileiras de fusíveis amarelos dentro e cabos vermelhos escorrendo dela pelo piso do porão, teias de aranha nos barris atrás.
+object.furnace = Uma escotilha de ferro atarracada com uma cruz de nervuras, articulada numa massa de tijolo e ferro rebitado, sobre um piso de pedras soltas e uma grade.
+object.icecream = Uma caixa de aço vermelha com uma grelha na lateral e um volante azul de válvula em cima, de pé sobre rodízios, cabos e cilindros de gás no chão em volta.
+object.cache = Um buraco irregular na parede de tijolo do nicho dos canos atrás de canos pretos grossos, um pano vermelho pendurado ao lado e uma cabeça de veado empalhada montada sobre as pedras abaixo.
+object.fridge = Uma geladeira enorme e pálida esculpida como um urso polar agachado, uma porta de aço embutida no peito, de pé no piso do porão numa névoa fria com cabos serpenteando até ela.
+object.bookcase = Uma pilha de pranchas e um caixote ao pé dos degraus de madeira do porão, a parede de tijolo atrás.
+object.bearfridge = Uma geladeira enorme e pálida esculpida como um urso polar agachado, uma porta de aço embutida no peito, de pé no piso do porão numa névoa fria com cabos serpenteando até ela.
+object.shelf = Um armário contra a parede de tijolo do porão sob um manto de teias de aranha, junto ao pé dos degraus.
+object.coins = Um trecho escuro do piso de pedra do porão junto à parede de tijolo, mal iluminado.
+object.shelf3 = Uma mesa de aço com as gavetas abertas e uma cadeira verde enfiada embaixo, ao lado dos canos da grande caldeira, alguns livros em cima e tijolos espalhados pelas pedras.
+object.shelf2 = Uma estante de prateleiras contra a parede do porão com uma fileira de cilindros de gás azuis empilhados embaixo, um caixote laranja ao lado e um caixilho de janela encostado nos tijolos.
+object.f2door = Uma porta no alto da escada de pranchas do porão ao lado de um cano preto grosso, a cabeça pálida da geladeira de urso polar abaixo.
+object.kim = Um homem magro de jaqueta bomber laranja sobre camisa branca e calça escura, cabelo escuro penteado para trás e óculos redondos, um caderninho aberto numa mão e uma caneta na outra.

@@ -1,0 +1,10 @@
+# Descriptions du monde en français. Registre : français écrit standard, neutre et concis, celui de lang/fr.txt ; noms de lieux et de personnes repris de la version française du jeu.
+zone.bedroomdoor.title = la porte de la chambre
+zone.bedroomdoor.body = Le passage entre la pièce principale de l'appartement et une petite chambre, où un lit de laiton aux draps froissés se trouve sous une lampe suspendue et une malle ouverte repose à son pied.
+zone.apartment.title = l'appartement voûté
+zone.apartment.body = Une pièce basse de sous-sol voûtée, en brique et plâtre, éclairée par une grappe de lampes, avec un bureau et une table bleue sous l'arche chargés de livres et de papiers, une bibliothèque, un canapé drapé d'une couverture verte, une bannière jaune au mur, un sol de carreaux en damier près de la porte et une petite salle de bain avec un lavabo derrière une cloison.
+object.shelf = Un bureau en bois avec une lampe, un livre ouvert et un casier de dossiers, une chaise pivotante devant, sous une étagère où pend un drapeau rayé, près de la porte de la chambre.
+object.luggage = Une valise ouverte pleine de vêtements sur un support au pied du lit, une couverture jaune et une lampe à côté.
+object.books = Une étagère de livres sur le mur bleu près de la porte ouverte, un manteau accroché à l'intérieur de la porte, vus par-delà la courbe de la voûte nervurée.
+object.plaisance = Une femme aux cheveux foncés relevés, en gilet noir sur une chemise blanche, debout près des manteaux accrochés au mur de l'appartement.
+object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.

@@ -1,0 +1,9 @@
+# Español de España, registro de lang/es.txt: tuteo informal, estilo neutro y conciso para lector de pantalla.
+zone.coalroom.title = la carbonera
+zone.coalroom.body = Un sótano de ladrillo mugriento con el suelo de losas agrietadas y una rejilla de desagüe redonda de hierro en el centro, donde una caldera oxidada con dos portezuelas redondas se alza contra la pared del fondo bajo una maraña de tuberías. Un montón de carbón yace en el rincón con una pala clavada, bidones oxidados y sacos se apoyan en la pared, y una escalera de piedra sube hacia el embarcadero.
+object.exit = Una puerta al pie de unos pocos escalones de hormigón junto a una tubería en la pared, papeles sueltos en el suelo y un haz de luz que entra.
+object.grate = Una pesada tubería de hierro con una junta de brida que recorre la pared oscura de la carbonera.
+object.coalbox = Un montón de carbón en el rincón de la cámara de azulejos verdes con una pala clavada, una caja de fusibles naranja en la pared encima y tuberías gruesas que pasan por lo alto.
+object.coaldoor = Una caldera de hierro oxidada con escotillas redondas y una hilera de respiraderos enrejados a lo largo de la base, empotrada en la pared manchada de verde de la cámara.
+object.plaisance = Una mujer con el pelo oscuro recogido, con un chaleco negro sobre una camisa blanca, de pie junto a los abrigos colgados en la pared del apartamento.
+object.kim = Un hombre delgado con una cazadora bomber naranja sobre una camisa blanca y pantalones oscuros, el pelo oscuro peinado hacia atrás y gafas redondas, con una pequeña libreta abierta en una mano y un bolígrafo en la otra.

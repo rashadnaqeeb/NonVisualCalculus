@@ -1,0 +1,12 @@
+# Español de España, registro de lang/es.txt: tuteo informal, estilo neutro y conciso para lector de pantalla.
+zone.room.title = la habitación de la casa sobre pilotes
+zone.room.body = Una acogedora casa de una sola habitación de tablas: una cama con una almohada a rayas bajo la ventana, una mesa pequeña y una silla junto a la lámpara, un lavamanos y un espejo en el rincón del fondo bajo un tubo de estufa amarillo, y baldas de botellas y latas a lo largo de la pared del fondo.
+object.bed = Una cama estrecha bajo la ventana con una colcha blanca y una almohada a rayas, una radio pequeña en la balda sobre la cabecera y una mesa de madera con un cuenco y una cuchara al lado.
+object.washbasin = Una palangana blanca sobre un soporte de hierro oxidado en el rincón del fondo bajo un tubo de estufa amarillo, un rollo de tubería detrás y una taza en la balda de arriba.
+object.floorboard = Un trozo del suelo de tablas desnudo entre la cama y la mesa, junto a una silla cian, donde la luz del sol de la ventana cae sobre las tablas.
+object.exit = Una puerta de madera marrón con el picaporte de latón en la pared de tablas, al otro lado de la tarima desde la cama.
+object.mirror = Un espejo pequeño en la pared de tablas sobre el lavamanos en el rincón del fondo, junto a una taza en una balda y el tubo de estufa amarillo.
+object.clothbox = La cama estrecha bajo la ventana con su colcha blanca y su almohada a rayas, una caja oscura a sus pies.
+object.exit2 = Una puerta de madera marrón con el picaporte de latón en la pared de tablas, al otro lado de la tarima desde la cama.
+object.plaisance = Una mujer con el pelo oscuro recogido, con un chaleco negro sobre una camisa blanca, de pie junto a los abrigos colgados en la pared del apartamento.
+object.kim = Un hombre delgado con una cazadora bomber naranja sobre una camisa blanca y pantalones oscuros, el pelo oscuro peinado hacia atrás y gafas redondas, con una pequeña libreta abierta en una mano y un bolígrafo en la otra.

@@ -1,0 +1,11 @@
+# Türkçe: standart yazı dili, kısa ve yalın cümleler, lang/tr.txt ile aynı ölçün; yer ve kişi adları oyunun kendi Türkçe çevirisinden.
+zone.shop.title = ikinci el dükkânı
+zone.shop.body = Birkaç asılı lambayla aydınlanan sıkışık bir dükkân, her duvar tavana kadar hurdayla yığılı: radyo, müzik seti ve kaset çalar rafları, ikinci el giysi askıları, içi doldurulmuş bir hayvan başı, ağır çerçeveli resimler ve aynalar. Ortadan yazar kasalı ve ufak mal tepsili cam bir tezgâh geçiyor ve kapının yanındaki raflara kesilmiş bir sokak lambası yaslanmış.
+zone.shop.body@PAWNSHOP_SIGN:on = Birkaç asılı lambayla aydınlanan sıkışık bir dükkân, her duvar tavana kadar hurdayla yığılı: radyo, müzik seti ve kaset çalar rafları, ikinci el giysi askıları, içi doldurulmuş bir hayvan başı, ağır çerçeveli resimler ve aynalar. Ortadan yazar kasalı ve ufak mal tepsili cam bir tezgâh geçiyor ve kapının yanındaki raflara kesilmiş bir sokak lambası yaslanmış, üstüne beyaz harfli kırmızı bir tabela asılmış.
+object.exit = Dükkânın köşesinde koyu çerçeveli cam panelli bir kapı, radyo ve lamba raflarının ve yeşil abajurlu bir lambanın altında.
+object.boomboxes = Gri hoparlörler, kaset çalarlar ve sarı makaralı bir teyple yığılı bir raf duvarı, saat, fotoğraf makinesi ve daktilo dolu cam bir tezgâhın üstünde.
+object.figurines = Küçük beyaz biblolar, bir satranç takımı ve kavanozlarla tıklım tıklım cam bir vitrin, turuncu bir müzik kutusunun ve ıvır zıvır dolu cam bir tezgâhın yanında.
+object.streetlight = Tabanından kesilmiş dökme demir bir sokak lambası, feneri yanık, dükkânın raflarına yaslanmış, askıda yeşil bir paltonun ve lambalar ile yeşil cam bir kürenin durduğu bir tezgâhın yanında.
+object.uniforms = Askılarda ikinci el paltolardan bir askı rafı, aralarında yeşil ekose bir pardösü, altında yere yığılmış karton kutular.
+object.roy = Tezgâhın arkasındaki cam vitrinin içinden lambalar ve saatler arasında görünen bir adam, yanında rafta yanan bir fener.
+object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.

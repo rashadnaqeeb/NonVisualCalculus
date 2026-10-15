@@ -1,0 +1,9 @@
+# Deutsch. Register wie lang/de.txt: Schriftdeutsch, Du-Form, knapper neutraler Screenreader-Stil, Orts- und Personennamen aus der deutschen Spielfassung.
+zone.shack.title = die Fischerhütte
+zone.shack.body = Eine dunkle Hütte aus grauen, verwitterten Planken mit Lichtspalten zwischen den Brettern, einem Lehmboden, einem schlichten Holzstuhl an der Wand und ein paar Kisten in der Ecke, mit einem Fenster aus kleinen Scheiben neben der Tür.
+object.exit = Die Plankentür der Hütte mit einem kleinen Fenster daneben, Sonnenlicht und die Farben des Dorfs scheinen durch den Spalt.
+object.box = Ein Bretterregal in der Ecke der dunklen Hütte mit einer Flasche und ein paar Papieren, eine Seilrolle hängt an einem Nagel an den Planken daneben.
+object.postcard = Eine blasse Karte, an die grauen Planken der Hüttenwand über dem Regal geheftet, neben einem kleinen Ring an einem Nagel.
+object.pierbox = Ein schlichter Holzstuhl an der grauen Plankenwand der Hütte, eine Seilrolle auf dem Lehmboden daneben.
+object.plaisance = Eine Frau mit hochgestecktem dunklem Haar, in einer schwarzen Weste über einem weißen Hemd, steht bei den Mänteln, die an der Wand der Wohnung hängen.
+object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.

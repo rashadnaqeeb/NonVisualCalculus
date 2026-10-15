@@ -1,0 +1,11 @@
+# Descrições do mod em português do Brasil. Registro: tratamento por você, estilo neutro e conciso de leitor de tela, como em lang/pt-br.txt.
+zone.waitingroom.title = a sala de espera do container
+zone.waitingroom.body = O interior de um container de carga com armação de aço amarela, coberto de pano vermelho ao longo de um lado, um piso de tábuas arranhadas, uma fileira de cadeiras dobráveis e um suporte de garrafões de aço contra a parede, com uma escada de tábuas subindo para o escritório acima.
+zone.office.title = o escritório do container
+zone.office.body = Um container mobiliado como escritório, faixas vermelhas penduradas em volta de suas paredes de tela: uma escrivaninha pesada de madeira coberta de papéis e um abajur, um tapete estampado no chão, uma parede de arquivos de aço com um peixe empalhado montado acima, vasos de plantas nos cantos e caixotes junto à escada.
+zone.officestep.title = o degrau do escritório
+zone.officestep.body = O alto da escada de tábuas da sala de espera, na porta do escritório.
+object.exit = A porta na extremidade do container, coberta de pano vermelho, com tábuas assentadas sobre a soleira.
+object.coffeetable = Uma mesa de tampo vermelho contra a parede de tela segurando dois garrafões de aço com torneiras, pilhas de copos brancos de papel e uma caixa de papelão, com cadeiras dobráveis em verde e oliva empilhadas e espalhadas em volta.
+object.evrart = Uma escrivaninha pesada de madeira coberta de papéis, pastas, um abajur, uma xícara e garrafas, uma cadeira de couro atrás e o tapete estampado adiante.
+object.kim = Um homem magro de jaqueta bomber laranja sobre camisa branca e calça escura, cabelo escuro penteado para trás e óculos redondos, um caderninho aberto numa mão e uma caneta na outra.

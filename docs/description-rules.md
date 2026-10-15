@@ -30,6 +30,10 @@ pass verbatim. Design background: `zones-and-descriptions-plan.md` (same folder)
   signifies. The game's examine conversations and orbs say the rest, and the mod never restates
   the game's writing.
 - Unflinching detail. A mature game; blood, wreckage, squalor and cruelty are described plainly.
+- Painted words as painted. Graffiti, signs, murals and window lettering are quoted verbatim in
+  the script and language they are painted in (RENE LIVES, ALLEZ VOUS-EN, SUND), in every
+  translation of the file alike: the paint is not localized, and the game's own examine text
+  carries its meaning.
 
 ## What stays out
 

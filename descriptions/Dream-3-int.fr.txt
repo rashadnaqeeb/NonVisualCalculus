@@ -1,0 +1,21 @@
+# Descriptions du monde en français. Registre : français écrit standard, neutre et concis, celui de lang/fr.txt ; noms de lieux et de personnes repris de la version française du jeu.
+zone.gunhall.title = la salle du canon
+zone.gunhall.body = Une salle de béton sous le fort au sol de dalles fissurées, éclairée par une lampe posée au sol. Une machine rouillée drapée d'une housse se dresse contre le mur près d'un petit escalier de fer, une trappe ronde est encastrée dans le sol, et le mur côté mer s'est effondré en une pente de gravats et de sable où s'ouvre la porte vers la cale de halage.
+zone.eastdoor.title = la porte est
+zone.eastdoor.body = Un court passage sombre à l'intérieur de la porte est du fort, ouvrant sur le niveau supérieur de la salle du canon près de la plateforme tournante à rambarde.
+zone.turntable.title = la plateforme tournante
+zone.turntable.body = Une piste circulaire de fer encastrée dans le béton, entourée d'une rambarde, avec l'affût rouillé et les engrenages d'une tourelle de canon sur un piédestal en son centre, sous des câbles pendant du toit.
+zone.upperdeck.title = la galerie haute
+zone.upperdeck.body = Une plateforme à rambarde de béton strié de rouille au-dessus de la plateforme tournante, où les engrenages de l'affût s'élèvent à côté, un générateur vert est posé sur un cadre d'acier avec un câble jaune traînant sur le sol, et des marches montent vers la salle à la meurtrière.
+zone.entrycorridor.title = le couloir d'entrée
+zone.entrycorridor.body = Un couloir de béton à l'intérieur de la porte principale, avec un casier gris contre le mur, une caisse en bois au sol, une roue dentée fixée au mur et un escalier montant vers la salle au-dessus.
+zone.upperstair.title = l'escalier haut
+zone.upperstair.body = Un escalier de fer à rambarde montant du couloir d'entrée vers la salle à la meurtrière au-dessus, devant un portrait passé peint sur le mur de béton.
+zone.desertersroom.title = la salle à la meurtrière
+zone.desertersroom.body = Une salle de béton courbe sous une longue meurtrière, ses murs tendus de draps gris, un lit de chiffons et de couvertures contre le mur du fond, un générateur sur un support avec des câbles traînant sur le sol, une table de boîtes de conserve et de bols, une pile de livres et un fusil appuyé près de la fenêtre.
+zone.holepassage.title = le passage du trou
+zone.holepassage.body = Un passage de dalles de béton brisées partant du trou déchiqueté dans le mur du fort, des gravats et un bol au sol, la lumière du jour tombant en longs rais par la brèche et des barres de fer rouillées calées en travers.
+object.exiteast = Une porte d'acier rouillé à lourds blocs de charnières dans le mur de béton, éclairée en violet.
+object.exithole = Un trou déchiqueté dans le mur de roche du passage, calé par des barres de fer rouillées, des rochers entassés dedans et une lueur orange et rose qui s'y déverse.
+object.exitmain = Une ouverture dans le mur de béton rouillé, une lueur orange et rose qui s'y déverse.
+object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.

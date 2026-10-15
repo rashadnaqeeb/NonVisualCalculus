@@ -1,0 +1,9 @@
+# Polski. Rejestr: standardowa polszczyzna literacka, zwięzły neutralny styl czytnika ekranu, jak w lang/pl.txt.
+zone.shack.title = chata rybacka
+zone.shack.body = Ciemna chata z szarych zwietrzałych desek ze szparami światła między deskami, klepiskiem, zwykłym drewnianym krzesłem pod ścianą i kilkoma pudłami w kącie, z oknem z małych szybek obok drzwi.
+object.exit = Drzwi chaty z desek z małym oknem obok, przez szparę widać słońce i kolory wsi.
+object.box = Półka z desek w kącie ciemnej chaty z butelką i kilkoma papierami, obok na gwoździu w deskach wisi zwój liny.
+object.postcard = Blada kartka przypięta do szarych desek ściany chaty nad półką, obok małego pierścienia zawieszonego na gwoździu.
+object.pierbox = Zwykłe drewniane krzesło pod szarą ścianą chaty z desek, obok na klepisku zwój liny.
+object.plaisance = Kobieta z upiętymi ciemnymi włosami, w czarnej kamizelce na białej koszuli, stojąca przy płaszczach wiszących na ścianie mieszkania.
+object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.

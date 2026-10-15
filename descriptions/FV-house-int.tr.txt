@@ -1,0 +1,8 @@
+# Türkçe: standart yazı dili, kısa ve yalın cümleler, lang/tr.txt ile aynı ölçün; yer ve kişi adları oyunun kendi Türkçe çevirisinden.
+zone.house.title = köy evi
+zone.house.body = Kalas duvarlı ve çıplak tahta döşemeli tek bir sıcak oda, sarı perdeli iki pencereyle aydınlanıyor. Pencerelerin altındaki uzun bir masanın üstünde duvar boyunca kavanoz ve teneke kutu rafları uzanıyor, köşede sarı bir perdenin arkasında mavi battaniyeli bir ranza duruyor ve çaydanlıklı bir soba ile tuğla bir baca karşı duvarı dolduruyor.
+object.exit = Evin duvarında küçük camlı bir pencerenin yanında açık duran bir kalas kapı, içinden çıplak tahtalara düşen güneş ışığı.
+object.bedbox = Yatağın ayak ucunda çıplak tahtalarda kahverengi bir bavul ve bir karton kutu, sobanın yanındaki köşede.
+object.grouse = Kanatları açık, içi doldurulmuş kahverengi bir kuş, kanepenin üstündeki rafa kavanozlar ve teneke kutuların arasına monte edilmiş, altındaki masada sarı perdelerin altında bir çaydanlık ve fincanlar.
+object.lily = Mavi ceketli ve sarı etekli, siyah saçlı küçük bir kız, uzun masanın bankında yanında turuncu ceketli bir adamla oturuyor, masada kâseler.
+object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.

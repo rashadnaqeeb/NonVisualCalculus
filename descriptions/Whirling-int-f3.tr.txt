@@ -1,0 +1,21 @@
+# Türkçe: standart yazı dili, kısa ve yalın cümleler, lang/tr.txt ile aynı ölçün; yer ve kişi adları oyunun kendi Türkçe çevirisinden.
+zone.atticdoor.title = çatı katı kapısı
+zone.atticdoor.body = Çatı katının kapısında dar bir sahanlık, yanında yuvarlak bir havalandırma fanı olan yeşil boyalı bir kapı, cam duvarlı merdiven kafesinin yatak odasının sıva duvarıyla birleştiği yer.
+zone.atticstair.title = çatı katı merdiveni
+zone.atticstair.body = Çelik çerçeveli cam bir bölmeyle kapatılmış ahşap bir merdivenin tepesi, cam bir kapıdan çatı katının çıplak beton zeminine açılıyor.
+zone.atticbedroom.title = çatı katı yatak odası
+zone.atticbedroom.body = Çatının altında duvara dayalı toplanmamış bir yatağı, bir başucu lambası, sıvada bir kitap rafı ve çerçeveli bir resmi olan küçük bir yatak odası, odanın bir ucundan öbürüne iğnelerin arasına gerilmiş kırmızı iplikler ve yatağın ayak ucunda bir battaniye sandığı.
+zone.atticworkshop.title = çatı katı atölyesi
+zone.atticworkshop.body = Yatak odasının arkasında kavanoz, teneke kutu ve kutu raflarıyla tıka basa dolu bir depo, bir lambanın altında kâğıt yığılı bir masa, tel ızgaralı bir pencere, köşede kalın borulu bir kazan ve zemine yığılmış kasalar ve hurda.
+object.door2 = Cam duvarlı merdiven kafesinin dibinde açık duran çelik çerçeveli cam bir kapı, önünde çıplak betonda bir paspas ve camların arkasında pas kırmızısı oturaklı beyaz bir yumurta koltuk.
+object.roofdoor = Çatı katının uç duvarında cam panelli koyu ahşap bir kapı, yanında yuvarlak ızgaralı bir havalandırma fanı ve önünde betonda iki bodur siyah hava kanalı.
+object.windowtrivial = Ahşap merdiveni çevreleyen koyu çelik çerçeveli camlar, arkalarında pas kırmızısı oturaklı beyaz bir yumurta koltuk ve yukarıda odanın bir ucundan öbürüne gerilmiş kırmızı iplikler.
+object.windowclear = Ahşap merdiveni çevreleyen koyu çelik çerçeveli camlar, arkalarında pas kırmızısı oturaklı beyaz bir yumurta koltuk ve yukarıda odanın bir ucundan öbürüne gerilmiş kırmızı iplikler.
+object.shelves = Çatı katı atölyesinde bir lambanın altında kâğıt yığılı bir masa, önünde bir sandalye ve altında pervazında bir bitki olan bir pencere.
+object.box = Çatı katının asansör kapısının yanına yığılmış karton kutular, betonda bir kova ve üstteki duvarda turuncu uyarı levhaları.
+object.footprints = Çatı katının kapısından atölyeye inen birkaç çıplak ahşap basamak, dibine yığılmış karton kutular ve yanlarındaki sıvaya tutturulmuş kâğıtlar.
+object.exit = Asansörün kapısının yanında çatı katı duvarına dayalı teneke kutu, kavanoz ve kutu dolu çelik bir raf, altında bir tabure ve sıvaya yaslanmış çerçeveli bir deniz manzarası.
+object.elevator = Asansörün kapısının yanında çatı katı duvarına dayalı teneke kutu, kavanoz ve kutu dolu çelik bir raf, yerde karton kutular.
+object.roofdoor2 = Çatı katının uç duvarında cam panelli koyu ahşap bir kapı, yanında yuvarlak ızgaralı bir havalandırma fanı ve önünde betonda iki bodur siyah hava kanalı.
+object.plaisance = Siyah saçlarını topuz yapmış, beyaz gömlek üstüne siyah yelek giymiş bir kadın, dairenin duvarına asılı paltoların yanında duruyor.
+object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.

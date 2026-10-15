@@ -13,6 +13,7 @@ New Features and improvements:
 - Zones rebuild when the story changes the ground (a gate repaired, boards raised, a blocked passage cleared), not only when a door moves.
 - Zone maps build in the background and are kept per map for the session, so entering a map or opening a door no longer freezes the game.
 - E describes people too, and every door and exit in Martinaise, including ones the story has not yet opened.
+- Zone and object descriptions are spoken in the game's language: all twelve languages are translated, with the game's own names for places and people.
 - The mod runs on the Mac version of the game on Apple Silicon Macs; see the macOS install guide.
 - On a Mac, speech goes through a screen reader with a Prism plugin, else the system voice, or VoiceOver if chosen in settings.
 

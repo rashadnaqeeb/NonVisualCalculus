@@ -1,0 +1,8 @@
+# Descrições do mod em português do Brasil. Registro: tratamento por você, estilo neutro e conciso de leitor de tela, como em lang/pt-br.txt.
+zone.container.title = o container de carga
+zone.container.body = O interior de um container de carga, uma caixa estreita de nervuras de aço amarelas com paredes de tela, o piso listrado de tinta amarela de perigo, onde uma luz pálida ofuscante jorra pela extremidade oposta e a tela se torce e ondula em volta dela.
+object.exit = A extremidade aberta do container, uma porta de nervuras de aço amarelas listradas de tinta de perigo, sua parede de tela ondulando com a luz pálida que jorra para dentro.
+object.vicquemare = A extremidade ondulante do container, a luz pálida curvando as paredes de aço em arcos.
+object.lightbender = Uma forma escura no coração da luz ofuscante na extremidade do container, as paredes deformando-se em círculos em volta dela.
+object.lightbender2 = Uma forma escura no coração da luz ofuscante na extremidade do container, as paredes deformando-se em círculos em volta dela.
+object.kim = Um homem magro de jaqueta bomber laranja sobre camisa branca e calça escura, cabelo escuro penteado para trás e óculos redondos, um caderninho aberto numa mão e uma caneta na outra.

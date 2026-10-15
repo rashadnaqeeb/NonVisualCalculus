@@ -1,0 +1,10 @@
+# Deutsch. Register wie lang/de.txt: Schriftdeutsch, Du-Form, knapper neutraler Screenreader-Stil, Orts- und Personennamen aus der deutschen Spielfassung.
+zone.kitchen.title = die Küche von Wohnung 28
+zone.kitchen.body = Eine kleine Küche mit Spüle und Herd unter einer Wand aus gelben Schränken und einer Lochwand mit Pfannen, einem runden Tisch mit Tassen und einem Teller darauf, einem roten Hocker und einer Topfpflanze an der Tür.
+zone.bedroom.title = das Schlafzimmer von Wohnung 28
+zone.bedroom.body = Ein Schlafzimmer mit einem Himmelbett unter einem blaugrünen Baldachin unter einem Fenster aus Milchglasscheiben, einem Sessel an der Tür mit einem aufgeschlagenen Buch darauf, einem gemusterten Teppich auf den Dielen, einer Kleiderstange mit einem gelben Mantel und einem Frisiertisch an der gegenüberliegenden Wand, und einer Lampe mit Fransenschirm in der Ecke.
+object.exit = Eine Tür in der Wand der Wohnung unterhalb eines gepolsterten grauen Sessels mit einem aufgeschlagenen Buch auf dem Sitz, das Lampenlicht fällt über den Putz.
+object.bed = Ein Bett mit weißen Laken in der Ecke der lampenbeleuchteten Wohnung, ein gepolsterter grauer Sessel mit einer aufgeschlagenen Zeitschrift an seinem Fußende.
+object.closet = Ein offen stehender Kleiderschrank in der dunklen Ecke der Wohnung, ein paar Mäntel und Hemden hängen darin, ein grüner Stuhl daneben.
+object.sponsor = Ein Mann in einem dunklen Anzug steht am Fenster, eine Pfeife und eine Zeitung auf dem niedrigen Tisch neben ihm zwischen Tassen und Flaschen.
+object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.

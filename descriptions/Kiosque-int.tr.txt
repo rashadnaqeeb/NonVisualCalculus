@@ -1,0 +1,13 @@
+# Türkçe: standart yazı dili, kısa ve yalın cümleler, lang/tr.txt ile aynı ölçün; yer ve kişi adları oyunun kendi Türkçe çevirisinden.
+zone.shop.title = Frittte Market
+zone.shop.body = Aşınmış fayans zeminli küçük, aydınlık bir dükkân. Arka boyunca şişe raflarının altında cam bir tezgâh ve soğutmalı vitrinler uzanıyor, tezgâhta bir depozito makinesi ve bir yazar kasa; kapının yanında bir içecek dolabı ve bir atıştırmalık standı duruyor, duvarı posterler kaplıyor ve ön pencereler çiçek ve saksı bitkileriyle dolu.
+object.apothecary = Dükkânın arkasında, kırmızı dudaklı bir posterin altında üstünde gri bir radyo olan bir tezgâh, yanında beyaz bir şişe kasası ve yerde tel bir mal sepeti.
+object.taremachine = Dükkânın arka duvarına dayalı, ön yüzünde çerçeveli bir panel olan uzun yeşil bir makine, yanında cam önlü bir fincan dolabı ve duvarda bir poster.
+object.alcohol = Çelik lavabolu yeşil dolaplardan bir mutfak tezgâhı, arkası boyunca sarı fiyat etiketli sıra sıra yeşil ve kahverengi şişeler ve üstünde cam bir mal vitrini.
+object.exit = Dükkânın duvarında saksıda çiçek ve bitkilerle dolu iki pencerenin arasında bir kapı aralığı, içerideki fayans zemin ışıkla çizgili.
+object.knicknacks = Turuncu çelik çerçeveli cam bir sergi tezgâhı, raflarında hamur işleri ve şişeler, cama yapıştırılmış sarı fiyat etiketleri, basamağın yanında fayans zeminde.
+object.liquorpodium = Dükkânın penceresinin yanında üst tablasının altında şişeler ve kutular olan cam bir tezgâh, yanında hasır bir sandalye ve saksıda bir palmiye ve camın üstünde bir kurşun kalem kabı.
+object.cigarettes = Tezgâhtarın kasasının yanındaki cam tezgâhlar, tablalarının altında hamur işleri ve şişeler, camın üstünde bir kurşun kalem kabı ve bir lamba.
+object.jamdoor = Pencerelerin arasında dükkânın cam kapısı, dışarıda pervazda saksı bitkileri.
+object.clerk = Mor üstlü, siyah saçlı genç bir kadın, ellerinde açık bir kitapla cam tezgâhın arkasında duruyor.
+object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.

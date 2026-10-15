@@ -1,0 +1,21 @@
+# Türkçe: standart yazı dili, kısa ve yalın cümleler, lang/tr.txt ile aynı ölçün; yer ve kişi adları oyunun kendi Türkçe çevirisinden.
+zone.workshop.title = bodrum atölyesi
+zone.workshop.body = Eski binanın altında tuğla ve kereste karanlık bir bodrum, içine inen ahşap basamaklar, turuncu lambalı ve kamp ocaklı bir tezgâh, duvarlara yığılmış variller ve kasalar, uzak kapının yanında bir sigorta kutusu ve kirişlerden sarkan bir flama dizisi.
+zone.pipealcove.title = boru girintisi
+zone.pipealcove.body = Bodrumun ucunda, kalın siyah boruların duvar boyunca uzandığı, bir kancadan kırmızı bir bezin sarktığı ve karanlıkta bir rafta aletlerin durduğu sıkışık bir girinti.
+zone.bearcellar.title = buz ayısı bodrumu
+zone.bearcellar.body = Tek bir soğuk lambayla aydınlanan geniş, loş bir bodrum, zeminin ortasında kutup ayısı biçiminde kocaman beyaz bir buzdolabı duruyor. Tuğla duvarları borular ve teller kesiyor, köşede bir ocak ve kasalar duruyor, büyük bir kazanın yanındaki girintide kubbe biçimli cam bir tank parlıyor ve üst kata çıkan bir merdivenin yanına kalaslar yığılmış.
+object.exit = Bodrumun ahşap basamaklarının tepesinde bir kapı aralığı, yanındaki keresteye gerilmiş örümcek ağları ve duvar boyunca uzanan kalın bir boru.
+object.breaker = Tuğla bir kemerin altında açık duran gri çelik bir sigorta kutusu, içinde sıra sıra sarı sigortalar ve ondan bodrum zemini boyunca uzanan kırmızı kablolar, arkadaki varillerde örümcek ağları.
+object.furnace = Haç biçiminde kaburgalı bodur demir bir kapak, tuğla ve perçinli demirden bir kütleye menteşelenmiş, gevşek taşlardan ve bir ızgaradan oluşan bir zeminin üstünde.
+object.icecream = Yanında ızgara ve üstünde mavi çarklı bir vana olan kırmızı çelik bir kutu, tekerlekler üstünde duruyor, çevresinde yerde kablolar ve gaz tüpleri.
+object.cache = Boru girintisinin tuğla duvarında kalın siyah boruların arkasında yırtık bir delik, yanında asılı kırmızı bir bez ve aşağıdaki taşlarda duvara monte edilmiş bir geyik başı.
+object.fridge = Çömelmiş bir kutup ayısı biçiminde yontulmuş kocaman soluk bir buzdolabı, göğsüne çelik bir kapı yerleştirilmiş, soğuk bir pusun içinde bodrum zemininde duruyor, ona doğru kıvrılarak uzanan kablolar.
+object.bookcase = Bodrumun ahşap basamaklarının dibinde bir kalas yığını ve bir kasa, arkada tuğla duvar.
+object.bearfridge = Çömelmiş bir kutup ayısı biçiminde yontulmuş kocaman soluk bir buzdolabı, göğsüne çelik bir kapı yerleştirilmiş, soğuk bir pusun içinde bodrum zemininde duruyor, ona doğru kıvrılarak uzanan kablolar.
+object.shelf = Bir örümcek ağı yayılımının altında bodrumun tuğla duvarına dayalı bir dolap, basamakların dibinde.
+object.coins = Tuğla duvarın yanında bodrumun taş zemininde karanlık bir parça, güçbela aydınlanmış.
+object.shelf3 = Çekmeceleri açılmış ve altına yeşil bir sandalye sokulmuş çelik bir masa, büyük kazanın borularının yanında, üstünde birkaç kitap ve taşlara saçılmış tuğlalar.
+object.shelf2 = Bodrum duvarına dayalı bir raf, altına bir sıra mavi gaz tüpü yığılmış, yanında turuncu bir kasa ve tuğlalara dayanmış bir pencere çerçevesi.
+object.f2door = Bodrumun kalas merdiveninin tepesinde kalın siyah bir borunun yanında bir kapı aralığı, aşağıda kutup ayısı buzdolabının soluk başı.
+object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.

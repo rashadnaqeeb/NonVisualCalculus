@@ -1,0 +1,13 @@
+# Deutsch. Register wie lang/de.txt: Schriftdeutsch, Du-Form, knapper neutraler Screenreader-Stil, Orts- und Personennamen aus der deutschen Spielfassung.
+zone.shop.title = der Frittte
+zone.shop.body = Ein kleiner heller Laden mit abgetretenem Fliesenboden. Ein Glastresen und gekühlte Vitrinen ziehen sich hinten unter Regalen voller Flaschen entlang, mit einer Tara-Waage und einer Registrierkasse auf dem Tresen; ein Getränkekühlschrank und ein Ständer mit Snacks stehen an der Tür, Poster bedecken die Wand, und die Schaufenster sind voller Blumen und Topfpflanzen.
+object.apothecary = Ein Tresen hinten im Laden mit einem grauen Radio darauf unter einem Poster mit roten Lippen, eine weiße Kiste mit Flaschen daneben und ein Drahtkorb mit Waren auf dem Boden.
+object.taremachine = Eine hohe grüne Maschine an der Rückwand des Ladens mit einem gerahmten Feld auf ihrer Vorderseite, ein Schrank mit Glasfront voller Tassen daneben und ein Poster an der Wand.
+object.alcohol = Eine Küchenzeile aus grünen Schränken mit einer Stahlspüle, Reihen grüner und brauner Flaschen mit gelben Preisschildern an ihrer Rückseite aufgereiht und eine Glasvitrine mit Waren darüber.
+object.exit = Eine Türöffnung in der Wand des Ladens zwischen zwei Fenstern voller Topfblumen und Pflanzen, der Fliesenboden innen von Licht gestreift.
+object.knicknacks = Eine Glasvitrine mit orangefarbenem Stahlrahmen, Gebäck und Flaschen auf ihren Borden, gelbe Preisschilder ans Glas geklebt, auf dem Fliesenboden bei der Stufe.
+object.liquorpodium = Ein Glastresen am Fenster des Ladens mit Flaschen und Schachteln unter seiner Platte, ein Korbstuhl und eine Topfpalme daneben und ein Becher voller Stifte auf dem Glas.
+object.cigarettes = Die Glastresen bei der Kasse der Verkäuferin, Gebäck und Flaschen unter ihren Platten, ein Becher voller Stifte und eine Lampe auf dem Glas.
+object.jamdoor = Die Glastür des Ladens zwischen den Fenstern, Topfpflanzen auf dem Sims draußen.
+object.clerk = Eine junge Frau mit dunklem Haar in einem lila Oberteil steht hinter dem Glastresen, ein aufgeschlagenes Buch in den Händen.
+object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.

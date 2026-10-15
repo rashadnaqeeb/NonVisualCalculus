@@ -1,0 +1,21 @@
+# Descrições do mod em português do Brasil. Registro: tratamento por você, estilo neutro e conciso de leitor de tela, como em lang/pt-br.txt.
+zone.atticdoor.title = a porta do sótão
+zone.atticdoor.body = Um patamar estreito na porta do sótão, uma porta pintada de verde com um ventilador redondo ao lado, onde o fechamento de vidro da escada encontra a parede de reboco do quarto.
+zone.atticstair.title = a escada do sótão
+zone.atticstair.body = O alto de uma escada de madeira encaixotada por uma divisória de vidro com armação de aço, abrindo-se por uma porta de vidro para o piso de concreto nu do sótão.
+zone.atticbedroom.title = o quarto do sótão
+zone.atticbedroom.body = Um quarto pequeno sob o telhado com uma cama desarrumada contra a parede, um abajur de cabeceira, uma prateleira de livros e um quadro emoldurado no reboco, linhas vermelhas esticadas pelo cômodo entre alfinetes, e um baú de cobertores ao pé da cama.
+zone.atticworkshop.title = a oficina do sótão
+zone.atticworkshop.body = Um depósito atrás do quarto abarrotado de prateleiras de potes, latas e caixas, uma escrivaninha sob uma luminária coberta de papéis, uma janela com uma grade de arame, uma caldeira com canos grossos no canto, e caixotes e tralha empilhados pelo piso.
+object.door2 = Uma porta de vidro numa armação de aço aberta ao pé do fechamento de vidro da escada, um capacho no concreto nu na frente e uma poltrona ovo branca de assento vermelho-ferrugem atrás dos vidros.
+object.roofdoor = Uma porta de madeira escura com um vidro na parede do fim do sótão, um ventilador redondo gradeado ao lado e dois dutos de ar pretos atarracados no concreto na frente.
+object.windowtrivial = Vidros em caixilhos de aço escuros fechando a escada de madeira, uma poltrona ovo branca de assento vermelho-ferrugem atrás deles e linhas vermelhas esticadas pelo cômodo acima.
+object.windowclear = Vidros em caixilhos de aço escuros fechando a escada de madeira, uma poltrona ovo branca de assento vermelho-ferrugem atrás deles e linhas vermelhas esticadas pelo cômodo acima.
+object.shelves = Uma escrivaninha coberta de papéis na oficina do sótão sob uma luminária, uma cadeira na frente e uma janela com uma planta no parapeito abaixo.
+object.box = Caixas de papelão empilhadas ao lado da porta do elevador do sótão, um balde no concreto e placas de aviso laranja na parede acima.
+object.footprints = Alguns degraus de madeira nua descendo da porta do sótão para a oficina, caixas de papelão amontoadas ao pé e papéis pregados no reboco ao lado.
+object.exit = Uma estante de aço de latas, potes e caixas contra a parede do sótão ao lado da porta do elevador, um banquinho abaixo e uma marinha emoldurada encostada no reboco.
+object.elevator = Uma estante de aço de latas, potes e caixas contra a parede do sótão ao lado da porta do elevador, caixas de papelão no chão.
+object.roofdoor2 = Uma porta de madeira escura com um vidro na parede do fim do sótão, um ventilador redondo gradeado ao lado e dois dutos de ar pretos atarracados no concreto na frente.
+object.plaisance = Uma mulher de cabelo escuro preso, de colete preto sobre camisa branca, de pé junto aos casacos pendurados na parede do apartamento.
+object.kim = Um homem magro de jaqueta bomber laranja sobre camisa branca e calça escura, cabelo escuro penteado para trás e óculos redondos, um caderninho aberto numa mão e uma caneta na outra.

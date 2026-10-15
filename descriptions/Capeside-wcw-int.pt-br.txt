@@ -1,0 +1,10 @@
+# Descrições do mod em português do Brasil. Registro: tratamento por você, estilo neutro e conciso de leitor de tela, como em lang/pt-br.txt.
+zone.kitchen.title = a cozinha do apartamento
+zone.kitchen.body = Uma cozinha estreita de azulejos azuis com uma pia e um fogão, panelas penduradas na parede sobre a bancada, potes e garrafas nas prateleiras e uma planta em vaso junto à porta.
+zone.mainroom.title = o cômodo principal do apartamento
+zone.mainroom.body = Um cômodo de paredes amarelas com uma cama grande sob uma janela de muitos vidros pequenos, vasos de plantas no parapeito, um baú ao pé da cama, uma estante alta e um armário contra a parede do fundo, uma poltrona gasta junto à porta com uma luminária de mesa ao lado, e um banheirinho abrindo-se no canto.
+zone.childrensroom.title = o quarto das crianças
+zone.childrensroom.body = Um quarto pequeno e verde com duas camas baixas sob uma janela de persiana, um cobertor azul-petróleo numa e uma colcha amarela de retalhos na outra, uma mesa de cabeceira com um abajur e desenhos de criança pregados na parede.
+object.exit = Uma porta cinza de tinta descascada na parede do apartamento, uma poltrona amarela e um abajur numa mesinha do outro lado do tapete e um varal de arame junto à janela.
+object.workingwoman = Uma mulher de jaqueta azul e calça escura sentada na beira da cama com as mãos entrelaçadas entre os joelhos, chinelos amarelos nos pés.
+object.kim = Um homem magro de jaqueta bomber laranja sobre camisa branca e calça escura, cabelo escuro penteado para trás e óculos redondos, um caderninho aberto numa mão e uma caneta na outra.

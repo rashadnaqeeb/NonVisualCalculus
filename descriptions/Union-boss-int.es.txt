@@ -1,0 +1,11 @@
+# Español de España, registro de lang/es.txt: tuteo informal, estilo neutro y conciso para lector de pantalla.
+zone.waitingroom.title = la sala de espera del contenedor
+zone.waitingroom.body = El interior de un contenedor de carga con armazón de acero amarillo, con tela roja colgada a lo largo de un lado, el suelo de tablas rozadas, una hilera de sillas plegables y un soporte con termos de acero contra la pared, y una escalera de tablas que sube a la oficina de arriba.
+zone.office.title = la oficina del contenedor
+zone.office.body = Un contenedor amueblado como oficina, con pancartas rojas colgadas en torno a sus paredes de malla: un pesado escritorio de madera cargado de papeles y una lámpara, una alfombra estampada en el suelo, una pared de archivadores con un pez disecado montado encima, plantas en maceta en los rincones y cajas junto a la escalera.
+zone.officestep.title = el escalón de la oficina
+zone.officestep.body = Lo alto de la escalera de tablas que sube de la sala de espera, en la puerta de la oficina.
+object.exit = La puerta en el extremo del contenedor, con tela roja colgada, con tablas tendidas sobre su umbral.
+object.coffeetable = Una mesa con tablero rojo contra la pared de malla con dos termos de acero con grifo, pilas de vasos de papel blancos y una caja de cartón, con sillas plegables verdes y verde oliva apiladas y desperdigadas alrededor.
+object.evrart = Un pesado escritorio de madera cargado de papeles, carpetas, una lámpara, una taza y botellas, una silla de cuero detrás y la alfombra estampada más allá.
+object.kim = Un hombre delgado con una cazadora bomber naranja sobre una camisa blanca y pantalones oscuros, el pelo oscuro peinado hacia atrás y gafas redondas, con una pequeña libreta abierta en una mano y un bolígrafo en la otra.

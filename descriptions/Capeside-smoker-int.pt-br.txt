@@ -1,0 +1,10 @@
+# Descrições do mod em português do Brasil. Registro: tratamento por você, estilo neutro e conciso de leitor de tela, como em lang/pt-br.txt.
+zone.kitchen.title = a cozinha do apartamento 28
+zone.kitchen.body = Uma cozinha pequena com uma pia e um fogão sob uma parede de armários amarelos e um painel perfurado com panelas penduradas, uma mesa redonda com xícaras e um prato em cima, um banquinho vermelho e uma planta em vaso junto à porta.
+zone.bedroom.title = o quarto do apartamento 28
+zone.bedroom.body = Um quarto com uma cama de dossel coberta por um baldaquino azul-petróleo sob uma janela de vidros foscos, uma poltrona junto à porta com um livro aberto em cima, um tapete estampado sobre as tábuas, uma arara com um casaco amarelo e uma penteadeira contra a parede do fundo, e um abajur com cúpula de franjas no canto.
+object.exit = Uma porta na parede do apartamento abaixo de uma poltrona cinza acolchoada com um livro aberto no assento, a luz do abajur caindo sobre o reboco.
+object.bed = Uma cama de lençóis brancos no canto do apartamento iluminado pelo abajur, uma poltrona cinza acolchoada com uma revista aberta ao pé dela.
+object.closet = Um guarda-roupa aberto no canto escuro do apartamento, alguns casacos e camisas pendurados dentro, uma cadeira verde ao lado.
+object.sponsor = Um homem de terno escuro de pé junto à janela, um cachimbo e um jornal na mesa baixa ao lado dele entre xícaras e garrafas.
+object.kim = Um homem magro de jaqueta bomber laranja sobre camisa branca e calça escura, cabelo escuro penteado para trás e óculos redondos, um caderninho aberto numa mão e uma caneta na outra.

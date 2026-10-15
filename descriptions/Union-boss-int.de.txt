@@ -1,0 +1,11 @@
+# Deutsch. Register wie lang/de.txt: Schriftdeutsch, Du-Form, knapper neutraler Screenreader-Stil, Orts- und Personennamen aus der deutschen Spielfassung.
+zone.waitingroom.title = das Wartezimmer im Container
+zone.waitingroom.body = Das Innere eines Frachtcontainers mit gelbem Stahlrahmen, an einer Seite mit rotem Tuch verhängt, ein Boden aus abgestoßenen Brettern, eine Reihe Klappstühle und ein Ständer mit Stahlkannen an der Wand, mit einer Bretttreppe, die zum Büro darüber steigt.
+zone.office.title = das Containerbüro
+zone.office.body = Ein als Büro eingerichteter Container, rote Banner hängen rund um seine Gitterwände: ein schwerer Holzschreibtisch, mit Papieren und einer Lampe beladen, ein gemusterter Teppich auf dem Boden, eine Wand aus Aktenschränken mit einem ausgestopften Fisch darüber, Topfpflanzen in den Ecken und Kisten bei der Treppe.
+zone.officestep.title = die Bürostufe
+zone.officestep.body = Das obere Ende der Bretttreppe vom Wartezimmer, an der Tür des Büros.
+object.exit = Die Türöffnung am Ende des Containers, mit rotem Tuch verhängt, mit Brettern, die quer über ihre Schwelle gelegt sind.
+object.coffeetable = Ein Tisch mit roter Platte an der Gitterwand mit zwei Stahlkannen mit Zapfhähnen, Stapeln weißer Pappbecher und einem Karton, mit Klappstühlen in Grün und Oliv, die darum gestapelt und verstreut sind.
+object.evrart = Ein schwerer Holzschreibtisch, mit Papieren, Ordnern, einer Lampe, einer Tasse und Flaschen beladen, ein Ledersessel dahinter und der gemusterte Teppich dahinter.
+object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.

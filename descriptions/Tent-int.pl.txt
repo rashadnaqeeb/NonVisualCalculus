@@ -1,0 +1,8 @@
+# Polski. Rejestr: standardowa polszczyzna literacka, zwięzły neutralny styl czytnika ekranu, jak w lang/pl.txt.
+zone.tent.title = wnętrze namiotu
+zone.tent.body = Wnętrze namiotu z plandeki, ciasny trójkąt niebieskiego brezentu na żerdziach oświetlony latarnią zawieszoną na kalenicy, z wzorzystym dywanem na piasku, stosem radioodbiorników i magnetofonem pod jednym bokiem, skrzynią i wiadrem, płachtą narzuconą na stertę dobytku i rośliną w doniczce przy wejściu.
+object.exit = Wejście namiotu obok drewnianej skrzyni, stosu radioodbiorników i magnetofonu, lampa z wiklinowym kloszem i garnek na dywanie, dzienne światło wlewające się po piasku.
+object.egghead = Młody mężczyzna w zielonej kurtce z kapturem i koroną jasnych kolców na głowie, rozwalony na dywanie plecami opartymi o skrzynię, z wyciągniętymi nogami.
+object.andre = Młody mężczyzna w niebieskiej kurtce siedzący na skrzyni przy radioodbiornikach namiotu z jednym kolanem w górze, z kubkiem w ręce.
+object.noid = Mężczyzna w ciemnej kurtce stojący przy spiętrzonych głośnikach pod gołą żarówką, obok niego sterta okryta tkaniną.
+object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.

@@ -1,0 +1,8 @@
+# Polski. Rejestr: standardowa polszczyzna literacka, zwięzły neutralny styl czytnika ekranu, jak w lang/pl.txt.
+zone.container.title = kontener ładunkowy
+zone.container.body = Wnętrze kontenera transportowego, wąskie pudło z żółtych stalowych żeber ze ścianami z siatki, podłoga w pasach żółtej farby ostrzegawczej, gdzie przez dalszy koniec wlewa się oślepiające blade światło, a siatka skręca się i faluje wokół niego.
+object.exit = Otwarty koniec kontenera, wejście z żółtych stalowych żeber w pasach farby ostrzegawczej, jego ściana z siatki falująca od wlewającego się bladego światła.
+object.vicquemare = Falujący koniec kontenera, blade światło wyginające stalowe ściany w krzywizny.
+object.lightbender = Ciemny kształt w sercu oślepiającego światła na końcu kontenera, ściany wokół niego wypaczające się w kręgi.
+object.lightbender2 = Ciemny kształt w sercu oślepiającego światła na końcu kontenera, ściany wokół niego wypaczające się w kręgi.
+object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.

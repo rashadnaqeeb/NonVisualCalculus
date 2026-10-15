@@ -1,0 +1,13 @@
+# Español de España, registro de lang/es.txt: tuteo informal, estilo neutro y conciso para lector de pantalla.
+zone.shop.title = el Frittte
+zone.shop.body = Una tienda pequeña y luminosa con el suelo de baldosas gastadas. Un mostrador de cristal y vitrinas refrigeradas recorren el fondo bajo baldas de botellas, con una máquina de tara y una caja registradora en el mostrador; una nevera de bebidas y un expositor de aperitivos están junto a la puerta, carteles cubren la pared, y los escaparates están llenos de flores y plantas en maceta.
+object.apothecary = Un mostrador al fondo de la tienda con una radio gris encima bajo un cartel de unos labios rojos, una caja blanca de botellas al lado y una cesta de alambre con mercancía en el suelo.
+object.taremachine = Una máquina alta y verde contra la pared del fondo de la tienda con un panel enmarcado en el frente, un armario con frente de cristal lleno de tazas al lado y un cartel en la pared.
+object.alcohol = Una encimera de cocina de armarios verdes con un fregadero de acero, filas de botellas verdes y marrones de pie a lo largo del fondo con etiquetas amarillas de precio, y una vitrina de mercancía encima.
+object.exit = Una puerta en la pared de la tienda entre dos escaparates llenos de flores y plantas en maceta, el suelo de baldosas de dentro rayado de luz.
+object.knicknacks = Una vitrina de cristal con armazón de acero naranja, bollería y botellas en sus baldas, etiquetas amarillas de precio pegadas al cristal, sobre el suelo de baldosas junto al escalón.
+object.liquorpodium = Un mostrador de cristal junto al escaparate de la tienda con botellas y cajas bajo su tapa, una silla de mimbre y una palmera en maceta al lado y un bote de lápices sobre el cristal.
+object.cigarettes = Los mostradores de cristal junto a la caja de la dependienta, bollería y botellas bajo sus tapas, un bote de lápices y una lámpara sobre el cristal.
+object.jamdoor = La puerta de cristal de la tienda entre los escaparates, plantas en maceta en el alféizar de fuera.
+object.clerk = Una joven de pelo oscuro con un top morado, de pie tras el mostrador de cristal con un libro abierto en las manos.
+object.kim = Un hombre delgado con una cazadora bomber naranja sobre una camisa blanca y pantalones oscuros, el pelo oscuro peinado hacia atrás y gafas redondas, con una pequeña libreta abierta en una mano y un bolígrafo en la otra.

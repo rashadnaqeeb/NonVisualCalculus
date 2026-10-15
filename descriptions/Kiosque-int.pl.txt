@@ -1,0 +1,13 @@
+# Polski. Rejestr: standardowa polszczyzna literacka, zwięzły neutralny styl czytnika ekranu, jak w lang/pl.txt.
+zone.shop.title = Frittte
+zone.shop.body = Mały jasny sklep z wytartą kafelkową podłogą. Szklana lada i chłodzone gabloty ciągną się wzdłuż tylnej ściany pod półkami z butelkami, na ladzie waga i kasa. Przy drzwiach stoją lodówka z napojami i stojak z przekąskami, ścianę pokrywają plakaty, a frontowe okna pełne są kwiatów i roślin w doniczkach.
+object.apothecary = Lada w głębi sklepu z szarym radiem pod plakatem z czerwonymi ustami, obok biała skrzynka z butelkami, a na podłodze druciany kosz z towarem.
+object.taremachine = Wysoka zielona maszyna pod tylną ścianą sklepu z oprawionym panelem z przodu, obok przeszklona szafka z kubkami i plakat na ścianie.
+object.alcohol = Blat kuchenny z zielonych szafek ze stalowym zlewem, wzdłuż jego tyłu rzędy zielonych i brązowych butelek z żółtymi cenówkami, a nad nim szklana gablota z towarem.
+object.exit = Wejście w ścianie sklepu między dwoma oknami pełnymi kwiatów i roślin w doniczkach, kafelkowa podłoga w środku w pasach światła.
+object.knicknacks = Szklana lada wystawowa w pomarańczowej stalowej ramie, na jej półkach wypieki i butelki, do szkła przyklejone żółte cenówki, na kafelkowej podłodze przy stopniu.
+object.liquorpodium = Szklana lada przy oknie sklepu z butelkami i pudełkami pod blatem, obok wiklinowe krzesło i palma w donicy, a na szkle kubek na ołówki.
+object.cigarettes = Szklane lady przy kasie sprzedawczyni, pod ich blatami wypieki i butelki, na szkle kubek na ołówki i lampa.
+object.jamdoor = Szklane drzwi sklepu między oknami, na parapecie na zewnątrz rośliny w doniczkach.
+object.clerk = Młoda kobieta z ciemnymi włosami w fioletowej bluzce, stojąca za szklaną ladą z otwartą książką w rękach.
+object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.

@@ -1,0 +1,10 @@
+# Türkçe: standart yazı dili, kısa ve yalın cümleler, lang/tr.txt ile aynı ölçün; yer ve kişi adları oyunun kendi Türkçe çevirisinden.
+zone.windowfloor.title = kırık pencereli kat
+zone.windowfloor.body = Feld Binası'nın içinde çatlak fayans ve molozdan kırık bir kat, camları kırılmış demir kafesli uzun kemerli bir pencereyle aydınlanıyor, sıva duvarlar çatlaklarla kaplı ve köşede kıyı katına inen bir kapı aralığı.
+zone.brokenstair.title = kırık merdiven
+zone.brokenstair.body = Yıkık binanın çatlak duvarı boyunca zikzak çizerek yukarı çıkan paslı demir korkuluklu beton bir merdiven, alt kolu pencereli katta bitiyor ve üst sahanlığı tahta yol kapısına doğru açılıyor.
+object.exit = Paslı demir korkuluklu beton merdivenin en üst sahanlığı, bir kapı aralığı tahta yola doğru açılıyor.
+object.lairdoor = Merdivenin dibinde çatlak fayanslı katın köşesinde bir kapı aralığı, bükülmüş demir korkuluklar ve dağınık kâğıtlar arasında, kıyı katına iniyor.
+object.postcard = Pencereli katın çatlak fayanslarına yığılmış moloz, içinden fırlayan paslı bir demir çubuk.
+object.plaisance = Siyah saçlarını topuz yapmış, beyaz gömlek üstüne siyah yelek giymiş bir kadın, dairenin duvarına asılı paltoların yanında duruyor.
+object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.

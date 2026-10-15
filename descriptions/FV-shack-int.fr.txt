@@ -1,0 +1,9 @@
+# Descriptions du monde en français. Registre : français écrit standard, neutre et concis, celui de lang/fr.txt ; noms de lieux et de personnes repris de la version française du jeu.
+zone.shack.title = la cabane de pêcheur
+zone.shack.body = Une hutte sombre de planches grises délavées avec des fentes de lumière entre les planches, un sol de terre battue, une simple chaise de bois contre le mur et quelques boîtes dans le coin, avec une fenêtre à petits carreaux à côté de la porte.
+object.exit = La porte de planches de la cabane avec une petite fenêtre à côté, le soleil et les couleurs du village visibles par la fente.
+object.box = Une étagère de planches dans le coin de la cabane sombre portant une bouteille et quelques papiers, un rouleau de corde pendu à un clou sur les planches à côté.
+object.postcard = Une carte pâle épinglée aux planches grises du mur de la cabane au-dessus de l'étagère, à côté d'un petit anneau pendu à un clou.
+object.pierbox = Une simple chaise de bois contre le mur de planches grises de la cabane, un rouleau de corde sur le sol de terre battue à côté.
+object.plaisance = Une femme aux cheveux foncés relevés, en gilet noir sur une chemise blanche, debout près des manteaux accrochés au mur de l'appartement.
+object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.

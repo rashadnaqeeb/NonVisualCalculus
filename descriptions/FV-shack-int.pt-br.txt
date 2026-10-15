@@ -1,0 +1,9 @@
+# Descrições do mod em português do Brasil. Registro: tratamento por você, estilo neutro e conciso de leitor de tela, como em lang/pt-br.txt.
+zone.shack.title = o barraco de pesca
+zone.shack.body = Uma cabana escura de pranchas cinza castigadas pelo tempo com frestas de luz entre as tábuas, piso de terra, uma cadeira simples de madeira contra a parede e algumas caixas no canto, com uma janela de vidros pequenos ao lado da porta.
+object.exit = A porta de pranchas do barraco com uma janela pequena ao lado, a luz do sol e as cores da vila aparecendo pela fresta.
+object.box = Uma prateleira de tábuas no canto do barraco escuro segurando uma garrafa e alguns papéis, um rolo de corda pendurado num prego nas pranchas ao lado.
+object.postcard = Um cartão pálido pregado nas pranchas cinza da parede do barraco acima da prateleira, ao lado de uma argola pequena pendurada num prego.
+object.pierbox = Uma cadeira simples de madeira contra a parede de pranchas cinza do barraco, um rolo de corda no piso de terra ao lado.
+object.plaisance = Uma mulher de cabelo escuro preso, de colete preto sobre camisa branca, de pé junto aos casacos pendurados na parede do apartamento.
+object.kim = Um homem magro de jaqueta bomber laranja sobre camisa branca e calça escura, cabelo escuro penteado para trás e óculos redondos, um caderninho aberto numa mão e uma caneta na outra.

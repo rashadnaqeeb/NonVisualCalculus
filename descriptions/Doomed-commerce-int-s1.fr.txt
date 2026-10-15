@@ -1,0 +1,21 @@
+# Descriptions du monde en français. Registre : français écrit standard, neutre et concis, celui de lang/fr.txt ; noms de lieux et de personnes repris de la version française du jeu.
+zone.workshop.title = l'atelier du sous-sol
+zone.workshop.body = Une cave sombre de brique et de charpente sous le vieux bâtiment, avec des marches de bois qui y descendent, un établi avec une lampe orange et un réchaud de camping, des tonneaux et des caisses empilés contre les murs, un boîtier de disjoncteurs près de la porte du fond, et une guirlande de fanions suspendue aux poutres.
+zone.pipealcove.title = l'alcôve des tuyaux
+zone.pipealcove.body = Un renfoncement exigu au bout de la cave où de gros tuyaux noirs courent le long du mur, un tissu rouge pend à un crochet et des outils reposent sur une étagère dans le noir.
+zone.bearcellar.title = la cave de l'ours polaire
+zone.bearcellar.body = Une cave large et sombre éclairée par une seule lampe froide, où un énorme réfrigérateur blanc en forme d'ours polaire se dresse au milieu du sol. Des tuyaux et des fils traversent les murs de brique, un poêle et des caisses sont dans le coin, une cuve de verre en dôme luit dans une alcôve près d'une grosse chaudière, et des planches sont entassées près d'un escalier qui monte à l'étage.
+object.exit = Une porte en haut des marches de bois de la cave, des toiles d'araignée tendues sur la charpente à côté et un gros tuyau courant le long du mur.
+object.breaker = Un boîtier de disjoncteurs en acier gris ouvert sous une arche de brique, des rangées de fusibles jaunes à l'intérieur et des câbles rouges traînant depuis lui sur le sol de la cave, des toiles d'araignée sur les tonneaux derrière.
+object.furnace = Une trappe de fer trapue à croix de nervures, montée sur charnières dans une masse de brique et de fer riveté, au-dessus d'un sol de pierres détachées et d'une grille.
+object.icecream = Un coffre d'acier rouge avec une grille sur le côté et une vanne à volant bleu sur le dessus, posé sur des roulettes, des câbles et des bouteilles de gaz au sol autour.
+object.cache = Un trou déchiqueté dans le mur de brique de l'alcôve des tuyaux derrière de gros tuyaux noirs, un tissu rouge pendu à côté et une tête de cerf naturalisée sur les pierres en dessous.
+object.fridge = Un énorme réfrigérateur pâle sculpté en ours polaire accroupi, une porte d'acier dans la poitrine, posé sur le sol de la cave dans une brume froide avec des câbles serpentant jusqu'à lui.
+object.bookcase = Une pile de planches et une caisse au pied des marches de bois de la cave, le mur de brique derrière.
+object.bearfridge = Un énorme réfrigérateur pâle sculpté en ours polaire accroupi, une porte d'acier dans la poitrine, posé sur le sol de la cave dans une brume froide avec des câbles serpentant jusqu'à lui.
+object.shelf = Une armoire contre le mur de brique de la cave sous un voile de toiles d'araignée, près du pied des marches.
+object.coins = Un coin sombre du sol de pierre de la cave près du mur de brique, à peine éclairé.
+object.shelf3 = Un bureau d'acier aux tiroirs tirés avec une chaise verte glissée dessous, à côté des tuyaux de la grosse chaudière, quelques livres dessus et des briques éparses sur les pierres.
+object.shelf2 = Un rayonnage contre le mur de la cave avec une rangée de bouteilles de gaz bleues empilées dessous, une caisse orange à côté et un châssis de fenêtre appuyé contre les briques.
+object.f2door = Une porte en haut de l'escalier de planches de la cave à côté d'un gros tuyau noir, la tête pâle du réfrigérateur ours polaire en dessous.
+object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.

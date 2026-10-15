@@ -189,6 +189,30 @@ object.pinball = A pinball machine on its side, glass cracked.
                 }
                 foreach (string key in prose.Keys)
                     if (!used.Contains(key)) problems.Add(stem + ": orphan prose " + key);
+                // Every other language's file for the scene: parses, no key the geometry does not know, and
+                // every English key present (a missing key falls back to English at runtime, which a
+                // translation must not rely on; a translator's gap is a defect to fix, not a feature).
+                foreach (string langPath in Directory.GetFiles(dir, stem + ".*.txt"))
+                {
+                    string langStem = Path.GetFileNameWithoutExtension(langPath);
+                    string lang = langStem.Substring(stem.Length + 1);
+                    if (lang == "en") continue;
+                    string langText = File.ReadAllText(langPath);
+                    var lp = SceneProse.Parse(langText, out var langErrors);
+                    foreach (var e in langErrors) problems.Add(langStem + ": " + e);
+                    foreach (string key in lp.Keys)
+                        if (!used.Contains(key)) problems.Add(langStem + ": orphan prose " + key);
+                    var langKeys = new HashSet<string>(lp.Keys);
+                    foreach (string key in prose.Keys)
+                        if (!langKeys.Contains(key)) problems.Add(langStem + ": missing " + key);
+                    var langRaw = new HashSet<string>();
+                    foreach (string line in langText.Replace("\r\n", "\n").Split('\n'))
+                    {
+                        int eq = line.IndexOf('=');
+                        if (eq <= 0 || line.TrimStart().StartsWith("#")) continue;
+                        if (!langRaw.Add(line.Substring(0, eq).Trim())) problems.Add(langStem + ": duplicate line " + line.Substring(0, eq).Trim());
+                    }
+                }
                 // A duplicate line in the prose file silently overrides: catch it on the raw text.
                 var rawKeys = new HashSet<string>();
                 foreach (string line in proseText.Replace("\r\n", "\n").Split('\n'))

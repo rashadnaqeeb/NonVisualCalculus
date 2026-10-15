@@ -1,0 +1,10 @@
+# Polski. Rejestr: standardowa polszczyzna literacka, zwięzły neutralny styl czytnika ekranu, jak w lang/pl.txt.
+zone.kitchen.title = kuchnia mieszkania 28
+zone.kitchen.body = Mała kuchnia ze zlewem i kuchenką pod ścianą żółtych szafek i tablicą z zawieszonymi patelniami, okrągłym stołem z kubkami i talerzem, czerwonym stołkiem i rośliną w doniczce przy wejściu.
+zone.bedroom.title = sypialnia mieszkania 28
+zone.bedroom.body = Sypialnia z łóżkiem na czterech słupkach, udrapowanym morskozielonym baldachimem, pod oknem z matowych szyb, fotelem przy drzwiach z otwartą książką, wzorzystym dywanem na deskach, wieszakiem na ubrania z żółtym płaszczem i toaletką pod przeciwległą ścianą oraz lampą z abażurem z frędzlami w kącie.
+object.exit = Drzwi w ścianie mieszkania poniżej wyściełanego szarego fotela z otwartą książką na siedzisku, światło lampy padające na tynk.
+object.bed = Łóżko z białą pościelą w kącie oświetlonego lampą mieszkania, w nogach wyściełany szary fotel z otwartym czasopismem.
+object.closet = Otwarta szafa w ciemnym kącie mieszkania, w środku kilka wiszących płaszczy i koszul, obok zielone krzesło.
+object.sponsor = Mężczyzna w ciemnym garniturze stojący przy oknie, obok niego na niskim stoliku fajka i gazeta wśród kubków i butelek.
+object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.

@@ -1,0 +1,10 @@
+# Descriptions du monde en français. Registre : français écrit standard, neutre et concis, celui de lang/fr.txt ; noms de lieux et de personnes repris de la version française du jeu.
+zone.kitchen.title = la cuisine de l'appartement 28
+zone.kitchen.body = Une petite cuisine avec un évier et une cuisinière sous un mur de placards jaunes et un panneau perforé garni de casseroles, une table ronde avec des tasses et une assiette dessus, un tabouret rouge et une plante en pot près de la porte.
+zone.bedroom.title = la chambre de l'appartement 28
+zone.bedroom.body = Une chambre avec un lit à baldaquin drapé d'un ciel de lit bleu sarcelle sous une fenêtre aux vitres dépolies, un fauteuil près de la porte avec un livre ouvert dessus, un tapis à motifs sur les planches, un portant avec un manteau jaune et une coiffeuse contre le mur du fond, et une lampe à abat-jour à franges dans le coin.
+object.exit = Une porte dans le mur de l'appartement sous un fauteuil gris capitonné avec un livre ouvert sur l'assise, la lumière de la lampe tombant sur le plâtre.
+object.bed = Un lit aux draps blancs dans le coin de l'appartement éclairé par la lampe, un fauteuil gris capitonné avec un magazine ouvert à son pied.
+object.closet = Une armoire ouverte dans le coin sombre de l'appartement, quelques manteaux et chemises suspendus dedans, une chaise verte à côté.
+object.sponsor = Un homme en costume sombre debout près de la fenêtre, une pipe et un journal sur la table basse à côté de lui parmi des tasses et des bouteilles.
+object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.

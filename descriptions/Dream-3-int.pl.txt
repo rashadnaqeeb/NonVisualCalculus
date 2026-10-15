@@ -1,0 +1,21 @@
+# Polski. Rejestr: standardowa polszczyzna literacka, zwięzły neutralny styl czytnika ekranu, jak w lang/pl.txt.
+zone.gunhall.title = hala działa
+zone.gunhall.body = Betonowa hala pod fortecą z podłogą z popękanych płyt, oświetlona lampą na podłodze. Zardzewiała maszyna okryta pokrowcem od kurzu stoi pod ścianą przy krótkich żelaznych schodach, w podłodze osadzony jest okrągły właz, a ściana od strony morza rozsypała się w zbocze gruzu i piasku, gdzie otwierają się drzwi na pochylnię.
+zone.eastdoor.title = wschodnie drzwi
+zone.eastdoor.body = Krótki ciemny korytarz za wschodnimi drzwiami fortecy, otwierający się na górny poziom hali działa przy obarierowanej obrotnicy.
+zone.turntable.title = obrotnica
+zone.turntable.body = Kolisty żelazny tor osadzony w betonie, otoczony balustradą, z zardzewiałą podstawą i kołami zębatymi wieży działowej na cokole pośrodku, pod kablami zwisającymi z dachu.
+zone.upperdeck.title = górna galeria
+zone.upperdeck.body = Obarierowany pomost z betonu w smugach rdzy nad obrotnicą, gdzie obok wznoszą się koła zębate podstawy działa, zielony generator stoi na stalowej ramie z żółtym kablem ciągnącym się po podłodze, a stopnie wspinają się do pokoju ze szczelinowym oknem.
+zone.entrycorridor.title = korytarz wejściowy
+zone.entrycorridor.body = Betonowy korytarz za głównymi drzwiami, z szarą szafką pod ścianą, drewnianą skrzynią na podłodze, kołem zębatym zamocowanym na ścianie i schodami wspinającymi się do pokoju powyżej.
+zone.upperstair.title = górne schody
+zone.upperstair.body = Żelazne schody z poręczą wspinające się z korytarza wejściowego do pokoju ze szczelinowym oknem powyżej, obok wyblakłego portretu namalowanego na betonowej ścianie.
+zone.desertersroom.title = pokój ze szczelinowym oknem
+zone.desertersroom.body = Zakrzywiony betonowy pokój pod długim szczelinowym oknem, ściany obwieszone szarymi płachtami, posłanie ze szmat i koców pod przeciwległą ścianą, generator na stojaku z kablami ciągnącymi się po podłodze, stół z puszkami i miskami, stos książek i karabin oparty przy oknie.
+zone.holepassage.title = przejście przez wyłom
+zone.holepassage.body = Przejście z połamanych betonowych płyt od postrzępionej dziury w ścianie fortecy, gruz i miska na podłodze, dzienne światło wpadające długimi smugami przez wyrwę i zardzewiałe żelazne pręty wsparte w poprzek niej.
+object.exiteast = Zardzewiałe stalowe drzwi z ciężkimi blokami zawiasów w betonowej ścianie, oświetlone na fioletowo.
+object.exithole = Postrzępiona dziura w skalnej ścianie przejścia wsparta zardzewiałymi żelaznymi prętami, w niej spiętrzone głazy i wlewająca się pomarańczowo-różowa poświata.
+object.exitmain = Wejście w zardzewiałej betonowej ścianie, wlewająca się przez nie pomarańczowo-różowa poświata.
+object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.

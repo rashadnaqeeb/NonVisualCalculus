@@ -1,0 +1,11 @@
+# Polski. Rejestr: standardowa polszczyzna literacka, zwięzły neutralny styl czytnika ekranu, jak w lang/pl.txt.
+zone.waitingroom.title = poczekalnia w kontenerze
+zone.waitingroom.body = Wnętrze kontenera transportowego o żółtym stalowym szkielecie, wzdłuż jednej strony udrapowane czerwoną tkaniną, podłoga z porysowanych desek, rząd składanych krzeseł i stojak ze stalowymi termosami pod ścianą, ze schodami z desek wspinającymi się do biura powyżej.
+zone.office.title = biuro w kontenerze
+zone.office.body = Kontener urządzony jako biuro, czerwone sztandary zawieszone wokół jego ścian z siatki: ciężkie drewniane biurko zawalone papierami i lampa, wzorzysty dywan na podłodze, ściana szafek na akta z wypchaną rybą zamontowaną nad nimi, rośliny w doniczkach po kątach i skrzynie przy schodach.
+zone.officestep.title = stopień biura
+zone.officestep.body = Szczyt schodów z desek z poczekalni, przy drzwiach biura.
+object.exit = Wejście na końcu kontenera, zasłonięte czerwoną tkaniną, z deskami ułożonymi w poprzek progu.
+object.coffeetable = Stół z czerwonym blatem pod ścianą z siatki z dwoma stalowymi termosami z kranikami, stosami białych papierowych kubków i kartonowym pudłem, wokół niego składane krzesła w zieleni i oliwce, spiętrzone i porozstawiane.
+object.evrart = Ciężkie drewniane biurko zawalone papierami, teczkami, lampą, kubkiem i butelkami, za nim skórzany fotel i dalej wzorzysty dywan.
+object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.

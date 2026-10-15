@@ -1,0 +1,8 @@
+# Polski. Rejestr: standardowa polszczyzna literacka, zwięzły neutralny styl czytnika ekranu, jak w lang/pl.txt.
+zone.house.title = dom we wsi
+zone.house.body = Jedna ciepła izba ze ścianami z desek i gołymi deskami podłogi, oświetlona dwoma oknami z żółtymi zasłonami. Półki ze słoikami i puszkami ciągną się po ścianie nad długim stołem pod oknami, w kącie za żółtą zasłoną stoi piętrowe łóżko z niebieskimi kocami, a piec z czajnikiem i ceglanym kominem wypełnia przeciwległą ścianę.
+object.exit = Drzwi z desek otwarte w ścianie domu obok okna z małych szybek, słońce wpadające przez nie na gołe deski.
+object.bedbox = Brązowa walizka i kartonowe pudło na gołych deskach w nogach łóżka, w kącie przy piecu.
+object.grouse = Wypchany brązowy ptak z rozpostartymi skrzydłami, umocowany na półce nad sofą wśród słoików i puszek, pod nim na stole czajnik i kubki pod żółtymi zasłonami.
+object.lily = Mała dziewczynka z ciemnymi włosami w niebieskiej kurtce i żółtej spódniczce, siedząca na ławie przy długim stole, obok niej mężczyzna w pomarańczowej kurtce, miski na stole.
+object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.

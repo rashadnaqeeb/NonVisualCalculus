@@ -1,0 +1,20 @@
+# Polski. Rejestr: standardowa polszczyzna literacka, zwięzły neutralny styl czytnika ekranu, jak w lang/pl.txt.
+zone.atticdoor.title = drzwi strychu
+zone.atticdoor.body = Wąski podest przy drzwiach strychu, drzwiach malowanych na zielono z okrągłym wentylatorem obok, gdzie przeszklona obudowa schodów styka się z tynkowaną ścianą sypialni.
+zone.atticstair.title = schody na strych
+zone.atticstair.body = Szczyt drewnianych schodów zamkniętych szklanym przepierzeniem w stalowej ramie, otwierający się przez szklane drzwi na gołą betonową podłogę strychu.
+zone.atticbedroom.title = sypialnia na strychu
+zone.atticbedroom.body = Mała sypialnia pod dachem z niepościelonym łóżkiem pod ścianą, lampką nocną, półką z książkami i obrazkiem w ramce na tynku, czerwonymi nićmi rozpiętymi w poprzek pokoju między pinezkami i skrzynią na koce w nogach łóżka.
+zone.atticworkshop.title = warsztat na strychu
+zone.atticworkshop.body = Magazyn za sypialnią zapchany półkami ze słoikami, puszkami i pudłami, biurkiem pod lampą zawalonym papierami, oknem z drucianą kratą, kotłem z grubymi rurami w kącie oraz skrzyniami i rupieciami spiętrzonymi po całej podłodze.
+object.elevator = Stalowy regał z puszkami, słoikami i pudłami pod ścianą strychu obok drzwi windy, poniżej stołek, a o tynk oparty oprawiony pejzaż morski.
+object.roofdoor = Ciemne drewniane drzwi z szybą w końcowej ścianie strychu, obok okrągły wentylator z kratką, a przed nimi na betonie dwa przysadziste czarne kanały wentylacyjne.
+object.footprints = Kilka gołych drewnianych stopni schodzących od drzwi strychu do warsztatu, u ich stóp spiętrzone kartonowe pudła, a obok papiery przypięte do tynku.
+object.shelves = Biurko zawalone papierami w warsztacie na strychu pod lampą, przed nim krzesło, a poniżej okno z rośliną na parapecie.
+object.box = Kartonowe pudła ułożone obok drzwi windy na strychu, wiadro na betonie i pomarańczowe znaki ostrzegawcze na ścianie powyżej.
+object.windowtrivial = Szyby w ciemnych stalowych ramach zamykające drewniane schody, za nimi biały fotel jajo z rdzawoczerwonym siedziskiem i czerwone nici rozpięte w poprzek pokoju powyżej.
+object.windowclear = Szyby w ciemnych stalowych ramach zamykające drewniane schody, za nimi biały fotel jajo z rdzawoczerwonym siedziskiem i czerwone nici rozpięte w poprzek pokoju powyżej.
+object.door2 = Szklane drzwi w stalowej ramie u stóp przeszklonych schodów, za szybami biały fotel jajo z rdzawoczerwonym siedziskiem.
+object.klaasjeroofdoor = Ciemne drewniane drzwi z szybą w końcowej ścianie strychu, obok okrągły wentylator z kratką, a przed nimi na betonie dwa przysadziste czarne kanały wentylacyjne.
+object.plaisance = Kobieta z upiętymi ciemnymi włosami, w czarnej kamizelce na białej koszuli, stojąca przy płaszczach wiszących na ścianie mieszkania.
+object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.

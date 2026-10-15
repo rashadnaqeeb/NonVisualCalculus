@@ -1,0 +1,11 @@
+# Polski. Rejestr: standardowa polszczyzna literacka, zwięzły neutralny styl czytnika ekranu, jak w lang/pl.txt.
+zone.shop.title = lombard
+zone.shop.body = Ciasny sklep oświetlony kilkoma wiszącymi lampami, każda ściana zastawiona po sufit rupieciami: półki radioodbiorników, boomboxów i magnetofonów, wieszaki z używanymi ubraniami, wypchana głowa zwierzęcia, obrazy i lustra w ciężkich ramach. Przez środek biegnie szklana lada z kasą i tackami drobnego towaru, a przy drzwiach o półki opiera się odpiłowana latarnia uliczna.
+zone.shop.body@PAWNSHOP_SIGN:on = Ciasny sklep oświetlony kilkoma wiszącymi lampami, każda ściana zastawiona po sufit rupieciami: półki radioodbiorników, boomboxów i magnetofonów, wieszaki z używanymi ubraniami, wypchana głowa zwierzęcia, obrazy i lustra w ciężkich ramach. Przez środek biegnie szklana lada z kasą i tackami drobnego towaru, a przy drzwiach o półki opiera się odpiłowana latarnia uliczna z zawieszonym na niej czerwonym szyldem z białymi literami.
+object.exit = Drzwi z szybą w ciemnej ramie w rogu sklepu, pod półkami radioodbiorników i lamp oraz lampą z zielonym kloszem.
+object.boomboxes = Ściana półek zastawionych szarymi głośnikami, magnetofonami i żółtym magnetofonem szpulowym, nad szklaną ladą z zegarkami, aparatami i maszyną do pisania.
+object.figurines = Szklana gablota zatłoczona małymi białymi figurkami, zestawem szachów i słoikami, obok pomarańczowej szafy grającej i szklanej lady z drobiazgami.
+object.streetlight = Żeliwna latarnia uliczna odpiłowana u podstawy, oparta o półki sklepu z zapaloną lampą, obok zielonego płaszcza na wieszaku i lady z lampami oraz zielonej szklanej kuli.
+object.uniforms = Wieszak z używanymi płaszczami na wieszakach, wśród nich zielony płaszcz w kratę, pod spodem na podłodze spiętrzone kartonowe pudła.
+object.roy = Mężczyzna widziany przez szklaną gablotę za ladą wśród lamp i zegarów, obok niego na półce zapalona latarnia.
+object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.

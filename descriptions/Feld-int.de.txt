@@ -1,0 +1,10 @@
+# Deutsch. Register wie lang/de.txt: Schriftdeutsch, Du-Form, knapper neutraler Screenreader-Stil, Orts- und Personennamen aus der deutschen Spielfassung.
+zone.windowfloor.title = das Stockwerk mit dem zerschlagenen Fenster
+zone.windowfloor.body = Ein kaputter Boden aus gesprungenen Fliesen und Schutt im Feld-Gebäude, von einem hohen Bogenfenster aus Eisengitter mit zerschlagenen Scheiben beleuchtet, die Putzwände von Rissen durchzogen und eine Türöffnung hinunter zum Uferstockwerk in der Ecke.
+zone.brokenstair.title = die kaputte Treppe
+zone.brokenstair.body = Eine Betontreppe mit verrosteten Eisengeländern, die im Zickzack die gesprungene Wand des verfallenen Gebäudes hinaufführt, ihr unterer Lauf endet auf dem Fensterstockwerk und ihr oberer Absatz öffnet sich zur Tür auf den Holzsteg.
+object.exit = Der oberste Absatz der Betontreppe mit ihren verrosteten Eisengeländern, wo eine Türöffnung hinaus zum Holzsteg führt.
+object.lairdoor = Eine Türöffnung in der Ecke des gesprungenen Fliesenbodens am Fuß der Treppe, zwischen verbogenen Eisengeländern und verstreuten Papieren, hinunter zum Uferstockwerk.
+object.postcard = Schutt, auf den gesprungenen Fliesen des Fensterstockwerks aufgehäuft, eine verrostete Eisenstange ragt daraus hervor.
+object.plaisance = Eine Frau mit hochgestecktem dunklem Haar, in einer schwarzen Weste über einem weißen Hemd, steht bei den Mänteln, die an der Wand der Wohnung hängen.
+object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.

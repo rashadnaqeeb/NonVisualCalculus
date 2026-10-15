@@ -1,0 +1,10 @@
+# Descriptions du monde en français. Registre : français écrit standard, neutre et concis, celui de lang/fr.txt ; noms de lieux et de personnes repris de la version française du jeu.
+zone.kitchen.title = la cuisine de l'appartement
+zone.kitchen.body = Une cuisine étroite aux carreaux bleus avec un évier et une cuisinière, des casseroles accrochées au mur au-dessus du plan de travail, des bocaux et des bouteilles sur les étagères et une plante en pot près de la porte.
+zone.mainroom.title = la pièce principale de l'appartement
+zone.mainroom.body = Une pièce aux murs jaunes avec un grand lit sous une fenêtre à nombreux petits carreaux, des plantes en pot sur le rebord, une malle au pied du lit, une haute bibliothèque et une armoire contre le mur du fond, un fauteuil usé près de la porte avec une lampe de bureau à côté, et de petites toilettes ouvrant dans le coin.
+zone.childrensroom.title = la chambre des enfants
+zone.childrensroom.body = Une petite chambre verte avec deux lits bas sous une fenêtre à store, une couverture bleu sarcelle sur l'un et une courtepointe jaune en patchwork sur l'autre, une table de chevet avec une lampe et des dessins d'enfants épinglés au mur.
+object.exit = Une porte grise à la peinture écaillée dans le mur de l'appartement, un fauteuil jaune et une lampe sur une table d'appoint de l'autre côté du tapis et un étendoir en fil de fer près de la fenêtre.
+object.workingwoman = Une femme en veste bleue et pantalon sombre assise au bord du lit, les mains jointes entre les genoux, des pantoufles jaunes aux pieds.
+object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.

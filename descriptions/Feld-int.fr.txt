@@ -1,0 +1,10 @@
+# Descriptions du monde en français. Registre : français écrit standard, neutre et concis, celui de lang/fr.txt ; noms de lieux et de personnes repris de la version française du jeu.
+zone.windowfloor.title = l'étage de la fenêtre brisée
+zone.windowfloor.body = Un sol brisé de carreaux fissurés et de gravats à l'intérieur du bâtiment de Feld, éclairé par une haute fenêtre cintrée à treillis de fer aux vitres brisées, les murs de plâtre craquelés de fissures et une porte descendant vers l'étage de la rive dans le coin.
+zone.brokenstair.title = l'escalier brisé
+zone.brokenstair.body = Un escalier de béton à rambardes de fer rouillé zigzaguant le long du mur fissuré du bâtiment en ruine, sa volée basse finissant sur l'étage de la fenêtre et son palier haut ouvrant vers la porte de la promenade de planches.
+object.exit = Le palier haut de l'escalier de béton à rambardes de fer rouillé, où une porte ouvre vers la promenade de planches.
+object.lairdoor = Une porte dans le coin du sol de carreaux fissurés au pied de l'escalier, parmi des rambardes de fer tordues et des papiers épars, descendant vers l'étage de la rive.
+object.postcard = Des gravats entassés sur les carreaux fissurés de l'étage de la fenêtre, une barre de fer rouillée en saillie.
+object.plaisance = Une femme aux cheveux foncés relevés, en gilet noir sur une chemise blanche, debout près des manteaux accrochés au mur de l'appartement.
+object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.

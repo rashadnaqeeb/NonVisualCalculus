@@ -1,0 +1,8 @@
+# Español de España, registro de lang/es.txt: tuteo informal, estilo neutro y conciso para lector de pantalla.
+zone.tent.title = dentro de la tienda
+zone.tent.body = El interior de la tienda de lona, un triángulo angosto de lona azul sobre palos iluminado por un farol colgado de la cumbrera, con una alfombra estampada sobre la arena, una pila de radios y una pletina contra un lado, un cajón y un cubo, una sábana echada sobre un montón de pertenencias y una planta en maceta junto a la entrada.
+object.exit = La entrada de la tienda junto a un cajón de madera, una pila de radios y una pletina, una lámpara con pantalla de mimbre y una maceta sobre la alfombra, la luz del día entrando a raudales sobre la arena.
+object.egghead = Un joven con una chaqueta verde con capucha y una corona de pinchos rubios, despatarrado sobre la alfombra con la espalda contra una caja, las piernas estiradas.
+object.andre = Un joven con una chaqueta azul sentado en un cajón junto a las radios de la tienda con una rodilla levantada, una taza en la mano.
+object.noid = Un hombre con una chaqueta oscura de pie junto a los altavoces apilados bajo una bombilla desnuda, un montón cubierto con una tela a su lado.
+object.kim = Un hombre delgado con una cazadora bomber naranja sobre una camisa blanca y pantalones oscuros, el pelo oscuro peinado hacia atrás y gafas redondas, con una pequeña libreta abierta en una mano y un bolígrafo en la otra.

@@ -1,0 +1,21 @@
+# 非视觉计算世界描述，简体中文。语体：标准书面普通话，简洁中性的读屏风格，与游戏中文本地化一致；全角标点，词间不加空格。
+zone.gunhall.title = 炮厅
+zone.gunhall.body = 堡垒下一座混凝土大厅，地面是开裂的石板，由地上一盏灯照亮。一台罩着防尘布的生锈机器靠墙立在一道短铁楼梯旁，地面嵌着一个圆舱口，面海一侧的墙已经坍塌成一道瓦砾和沙的斜坡，通往滑道的门在那里敞开。
+zone.eastdoor.title = 东门
+zone.eastdoor.body = 堡垒东门内一条黑暗的短过道，通向炮厅上层带栏杆的转台旁。
+zone.turntable.title = 转台
+zone.turntable.body = 混凝土中嵌着的一圈圆形铁轨，四周围着栏杆，中央基座上是炮塔生锈的炮架和齿轮，屋顶垂下电缆。
+zone.upperdeck.title = 上层廊台
+zone.upperdeck.body = 转台上方一处带栏杆的锈迹条痕混凝土平台，炮架的齿轮在旁边升起，一台绿色发电机立在钢架上，一根黄色电缆拖过地面，台阶向上通往狭缝窗房间。
+zone.entrycorridor.title = 入口走廊
+zone.entrycorridor.body = 正门内一条混凝土走廊，墙边一个灰色储物柜，地上一个木箱，墙上装着一个齿轮，一道楼梯向上通往楼上的房间。
+zone.upperstair.title = 上层楼梯
+zone.upperstair.body = 一道带栏杆的铁楼梯，从入口走廊向上通往狭缝窗房间，经过混凝土墙上一幅褪色的肖像画。
+zone.desertersroom.title = 狭缝窗房间
+zone.desertersroom.body = 一条长狭缝窗下的一间弧形混凝土房间，墙上挂着灰布，远墙边一张破布和毯子铺成的床，架子上一台发电机，电缆拖过地面，一张放着罐头和碗的桌子，一摞书，窗边靠着一支步枪。
+zone.holepassage.title = 破洞过道
+zone.holepassage.body = 从堡垒墙上的破洞延伸出的一条碎混凝土板过道，地上有瓦砾和一只碗，日光透过缺口投下长长的光柱，生锈的铁条横撑在缺口上。
+object.exiteast = 混凝土墙上一扇带厚重铰链块的生锈钢门，被照成紫色。
+object.exithole = 过道岩壁上一个用生锈铁条撑着的破洞，里面堆着巨石，橙色和粉色的光从中涌入。
+object.exitmain = 生锈混凝土墙上的一个门口，橙色和粉色的光从中涌入。
+object.kim = 一个身穿橙色飞行员夹克、里面是白衬衫配深色长裤的瘦削男人，深色头发向后梳起，戴圆框眼镜，一手摊开一本小笔记本，另一手拿着笔。
