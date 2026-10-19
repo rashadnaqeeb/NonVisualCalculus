@@ -195,6 +195,7 @@ ScreenThought = فكرة
 ScreenCollage = وضع الكولاج
 ScreenContainer = حاوية
 ScreenNewspaper = الجريدة
+ScreenCredits = شارة النهاية
 ScreenPawnshop = محل الرهن
 ScreenThoughtComplete = اكتملت الفكرة
 ScreenBeginPrompt = اضغط إنتر للبدء

@@ -472,8 +472,8 @@ namespace NonVisualCalculus.Module
             // Escape on a game view is handed to the game's own back action (context-sensitive: it closes
             // the open view or world container), so the game closes screens the way it does for a sighted
             // player - the mod reconstructs no close. Only the mod's own surfaces (a mod overlay, the
-            // popup) handle Escape themselves, since the game has no equivalent to close.
-            if (key == UiActions.Back && !_screens.OnOwnSurface)
+            // popup) and a screen that claims Escape (the end credits) handle it themselves.
+            if (key == UiActions.Back && !_screens.HandlesBack)
             {
                 _commands.Escape();
                 return true;

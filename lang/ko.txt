@@ -206,6 +206,7 @@ ScreenThought = 생각
 ScreenCollage = 콜라주 모드
 ScreenContainer = 보관함
 ScreenNewspaper = 신문
+ScreenCredits = 엔딩 크레딧
 ScreenPawnshop = 전당포
 ScreenThoughtComplete = 사고 완료
 ScreenBeginPrompt = Enter 키를 눌러 시작하십시오

@@ -197,6 +197,7 @@ ScreenThought = thought
 ScreenCollage = collage mode
 ScreenContainer = container
 ScreenNewspaper = newspaper
+ScreenCredits = credits
 ScreenPawnshop = pawnshop
 ScreenThoughtComplete = thought complete
 ScreenBeginPrompt = Press Enter to begin

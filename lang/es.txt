@@ -199,6 +199,7 @@ ScreenThought = idea
 ScreenCollage = modo collage
 ScreenContainer = contenedor
 ScreenNewspaper = periódico
+ScreenCredits = créditos
 ScreenPawnshop = casa de empeños
 ScreenThoughtComplete = idea desarrollada
 ScreenBeginPrompt = Pulsa Intro para empezar

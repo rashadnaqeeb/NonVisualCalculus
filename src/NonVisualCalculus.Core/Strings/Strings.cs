@@ -459,6 +459,8 @@ namespace NonVisualCalculus.Core.Strings
             D("ScreenContainer", "container"),
             // The endgame newspaper the credits offer.
             D("ScreenNewspaper", "newspaper"),
+            // The end credits that roll after the game's final ending.
+            D("ScreenCredits", "credits"),
             // The pawnshop's buy/sell trade screen.
             D("ScreenPawnshop", "pawnshop"),
             // The splash when a thought finishes research; match I2 THC_SPLASH_SCREEN_TITLE
@@ -1351,6 +1353,7 @@ namespace NonVisualCalculus.Core.Strings
         public static string ScreenCollage => T("ScreenCollage");
         public static string ScreenContainer => T("ScreenContainer");
         public static string ScreenNewspaper => T("ScreenNewspaper");
+        public static string ScreenCredits => T("ScreenCredits");
         public static string ScreenPawnshop => T("ScreenPawnshop");
         public static string ScreenThoughtComplete => T("ScreenThoughtComplete");
         public static string ScreenBeginPrompt => T("ScreenBeginPrompt");

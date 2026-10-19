@@ -202,6 +202,7 @@ ScreenThought = 思維
 ScreenCollage = 拼貼模式
 ScreenContainer = 容器
 ScreenNewspaper = 報紙
+ScreenCredits = 製作人員名單
 ScreenPawnshop = 當鋪
 ScreenThoughtComplete = 完成思維整理
 ScreenBeginPrompt = 按下Enter鍵開始

@@ -211,6 +211,7 @@ ScreenThought = düşünce
 ScreenCollage = kolaj modu
 ScreenContainer = kap
 ScreenNewspaper = gazete
+ScreenCredits = jenerik
 ScreenPawnshop = ikinci el dükkânı
 ScreenThoughtComplete = düşünce tamamlandı
 ScreenBeginPrompt = Başlamak için Enter tuşuna bas

@@ -197,6 +197,7 @@ ScreenThought = 思维
 ScreenCollage = 拼贴模式
 ScreenContainer = 容器
 ScreenNewspaper = 报纸
+ScreenCredits = 制作人员名单
 ScreenPawnshop = 当铺
 ScreenThoughtComplete = 思维完成
 ScreenBeginPrompt = 按回车键开始

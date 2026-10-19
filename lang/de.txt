@@ -204,6 +204,7 @@ ScreenThought = Gedanke
 ScreenCollage = Collage-Modus
 ScreenContainer = Behälter
 ScreenNewspaper = Zeitung
+ScreenCredits = Abspann
 ScreenPawnshop = Pfandhaus
 ScreenThoughtComplete = Gedanke abgeschlossen
 ScreenBeginPrompt = Drücke die Eingabetaste, um zu beginnen

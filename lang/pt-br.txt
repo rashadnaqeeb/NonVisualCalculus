@@ -201,6 +201,7 @@ ScreenThought = reflexão
 ScreenCollage = modo montagem
 ScreenContainer = recipiente
 ScreenNewspaper = jornal
+ScreenCredits = créditos
 ScreenPawnshop = loja de penhores
 ScreenThoughtComplete = reflexão concluída
 ScreenBeginPrompt = Pressione Enter para começar

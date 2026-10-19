@@ -16,6 +16,7 @@ New Features and improvements:
 - Zone and object descriptions are spoken in the game's language: all twelve languages are translated, with the game's own names for places and people.
 - The mod runs on the Mac version of the game on Apple Silicon Macs; see the macOS install guide.
 - On a Mac, speech goes through a screen reader with a Prism plugin, else the system voice, or VoiceOver if chosen in settings.
+- The end credits are read as they scroll, and Escape closes them to the main menu.
 
 ## V1.2.2
 

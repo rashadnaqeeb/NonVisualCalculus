@@ -196,6 +196,7 @@ ScreenThought = myśl
 ScreenCollage = tryb kolażu
 ScreenContainer = pojemnik
 ScreenNewspaper = gazeta
+ScreenCredits = napisy końcowe
 ScreenPawnshop = lombard
 ScreenThoughtComplete = myśl ukończona
 ScreenBeginPrompt = Naciśnij Enter, aby rozpocząć

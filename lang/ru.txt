@@ -194,6 +194,7 @@ ScreenThought = мысль
 ScreenCollage = режим коллажа
 ScreenContainer = контейнер
 ScreenNewspaper = газета
+ScreenCredits = титры
 ScreenPawnshop = ломбард
 ScreenThoughtComplete = мысль завершена
 ScreenBeginPrompt = Нажмите Enter, чтобы начать

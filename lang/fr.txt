@@ -197,6 +197,7 @@ ScreenThought = réflexion
 ScreenCollage = mode collage
 ScreenContainer = conteneur
 ScreenNewspaper = gazette
+ScreenCredits = générique de fin
 ScreenPawnshop = prêteur sur gages
 ScreenThoughtComplete = réflexion assimilée
 ScreenBeginPrompt = Appuyez sur Entrée pour commencer

@@ -211,6 +211,7 @@ ScreenThought = 思考
 ScreenCollage = コラージュモード
 ScreenContainer = 容器
 ScreenNewspaper = 新聞
+ScreenCredits = エンドクレジット
 ScreenPawnshop = 質屋
 ScreenThoughtComplete = 思考習得
 ScreenBeginPrompt = Enterキーを押して開始

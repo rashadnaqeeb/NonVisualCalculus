@@ -78,10 +78,12 @@ namespace NonVisualCalculus.Module.Nav
         /// <see cref="Tick"/> before input is polled, so the input layer can gate UI keys on it.</summary>
         public bool OwnsKeyboard { get; private set; }
 
-        /// <summary>Whether the surface we drive is the mod's own (a mod overlay or the confirmation
-        /// popup), which have no game equivalent, so we handle their Escape ourselves. On a game view, Escape
-        /// is instead handed to the game's own back action so the game closes the screen.</summary>
-        public bool OnOwnSurface => _overlay != null || PopupOverlay.IsShowing();
+        /// <summary>Whether Escape is ours to handle through the navigator's Back: on the mod's own surfaces
+        /// (a mod overlay or the confirmation popup), which have no game equivalent, and on a screen that
+        /// claims it (<see cref="Screen.HandlesBack"/>). On any other game view, Escape is instead handed to
+        /// the game's own back action so the game closes the screen.</summary>
+        public bool HandlesBack => _overlay != null || PopupOverlay.IsShowing()
+                                   || (_attachedScreen != null && _attachedScreen.HandlesBack);
 
         /// <summary>Whether type-ahead search is enabled on the attached screen (default true when none).</summary>
         public bool TypeAheadEnabled => _attachedScreen?.TypeAheadEnabled ?? true;
@@ -126,6 +128,9 @@ namespace NonVisualCalculus.Module.Nav
             Register(new PawnshopScreen());
             Register(new DialogueScreen());
             Register(new HelpOverlayScreen());
+            // The end credits roll over free-roam (CLEAR) after the final ending; this applies only while
+            // they play, ahead of the loot panel, the other CLEAR screen.
+            Register(new CreditsScreen());
             // The world's loot panel: CLEAR (free-roam) has no screen of its own, so this applies only
             // while the panel is up and the world reader keeps the keyboard the rest of the time.
             Register(new ContainerPanelScreen());

@@ -39,6 +39,12 @@ namespace NonVisualCalculus.Module.Nav
         /// and bare letters serve navigation/type-ahead instead.</summary>
         public virtual bool WantsStatusKeys => false;
 
+        /// <summary>Whether Escape goes to this screen's root Back action rather than the game's Pause
+        /// action. For a game view whose Escape the game itself binds to nothing (the end credits swallow
+        /// it, and Pause would open the pause menu over the still-rolling credits). Default false: Escape
+        /// on a game view is the game's.</summary>
+        public virtual bool HandlesBack => false;
+
         /// <summary>Extra key-help lines for keys this screen handles itself, outside the input registry
         /// (the dialogue viewer's number-row jump), composed and ready to speak. The key-help screen
         /// reads them ahead of the registry's own list. Empty by default.</summary>
