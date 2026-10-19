@@ -1,9 +1,9 @@
 # Türkçe: standart yazı dili, kısa ve yalın cümleler, lang/tr.txt ile aynı ölçün; yer ve kişi adları oyunun kendi Türkçe çevirisinden.
 zone.shack.title = balıkçı barakası
-zone.shack.body = Tahtaların arasından ışık sızan gri, yıpranmış kalaslardan karanlık bir kulübe, toprak zemin, duvara dayalı sade ahşap bir sandalye ve köşede birkaç kutu, kapının yanında küçük camlı bir pencere.
+zone.shack.body = Tahtaların arasında boşluklar olan gri, yıpranmış kalaslardan bir kulübe, kalas döşeme, duvara dayalı turuncu oturaklı ahşap bir sandalye, arkada metal bir raf ünitesi ve kapının yanında küçük bir pencere.
 object.exit = Barakanın kalas kapısı, yanında küçük bir pencere, aralıktan görünen güneş ışığı ve köyün renkleri.
-object.box = Karanlık barakanın köşesinde bir şişe ve birkaç kâğıt duran tahtadan bir raf, yanındaki kalaslarda bir çividen sarkan bir ip kangalı.
+object.box = Barakanın köşesine yapılmış çıplak gri tahta raflar, en üstte kuru otlu uzun bir kil vazo, daha alttaki rafta dağınık kâğıtlar.
 object.postcard = Barakanın duvarının gri kalaslarına rafın üstüne tutturulmuş soluk bir kart, bir çividen sarkan küçük bir halkanın yanında.
-object.pierbox = Barakanın gri kalas duvarına dayalı sade ahşap bir sandalye, yanında toprak zeminde bir ip kangalı.
-object.plaisance = Siyah saçlarını topuz yapmış, beyaz gömlek üstüne siyah yelek giymiş bir kadın, dairenin duvarına asılı paltoların yanında duruyor.
+object.pierbox = Köşe raflarının orta tahtasında, katlanmış mavi bir bezin yanında küçük soluk renk bir karton kutu.
+object.plaisance = Siyah saçlarını topuz yapmış, beyaz gömlek üstüne siyah yelek ve kahverengi etek giymiş bir kadın.
 object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.

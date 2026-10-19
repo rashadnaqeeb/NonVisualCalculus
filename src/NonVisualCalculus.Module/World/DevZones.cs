@@ -38,6 +38,20 @@ namespace NonVisualCalculus.Module.World
             return sb.ToString();
         }
 
+        /// <summary>The authored anchors against the live map: anchors in no zone, zones with no anchor,
+        /// zones holding several. "clean" when every zone has exactly one; the same check the world reader
+        /// logs in play, here on demand and whether or not the map has settled.</summary>
+        public static string Validate()
+        {
+            var t = Tracker;
+            if (t?.Map == null) return "no zone map" + (t != null ? " (scene " + t.Scene + ")" : "");
+            var d = WorldReader.Active?.Descriptions.Current;
+            if (d == null || d.Scene != t.Scene) return t.Scene + ": no descriptions";
+            string report = Core.Descriptions.ZoneAudit.Run(d.Geometry, t.Map).Report();
+            string head = $"{t.Scene}: {t.Map.Zones.Count} zones, {d.Geometry.Zones.Count} anchors, {t.Map.AnchorSplits} split by anchors, {t.Map.AnchorJoins} unnamed joined, {t.Map.AnchorSpecks} specks dropped{(t.Settled ? "" : ", map not settled yet")}{(t.Building ? ", rebuild in flight" : "")}";
+            return head + (report.Length == 0 ? ": clean" : "\n" + report.TrimEnd());
+        }
+
         /// <summary>The zone at a point in the mod's world frame.</summary>
         public static string At(float x, float y, float z)
         {

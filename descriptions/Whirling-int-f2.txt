@@ -47,7 +47,6 @@ object beer13 = empty_beer (13)
 object beer14 = empty_beer (14)
 object beer15 = empty_beer (15)
 object klaasje = Klaasje
-object moneyman2 = Money man
 object rosemary2 = Rosemary2
 object klaasjeroof2 = klaasjeRoof2
 object clubberman2 = ClubberMan2

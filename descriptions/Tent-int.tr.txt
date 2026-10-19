@@ -1,6 +1,6 @@
 # Türkçe: standart yazı dili, kısa ve yalın cümleler, lang/tr.txt ile aynı ölçün; yer ve kişi adları oyunun kendi Türkçe çevirisinden.
 zone.tent.title = çadırın içi
-zone.tent.body = Muşamba çadırın içi, sırıklar üstünde mavi branda bezinden sıkışık bir üçgen, tepe çizgisinden asılı bir fenerle aydınlanıyor, kumda desenli bir halı, bir yana dayalı bir radyo yığını ve bir kaset çalar, bir kasa ve bir kova, bir eşya yığınının üstüne örtülmüş bir çarşaf ve kapı perdesinin yanında saksıda bir bitki.
+zone.tent.body = Muşamba çadırın içi, sırıklar üstünde mavi branda bezinden sıkışık bir üçgen, iskeletin yükseğine bir lamba asılı, kumda desenli bir halı, bir yana dayalı bir radyo yığını ve bir kaset çalar, bir kasa ve bir kova, arkaya istiflenmiş beyaz sürahiler ve kaplar ve bir eşya yığınının üstüne örtülmüş bir çarşaf.
 object.exit = Ahşap bir kasanın, bir radyo yığınının ve bir kaset çaların yanında çadırın kapı perdesi, halıda hasır abajurlu bir lamba ve bir saksı, kumun üstünden içeri dolan gün ışığı.
 object.egghead = Sarı dikenlerden bir taçla yeşil kapüşonlu ceketli genç bir adam, sırtı bir kasaya dayalı halıya yayılmış, bacakları uzatılmış.
 object.andre = Çadırın radyolarının yanında bir kasada bir dizi dikili oturan mavi ceketli genç bir adam, elinde bir fincan.

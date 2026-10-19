@@ -1,5 +1,5 @@
 zone.shop.title = the Frittte
-zone.shop.body = A small bright shop with a worn tiled floor. A glass counter and chilled display cases run along the back under shelves of bottles, with a tare machine and a cash register on the counter; a drinks fridge and a rack of snacks stand by the door, posters cover the wall, and the front windows are full of flowers and pot plants.
+zone.shop.body = A small shop with a worn tiled floor. A glass counter and chilled display cases run along the back under shelves of bottles, with a tare machine and a cash register on the counter. A drinks fridge and a green machine with a screen stand in the back corner, posters cover the wall, and the front windows are full of flowers and pot plants.
 object.apothecary = A counter at the back of the shop with a grey radio on it under a poster of red lips, a white crate of bottles beside it and a wire basket of goods on the floor.
 object.taremachine = A tall green machine against the shop's back wall with a framed panel on its front, a glass-fronted cabinet of cups beside it and a poster on the wall.
 object.alcohol = A kitchen counter of green cabinets with a steel sink, rows of green and brown bottles standing along its back with yellow price tags, and a glass case of goods above.

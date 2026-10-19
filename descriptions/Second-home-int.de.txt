@@ -1,6 +1,6 @@
 # Deutsch. Register wie lang/de.txt: Schriftdeutsch, Du-Form, knapper neutraler Screenreader-Stil, Orts- und Personennamen aus der deutschen Spielfassung.
 zone.room.title = das Zimmer im Stelzenhaus
-zone.room.body = Ein gemütliches Einzimmerhaus aus Planken: ein Bett mit gestreiftem Kissen unter dem Fenster, ein kleiner Tisch mit Stuhl bei der Lampe, ein Waschbecken und ein Spiegel in der hinteren Ecke unter einem gelben Ofenrohr und Regale mit Flaschen und Dosen an der Rückwand entlang.
+zone.room.body = Ein gemütliches Einzimmerhaus aus Planken, mit einem Bett mit Kissen und Nackenrolle an der Wand und einem kleinen Tisch mit petrolfarbenen Stühlen unter dem Fenster. In der hinteren Ecke steht ein Waschbecken mit Hahn unter einem Regal mit Tassen, neben einem Eisenofen mit rostigem Ofenrohr und einem gelben Schlauch, der die Wand hinabläuft.
 object.bed = Ein schmales Bett unter dem Fenster mit einer weißen Steppdecke und einem gestreiften Kissen, ein kleines Radio auf dem Regal über seinem Kopfende und ein Holztisch mit Schale und Löffel daneben.
 object.washbasin = Ein weißes Becken auf einem verrosteten Eisenständer in der hinteren Ecke unter einem gelben Ofenrohr, eine Rohrschlinge dahinter und eine Tasse auf dem Regal darüber.
 object.floorboard = Ein Stück des nackten Plankenbodens zwischen dem Bett und dem Tisch, bei einem türkisfarbenen Stuhl, wo Sonnenlicht vom Fenster über die Bretter fällt.
@@ -8,5 +8,5 @@ object.exit = Eine braune Holztür mit Messinggriff in der Plankenwand, jenseits
 object.mirror = Ein kleiner Spiegel an der Plankenwand über dem Waschbecken in der hinteren Ecke, neben einer Tasse auf einem Regal und dem gelben Ofenrohr.
 object.clothbox = Das schmale Bett unter dem Fenster mit seiner weißen Steppdecke und dem gestreiften Kissen, eine dunkle Kiste an seinem Fußende.
 object.exit2 = Eine braune Holztür mit Messinggriff in der Plankenwand, jenseits der Dielen vom Bett aus.
-object.plaisance = Eine Frau mit hochgestecktem dunklem Haar, in einer schwarzen Weste über einem weißen Hemd, steht bei den Mänteln, die an der Wand der Wohnung hängen.
+object.plaisance = Eine Frau mit hochgestecktem dunklem Haar, in einer schwarzen Weste über einem weißen Hemd und einem braunen Rock.
 object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.

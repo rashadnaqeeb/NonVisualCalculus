@@ -8,13 +8,21 @@ merge -28.39,0.5,62.59 -31.64,0.42,56.09
 merge -125.89,4.73,59.84 -128.39,3.85,66.59
 merge -81.89,1.63,98.09 -83.39,1.81,103.84
 merge 45.61,8.75,100.59 46.61,6.64,101.59
+# Fragments of open ground the watershed cuts off: each is part of the place beside it.
+merge -98.64,1.57,70.59 -98.64,0.08,80.59
+merge -128.14,0.37,103.09 -125.14,1.54,105.59
+merge -49.64,3.7,30.59 -47.89,4.25,34.09
+merge -74.89,1.21,102.09 -84.89,0.15,89.59
+merge -74.89,1.21,102.09 -71.39,2.65,113.59
+merge -74.89,1.21,102.09 -68.14,0.79,97.09
+merge -51.14,1.21,59.84 -45.89,0.82,55.59
+merge -22.89,0.87,202.34 -29.39,0.94,198.34
 zone shedyard -33.39 3.99 20.59
 zone yardgate -25.89 2.98 27.34
 zone roofstrip -49.64 3.7 30.59
 zone boilerlanding -9.39 4.24 31.59
 zone treeslope -15.89 2.93 32.34
 zone fencepath -29.14 1.47 33.59
-zone shackpath -47.89 4.25 34.09
 zone sandylot -26.39 0.7 35.59
 zone shackslope -41.89 3.23 36.59
 zone shacksteps -49.89 2.65 38.34
@@ -32,7 +40,6 @@ zone pawnshopyard -3.39 2.94 50.34
 zone lorryqueue 10.86 4.29 51.84
 zone pawnshoppath 4.11 2.94 54.09
 zone netpickerlot -75.39 2.9 54.84
-zone tentbeach -45.89 0.82 55.59
 zone lorrykerb 38.11 4.27 57.09
 zone swingset -37.89 0.49 58.84
 zone boatbeach -51.14 1.21 59.84
@@ -61,7 +68,6 @@ zone plazastairs 4.36 3.23 77.34
 zone waterstairs -8.39 1.48 79.09
 zone boardwalknorth -109.39 1.42 79.34
 zone boathouses -131.64 1.46 79.34
-zone bogcrossing -98.64 0.08 80.59
 zone bogstream -91.39 0.14 80.59
 zone lowerterrace -6.14 1.48 81.09
 zone plaza 16.86 4.28 81.09
@@ -76,7 +82,6 @@ zone dunehollow -96.89 0.57 86.09
 zone bouldermeadow -90.39 0.75 88.34
 zone pilesand -108.39 0.44 89.09
 zone fountain -8.89 3.2 89.34
-zone meadowpath -84.89 0.15 89.59
 zone frittteforecourt 39.61 4.27 89.59
 zone pilesteps -102.64 2.46 89.84
 zone fountainterrace -3.89 3.24 92.09
@@ -86,7 +91,6 @@ zone pilefoot -115.14 0.89 95.09
 zone bannerstreet 52.11 4.27 95.84
 zone dunecrest -72.89 0.7 95.84
 zone icelanding -48.64 0.27 96.09
-zone shorefence -68.14 0.79 97.09
 zone pinehollow -89.14 1.97 97.09
 zone poolbank -81.89 1.63 98.09
 zone icebay -61.39 0.13 99.09
@@ -98,13 +102,11 @@ zone churchmeadow -74.89 1.21 102.09
 zone netbeach -128.14 0.37 103.09
 zone icesteps -55.64 0.25 105.09
 zone icefield -43.39 0.36 105.09
-zone netframes -125.14 1.54 105.59
 zone churchporch -59.89 3.1 107.09
 zone feldsteps -96.89 5.34 109.59
 zone hotelyard 22.61 3.72 110.84
 zone poolterrace -85.64 2.47 111.09
 zone pineshore -122.89 0.77 111.34
-zone churchlane -71.39 2.65 113.59
 zone mosaicquay -1.64 3.61 114.34
 zone poolstair -84.39 3.8 114.84
 zone towerfence 14.61 3.67 118.34
@@ -138,7 +140,6 @@ zone tetrapods -25.14 0.35 192.84
 zone winchplatform -60.64 0.68 195.09
 zone slipway -34.64 2.04 196.84
 zone cliffbeach -52.14 0 197.34
-zone deadtree -29.39 0.94 198.34
 zone isletice -11.39 0.25 198.84
 zone winchstair -57.89 2.73 199.34
 zone isletmeadow -22.89 0.87 202.34
@@ -245,7 +246,6 @@ object sandcastle = Village Sandcastle
 object hangingcloak = Hanging-Cloak
 object sunglasses = clickable_humanitarian_sunglasses
 object humjacket = clickable_humanitarian_jacket
-object plasticbag = plastic_bag_container
 object bottle0 = empty bottle
 object stonekeys = Stone With Keys
 object icepillars3 = Ice Pillars 3
@@ -293,7 +293,6 @@ object motorboat = Motorboat
 object pierbox1 = Box_1 pier
 object doomedtrash = Doomed Trash Can
 object jamcratesright = Jam Crates Right
-object butter = Samaran Butter
 object yardwoodpile = Yard Woodpile
 object fishmachine = Fishmarket Machine
 object icepillars1 = Ice Pillars 1
@@ -313,7 +312,6 @@ object toolbox = Toolbox
 object depotdoor = Depot Door
 object filthyjacket = Filthy-jacket
 object yardbox = Yard Box
-object pawnshopbox = box pawnshop
 object villagebarrels = Village Barrels
 object boardwalkhut = Boardwalk Hut
 object crateruins = Crate Ruins
@@ -375,7 +373,6 @@ object pierapartmentsdoor2 = pier-door-apartments-2
 object fishingboat = fishing-boat
 object wcwdoor = courtyard-door-apartments-wcw
 object unionbossdoor = containertown-union-boss
-object fortressboat = fortress-boat
 object garysdoor = courtyard-door-crypto-garys-apt
 object shackroofhatch = courtyard-door-cunos-shack roof
 object pierapartmentsdoor1 = pier-door-apartments-1

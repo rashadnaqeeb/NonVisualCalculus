@@ -1,6 +1,6 @@
 # Deutsch. Register wie lang/de.txt: Schriftdeutsch, Du-Form, knapper neutraler Screenreader-Stil, Orts- und Personennamen aus der deutschen Spielfassung.
 zone.shop.title = der Frittte
-zone.shop.body = Ein kleiner heller Laden mit abgetretenem Fliesenboden. Ein Glastresen und gekühlte Vitrinen ziehen sich hinten unter Regalen voller Flaschen entlang, mit einer Tara-Waage und einer Registrierkasse auf dem Tresen; ein Getränkekühlschrank und ein Ständer mit Snacks stehen an der Tür, Poster bedecken die Wand, und die Schaufenster sind voller Blumen und Topfpflanzen.
+zone.shop.body = Ein kleiner Laden mit abgetretenem Fliesenboden. Ein Glastresen und gekühlte Vitrinen ziehen sich hinten unter Regalen voller Flaschen entlang, mit einer Tara-Waage und einer Registrierkasse auf dem Tresen. Ein Getränkekühlschrank und ein grüner Automat mit Bildschirm stehen in der hinteren Ecke, Poster bedecken die Wand, und die Schaufenster sind voller Blumen und Topfpflanzen.
 object.apothecary = Ein Tresen hinten im Laden mit einem grauen Radio darauf unter einem Poster mit roten Lippen, eine weiße Kiste mit Flaschen daneben und ein Drahtkorb mit Waren auf dem Boden.
 object.taremachine = Eine hohe grüne Maschine an der Rückwand des Ladens mit einem gerahmten Feld auf ihrer Vorderseite, ein Schrank mit Glasfront voller Tassen daneben und ein Poster an der Wand.
 object.alcohol = Eine Küchenzeile aus grünen Schränken mit einer Stahlspüle, Reihen grüner und brauner Flaschen mit gelben Preisschildern an ihrer Rückseite aufgereiht und eine Glasvitrine mit Waren darüber.

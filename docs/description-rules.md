@@ -73,6 +73,20 @@ pass verbatim. Design background: `zones-and-descriptions-plan.md` (same folder)
 - `<scene>.en.txt` holds the English prose under `zone.<key>.title`, `zone.<key>.body`,
   `detail.<key>.title`, `detail.<key>.body`, `object.<key>`. Another language goes in
   `<scene>.<lang>.txt` with the same keys; English is the fallback per key.
+- An anchor sits deep inside its zone, never on the line between two (`DevZones.Dump()` then the
+  dump's cells give the deepest point). The zone map follows the live navmesh, which doors, parked
+  vehicles and story switches reshape from save to save, so the anchors steer it: a region holding
+  two anchors is divided between them by walking distance, a region holding none joins its named
+  neighbour, and an unnamed island under 12 square metres is dropped. Where the natural boundary
+  matters (a doorway, a partition, the edge of a square), pin it with a `wall`:
+  `python3 tools/zone_wall.py <dump> <zoneA> <zoneB>` turns the boundary of a map where the split is
+  right into a wall line. Fold a fragment of open ground into the place beside it with a `merge` of
+  the two points and no anchor of its own.
+- A `drop` removes only the zone under its own cell; place it on the stray patch itself.
 - `dotnet test` validates every committed scene offline: every anchor has a title, every detail
-  and object has text, no orphans, no duplicates. Live, `DevZones.Stats()` and the untitled-zone
-  check in the plan's phase 2 confirm every zone resolves.
+  and object has text, titles are unique in a scene, no two anchors under a metre apart, no orphans, no duplicates. Live,
+  `DevZones.Validate()` checks the anchors against the zone map: every zone holds exactly one
+  anchor and every anchor stands in a zone. The world reader logs the same check whenever a
+  settled map lands, so a story state or a save that segments a scene differently shows up in the
+  log. Validate each scene in more than one save: the map follows the navmesh, and doors, parked
+  vehicles and story switches reshape it.

@@ -1,8 +1,8 @@
 # Español de España, registro de lang/es.txt: tuteo informal, estilo neutro y conciso para lector de pantalla.
 zone.container.title = el contenedor de carga
-zone.container.body = El interior de un contenedor de carga, una caja estrecha de costillas de acero amarillo con paredes de malla, el suelo rayado con pintura amarilla de peligro, donde una luz pálida y cegadora entra a raudales por el extremo del fondo y la malla se retuerce y ondula a su alrededor.
+zone.container.body = El interior de un contenedor de carga, una caja estrecha de costillas de acero naranja óxido con paredes de malla, donde en el extremo del fondo la malla se retuerce y ondula en pliegues de rosa y violeta.
 object.exit = El extremo abierto del contenedor, una abertura de costillas de acero amarillo rayadas con pintura de peligro, su pared de malla ondulando con la luz pálida que entra a raudales.
-object.vicquemare = El extremo ondulante del contenedor, la luz pálida curvando las paredes de acero.
+object.vicquemare = Un hombre visto solo como una silueta oscura de los hombros hacia arriba, enmarcado en una abertura redonda y pálida donde las paredes de acero del contenedor se doblan y se estrechan a su alrededor.
 object.lightbender = Una forma oscura en el corazón de la luz cegadora en el extremo del contenedor, las paredes deformándose a su alrededor en círculos.
 object.lightbender2 = Una forma oscura en el corazón de la luz cegadora en el extremo del contenedor, las paredes deformándose a su alrededor en círculos.
 object.kim = Un hombre delgado con una cazadora bomber naranja sobre una camisa blanca y pantalones oscuros, el pelo oscuro peinado hacia atrás y gafas redondas, con una pequeña libreta abierta en una mano y un bolígrafo en la otra.

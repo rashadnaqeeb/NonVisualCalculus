@@ -1,8 +1,8 @@
 # Español de España, registro de lang/es.txt: tuteo informal, estilo neutro y conciso para lector de pantalla.
 zone.gunhall.title = la sala del cañón
-zone.gunhall.body = Una sala de hormigón bajo la fortaleza con el suelo de losas agrietadas, iluminada por una lámpara en el suelo. Una máquina oxidada cubierta con una sábana contra el polvo se alza contra la pared junto a una corta escalera de hierro, una escotilla redonda está encajada en el suelo, y la pared del lado del mar se ha desmoronado en una pendiente de escombros y arena donde se abre la puerta a la rampa de varada.
-zone.eastdoor.title = la puerta este
-zone.eastdoor.body = Un pasadizo corto y oscuro tras la puerta este de la fortaleza, que se abre al nivel superior de la sala del cañón junto a la plataforma giratoria con barandilla.
+zone.gunhall.body = Una sala de hormigón bajo la fortaleza con el suelo de losas agrietadas. Una máquina oxidada cubierta con una sábana contra el polvo se alza contra la pared junto a una corta escalera de hierro, una escotilla redonda está encajada en el suelo, y una pared se ha desmoronado en una pendiente de escombros y arena donde se abre la puerta a la rampa de varada.
+zone.eastdoor.title = la entrada alta
+zone.eastdoor.body = Un pasadizo corto dentro de la entrada alta de la fortaleza, que se abre al nivel superior de la sala del cañón junto a la plataforma giratoria con barandilla.
 zone.turntable.title = la plataforma giratoria
 zone.turntable.body = Una vía circular de hierro encajada en el hormigón, rodeada de barandilla, con la montura oxidada y los engranajes de una torreta de cañón sobre un pedestal en su centro, bajo cables que cuelgan del techo.
 zone.upperdeck.title = la galería superior
@@ -12,9 +12,9 @@ zone.entrycorridor.body = Un pasillo de hormigón tras la puerta principal, con 
 zone.upperstair.title = la escalera superior
 zone.upperstair.body = Una escalera de hierro con barandilla que sube del pasillo de entrada a la sala de la aspillera de arriba, junto a un retrato desvaído pintado en la pared de hormigón.
 zone.desertersroom.title = la sala de la aspillera
-zone.desertersroom.body = Una sala curva de hormigón bajo una larga ventana en rendija, con las paredes cubiertas de sábanas grises, una cama de harapos y mantas contra la pared del fondo, un generador sobre un soporte con cables arrastrándose por el suelo, una mesa de latas y cuencos, una pila de libros y un fusil apoyado junto a la ventana.
+zone.desertersroom.body = Una sala curva de hormigón bajo una larga ventana en rendija, con las paredes cubiertas de sábanas grises, una cama de harapos y mantas contra la pared del fondo, una mesa de latas y cuencos y una pila de libros. Un largo instrumento óptico sobre un soporte con ruedas se alza junto a la ventana, medio cubierto de tela, al lado de una silla cargada de libros.
 zone.holepassage.title = el pasadizo del agujero
-zone.holepassage.body = Un pasadizo de losas de hormigón rotas desde el agujero desgarrado en el muro de la fortaleza, escombros y un cuenco en el suelo, luz del día cayendo en largos haces por la brecha y barras de hierro oxidadas apuntaladas a través de ella.
+zone.holepassage.body = Un pasadizo de losas de hormigón rotas desde el agujero desgarrado en el muro de la fortaleza, con escombros y un cuenco en el suelo y barras de hierro oxidadas apuntaladas a través de la brecha.
 object.exiteast = Una puerta de acero oxidada con pesados bloques de bisagra en el muro de hormigón, iluminada de violeta.
 object.exithole = Un agujero desgarrado en la pared de roca del pasadizo apuntalado con barras de hierro oxidadas, rocas amontonadas en él y un resplandor naranja y rosa entrando a raudales.
 object.exitmain = Una puerta en el muro de hormigón oxidado, un resplandor naranja y rosa entrando a raudales por ella.

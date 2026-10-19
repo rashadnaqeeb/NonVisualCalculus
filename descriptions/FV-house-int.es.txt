@@ -1,6 +1,6 @@
 # Español de España, registro de lang/es.txt: tuteo informal, estilo neutro y conciso para lector de pantalla.
 zone.house.title = la casa de la aldea
-zone.house.body = Una sola habitación cálida de paredes de tablas y tarima desnuda, iluminada por dos ventanas con cortinas amarillas. Baldas de tarros y latas recorren la pared sobre una mesa larga bajo las ventanas, una litera con mantas azules se alza en la esquina tras una cortina amarilla, y una estufa con una tetera y una chimenea de ladrillo ocupa la pared del fondo.
+zone.house.body = Una sola habitación de paredes de tablones y suelo de madera desnuda, con dos ventanas de cortinas amarillas. Baldas de tarros y latas recorren la pared sobre una larga mesa y un banco cubierto de tela beige bajo las ventanas, una litera de mantas azules está en el rincón tras una cortina amarilla, y una estufa de azulejos encastrada en ladrillo se alza contra la pared del fondo.
 object.exit = Una puerta de tablas abierta en la pared de la casa junto a una ventana de cristales pequeños, la luz del sol cayendo a través de ella sobre la tarima desnuda.
 object.bedbox = Una maleta marrón y una caja de cartón sobre la tarima desnuda a los pies de la cama, en la esquina junto a la estufa.
 object.grouse = Un pájaro pardo disecado con las alas extendidas, montado en la balda sobre el sofá entre tarros y latas, una tetera y tazas en la mesa de debajo bajo las cortinas amarillas.

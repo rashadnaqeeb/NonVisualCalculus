@@ -1,11 +1,11 @@
 # Descriptions du monde en français. Registre : français écrit standard, neutre et concis, celui de lang/fr.txt ; noms de lieux et de personnes repris de la version française du jeu.
 zone.waitingroom.title = la salle d'attente du conteneur
-zone.waitingroom.body = L'intérieur d'un conteneur de transport à cadre d'acier jaune, drapé de tissu rouge le long d'un côté, un sol de planches éraflées, une rangée de chaises pliantes et un support de percolateurs en acier contre le mur, avec un escalier de planches montant vers le bureau au-dessus.
+zone.waitingroom.body = L'intérieur d'un conteneur de transport à cadre d'acier jaune, tendu de tissu rouge sur un côté, un sol de panneaux d'acier grillagés, une rangée de chaises pliantes et un présentoir d'urnes d'acier contre le mur, avec un escalier de planches montant vers le bureau au-dessus.
 zone.office.title = le bureau du conteneur
 zone.office.body = Un conteneur aménagé en bureau, des bannières rouges pendues autour de ses murs grillagés : un lourd bureau de bois chargé de papiers et d'une lampe, un tapis à motifs au sol, un mur de classeurs avec un poisson naturalisé monté au-dessus, des plantes en pot dans les coins et des caisses près de l'escalier.
 zone.officestep.title = la marche du bureau
 zone.officestep.body = Le haut de l'escalier de planches venant de la salle d'attente, à la porte du bureau.
 object.exit = L'ouverture au bout du conteneur, tendue de tissu rouge, avec des planches posées en travers de son seuil.
 object.coffeetable = Une table à dessus rouge contre le mur grillagé portant deux percolateurs d'acier à robinets, des piles de gobelets en papier blancs et un carton, avec des chaises pliantes vertes et olive empilées et éparpillées autour.
-object.evrart = Un lourd bureau de bois chargé de papiers, de dossiers, d'une lampe, d'une tasse et de bouteilles, un fauteuil de cuir derrière et le tapis à motifs au-delà.
+object.evrart = Un homme très corpulent aux cheveux sombres et à lunettes, en veste brune sur une chemise jaune, assis dans un grand fauteuil de cuir au bureau encombré, les mains sur une machine à écrire.
 object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.

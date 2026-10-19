@@ -2,8 +2,8 @@
 zone.coalroom.title = la chaufferie à charbon
 zone.coalroom.body = Une cave de brique crasseuse au sol de dalles fissurées, une grille d'évacuation ronde en fer en son milieu, où une chaudière rouillée à deux portes rondes se dresse contre le mur du fond sous un enchevêtrement de tuyaux. Un tas de charbon gît dans le coin avec une pelle plantée dedans, des fûts rouillés et des sacs sont posés le long du mur, et un escalier de pierre monte vers le ponton.
 object.exit = Une porte au pied de quelques marches de béton à côté d'un tuyau au mur, des papiers épars au sol et un rai de lumière qui tombe à l'intérieur.
-object.grate = Un lourd tuyau de fer à joint à bride courant le long du mur sombre de la chaufferie.
+object.grate = Une grille de barres de fer rouillées ménagée bas dans la base de l'énorme chaudière rivetée, sous ses trappes rondes.
 object.coalbox = Un tas de charbon dans le coin de la salle aux carreaux verts avec une pelle plantée dedans, un boîtier à fusibles orange au mur au-dessus et de gros tuyaux passant au plafond.
 object.coaldoor = Une chaudière en fer rouillé à trappes rondes et à rangée de bouches grillagées le long de sa base, encastrée dans le mur taché de vert de la salle.
-object.plaisance = Une femme aux cheveux foncés relevés, en gilet noir sur une chemise blanche, debout près des manteaux accrochés au mur de l'appartement.
+object.plaisance = Une femme aux cheveux sombres relevés, en gilet noir sur une chemise blanche et une jupe brune.
 object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.

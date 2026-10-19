@@ -1,6 +1,6 @@
 # Descrições do mod em português do Brasil. Registro: tratamento por você, estilo neutro e conciso de leitor de tela, como em lang/pt-br.txt.
 zone.house.title = a casa da vila
-zone.house.body = Um único cômodo aconchegante de paredes de pranchas e tábuas nuas, iluminado por duas janelas com cortinas amarelas. Prateleiras de potes e latas forram a parede acima de uma mesa comprida sob as janelas, um beliche com cobertores azuis fica no canto atrás de uma cortina amarela, e um fogão com uma chaleira e uma chaminé de tijolo ocupa a parede do fundo.
+zone.house.body = Um cômodo único de paredes de tábuas e assoalho nu, com duas janelas cobertas por cortinas amarelas. Prateleiras de potes e latas forram a parede acima de uma mesa comprida e de um banco coberto de pano bege sob as janelas, um beliche com cobertores azuis fica no canto atrás de uma cortina amarela, e um fogão de azulejos embutido em tijolo fica contra a parede do fundo.
 object.exit = Uma porta de pranchas aberta na parede da casa ao lado de uma janela de vidros pequenos, a luz do sol entrando por ela sobre as tábuas nuas.
 object.bedbox = Uma mala marrom e uma caixa de papelão nas tábuas nuas ao pé da cama, no canto junto ao fogão.
 object.grouse = Um pássaro marrom empalhado de asas abertas, montado na prateleira acima do sofá entre potes e latas, uma chaleira e xícaras na mesa abaixo sob as cortinas amarelas.

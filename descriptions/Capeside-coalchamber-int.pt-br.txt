@@ -2,8 +2,8 @@
 zone.coalroom.title = a sala do carvão
 zone.coalroom.body = Um porão de tijolos encardidos com um piso de lajes rachadas, um ralo redondo de ferro no meio, onde uma caldeira enferrujada com duas portas redondas fica contra a parede do fundo sob um emaranhado de canos. Um monte de carvão está no canto com uma pá fincada nele, tambores de óleo enferrujados e sacos ficam junto à parede, e uma escada de pedra sobe para o píer.
 object.exit = Uma porta ao pé de alguns degraus de concreto ao lado de um cano na parede, papéis soltos no chão e um feixe de luz entrando.
-object.grate = Um cano pesado de ferro com uma junta flangeada correndo ao longo da parede escura da câmara do carvão.
+object.grate = Uma grelha de barras de ferro enferrujadas, embutida na parte baixa da base da enorme caldeira rebitada, sob suas escotilhas redondas.
 object.coalbox = Um monte de carvão no canto da câmara de azulejos verdes com uma pá fincada nele, uma caixa de fusíveis laranja na parede acima e canos grossos passando no alto.
 object.coaldoor = Uma caldeira de ferro enferrujada com escotilhas redondas e uma fileira de respiros gradeados ao longo da base, embutida na parede manchada de verde da câmara.
-object.plaisance = Uma mulher de cabelo escuro preso, de colete preto sobre camisa branca, de pé junto aos casacos pendurados na parede do apartamento.
+object.plaisance = Uma mulher de cabelo escuro preso para cima, de colete preto sobre camisa branca e saia marrom.
 object.kim = Um homem magro de jaqueta bomber laranja sobre camisa branca e calça escura, cabelo escuro penteado para trás e óculos redondos, um caderninho aberto numa mão e uma caneta na outra.

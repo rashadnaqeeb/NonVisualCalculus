@@ -15,9 +15,6 @@ object paranormal = Paranormal-shelf
 object mapwall = Map Wall
 object cockatoo = Cockatoo-book
 object romance = Romance-books
-object counterrug = clickable_paper_wall_1
-object displaylower = clickable_display_lower2
-object shortwave = Shortwave-radio
 # A two-square-metre speck of navmesh on the gallery level, joined to nothing.
 drop -2.24 3.32 4.85
 object annette = Annette

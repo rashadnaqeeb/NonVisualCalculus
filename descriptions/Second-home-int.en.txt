@@ -1,5 +1,5 @@
 zone.room.title = the stilt house room
-zone.room.body = A snug one-room house of planks: a bed with a striped pillow under the window, a small table and chair by the lamp, a washbasin and a mirror in the far corner under a yellow stovepipe, and shelves of bottles and tins along the back wall.
+zone.room.body = A snug one-room house of planks, with a bed with a pillow and a bolster against the wall and a small table with teal chairs under the window. In the far corner a washbasin with a tap stands under a shelf of cups, beside an iron stove with a rusted stovepipe and a yellow hose running down the wall.
 object.bed = A narrow bed under the window with a white quilt and a striped pillow, a small radio on the shelf above its head and a wooden table with a bowl and spoon beside it.
 object.washbasin = A white basin on a rusted iron stand in the far corner under a yellow stovepipe, a coil of pipe behind it and a cup on the shelf above.
 object.floorboard = A patch of the bare plank floor between the bed and the table, by a cyan chair, where sunlight from the window falls across the boards.
@@ -7,5 +7,5 @@ object.exit = A brown wooden door with a brass handle in the plank wall, across 
 object.mirror = A small mirror on the plank wall above the washbasin in the far corner, beside a cup on a shelf and the yellow stovepipe.
 object.clothbox = The narrow bed under the window with its white quilt and striped pillow, a dark box at its foot.
 object.exit2 = A brown wooden door with a brass handle in the plank wall, across the boards from the bed.
-object.plaisance = A woman with dark hair pinned up, in a black waistcoat over a white shirt, standing by the coats hung on the apartment's wall.
+object.plaisance = A woman with dark hair pinned up, in a black waistcoat over a white shirt and a brown skirt.
 object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

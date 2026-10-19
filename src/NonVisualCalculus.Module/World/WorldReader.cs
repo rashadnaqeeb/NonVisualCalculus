@@ -40,6 +40,10 @@ namespace NonVisualCalculus.Module.World
         /// the character covers a fraction of a metre per frame, while a teleport is metres to hundreds.</summary>
         private const float RepositionJump = 3f;
 
+        /// <summary>How far past a zone boundary the zone last announced keeps its hold, metres (see
+        /// AnnounceZoneChange). Under a quarter second of glide; wider than a boundary's cell-scale jags.</summary>
+        private const float ZoneHold = 0.75f;
+
         /// <summary>The live reader, for dev-server introspection/driving.</summary>
         public static WorldReader Active;
 
@@ -60,6 +64,9 @@ namespace NonVisualCalculus.Module.World
         private readonly DescriptionStore _descriptions;
         private Zone _announcedZone; // the zone last spoken by the zone-change announcement
         private string _announcedZoneName; // its spoken name (mod output, not game state), for the dedupe across rebuilds
+        private ZoneMap _auditedMap;       // the map and descriptions last checked against each other (see AuditZones)
+        private SceneDescriptions _auditedDescriptions;
+        private string _auditReport;       // the last report logged, so a rebuild into the same mismatch stays quiet
         private bool _engaged;
         private Snv _lastPlayer; // character position last in-world frame, to catch a reposition (load/teleport)
         private string _lastScene; // scene last in-world frame - a change is a reposition regardless of distance
@@ -238,6 +245,7 @@ namespace NonVisualCalculus.Module.World
             // zone, never the previous map's (the tracker drops its map the frame the scene name moves).
             _zones.Tick(scene, WorldConvert.ToUnity(player));
             _descriptions.Tick(scene);
+            AuditZones(scene);
             // The jump also invalidates any still-playing cue tails (their listener just moved across the
             // map, or reads as the origin while the character is despawned mid-load) - stop tracking them.
             if (_hasLastPlayer && (scene != _lastScene || Snv.Distance(player, _lastPlayer) > RepositionJump))
@@ -248,6 +256,9 @@ namespace NonVisualCalculus.Module.World
                 // the same words the read-location key gives, so arrival orients without a keypress.
                 // Queued - it follows whatever the transition itself is saying.
                 if (scene != _lastScene) SpeakLocation(interrupt: false);
+                // A save loaded into the scene already showing keeps the scene name, so the tracker sees no
+                // change, but the story state, the doors and the parked vehicles may all differ.
+                else _zones.InvalidateSoon();
             }
             _lastPlayer = player;
             _lastScene = scene;
@@ -306,31 +317,54 @@ namespace NonVisualCalculus.Module.World
             Zone zone = _zones.ZoneAt(_overlay.Cursor.Position);
             if (zone != null)
             {
-                line = Strings.WorldLocationZone(line, ZoneSpeech.Name(_descriptions.Current, _zones.Map, zone));
+                string name = ZoneSpeech.Name(_descriptions.Current, _zones.Map, zone);
+                line = Strings.WorldLocationZone(line, name);
                 _announcedZone = zone;
+                _announcedZoneName = name;
             }
             _host.Speech.Speak(line, interrupt: interrupt);
         }
 
         // The zone-change announcement: when the cursor (which rides the character while unpinned)
         // resolves to a different zone than last spoken, say the zone's name, queued behind whatever is
-        // playing. Instant, no dwell: a zone boundary is a doorway or a street mouth, where flapping is
-        // rare, and a late line would misplace the player. Off by the setting.
+        // playing. No dwell, since a late line would misplace the player; instead the zone last spoken
+        // keeps its hold until the cursor is ZoneHold metres clear of it. Outdoors a boundary often runs
+        // across open ground and is jagged at cell scale, and walking along one would otherwise flap
+        // between the two names. Off by the setting.
         private void AnnounceZoneChange()
         {
             if (!_ownsKeyboard || _zones.Map == null || !_host.Settings.AnnounceZones.Value) return;
-            Zone zone = _zones.ZoneAt(_overlay.Cursor.Position);
+            Snv at = _overlay.Cursor.Position;
+            Zone zone = _zones.ZoneAt(at);
             if (zone == null) return;
             // Deduped on the spoken name, not the Zone instance: a rebuild (the settle pass, a door, a
             // story switch) replaces every instance while the player stands still, which must stay silent.
             string name = ZoneSpeech.Name(_descriptions.Current, _zones.Map, zone);
             if (ReferenceEquals(zone, _announcedZone) || name == _announcedZoneName) { _announcedZone = zone; return; }
+            if (_announcedZone != null && _zones.Map.IsNear(at, _announcedZone, ZoneHold)) return;
             _announcedZone = zone;
             _announcedZoneName = name;
             _host.Speech.Speak(name, interrupt: false);
         }
 
-        /// <summary>Speak the mod's authored description of the scanned thing (X): a detail's body or an
+        // Check the authored anchors against each new map: a zone left unnamed, two names in one zone
+        // (one is never spoken) or a name in no zone is invisible in play, so it goes to the log. Once
+        // per map and descriptions pair, and a report identical to the last one is not repeated.
+        private void AuditZones(string scene)
+        {
+            ZoneMap map = _zones.Map;
+            SceneDescriptions descriptions = _descriptions.Current;
+            if (map == null || !_zones.Settled || descriptions == null || descriptions.Scene != scene) return;
+            if (ReferenceEquals(map, _auditedMap) && ReferenceEquals(descriptions, _auditedDescriptions)) return;
+            _auditedMap = map;
+            _auditedDescriptions = descriptions;
+            string report = ZoneAudit.Run(descriptions.Geometry, map).Report();
+            if (report.Length == 0 || report == _auditReport) { _auditReport = report; return; }
+            _auditReport = report;
+            _host.LogWarning($"Zone anchors out of step with the {scene} zone map:\n{report.TrimEnd()}");
+        }
+
+        /// <summary>Speak the mod's authored description of the scanned thing (E): a detail's body or an
         /// entity's appearance text, else the nothing-described line. Never game text.</summary>
         public void DescribeObject()
         {
@@ -342,7 +376,7 @@ namespace NonVisualCalculus.Module.World
             _host.Speech.Speak(string.IsNullOrEmpty(text) ? Strings.WorldDescribeNone : text, interrupt: true);
         }
 
-        /// <summary>Speak the mod's authored description of the zone under the cursor (Shift+X): its title
+        /// <summary>Speak the mod's authored description of the zone under the cursor (Shift+E): its title
         /// and body, else the nothing-described line.</summary>
         public void DescribeZone()
         {

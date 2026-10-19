@@ -3,7 +3,11 @@
 and curating a scene (docs/zones-and-descriptions-plan.md).
 
 Usage:
-    python3 tools/zones_render.py <dump.txt> [out.png] [--scale N]
+    python3 tools/zones_render.py <dump.txt> [out.png] [--scale N] [--anchors descriptions/<scene>.txt]
+                                  [--crop X0,Z0,X1,Z1]
+
+--anchors draws each zone anchor (a magenta dot and its key) and each curation wall (a magenta line)
+from the scene's geometry file; --crop keeps one rectangle of the mod's world frame.
 
 The dump comes from the live game through the dev server:
     curl -X POST --data-binary 'NonVisualCalculus.Module.World.DevZones.Dump()' http://127.0.0.1:8771/eval
@@ -18,12 +22,19 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 def main():
-    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    argv = sys.argv[1:]
+    opts = {}
+    for flag in ("--scale", "--anchors", "--crop"):
+        if flag in argv:
+            i = argv.index(flag)
+            opts[flag] = argv[i + 1]
+            del argv[i:i + 2]
+    args = [a for a in argv if not a.startswith("--")]
     if not args:
         sys.exit(__doc__)
     dump_path = args[0]
     out_path = args[1] if len(args) > 1 else dump_path.rsplit(".", 1)[0] + ".png"
-    scale = int(sys.argv[sys.argv.index("--scale") + 1]) if "--scale" in sys.argv else 3
+    scale = int(opts.get("--scale", 3))
 
     lines = open(dump_path, encoding="utf-8").read().split("\n")
     head = lines[0].split()
@@ -64,6 +75,23 @@ def main():
         ix, iz = px(cx, cz)
         draw.text((ix + 1, iz + 1), str(zid), fill=(0, 0, 0), font=font, anchor="mm")
         draw.text((ix, iz), str(zid), fill=(255, 255, 255), font=font, anchor="mm")
+
+    if "--anchors" in opts:
+        for line in open(opts["--anchors"], encoding="utf-8"):
+            parts = line.split()
+            if len(parts) >= 5 and parts[0] == "zone":
+                ix, iz = px(float(parts[2]), float(parts[4]))
+                draw.ellipse([ix - 2 * scale, iz - 2 * scale, ix + 2 * scale, iz + 2 * scale], fill=(255, 0, 255))
+                draw.text((ix + 3 * scale, iz), parts[1], fill=(255, 0, 255), font=font, anchor="lm")
+            elif parts and parts[0] == "wall":
+                pts = [p.split(",") for p in parts[1:] if not p.startswith("@")]
+                xy = [px(float(a), float(b)) for a, b in pts]
+                draw.line(xy, fill=(255, 0, 255), width=max(1, scale // 2))
+
+    if "--crop" in opts:
+        cx0, cz0, cx1, cz1 = (float(v) for v in opts["--crop"].split(","))
+        a, b = px(min(cx0, cx1), max(cz0, cz1)), px(max(cx0, cx1), min(cz0, cz1))
+        im = im.crop((max(0, a[0]), max(0, a[1]), min(im.width, b[0]), min(im.height, b[1])))
 
     im.save(out_path)
     print(f"{scene}: {len(zones)} zones, {len(exits)} exit ends -> {out_path} ({im.width}x{im.height})")

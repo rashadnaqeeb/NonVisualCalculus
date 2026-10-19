@@ -1,6 +1,6 @@
 # Türkçe: standart yazı dili, kısa ve yalın cümleler, lang/tr.txt ile aynı ölçün; yer ve kişi adları oyunun kendi Türkçe çevirisinden.
 zone.room.title = kazıklı ev odası
-zone.room.body = Kalaslardan tek odalı rahat bir ev: pencerenin altında çizgili yastıklı bir yatak, lambanın yanında küçük bir masa ve sandalye, uzak köşede sarı bir soba borusunun altında bir lavabo ve bir ayna ve arka duvar boyunca şişe ve teneke kutu rafları.
+zone.room.body = Kalaslardan tek odalı rahat bir ev, duvara dayalı yastıklı ve uzun yastıklı bir yatak ve pencerenin altında deniz mavisi sandalyeli küçük bir masa. Uzak köşede musluklu bir lavabo bir fincan rafının altında duruyor, yanında paslı soba borulu demir bir soba ve duvardan aşağı inen sarı bir hortum.
 object.bed = Pencerenin altında beyaz yorganlı ve çizgili yastıklı dar bir yatak, baş ucunun üstündeki rafta küçük bir radyo ve yanında üstünde bir kâse ve kaşık olan ahşap bir masa.
 object.washbasin = Uzak köşede sarı bir soba borusunun altında paslı demir bir ayaklığın üstünde beyaz bir lavabo, arkasında bir boru kangalı ve üstteki rafta bir fincan.
 object.floorboard = Yatakla masanın arasında, camgöbeği bir sandalyenin yanında, pencereden gelen güneş ışığının tahtalara düştüğü çıplak kalas zeminden bir parça.
@@ -8,5 +8,5 @@ object.exit = Kalas duvarda pirinç kollu kahverengi ahşap bir kapı, tahtalar�
 object.mirror = Uzak köşede lavabonun üstünde kalas duvarda küçük bir ayna, raftaki bir fincanın ve sarı soba borusunun yanında.
 object.clothbox = Pencerenin altında beyaz yorganlı ve çizgili yastıklı dar yatak, ayak ucunda koyu bir kutu.
 object.exit2 = Kalas duvarda pirinç kollu kahverengi ahşap bir kapı, tahtaların öbür ucunda yatağın karşısında.
-object.plaisance = Siyah saçlarını topuz yapmış, beyaz gömlek üstüne siyah yelek giymiş bir kadın, dairenin duvarına asılı paltoların yanında duruyor.
+object.plaisance = Siyah saçlarını topuz yapmış, beyaz gömlek üstüne siyah yelek ve kahverengi etek giymiş bir kadın.
 object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.

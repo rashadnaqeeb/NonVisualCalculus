@@ -1,12 +1,12 @@
 # Deutsch. Register wie lang/de.txt: Schriftdeutsch, Du-Form, knapper neutraler Screenreader-Stil, Orts- und Personennamen aus der deutschen Spielfassung.
 zone.shack.title = Cunos Schuppen
-zone.shack.body = Eine düstere Hütte aus rauen Planken mit Lehmboden, einer zerrissenen Matratze und einem Haufen Gerümpel in einer Ecke, einer Werkbank aus Brettern an der Wand mit Flaschen und Dosen darauf, einem quer durch den Raum gespannten Kabel mit einer nackten Glühbirne und einem groben Gemälde von einem Haifischmaul an der Wand neben der Tür. Eine Leiter aus genagelten Brettern steigt zu einer Luke im Dach.
+zone.shack.body = Eine Hütte aus rauen Planken mit Lehmboden, einer zerrissenen Matratze und einem Haufen Gerümpel in einer Ecke, einer Werkbank aus Brettern an der Wand mit Flaschen und Dosen darauf, einem quer durch den Raum gespannten Kabel mit einer nackten Glühbirne und einem groben Gemälde von einem Haifischmaul an der Wand neben der Tür. Eine Leiter aus genagelten Brettern steigt zu einer Luke im Dach.
 object.roofhatch = Eine Leiter aus genagelten Brettern, an die Plankenwand gelehnt, neben einem Schweinekopf mit durchgestrichenen Augen, über der Werkbank mit Flaschen und Dosen.
 object.exit = Die Plankentür des Schuppens, eine nackte Glühbirne an einem Kabel darüber und eine zerrissene Matratze auf dem Lehmboden innen.
 object.jar = Die Werkbank aus Brettern an der Wand des Schuppens mit Flaschen, einer Dose und einem gelben Eimer darauf, ein Teller und Gläser auf dem Regal darüber.
 detail.pighead.title = Schweinekopf
-detail.pighead.body = Ein Schweinekopf aus rosa Gips mit einem Kreuz über jedem Auge gemalt, auf die Bank bei der Leiter aus genagelten Brettern gesetzt, die Schnauze zum Raum hin.
+detail.pighead.body = Ein Schweinekopf aus rosa Gips mit einem einzelnen blauen Kreuz über einem Auge gemalt, auf die Bank bei der Leiter aus genagelten Brettern neben einem alten Holzstuhl gesetzt, die Schnauze zum Raum hin.
 detail.sharkjaws.title = Gemälde von einem Haifischmaul
 detail.sharkjaws.body = Ein grobes Gemälde an der Plankenwand neben der Tür des Schuppens, ein offenes Haifischmaul, Reihen weißer Zähne in einem roten Rachen, mit Buchstaben über die Bretter gesprüht.
-object.plaisance = Eine Frau mit hochgestecktem dunklem Haar, in einer schwarzen Weste über einem weißen Hemd, steht bei den Mänteln, die an der Wand der Wohnung hängen.
+object.plaisance = Eine Frau mit hochgestecktem dunklem Haar, in einer schwarzen Weste über einem weißen Hemd und einem braunen Rock.
 object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.

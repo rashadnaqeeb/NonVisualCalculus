@@ -1,6 +1,6 @@
 # Deutsch. Register wie lang/de.txt: Schriftdeutsch, Du-Form, knapper neutraler Screenreader-Stil, Orts- und Personennamen aus der deutschen Spielfassung.
 zone.house.title = das Dorfhaus
-zone.house.body = Ein einzelner warmer Raum mit Plankenwänden und nackten Dielen, von zwei Fenstern mit gelben Vorhängen beleuchtet. Regale mit Gläsern und Dosen säumen die Wand über einem langen Tisch unter den Fenstern, ein Etagenbett mit blauen Decken steht in der Ecke hinter einem gelben Vorhang, und ein Ofen mit Kessel und einem Backsteinschornstein füllt die gegenüberliegende Wand.
+zone.house.body = Ein einzelner Raum mit Plankenwänden und nackten Dielen, mit zwei Fenstern mit gelben Vorhängen. Regale mit Gläsern und Dosen säumen die Wand über einem langen Tisch und einer mit beigem Stoff bezogenen Bank unter den Fenstern, ein Etagenbett mit blauen Decken steht in der Ecke hinter einem gelben Vorhang, und ein gekachelter Ofen, in Backstein eingelassen, steht an der gegenüberliegenden Wand.
 object.exit = Eine offen stehende Plankentür in der Wand des Hauses neben einem Fenster aus kleinen Scheiben, Sonnenlicht fällt hindurch auf die nackten Dielen.
 object.bedbox = Ein brauner Koffer und ein Karton auf den nackten Dielen am Fußende des Betts, in der Ecke beim Ofen.
 object.grouse = Ein ausgestopfter brauner Vogel mit ausgebreiteten Flügeln, auf dem Regal über dem Sofa zwischen Gläsern und Dosen montiert, ein Kessel und Tassen auf dem Tisch darunter unter den gelben Vorhängen.

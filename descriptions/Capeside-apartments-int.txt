@@ -27,7 +27,6 @@ object mailbox2 = clickable_apps-mailbox-2
 object fridge = clickable_apps-fridge
 object box = Apartments Box
 object dadsbed = Cunos Dad Bed
-object mailbox = Apartments Mailbox
 object closet = Apartments Closet
 object plate = clickable_apps-plate
 object box3 = clickable_apps-box-3

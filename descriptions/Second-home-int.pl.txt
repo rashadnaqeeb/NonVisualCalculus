@@ -1,6 +1,6 @@
 # Polski. Rejestr: standardowa polszczyzna literacka, zwięzły neutralny styl czytnika ekranu, jak w lang/pl.txt.
 zone.room.title = izba domu na palach
-zone.room.body = Przytulny jednoizbowy dom z desek: łóżko z poduszką w paski pod oknem, mały stolik i krzesło przy lampie, umywalka i lustro w dalszym kącie pod żółtą rurą od pieca oraz półki z butelkami i puszkami wzdłuż tylnej ściany.
+zone.room.body = Przytulny jednoizbowy dom z desek, z łóżkiem z poduszką i wałkiem pod ścianą oraz małym stolikiem z morskimi krzesłami pod oknem. W dalszym kącie umywalka z kranem stoi pod półką z kubkami, obok żelaznego pieca z zardzewiałą rurą i żółtym wężem biegnącym po ścianie.
 object.bed = Wąskie łóżko pod oknem z białą kołdrą i poduszką w paski, małe radio na półce nad wezgłowiem i drewniany stolik z miską i łyżką obok.
 object.washbasin = Biała miska na zardzewiałym żelaznym stojaku w dalszym kącie pod żółtą rurą od pieca, za nią zwój rury, a na półce powyżej kubek.
 object.floorboard = Kawałek gołej podłogi z desek między łóżkiem a stolikiem, przy błękitnym krześle, gdzie światło słońca z okna pada w poprzek desek.
@@ -8,5 +8,5 @@ object.exit = Brązowe drewniane drzwi z mosiężną klamką w ścianie z desek,
 object.mirror = Małe lustro na ścianie z desek nad umywalką w dalszym kącie, obok kubka na półce i żółtej rury od pieca.
 object.clothbox = Wąskie łóżko pod oknem z białą kołdrą i poduszką w paski, w jego nogach ciemne pudło.
 object.exit2 = Brązowe drewniane drzwi z mosiężną klamką w ścianie z desek, po drugiej stronie desek podłogi od łóżka.
-object.plaisance = Kobieta z upiętymi ciemnymi włosami, w czarnej kamizelce na białej koszuli, stojąca przy płaszczach wiszących na ścianie mieszkania.
+object.plaisance = Kobieta z upiętymi ciemnymi włosami, w czarnej kamizelce na białej koszuli i brązowej spódnicy.
 object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.

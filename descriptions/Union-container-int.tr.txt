@@ -1,8 +1,8 @@
 # Türkçe: standart yazı dili, kısa ve yalın cümleler, lang/tr.txt ile aynı ölçün; yer ve kişi adları oyunun kendi Türkçe çevirisinden.
 zone.container.title = kargo konteyneri
-zone.container.body = Bir yük konteynerinin içi, tel örgü duvarlı sarı çelik kaburgalardan dar bir kutu, zemini sarı tehlike boyasıyla çizgili, uzak uçtan kör edici soluk bir ışık içeri doluyor ve tel örgü onun çevresinde bükülüp dalgalanıyor.
+zone.container.body = Bir yük konteynerinin içi, tel örgü duvarlı pas turuncusu çelik kaburgalardan dar bir kutu, uzak uçta tel örgü pembe ve mor kıvrımlar halinde bükülüp dalgalanıyor.
 object.exit = Konteynerin açık ucu, tehlike boyasıyla çizgili sarı çelik kaburgalardan bir kapı aralığı, tel örgü duvarı içeri dolan soluk ışıkla dalgalanıyor.
-object.vicquemare = Konteynerin dalgalanan ucu, soluk ışık çelik duvarları kavislere büküyor.
+object.vicquemare = Yalnızca omuzlarından yukarısı koyu bir siluet olarak görünen bir adam, konteynerin çelik duvarlarının çevresinde bükülüp sıkıştığı soluk yuvarlak bir açıklığın içinde.
 object.lightbender = Konteynerin ucundaki kör edici ışığın kalbinde karanlık bir şekil, duvarlar onun çevresinde halkalar halinde çarpılıyor.
 object.lightbender2 = Konteynerin ucundaki kör edici ışığın kalbinde karanlık bir şekil, duvarlar onun çevresinde halkalar halinde çarpılıyor.
 object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.

@@ -1,8 +1,8 @@
 zone.shack.title = the fishing shack
-zone.shack.body = A dark hut of grey weathered planks with gaps of light between the boards, a dirt floor, a plain wooden chair against the wall and a few boxes in the corner, with a window of small panes beside the door.
+zone.shack.body = A hut of grey weathered planks with gaps between the boards, a floor of plank boards, a wooden chair with an orange seat against the wall, a metal shelf unit at the back and a small window beside the door.
 object.exit = The shack's plank door with a small window beside it, sunlight and the village's colours showing through the gap.
-object.box = A shelf of boards in the corner of the dark shack holding a bottle and a few papers, a coil of rope hanging from a nail on the planks beside it.
+object.box = Bare grey board shelves built into the shack's corner, a tall clay vase of dry grass on the top one and loose papers on a lower one.
 object.postcard = A pale card pinned to the grey planks of the shack's wall above the shelf, beside a small ring hung from a nail.
-object.pierbox = A plain wooden chair against the shack's grey plank wall, a coil of rope on the dirt floor beside it.
-object.plaisance = A woman with dark hair pinned up, in a black waistcoat over a white shirt, standing by the coats hung on the apartment's wall.
+object.pierbox = A small pale cardboard box on the middle board of the corner shelves, beside a folded blue cloth.
+object.plaisance = A woman with dark hair pinned up, in a black waistcoat over a white shirt and a brown skirt.
 object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

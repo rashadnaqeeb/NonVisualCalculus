@@ -1,12 +1,12 @@
 # Descriptions du monde en français. Registre : français écrit standard, neutre et concis, celui de lang/fr.txt ; noms de lieux et de personnes repris de la version française du jeu.
 zone.shack.title = le taudis de Cuno
-zone.shack.body = Une cabane sombre de planches brutes au sol de terre battue, un matelas déchiré et un tas de bric-à-brac dans un coin, un établi de planches contre le mur avec des bouteilles et des boîtes de conserve dessus, un câble tendu en travers de la pièce avec une ampoule nue, et une peinture grossière de mâchoires de requin sur le mur près de la porte. Une échelle de planches clouées monte vers une trappe dans le toit.
+zone.shack.body = Une cabane de planches brutes au sol de terre battue, un matelas déchiré et un tas de bric-à-brac dans un coin, un établi de planches contre le mur avec des bouteilles et des boîtes dessus, un câble tendu à travers la pièce avec une ampoule nue, et une peinture grossière d'une mâchoire de requin sur le mur près de la porte. Une échelle de planches clouées monte vers une trappe dans le toit.
 object.roofhatch = Une échelle de planches clouées appuyée au mur de planches à côté d'une tête de cochon aux yeux barrés, au-dessus de l'établi de bouteilles et de boîtes de conserve.
 object.exit = La porte de planches de la cabane, une ampoule nue sur un câble au-dessus et un matelas déchiré sur le sol de terre battue à l'intérieur.
 object.jar = L'établi de planches le long du mur de la cabane avec des bouteilles, une boîte de conserve et un seau jaune dessus, une assiette et des bocaux sur l'étagère au-dessus.
 detail.pighead.title = tête de cochon
-detail.pighead.body = Une tête de cochon en plâtre rose avec une croix peinte sur chaque œil, posée sur l'établi près de l'échelle de planches clouées, le groin tourné vers la pièce.
+detail.pighead.body = Une tête de cochon en plâtre rose avec une seule croix bleue peinte sur un œil, posée sur l'établi près de l'échelle de planches clouées à côté d'une vieille chaise de bois, le groin tourné vers la pièce.
 detail.sharkjaws.title = peinture de mâchoires de requin
 detail.sharkjaws.body = Une peinture grossière sur le mur de planches à côté de la porte de la cabane, des mâchoires de requin ouvertes, des rangées de dents blanches dans une gueule rouge, avec des lettres peintes à la bombe en travers des planches.
-object.plaisance = Une femme aux cheveux foncés relevés, en gilet noir sur une chemise blanche, debout près des manteaux accrochés au mur de l'appartement.
+object.plaisance = Une femme aux cheveux sombres relevés, en gilet noir sur une chemise blanche et une jupe brune.
 object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.

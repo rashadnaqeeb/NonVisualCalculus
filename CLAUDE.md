@@ -164,8 +164,13 @@ the variables it declared.
 
 **Zones and authored descriptions.** `ZoneTracker` segments the active scene's walkable ground
 (Core `World/Zoning`); `DevZones.Stats()`, `.Here()`, `.At(x,y,z)` (mod world frame), `.Dump()`
-(a text dump to the temp dir) and `.Options`/`.Rebuild()` drive it from `/eval`, and
-`python3 tools/zones_render.py <dump.txt> out.png` renders the floor plan. Zone names, zone bodies,
+(a text dump to the temp dir), `.Validate()` (the scene's anchors against the live map) and
+`.Options`/`.Rebuild()` drive it from `/eval`, and
+`python3 tools/zones_render.py <dump.txt> out.png --anchors descriptions/<scene>.txt` renders the floor
+plan; `tools/zone_wall.py` turns a boundary into a curation wall. The map follows the navmesh as the
+save leaves it, so check a scene in several saves (load one from `/eval` with
+`UnityEngine.Object.FindObjectOfType<SunshinePersistence>().Load("<save name>", false)`, the name
+without `.ntwtf.zip`). Zone names, zone bodies,
 painted details and object appearance live in `descriptions/<scene>.txt` (geometry, keys) and
 `descriptions/<scene>.en.txt` (prose; other languages beside it), deployed beside the plugin and
 loaded by `DescriptionStore` per scene; after editing a file, copy it into the deployed

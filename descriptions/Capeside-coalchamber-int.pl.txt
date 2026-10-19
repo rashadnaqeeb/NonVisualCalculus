@@ -2,8 +2,8 @@
 zone.coalroom.title = skład węgla
 zone.coalroom.body = Piwnica z brudnej cegły z podłogą z popękanych płyt i okrągłą żelazną kratką ściekową pośrodku, gdzie pod tylną ścianą pod plątaniną rur stoi zardzewiały kocioł z dwojgiem okrągłych drzwiczek. W kącie leży hałda węgla z wbitą w nią łopatą, pod ścianą stoją zardzewiałe beczki po oleju i worki, a kamienne schody wychodzą na pomost.
 object.exit = Wejście u stóp kilku betonowych stopni obok rury na ścianie, luźne papiery na podłodze i wpadająca smuga światła.
-object.grate = Ciężka żelazna rura z kołnierzowym złączem biegnąca wzdłuż ciemnej ściany składu węgla.
+object.grate = Ruszt z zardzewiałych żelaznych prętów osadzony nisko w podstawie ogromnego nitowanego kotła, pod jego okrągłymi włazami.
 object.coalbox = Hałda węgla w kącie komory w zielonych kafelkach z wbitą w nią łopatą, nad nią na ścianie pomarańczowa skrzynka bezpieczników, a w górze biegną grube rury.
 object.coaldoor = Zardzewiały żelazny kocioł z okrągłymi włazami i rzędem zakratowanych otworów wentylacyjnych wzdłuż podstawy, osadzony w zaplamionej na zielono ścianie komory.
-object.plaisance = Kobieta z upiętymi ciemnymi włosami, w czarnej kamizelce na białej koszuli, stojąca przy płaszczach wiszących na ścianie mieszkania.
+object.plaisance = Kobieta z upiętymi ciemnymi włosami, w czarnej kamizelce na białej koszuli i brązowej spódnicy.
 object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.

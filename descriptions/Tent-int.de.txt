@@ -1,6 +1,6 @@
 # Deutsch. Register wie lang/de.txt: Schriftdeutsch, Du-Form, knapper neutraler Screenreader-Stil, Orts- und Personennamen aus der deutschen Spielfassung.
 zone.tent.title = im Zelt
-zone.tent.body = Das Innere des Planenzelts, ein enges Dreieck aus blauem Segeltuch auf Stangen, von einer Laterne am First beleuchtet, mit einem gemusterten Teppich auf dem Sand, einem Stapel Radios und einem Kassettendeck an einer Seite, einer Kiste und einem Eimer, einem Tuch über einem Haufen Habseligkeiten und einer Topfpflanze an der Klappe.
+zone.tent.body = Das Innere des Planenzelts, ein enges Dreieck aus blauem Segeltuch auf Stangen, mit einer hoch am Gestell hängenden Lampe, einem gemusterten Teppich auf dem Sand, einem Stapel Radios und einem Kassettendeck an einer Seite, einer Kiste und einem Eimer, weißen Kanistern und Wannen hinten gestapelt und einem Tuch über einem Haufen Habseligkeiten.
 object.exit = Die Zeltklappe neben einer Holzkiste, einem Stapel Radios und einem Kassettendeck, einer Lampe mit Korbschirm und einem Topf auf dem Teppich, Tageslicht strömt über den Sand herein.
 object.egghead = Ein junger Mann in einer grünen Kapuzenjacke mit einer Krone aus blonden Stacheln, auf dem Teppich hingestreckt, den Rücken an einer Kiste, die Beine ausgestreckt.
 object.andre = Ein junger Mann in einer blauen Jacke sitzt auf einer Kiste bei den Radios des Zelts, ein Knie angezogen, eine Tasse in der Hand.

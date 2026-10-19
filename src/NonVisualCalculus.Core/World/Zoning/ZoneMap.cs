@@ -120,6 +120,14 @@ namespace NonVisualCalculus.Core.World.Zoning
         public WalkRaster Raster { get; }
         public IReadOnlyList<Zone> Zones => _zones;
 
+        /// <summary>How many extra zones the anchors carved out of regions they shared, and how many unnamed
+        /// regions joined a neighbour (see <see cref="ZoneCuration.Seeds"/>): what the names had to correct
+        /// in the watershed this build.</summary>
+        public int AnchorSplits { get; private set; }
+        public int AnchorJoins { get; private set; }
+        /// <summary>Unnamed islands under <see cref="ZoneMapOptions.MinZoneArea"/> the names dropped this build.</summary>
+        public int AnchorSpecks { get; private set; }
+
         /// <summary>Per-cell zone index (into <see cref="Zones"/>), -1 off the walkable ground.</summary>
         public int LabelAt(int gx, int gz) => _label[Raster.Index(gx, gz)];
 
@@ -138,6 +146,31 @@ namespace NonVisualCalculus.Core.World.Zoning
         {
             int l = LabelNear(p.X, p.Y, p.Z);
             return l >= 0 ? _zones[l] : null;
+        }
+
+        /// <summary>Whether any cell of <paramref name="zone"/> on the point's level lies within
+        /// <paramref name="radius"/> metres of it: the band a zone keeps its hold in after the point has
+        /// crossed out of it, so a jagged boundary is not a flapping one. False for a zone of another map.</summary>
+        public bool IsNear(Vector3 p, Zone zone, float radius)
+        {
+            int idx = zone.Id - 1;
+            if (idx < 0 || idx >= _zones.Count || !ReferenceEquals(_zones[idx], zone)) return false;
+            var r = Raster;
+            int gx = (int)Math.Floor((p.X - r.OriginX) / r.Cell);
+            int gz = (int)Math.Floor((p.Z - r.OriginZ) / r.Cell);
+            int reach = (int)Math.Ceiling(radius / r.Cell);
+            float r2 = radius * radius;
+            for (int dz = -reach; dz <= reach; dz++)
+                for (int dx = -reach; dx <= reach; dx++)
+                {
+                    int nz = gz + dz, nx = gx + dx;
+                    if (nz < 0 || nx < 0 || nz >= r.Height || nx >= r.Width) continue;
+                    float mx = dx * r.Cell, mz = dz * r.Cell;
+                    if (mx * mx + mz * mz > r2) continue;
+                    int i = r.Index(nx, nz);
+                    if (_label[i] == idx && Math.Abs(r.Elevation[i] - p.Y) <= _levelGap) return true;
+                }
+            return false;
         }
 
         private int LabelNear(float x, float y, float z)
@@ -374,14 +407,37 @@ namespace NonVisualCalculus.Core.World.Zoning
                 for (int i = 0; i < n; i++) if (members.Contains(label[i])) label[i] = target;
             }
 
-            // 7b) Curated drops: the region holding each anchor leaves the map.
+            // 7b) Curated drops: the region holding each anchor's own cell leaves the map. A direct hit
+            //     only: when a save does not load the patch, the nearest cell is the next zone over.
             foreach (var a in curation.Drops)
             {
-                int gx = (int)Math.Floor((a.X - raster.OriginX) / cell);
-                int gz = (int)Math.Floor((a.Z - raster.OriginZ) / cell);
-                int l = LabelNear(label, raster, gx, gz, a.Y, options.LevelGap);
-                if (l < 0) continue;
+                if (!raster.TryCell(a.X, a.Z, out int gx, out int gz)) continue;
+                int di = raster.Index(gx, gz);
+                int l = label[di];
+                if (l < 0 || Math.Abs(elev[di] - a.Y) > options.LevelGap) continue;
                 for (int i = 0; i < n; i++) if (label[i] == l) label[i] = -1;
+            }
+
+            // 7c) The names steer the last step: a region holding several anchors divides between them, a
+            //     region holding none joins a named neighbour. Then the per-region statistics the stair
+            //     test reads are taken again over the final regions.
+            int splits = 0, joins = 0, specks = 0;
+            if (curation.Seeds != null && curation.Seeds.Count > 0)
+            {
+                int before = regions;
+                regions = Reconcile(label, raster, curation.Seeds, options, regions, out joins, out specks);
+                splits = regions - before;
+                size = new int[regions]; slopedCells = new int[regions]; minY = new float[regions]; maxY = new float[regions];
+                for (int rr = 0; rr < regions; rr++) { minY[rr] = float.MaxValue; maxY[rr] = float.MinValue; }
+                for (int i = 0; i < n; i++)
+                {
+                    int l = label[i];
+                    if (l < 0) continue;
+                    size[l]++;
+                    if (sloped[i]) slopedCells[l]++;
+                    if (elev[i] < minY[l]) minY[l] = elev[i];
+                    if (elev[i] > maxY[l]) maxY[l] = elev[i];
+                }
             }
 
             // 8) Stable numbering (centroid order) and classification.
@@ -439,9 +495,170 @@ namespace NonVisualCalculus.Core.World.Zoning
             for (int i = 0; i < n; i++)
                 label[i] = label[i] >= 0 && remap.TryGetValue(label[i], out int z) ? z : -1;
 
-            var map = new ZoneMap(raster, label, zones, options.LevelGap);
+            var map = new ZoneMap(raster, label, zones, options.LevelGap) { AnchorSplits = splits, AnchorJoins = joins, AnchorSpecks = specks };
             map.BuildExits(options);
             return map;
+        }
+
+        // The cell an anchor resolves to (a direct hit, else the nearest labelled cell within two cells on
+        // its level), or -1.
+        private static int CellNear(int[] label, WalkRaster r, Vector3 p, float levelGap)
+        {
+            int gx = (int)Math.Floor((p.X - r.OriginX) / r.Cell);
+            int gz = (int)Math.Floor((p.Z - r.OriginZ) / r.Cell);
+            for (int ring = 0; ring <= 2; ring++)
+                for (int dz = -ring; dz <= ring; dz++)
+                    for (int dx = -ring; dx <= ring; dx++)
+                    {
+                        if (Math.Max(Math.Abs(dz), Math.Abs(dx)) != ring) continue;
+                        int nz = gz + dz, nx = gx + dx;
+                        if (nz < 0 || nx < 0 || nz >= r.Height || nx >= r.Width) continue;
+                        int i = r.Index(nx, nz);
+                        if (label[i] >= 0 && Math.Abs(r.Elevation[i] - p.Y) <= levelGap) return i;
+                    }
+            return -1;
+        }
+
+        // Anchor ownership. A region holding anchors at two or more cells is divided by walking distance:
+        // every cell goes to the anchor it is nearest to along the ground (chamfer steps, height-gated),
+        // the first anchor keeping the region's label. Then every region holding no anchor joins the
+        // neighbour it shares the longest height-continuous border with, preferring a named neighbour on
+        // its own side of any partition line, then any named neighbour, then any neighbour, until no
+        // unnamed region touches another; an unnamed region with no neighbour at all (ground sealed off by
+        // a closed door) stays as it is unless it is a speck (see below). Returns the new region count.
+        private static int Reconcile(int[] label, WalkRaster r, IReadOnlyList<Vector3> seeds, ZoneMapOptions o, int regions, out int joins, out int specks)
+        {
+            joins = 0;
+            specks = 0;
+            int w = r.Width, h = r.Height, n = w * h;
+            float[] elev = r.Elevation;
+            int[] part = r.Partition;
+            var cellsByRegion = new Dictionary<int, List<int>>();
+            foreach (var s in seeds)
+            {
+                int c = CellNear(label, r, s, o.LevelGap);
+                if (c < 0) continue;
+                if (!cellsByRegion.TryGetValue(label[c], out var list)) { list = new List<int>(); cellsByRegion[label[c]] = list; }
+                if (!list.Contains(c)) list.Add(c);
+            }
+
+            int[]? dist = null;
+            foreach (var kv in cellsByRegion)
+            {
+                if (kv.Value.Count < 2) continue;
+                int region = kv.Key;
+                if (dist == null) { dist = new int[n]; for (int i = 0; i < n; i++) dist[i] = int.MaxValue; }
+                var touched = new List<int>();
+                var open = new SortedSet<long>();
+                for (int k = 0; k < kv.Value.Count; k++)
+                {
+                    int c = kv.Value[k];
+                    int lbl = k == 0 ? region : regions++;
+                    label[c] = lbl;
+                    dist[c] = 0;
+                    touched.Add(c);
+                    open.Add(c);
+                }
+                while (open.Count > 0)
+                {
+                    long top = open.Min;
+                    open.Remove(top);
+                    int d = (int)(top >> 32), c = (int)(top & 0xFFFFFFFF);
+                    if (d > dist[c]) continue;
+                    int gz = c / w, gx = c % w;
+                    for (int k = 0; k < 8; k++)
+                    {
+                        int nz = gz + Dz8[k], nx = gx + Dx8[k];
+                        if (nz < 0 || nx < 0 || nz >= h || nx >= w) continue;
+                        int j = nz * w + nx;
+                        if (Math.Abs(elev[j] - elev[c]) > o.HeightGate) continue;
+                        bool member = label[j] == region || (dist[j] != int.MaxValue);
+                        if (!member) continue;
+                        int nd = d + (k < 4 ? 3 : 4);
+                        if (nd >= dist[j]) continue;
+                        if (dist[j] == int.MaxValue) touched.Add(j);
+                        dist[j] = nd;
+                        label[j] = label[c];
+                        open.Add(((long)nd << 32) | (uint)j);
+                    }
+                }
+                foreach (int c in touched) dist[c] = int.MaxValue;
+            }
+
+            var named = new HashSet<int>();
+            foreach (var s in seeds)
+            {
+                int c = CellNear(label, r, s, o.LevelGap);
+                if (c >= 0) named.Add(label[c]);
+            }
+            var parent = new Dictionary<int, int>();
+            int Root(int a) { while (parent.TryGetValue(a, out int p) && p != a) a = p; return a; }
+            for (int pass = 0; pass < 64; pass++)
+            {
+                // Per unnamed region, its border with each neighbour: [same side, named] counts.
+                var borders = new Dictionary<long, int[]>();
+                for (int i = 0; i < n; i++)
+                {
+                    int a = label[i];
+                    if (a < 0 || named.Contains(a)) continue;
+                    int gz = i / w, gx = i % w;
+                    for (int k = 0; k < 8; k++)
+                    {
+                        int nz = gz + Dz8[k], nx = gx + Dx8[k];
+                        if (nz < 0 || nx < 0 || nz >= h || nx >= w) continue;
+                        int j = nz * w + nx, b = label[j];
+                        if (b < 0 || b == a || Math.Abs(elev[j] - elev[i]) > o.HeightGate) continue;
+                        long key = ((long)a << 32) | (uint)b;
+                        if (!borders.TryGetValue(key, out var cnt)) { cnt = new int[2]; borders[key] = cnt; }
+                        cnt[part[j] == part[i] ? 0 : 1]++;
+                    }
+                }
+                var best = new Dictionary<int, (int tier, int count, int to)>();
+                foreach (var kv in borders)
+                {
+                    int a = (int)(kv.Key >> 32), b = (int)(kv.Key & 0xFFFFFFFF);
+                    bool bn = named.Contains(b);
+                    int same = kv.Value[0], any = kv.Value[0] + kv.Value[1];
+                    (int tier, int count) cand = bn && same > 0 ? (3, same) : bn ? (2, any) : same > 0 ? (1, same) : (0, any);
+                    if (!best.TryGetValue(a, out var cur) || cand.tier > cur.tier || (cand.tier == cur.tier && cand.count > cur.count))
+                        best[a] = (cand.tier, cand.count, b);
+                }
+                if (best.Count == 0) break;
+                bool merged = false;
+                foreach (var kv in best)
+                {
+                    int ra = Root(kv.Key), rb = Root(kv.Value.to);
+                    bool na = named.Contains(ra), nb = named.Contains(rb);
+                    if (ra == rb || (na && nb)) continue; // two names never merge
+                    // A named root absorbs; two unnamed ones join under the target.
+                    if (na) parent[rb] = ra; else parent[ra] = rb;
+                    merged = true;
+                    joins++;
+                }
+                if (!merged) break;
+                for (int i = 0; i < n; i++) if (label[i] >= 0) label[i] = Root(label[i]);
+                var nowNamed = new HashSet<int>();
+                foreach (int a in named) nowNamed.Add(Root(a));
+                named = nowNamed;
+            }
+
+            // What is left unnamed has no neighbour at all. Under a zone's minimum area it is a speck of
+            // mesh nobody walks to (no name was ever given it), and leaving it would speak a fallback
+            // number; a larger one is ground behind a closed door and stays, for the audit to report.
+            var area = new Dictionary<int, int>();
+            for (int i = 0; i < n; i++)
+            {
+                int l = label[i];
+                if (l < 0 || named.Contains(l)) continue;
+                area.TryGetValue(l, out int c);
+                area[l] = c + 1;
+            }
+            var speck = new HashSet<int>();
+            foreach (var kv in area) if (kv.Value * r.Cell * r.Cell < o.MinZoneArea) speck.Add(kv.Key);
+            if (speck.Count > 0)
+                for (int i = 0; i < n; i++) if (label[i] >= 0 && speck.Contains(label[i])) label[i] = -1;
+            specks = speck.Count;
+            return regions;
         }
 
         private static bool IsOnlyRegion(int[] size, int rid)

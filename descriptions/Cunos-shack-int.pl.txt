@@ -1,12 +1,12 @@
 # Polski. Rejestr: standardowa polszczyzna literacka, zwięzły neutralny styl czytnika ekranu, jak w lang/pl.txt.
 zone.shack.title = szopa Cuna
-zone.shack.body = Ciemna chata z nieheblowanych desek z klepiskiem, podartym materacem i stertą rupieci w jednym kącie, warsztatem z desek pod ścianą z butelkami i puszkami, kablem rozciągniętym w poprzek pomieszczenia z gołą żarówką i prymitywnym malunkiem paszczy rekina na ścianie przy drzwiach. Drabina ze zbitych gwoździami desek wspina się do klapy w dachu.
+zone.shack.body = Chata z nieheblowanych desek z klepiskiem, podartym materacem i stertą rupieci w jednym kącie, warsztatem z desek pod ścianą z butelkami i puszkami, kablem rozciągniętym w poprzek pomieszczenia z gołą żarówką i prymitywnym malunkiem paszczy rekina na ścianie przy drzwiach. Drabina ze zbitych gwoździami desek wspina się do klapy w dachu.
 object.roofhatch = Drabina ze zbitych gwoździami desek oparta o ścianę z desek obok świńskiego łba z przekreślonymi oczami, nad warsztatem z butelkami i puszkami.
 object.exit = Drzwi szopy z desek, nad nimi goła żarówka na kablu, a w środku podarty materac na klepisku.
 object.jar = Warsztat z desek wzdłuż ściany szopy z butelkami, puszką i żółtym wiadrem, na półce nad nim talerz i słoiki.
 detail.pighead.title = świński łeb
-detail.pighead.body = Świński łeb z różowego gipsu z krzyżem namalowanym na każdym oku, ustawiony na warsztacie przy drabinie ze zbitych desek, ryjem ku pomieszczeniu.
+detail.pighead.body = Świński łeb z różowego gipsu z jednym niebieskim krzyżem namalowanym nad okiem, ustawiony na warsztacie przy drabinie ze zbitych gwoździami desek, obok starego drewnianego krzesła, ryjem ku pomieszczeniu.
 detail.sharkjaws.title = malunek paszczy rekina
 detail.sharkjaws.body = Prymitywny malunek na ścianie z desek obok drzwi szopy, przedstawiający otwartą paszczę rekina, rzędy białych zębów w czerwonym pysku, z literami sprejowanymi w poprzek desek.
-object.plaisance = Kobieta z upiętymi ciemnymi włosami, w czarnej kamizelce na białej koszuli, stojąca przy płaszczach wiszących na ścianie mieszkania.
+object.plaisance = Kobieta z upiętymi ciemnymi włosami, w czarnej kamizelce na białej koszuli i brązowej spódnicy.
 object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.

@@ -1,10 +1,10 @@
 # Deutsch. Register wie lang/de.txt: Schriftdeutsch, Du-Form, knapper neutraler Screenreader-Stil, Orts- und Personennamen aus der deutschen Spielfassung.
 zone.bedroomdoor.title = die Schlafzimmertür
-zone.bedroomdoor.body = Die Türöffnung zwischen dem Hauptzimmer der Wohnung und einem kleinen Schlafzimmer, wo ein Messingbett mit zerknitterten Laken unter einer Hängelampe steht und eine offene Truhe an seinem Fußende.
+zone.bedroomdoor.body = Die Türöffnung in ein kleines blaues Schlafzimmer, neben einem gewölbten Backsteinbogen voller Bücher und Kisten. Ein Messingbett mit zerknitterten Laken steht unter einer Wandlampe, eine offene Truhe an seinem Fußende, und eine blaue Schreibtischlampe steht auf dem Boden.
 zone.apartment.title = die Gewölbewohnung
-zone.apartment.body = Ein niedriger gewölbter Kellerraum aus Backstein und Putz, von einer Gruppe Lampen beleuchtet, mit einem Schreibtisch und einem blauen Tisch unter dem Bogen, mit Büchern und Papieren beladen, einem Bücherregal, einem Sofa unter einer grünen Decke, einem gelben Banner an der Wand, einem karierten Fliesenboden an der Tür und einem kleinen Bad mit Waschbecken hinter einer Trennwand.
+zone.apartment.body = Ein niedriger gewölbter Kellerraum aus Backstein und Putz mit einer Gruppe Lampen, einem Schreibtisch und einem blauen Tisch unter dem Bogen, mit Büchern und Papieren beladen, einem Bücherregal, einem Sofa unter einer grünen Decke, einem gelben Banner an der Wand, einem karierten Fliesenboden an der Tür und einem kleinen Bad mit Waschbecken hinter einer Trennwand.
 object.shelf = Ein Holzschreibtisch mit Lampe, einem aufgeschlagenen Buch und einem Ordnerständer, ein Drehstuhl davor, unter einem Regal mit einer gestreiften Flagge, an der Schlafzimmertür.
 object.luggage = Ein offener Koffer mit Kleidung, auf einem Ständer am Fußende des Betts, eine gelbe Decke und eine Lampe daneben.
 object.books = Ein Bücherregal an der blauen Wand bei der offenen Tür, ein Mantel hängt an der Türinnenseite, an der Rundung des Rippengewölbes vorbei zu sehen.
-object.plaisance = Eine Frau mit hochgestecktem dunklem Haar, in einer schwarzen Weste über einem weißen Hemd, steht bei den Mänteln, die an der Wand der Wohnung hängen.
+object.plaisance = Eine Frau mit hochgestecktem dunklem Haar, in einer schwarzen Weste über einem weißen Hemd und einem braunen Rock.
 object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.

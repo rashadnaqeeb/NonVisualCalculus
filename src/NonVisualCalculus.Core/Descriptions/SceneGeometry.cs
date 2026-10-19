@@ -144,7 +144,9 @@ namespace NonVisualCalculus.Core.Descriptions
                     errors.Add("line " + (n + 1) + ": " + e.Message);
                 }
             }
-            return new SceneGeometry(zones, details, objects, new ZoneCuration(walls, merges, drops));
+            var seeds = new List<Vector3>();
+            foreach (var z in zones) seeds.Add(z.Position);
+            return new SceneGeometry(zones, details, objects, new ZoneCuration(walls, merges, drops, seeds));
         }
 
         private static float Num(string s) => float.Parse(s, NumberStyles.Float, CultureInfo.InvariantCulture);

@@ -1,6 +1,6 @@
 # Descriptions du monde en français. Registre : français écrit standard, neutre et concis, celui de lang/fr.txt ; noms de lieux et de personnes repris de la version française du jeu.
 zone.room.title = la pièce de la maison sur pilotis
-zone.room.body = Une maison douillette d'une seule pièce en planches : un lit à oreiller rayé sous la fenêtre, une petite table et une chaise près de la lampe, une cuvette et un miroir dans le coin du fond sous un tuyau de poêle jaune, et des étagères de bouteilles et de boîtes de conserve le long du mur du fond.
+zone.room.body = Une maison douillette d'une seule pièce en planches, avec un lit à oreiller et traversin contre le mur et une petite table aux chaises bleu canard sous la fenêtre. Dans le coin du fond, un lavabo à robinet se trouve sous une étagère de tasses, à côté d'un poêle de fer au tuyau rouillé et d'un tuyau jaune descendant le long du mur.
 object.bed = Un lit étroit sous la fenêtre avec une couette blanche et un oreiller rayé, une petite radio sur l'étagère au-dessus de sa tête et une table de bois avec un bol et une cuillère à côté.
 object.washbasin = Une cuvette blanche sur un support de fer rouillé dans le coin du fond sous un tuyau de poêle jaune, un serpentin de tuyau derrière et une tasse sur l'étagère au-dessus.
 object.floorboard = Un bout du plancher nu entre le lit et la table, près d'une chaise cyan, où le soleil de la fenêtre tombe sur les planches.
@@ -8,5 +8,5 @@ object.exit = Une porte en bois brun à poignée de laiton dans le mur de planch
 object.mirror = Un petit miroir sur le mur de planches au-dessus de la cuvette dans le coin du fond, à côté d'une tasse sur une étagère et du tuyau de poêle jaune.
 object.clothbox = Le lit étroit sous la fenêtre avec sa couette blanche et son oreiller rayé, une boîte sombre à son pied.
 object.exit2 = Une porte en bois brun à poignée de laiton dans le mur de planches, de l'autre côté des planches par rapport au lit.
-object.plaisance = Une femme aux cheveux foncés relevés, en gilet noir sur une chemise blanche, debout près des manteaux accrochés au mur de l'appartement.
+object.plaisance = Une femme aux cheveux sombres relevés, en gilet noir sur une chemise blanche et une jupe brune.
 object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.

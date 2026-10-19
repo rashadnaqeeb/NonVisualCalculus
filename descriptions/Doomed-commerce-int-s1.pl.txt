@@ -1,21 +1,20 @@
 # Polski. Rejestr: standardowa polszczyzna literacka, zwięzły neutralny styl czytnika ekranu, jak w lang/pl.txt.
 zone.workshop.title = warsztat w piwnicy
-zone.workshop.body = Ciemna piwnica z cegły i belek pod starym budynkiem, z drewnianymi schodkami schodzącymi do niej, warsztatem z pomarańczową lampą i kuchenką turystyczną, beczkami i skrzyniami spiętrzonymi pod ścianami, skrzynką bezpieczników przy dalszych drzwiach i girlandą proporczyków zwisającą z belek.
+zone.workshop.body = Piwnica z cegły i belek pod starym budynkiem, z drewnianymi schodkami schodzącymi do niej, warsztatem z pomarańczową lampą i kuchenką turystyczną, beczkami i skrzyniami spiętrzonymi pod ścianami, skrzynką bezpieczników przy dalszych drzwiach i girlandą proporczyków zwisającą z belek.
 zone.pipealcove.title = wnęka z rurami
-zone.pipealcove.body = Ciasna nisza na końcu piwnicy, gdzie wzdłuż ściany biegną grube czarne rury, z haka zwisa czerwona szmata, a na półce w ciemności leżą narzędzia.
+zone.pipealcove.body = Ciasna nisza na końcu piwnicy, gdzie grube czarne rury zginają się w dół przed kruszącą się kamienną ścianą oplecioną pajęczynami. Czerwona tkanina zwisa przewieszona przez ciąg jasnych rur wzdłuż bocznej ściany, a blada głowa jelenia z porożem leży wśród worków i rupieci za rurami.
 zone.bearcellar.title = piwnica z niedźwiedziem
-zone.bearcellar.body = Szeroka, ciemna piwnica oświetlona jedną zimną lampą, gdzie pośrodku podłogi stoi ogromna biała lodówka w kształcie niedźwiedzia polarnego. Rury i przewody przecinają ceglane ściany, w kącie stoją piecyk i skrzynie, w niszy przy wielkim kotle jarzy się kopulasty szklany zbiornik, a przy schodach na piętro wyżej leżą spiętrzone deski.
+zone.bearcellar.body = Szeroka piwnica, w której pośrodku podłogi stoi ogromna biała lodówka w kształcie niedźwiedzia polarnego. Rury i przewody przecinają ceglane ściany, w kącie stoją piecyk i skrzynie, kopulasty szklany zbiornik stoi we wnęce przy wielkim kotle, a przy schodach na piętro wyżej leżą spiętrzone deski.
 object.exit = Wejście u szczytu drewnianych schodków piwnicy, obok pajęczyny rozsnute na belce i gruba rura biegnąca wzdłuż ściany.
 object.breaker = Szara stalowa skrzynka bezpieczników stojąca otworem pod ceglanym łukiem, w środku rzędy żółtych bezpieczników, a z niej czerwone kable ciągnące się po podłodze piwnicy, pajęczyny na beczkach z tyłu.
 object.furnace = Przysadzisty żelazny właz z krzyżem żeber, zawieszony na masie cegły i nitowanego żelaza, nad podłogą z luźnych kamieni i kratą.
 object.icecream = Czerwona stalowa skrzynia z kratką w boku i niebieskim zaworem kołowym na wierzchu, stojąca na kółkach, na podłodze dookoła kable i butle gazowe.
 object.cache = Postrzępiona dziura w ceglanej ścianie wnęki z rurami za grubymi czarnymi rurami, obok zwisa czerwona szmata, a na kamieniach poniżej leży wypchana głowa jelenia.
 object.fridge = Ogromna blada lodówka wyrzeźbiona jako przyczajony niedźwiedź polarny, ze stalowymi drzwiczkami osadzonymi w piersi, stojąca na podłodze piwnicy w zimnej mgiełce, z kablami wijącymi się do niej.
-object.bookcase = Stos desek i skrzynia u stóp drewnianych schodków piwnicy, za nimi ceglana ściana.
+object.bookcase = Wysoki ciemny drewniany regał wpasowany we łukową niszę w ceglanej ścianie piwnicy, a przed nim oparta długa deska.
 object.bearfridge = Ogromna blada lodówka wyrzeźbiona jako przyczajony niedźwiedź polarny, ze stalowymi drzwiczkami osadzonymi w piersi, stojąca na podłodze piwnicy w zimnej mgiełce, z kablami wijącymi się do niej.
 object.shelf = Szafka pod ceglaną ścianą piwnicy pod zasłoną pajęczyn, przy stopie schodków.
-object.coins = Ciemny kawałek kamiennej podłogi piwnicy przy ceglanej ścianie, ledwie oświetlony.
-object.shelf3 = Stalowe biurko z wysuniętymi szufladami i zielonym krzesłem wsuniętym pod nie, obok rur wielkiego kotła, na wierzchu kilka książek, a na kamieniach porozrzucane cegły.
+object.shelf3 = Wysoki ciemny drewniany regał z jasnoszarymi pudłami na akta z nabazgranymi etykietami, stojący za stalowym biurkiem pod grubą żelazną rurą.
 object.shelf2 = Regał z półkami pod ścianą piwnicy z rzędem niebieskich butli gazowych ustawionych pod spodem, obok pomarańczowa skrzynka i rama okienna oparta o cegły.
 object.f2door = Wejście u szczytu schodów z desek w piwnicy obok grubej czarnej rury, poniżej blady łeb lodówki w kształcie niedźwiedzia polarnego.
 object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.

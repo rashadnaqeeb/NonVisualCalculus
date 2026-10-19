@@ -1,8 +1,8 @@
 # Deutsch. Register wie lang/de.txt: Schriftdeutsch, Du-Form, knapper neutraler Screenreader-Stil, Orts- und Personennamen aus der deutschen Spielfassung.
 zone.gunhall.title = die Geschützhalle
-zone.gunhall.body = Eine Betonhalle unter der Festung mit einem Boden aus gesprungenen Platten, von einer Lampe auf dem Boden beleuchtet. Eine verrostete Maschine unter einem Staubtuch steht an der Wand bei einer kurzen Eisentreppe, eine runde Luke ist in den Boden eingelassen, und die Wand zur Seeseite ist zu einer Halde aus Schutt und Sand zerbröckelt, wo die Tür zur Slipanlage aufgeht.
-zone.eastdoor.title = die Osttür
-zone.eastdoor.body = Ein kurzer dunkler Gang hinter der Osttür der Festung, der auf die obere Ebene der Geschützhalle bei der Drehscheibe mit Geländer führt.
+zone.gunhall.body = Eine Betonhalle unter der Festung mit einem Boden aus gesprungenen Platten. Eine verrostete Maschine unter einem Staubtuch steht an der Wand bei einer kurzen Eisentreppe, eine runde Luke ist in den Boden eingelassen, und eine Wand ist zu einer Halde aus Schutt und Sand zerbröckelt, wo die Tür zur Slipanlage aufgeht.
+zone.eastdoor.title = der obere Eingang
+zone.eastdoor.body = Ein kurzer Gang hinter dem oberen Eingang der Festung, der auf die obere Ebene der Geschützhalle bei der Drehscheibe mit Geländer führt.
 zone.turntable.title = die Drehscheibe
 zone.turntable.body = Eine kreisrunde Eisenschiene, in den Beton eingelassen, ringsum mit Geländer, mit der verrosteten Lafette und den Zahnrädern eines Geschützturms auf einem Sockel in ihrer Mitte, unter Kabeln, die vom Dach hängen.
 zone.upperdeck.title = die obere Galerie
@@ -12,9 +12,9 @@ zone.entrycorridor.body = Ein Betonkorridor hinter der Haupttür, mit einem grau
 zone.upperstair.title = die obere Treppe
 zone.upperstair.body = Eine Eisentreppe mit Geländer, die vom Eingangskorridor zum Schlitzfensterraum darüber steigt, an einem verblassten, auf die Betonwand gemalten Porträt vorbei.
 zone.desertersroom.title = der Schlitzfensterraum
-zone.desertersroom.body = Ein gebogener Betonraum unter einem langen Schlitzfenster, seine Wände mit grauen Tüchern verhängt, ein Bett aus Lumpen und Decken an der gegenüberliegenden Wand, ein Generator auf einem Gestell mit Kabeln über den Boden, ein Tisch mit Dosen und Schalen, ein Stapel Bücher und ein Gewehr am Fenster abgestellt.
+zone.desertersroom.body = Ein gebogener Betonraum unter einem langen Schlitzfenster, seine Wände mit grauen Tüchern verhängt, ein Bett aus Lumpen und Decken an der gegenüberliegenden Wand, ein Tisch mit Dosen und Schalen und ein Stapel Bücher. Ein langes optisches Instrument auf einer fahrbaren Halterung steht am Fenster, halb mit Stoff verhängt, neben einem Stuhl voller Bücher.
 zone.holepassage.title = der Lochgang
-zone.holepassage.body = Ein Gang aus zerbrochenen Betonplatten vom ausgefransten Loch in der Festungsmauer, Schutt und eine Schale auf dem Boden, Tageslicht fällt in langen Strahlen durch die Lücke und verrostete Eisenstangen sind quer darüber gestützt.
+zone.holepassage.body = Ein Gang aus zerbrochenen Betonplatten vom ausgefransten Loch in der Festungsmauer, mit Schutt und einer Schale auf dem Boden und verrosteten Eisenstangen, die quer über die Lücke gestützt sind.
 object.exiteast = Eine verrostete Stahltür mit schweren Scharnierblöcken in der Betonwand, violett beleuchtet.
 object.exithole = Ein ausgefranstes Loch in der Felswand des Gangs, mit verrosteten Eisenstangen abgestützt, Felsblöcke darin aufgehäuft und ein orange-rosa Glühen, das hindurchströmt.
 object.exitmain = Eine Türöffnung in der verrosteten Betonwand, ein orange-rosa Glühen strömt hindurch.

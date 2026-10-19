@@ -13,9 +13,7 @@ zone campbeach 7.94 4.25 -5.83
 object exit = instigators-exit
 object pipe = clickable_pipe-1
 object felddoor = instigators-feld
-object rubygun = ruby_gun
 object steeldoor = steel-door
-object body = Instigator Body
 object portrait = KrazMazovPortrait
 object tent = Instigators Tent
 object barrel1 = clickable_barrel_1

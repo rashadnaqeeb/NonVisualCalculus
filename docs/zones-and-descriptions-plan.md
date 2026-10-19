@@ -244,6 +244,30 @@ changed from WOTR's values and rules, and why:
 Curated walls and merges remain the tool for the plaza, the harbour yard, the coast and any
 street the heuristic splits oddly; none were needed to get here.
 
+### Stability across saves (2026-10-19)
+
+The first sweep of the anchors against the live maps of 42 saves found the segmentation is not a
+property of the scene. It follows the navmesh as the save leaves it: every character's schedule spot
+carves a small obstacle where the person stands, the Kineema parked in the plaza carves the plaza
+into three, gates and cages open and close, and a split that rests on a shallow clearance dip in open
+floor can fall either way on a reload of the same save. Two anchors landed in one zone (one name never
+spoken) or a zone had none (a fallback number) in about two thirds of the saves. Three changes:
+
+- People are taken out of the raster: the ground under a schedule spot's obstacle (a GameObject named
+  "Nav Mesh Obstacle") goes back in where the spot holds ground on both sides of it and no other
+  obstacle's carve covers it.
+- The anchors steer the last step of the segmentation (`ZoneCuration.Seeds`): a region holding several
+  anchors is divided between them by walking distance, a region holding none joins a named neighbour,
+  and an unnamed island under the minimum zone area is dropped. Every name has its zone in every save.
+- Curation walls pin the boundaries that matter where the watershed alone wavers (the Whirling's café
+  floor), and merges fold fragments of open ground into the place beside them (eight in Martinaise).
+
+The world reader audits each settled map against the anchors and logs any zone still unnamed or any
+anchor off the ground; `DevZones.Validate()` reports the same on demand with how many splits, joins
+and specks the anchors made. A save loaded into the scene already showing schedules a rebuild, since
+the scene name does not change. The zone-change announcement holds the last zone spoken until the
+cursor is 0.75 m clear of it, so walking along a jagged boundary does not flap between two names.
+
 ### What the game cannot give us
 
 The decompile was checked for a ready-made zoning source and there is none. `Sunshine.Location`

@@ -1,12 +1,12 @@
 # Español de España, registro de lang/es.txt: tuteo informal, estilo neutro y conciso para lector de pantalla.
 zone.shack.title = la choza de Cuno
-zone.shack.body = Una choza en penumbra de tablas toscas con el suelo de tierra, un colchón roto y un montón de trastos en un rincón, un banco de trabajo de tablas contra la pared con botellas y latas encima, un cable cruzado por la habitación con una bombilla desnuda y una pintura tosca de las fauces de un tiburón en la pared junto a la puerta. Una escalera de tablas clavadas sube a una trampilla en el techo.
+zone.shack.body = Una choza de tablas toscas con el suelo de tierra, un colchón roto y un montón de trastos en un rincón, un banco de trabajo de tablas contra la pared con botellas y latas encima, un cable tendido a través de la habitación con una bombilla desnuda, y una pintura tosca de las fauces de un tiburón en la pared junto a la puerta. Una escalera de tablas clavadas sube a una trampilla en el techo.
 object.roofhatch = Una escalera de tablas clavadas apoyada en la pared de tablas junto a una cabeza de cerdo con los ojos tachados, sobre el banco de trabajo de botellas y latas.
 object.exit = La puerta de tablas de la choza, una bombilla desnuda en un cable encima y un colchón roto sobre el suelo de tierra dentro.
 object.jar = El banco de trabajo de tablas a lo largo de la pared de la choza con botellas, una lata y un cubo amarillo encima, un plato y tarros en la balda de arriba.
 detail.pighead.title = cabeza de cerdo
-detail.pighead.body = Una cabeza de cerdo de yeso rosa con una cruz pintada sobre cada ojo, puesta en el banco junto a la escalera de tablas clavadas, con el hocico hacia la habitación.
+detail.pighead.body = Una cabeza de cerdo de yeso rosa con una sola cruz azul pintada sobre un ojo, puesta sobre el banco junto a la escalera de tablas clavadas, al lado de una vieja silla de madera, con el hocico hacia la habitación.
 detail.sharkjaws.title = pintura de fauces de tiburón
 detail.sharkjaws.body = Una pintura tosca en la pared de tablas junto a la puerta de la choza de las fauces abiertas de un tiburón, hileras de dientes blancos en una boca roja, con letras pintadas con espray por las tablas.
-object.plaisance = Una mujer con el pelo oscuro recogido, con un chaleco negro sobre una camisa blanca, de pie junto a los abrigos colgados en la pared del apartamento.
+object.plaisance = Una mujer de pelo oscuro recogido, con un chaleco negro sobre una camisa blanca y una falda marrón.
 object.kim = Un hombre delgado con una cazadora bomber naranja sobre una camisa blanca y pantalones oscuros, el pelo oscuro peinado hacia atrás y gafas redondas, con una pequeña libreta abierta en una mano y un bolígrafo en la otra.

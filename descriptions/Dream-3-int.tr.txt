@@ -1,8 +1,8 @@
 # Türkçe: standart yazı dili, kısa ve yalın cümleler, lang/tr.txt ile aynı ölçün; yer ve kişi adları oyunun kendi Türkçe çevirisinden.
 zone.gunhall.title = top salonu
-zone.gunhall.body = Hisarın altında çatlak plakalı zeminli beton bir salon, yerdeki bir lambayla aydınlanıyor. Toz örtüsüne sarılı paslı bir makine kısa bir demir merdivenin yanında duvara dayalı duruyor, zemine yuvarlak bir kapak yerleştirilmiş ve deniz tarafındaki duvar, kızak rampasına açılan kapının bulunduğu bir moloz ve kum yamacına dönüşerek çökmüş.
-zone.eastdoor.title = doğu kapısı
-zone.eastdoor.body = Hisarın doğu kapısının içinde kısa, karanlık bir geçit, korkuluklu döner tablanın yanında top salonunun üst katına açılıyor.
+zone.gunhall.body = Hisarın altında çatlak plakalı zeminli beton bir salon. Toz örtüsüne sarılı paslı bir makine kısa bir demir merdivenin yanında duvara dayalı duruyor, zemine yuvarlak bir kapak yerleştirilmiş ve bir duvar, kızak rampasına açılan kapının bulunduğu bir moloz ve kum yamacına dönüşerek çökmüş.
+zone.eastdoor.title = üst giriş
+zone.eastdoor.body = Hisarın üst kapı aralığının içinde kısa bir geçit, korkuluklu döner tablanın yanında top salonunun üst katına açılıyor.
 zone.turntable.title = döner tabla
 zone.turntable.body = Betona yerleştirilmiş, çevresi korkuluklu dairesel demir bir ray, ortasında bir kaide üstünde bir top kulesinin paslı yatağı ve dişlileri, çatıdan sarkan kabloların altında.
 zone.upperdeck.title = üst galeri
@@ -12,9 +12,9 @@ zone.entrycorridor.body = Ana kapının içinde beton bir koridor, duvara dayal�
 zone.upperstair.title = üst merdiven
 zone.upperstair.body = Giriş koridorundan yukarıdaki mazgal pencereli odaya tırmanan korkuluklu demir bir merdiven, beton duvara boyanmış solmuş bir portrenin yanından.
 zone.desertersroom.title = mazgal pencereli oda
-zone.desertersroom.body = Uzun bir mazgal pencerenin altında kavisli beton bir oda, duvarlarına gri çarşaflar asılı, karşı duvara dayalı paçavra ve battaniyeden bir yatak, bir sehpa üstünde kabloları zeminde sürünen bir jeneratör, teneke kutu ve kâse dolu bir masa, bir kitap yığını ve pencerenin yanına dayanmış bir tüfek.
+zone.desertersroom.body = Uzun bir mazgal pencerenin altında kavisli beton bir oda, duvarlarına gri çarşaflar asılı, karşı duvara dayalı paçavra ve battaniyeden bir yatak, teneke kutu ve kâse dolu bir masa ve bir kitap yığını. Tekerlekli bir ayak üzerinde uzun bir optik alet pencerede duruyor, yarı yarıya bezle örtülü, kitap yığılmış bir sandalyenin yanında.
 zone.holepassage.title = delik geçidi
-zone.holepassage.body = Hisar duvarındaki yırtık delikten gelen kırık beton plakalardan bir geçit, yerde moloz ve bir kâse, boşluktan uzun huzmeler halinde içeri düşen gün ışığı ve boşluğa çapraz dayanmış paslı demir çubuklar.
+zone.holepassage.body = Hisar duvarındaki yırtık delikten gelen kırık beton plakalardan bir geçit, yerde moloz ve bir kâse, boşluğa çapraz dayanmış paslı demir çubuklar.
 object.exiteast = Beton duvarda ağır menteşe bloklu paslı çelik bir kapı, mor ışıklı.
 object.exithole = Geçidin kaya duvarında paslı demir çubuklarla desteklenmiş yırtık bir delik, içine yığılmış kayalar ve içeri dolan turuncu ve pembe bir parıltı.
 object.exitmain = Paslı beton duvarda bir kapı aralığı, içinden dolan turuncu ve pembe bir parıltı.

@@ -1,10 +1,10 @@
 # Descrições do mod em português do Brasil. Registro: tratamento por você, estilo neutro e conciso de leitor de tela, como em lang/pt-br.txt.
 zone.bedroomdoor.title = a porta do quarto
-zone.bedroomdoor.body = A passagem entre o cômodo principal do apartamento e um quarto pequeno, onde uma cama de latão com lençóis amassados fica sob uma luminária pendurada e um baú aberto está ao pé dela.
+zone.bedroomdoor.body = A passagem para um pequeno quarto azul, ao lado de um arco curvo de tijolo cheio de livros e caixas. Uma cama de latão com lençóis amassados fica sob uma luminária de parede, um baú aberto está ao pé dela e uma luminária azul de mesa está no chão.
 zone.apartment.title = o apartamento abobadado
-zone.apartment.body = Um cômodo baixo de porão com abóbada de tijolo e reboco iluminado por um aglomerado de lâmpadas, com uma escrivaninha e uma mesa azul sob o arco cobertas de livros e papéis, uma estante, um sofá coberto por um cobertor verde, uma bandeira amarela na parede, um piso de ladrilhos xadrez junto à porta e um banheirinho com uma pia atrás de uma divisória.
+zone.apartment.body = Um cômodo baixo de porão com abóbada de tijolo e reboco, com um aglomerado de lâmpadas, uma escrivaninha e uma mesa azul sob o arco cobertas de livros e papéis, uma estante, um sofá coberto por um cobertor verde, uma faixa amarela na parede, um piso de ladrilhos xadrez junto à porta e um banheirinho com uma pia atrás de uma divisória.
 object.shelf = Uma escrivaninha de madeira com um abajur, um livro aberto e um porta-pastas, uma cadeira giratória na frente, sob uma prateleira com uma bandeira listrada pendurada, junto à porta do quarto.
 object.luggage = Uma mala aberta cheia de roupas sobre um suporte ao pé da cama, um cobertor amarelo e um abajur ao lado.
 object.books = Uma prateleira de livros na parede azul junto à porta aberta, um casaco pendurado no lado de dentro da porta, visto além da curva da abóbada nervurada.
-object.plaisance = Uma mulher de cabelo escuro preso, de colete preto sobre camisa branca, de pé junto aos casacos pendurados na parede do apartamento.
+object.plaisance = Uma mulher de cabelo escuro preso para cima, de colete preto sobre camisa branca e saia marrom.
 object.kim = Um homem magro de jaqueta bomber laranja sobre camisa branca e calça escura, cabelo escuro penteado para trás e óculos redondos, um caderninho aberto numa mão e uma caneta na outra.

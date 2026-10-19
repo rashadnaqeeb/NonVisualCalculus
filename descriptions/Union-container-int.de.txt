@@ -1,8 +1,8 @@
 # Deutsch. Register wie lang/de.txt: Schriftdeutsch, Du-Form, knapper neutraler Screenreader-Stil, Orts- und Personennamen aus der deutschen Spielfassung.
 zone.container.title = der Frachtcontainer
-zone.container.body = Das Innere eines Schiffscontainers, ein schmaler Kasten aus gelben Stahlrippen mit Gitterwänden, sein Boden mit gelber Warnfarbe gestreift, wo ein blendendes blasses Licht durch das ferne Ende hereinströmt und das Gitter sich darum windet und kräuselt.
+zone.container.body = Das Innere eines Schiffscontainers, ein schmaler Kasten aus rostorangen Stahlrippen mit Gitterwänden, wo sich am fernen Ende das Gitter in Falten aus Rosa und Violett windet und kräuselt.
 object.exit = Das offene Ende des Containers, eine Türöffnung aus gelben Stahlrippen mit Warnstreifen, ihre Gitterwand kräuselt sich im blassen Licht, das hereinströmt.
-object.vicquemare = Das sich kräuselnde Ende des Containers, das blasse Licht biegt die Stahlwände zu Kurven.
+object.vicquemare = Ein Mann, nur als dunkle Silhouette von den Schultern an aufwärts zu sehen, gerahmt von einer hellen runden Öffnung, wo sich die Stahlwände des Containers um ihn biegen und zusammenpressen.
 object.lightbender = Eine dunkle Gestalt im Herzen des blendenden Lichts am Ende des Containers, die Wände verzerren sich um sie zu Kreisen.
 object.lightbender2 = Eine dunkle Gestalt im Herzen des blendenden Lichts am Ende des Containers, die Wände verzerren sich um sie zu Kreisen.
 object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.

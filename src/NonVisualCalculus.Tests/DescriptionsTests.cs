@@ -189,6 +189,22 @@ object.pinball = A pinball machine on its side, glass cracked.
                 }
                 foreach (string key in prose.Keys)
                     if (!used.Contains(key)) problems.Add(stem + ": orphan prose " + key);
+                // Two anchors this close name one patch of floor twice; dividing it between them would make a
+                // sliver of a zone, so one of them is misplaced.
+                for (int i = 0; i < g.Zones.Count; i++)
+                    for (int j = i + 1; j < g.Zones.Count; j++)
+                    {
+                        var d = g.Zones[i].Position - g.Zones[j].Position;
+                        if (d.X * d.X + d.Z * d.Z < 1f && System.Math.Abs(d.Y) < 1f)
+                            problems.Add(stem + ": anchors " + g.Zones[i].Key + " and " + g.Zones[j].Key + " stand under a metre apart");
+                    }
+                // Titles name what tells a zone from its neighbours; two alike are two places with one name.
+                var titles = new HashSet<string>();
+                foreach (var z in g.Zones)
+                {
+                    string? title = prose.Get("zone." + z.Key + ".title", _ => null);
+                    if (title != null && !titles.Add(title)) problems.Add(stem + ": duplicate zone title " + title);
+                }
                 // Every other language's file for the scene: parses, no key the geometry does not know, and
                 // every English key present (a missing key falls back to English at runtime, which a
                 // translation must not rely on; a translator's gap is a defect to fix, not a feature).
@@ -234,6 +250,32 @@ object.pinball = A pinball machine on its side, glass cracked.
         var d = new SceneDescriptions("S", geometry, prose, prose, _ => null);
         Assert.Equal("A crate.", d.ObjectText("Pier Crate "));
         Assert.Equal("A crate.", d.ObjectText("Pier Crate"));
+    }
+
+    [Fact]
+    public void ZoneAuditIsCleanWhenEveryZoneHoldsOneAnchor()
+    {
+        var map = TwoZoneMap();
+        var audit = ZoneAudit.Run(SceneGeometry.Parse(Geometry, out _), map);
+        Assert.True(audit.Clean, audit.Report());
+        Assert.Equal("", audit.Report());
+    }
+
+    [Fact]
+    public void ZoneAuditReportsSharedUnnamedAndUnresolved()
+    {
+        var map = TwoZoneMap();
+        // Both anchors in the café, one off the ground: the kitchen is unnamed.
+        var g = SceneGeometry.Parse("zone cafe 1.0 0 -2.5\nzone stairs 1.2 0 -2.4\nzone void 50 0 50\n", out _);
+        var audit = ZoneAudit.Run(g, map);
+        Assert.Equal("void", Assert.Single(audit.Unresolved).Key);
+        var shared = Assert.Single(audit.Shared);
+        Assert.Equal(new[] { "cafe", "stairs" }, shared.Value.Select(a => a.Key));
+        Assert.Same(map.ZoneAt(new Vector3(-0.8f, 0f, 6.5f)), Assert.Single(audit.Unnamed));
+        string report = audit.Report();
+        Assert.Contains("anchor void", report);
+        Assert.Contains("holds anchors cafe stairs", report);
+        Assert.Contains("has no anchor", report);
     }
 
     }

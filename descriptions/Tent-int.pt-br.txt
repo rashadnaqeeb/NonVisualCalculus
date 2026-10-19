@@ -1,6 +1,6 @@
 # Descrições do mod em português do Brasil. Registro: tratamento por você, estilo neutro e conciso de leitor de tela, como em lang/pt-br.txt.
 zone.tent.title = dentro da tenda
-zone.tent.body = O interior da tenda de lona, um triângulo apertado de lona azul sobre varas iluminado por uma lanterna pendurada na cumeeira, com um tapete estampado na areia, uma pilha de rádios e um toca-fitas contra um lado, um caixote e um balde, um lençol jogado sobre um monte de pertences e uma planta em vaso junto à aba.
+zone.tent.body = O interior da tenda de lona, um triângulo apertado de lona azul sobre varas com uma lanterna pendurada no alto da armação, um tapete estampado na areia, uma pilha de rádios e um toca-fitas contra um lado, um caixote e um balde, jarros e tinas brancos empilhados ao fundo e um lençol jogado sobre um monte de pertences.
 object.exit = A aba da tenda ao lado de um caixote de madeira, uma pilha de rádios e um toca-fitas, uma luminária com cúpula de vime e um vaso no tapete, a luz do dia jorrando sobre a areia.
 object.egghead = Um jovem de jaqueta verde com capuz e uma coroa de espetos loiros, esparramado no tapete com as costas contra um caixote, as pernas esticadas.
 object.andre = Um jovem de jaqueta azul sentado num caixote junto aos rádios da tenda com um joelho erguido, uma xícara na mão.

@@ -1,6 +1,14 @@
 # Whirling-in-Rags, ground floor. Coordinates in the mod's world frame (x east, z north).
 # Zone anchors sit on open floor inside the zone they name; details on walkable ground beside
 # the thing they describe.
+# The café's floor is open from the dining hall through the archway to the bar, so where it divides
+# depends on who stands where; these walls hold the split the names were written for. The last one
+# closes the strip behind the bar's flap, so the barman's side stays its own place.
+wall @0 -3.65,-4.73 -6.88,-3.99
+wall @0 2.26,-1.44 2.26,1.19 2.29,2.16 2.86,3.23
+wall @0 3.9,3.6 4.9,3.6
+# The floor between the pillars sometimes rises as a basin of its own; it is the archway's.
+merge -1.4,0,-0.4 0.7,0,1.4
 zone tables -2.3 0 -6.8
 zone bar 5.4 0 -1.0
 zone archway -1.4 0 -0.4
@@ -20,7 +28,6 @@ object backdoor = int-door-whirling-kitchen-backdoor
 object stairs = Whirling 1st stairs
 object bottle = empty_bottle
 object pinballpile = Pile Pinball
-object bardoor = Door Kitchen
 object dumbwaiter = Dumbwaiter
 object cutlery = Cutlery
 object backroombox = Box Backroom
@@ -31,7 +38,6 @@ object garte = garte
 object smoker = Smoker
 object moneyman = Money man
 object titus = titus
-object lockeddoor = Locked-door_capeside-1
 object elevator = whirl1-elevator-whirl3
 object eugene = Eugene
 object glen = Glen
@@ -40,7 +46,6 @@ object theo = Theo
 object fatangus = FatAngus
 object shanky = Shanky
 object cook = Cook
-object sleepingdockworker = SleepingDockworker
 object tommy2 = Tommy Lhomme2
 object klaasjeroof2 = klaasjeRoof2
 object clubberman2 = ClubberMan2

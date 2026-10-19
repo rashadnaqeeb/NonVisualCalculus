@@ -1,5 +1,5 @@
 zone.tent.title = inside the tent
-zone.tent.body = The inside of the tarpaulin tent, a cramped triangle of blue canvas on poles lit by a lantern hung from the ridge, with a patterned rug on the sand, a stack of radios and a tape deck against one side, a crate and a bucket, a sheet draped over a heap of belongings and a pot plant by the flap.
+zone.tent.body = The inside of the tarpaulin tent, a cramped triangle of blue canvas on poles with a lamp hung high on the frame, a patterned rug on the sand, a stack of radios and a tape deck against one side, a crate and a bucket, white jugs and tubs stacked at the back and a sheet draped over a heap of belongings.
 object.exit = The tent's flap beside a wooden crate, a stack of radios and a tape deck, a lamp with a wicker shade and a pot on the rug, daylight pouring in across the sand.
 object.egghead = A young man in a green hooded jacket with a crown of blond spikes, sprawled on the rug with his back against a crate, his legs stretched out.
 object.andre = A young man in a blue jacket sitting on a crate by the tent's radios with one knee up, a cup in his hand.

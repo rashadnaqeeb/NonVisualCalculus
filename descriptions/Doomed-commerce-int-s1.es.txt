@@ -1,21 +1,20 @@
 # Español de España, registro de lang/es.txt: tuteo informal, estilo neutro y conciso para lector de pantalla.
 zone.workshop.title = el taller del sótano
-zone.workshop.body = Un sótano oscuro de ladrillo y madera bajo el viejo edificio, con escalones de madera que bajan a él, un banco de trabajo con una lámpara naranja y un hornillo de camping, barriles y cajas apilados contra las paredes, un cuadro de fusibles junto a la puerta del fondo y una ristra de banderines colgando de las vigas.
+zone.workshop.body = Un sótano de ladrillo y madera bajo el viejo edificio, con escalones de madera que bajan a él, un banco de trabajo con una lámpara naranja y un hornillo de camping, barriles y cajas apilados contra las paredes, una caja de fusibles junto a la puerta del fondo y una guirnalda de banderines colgando de las vigas.
 zone.pipealcove.title = el hueco de las tuberías
-zone.pipealcove.body = Un hueco angosto en el extremo del sótano donde gruesas tuberías negras recorren la pared, un paño rojo cuelga de un gancho y herramientas yacen en una balda en la oscuridad.
+zone.pipealcove.body = Un hueco angosto al final del sótano donde gruesas tuberías negras se doblan hacia abajo frente a un muro de piedra desmoronado cubierto de telarañas. Un paño rojo cuelga echado sobre una fila de tuberías pálidas junto a la pared lateral, y una cabeza de ciervo pálida con astas está entre sacos y trastos tras las tuberías.
 zone.bearcellar.title = el sótano del oso polar
-zone.bearcellar.body = Un sótano amplio y en penumbra iluminado por una sola lámpara fría, donde un enorme frigorífico blanco con forma de oso polar se alza en medio del suelo. Tuberías y cables cruzan las paredes de ladrillo, un hornillo y cajas descansan en el rincón, un tanque de cristal con forma de cúpula brilla en un hueco junto a una gran caldera, y tablones se amontonan junto a una escalera que sube a la planta de arriba.
+zone.bearcellar.body = Un amplio sótano donde un enorme frigorífico blanco con forma de oso polar se alza en medio del suelo. Tuberías y cables cruzan las paredes de ladrillo, una estufa y cajas están en el rincón, un depósito de cristal en forma de cúpula está en un nicho junto a una gran caldera, y tablones yacen amontonados junto a una escalera al piso de arriba.
 object.exit = Una puerta en lo alto de los escalones de madera del sótano, telarañas tendidas por la madera al lado y una tubería gruesa que recorre la pared.
 object.breaker = Un cuadro de fusibles de acero gris abierto bajo un arco de ladrillo, hileras de fusibles amarillos dentro y cables rojos saliendo de él por el suelo del sótano, telarañas en los barriles de detrás.
 object.furnace = Una escotilla achaparrada de hierro con una cruz de nervios, con bisagras sobre una masa de ladrillo y hierro remachado, sobre un suelo de piedras sueltas y una rejilla.
 object.icecream = Una caja de acero rojo con una rejilla en el lateral y una válvula de volante azul encima, montada sobre ruedas, cables y bombonas de gas en el suelo alrededor.
 object.cache = Un agujero desgarrado en la pared de ladrillo del hueco de las tuberías detrás de gruesas tuberías negras, un paño rojo colgado al lado y una cabeza de ciervo disecada sobre las piedras de abajo.
 object.fridge = Un enorme frigorífico pálido esculpido como un oso polar agazapado, con una puerta de acero en el pecho, de pie sobre el suelo del sótano en una neblina fría con cables serpenteando hasta él.
-object.bookcase = Una pila de tablones y un cajón al pie de los escalones de madera del sótano, la pared de ladrillo detrás.
+object.bookcase = Una alta librería de madera oscura encajada en un hueco en arco de la pared de ladrillo del sótano, con un largo tablón apoyado a lo ancho de su frente.
 object.bearfridge = Un enorme frigorífico pálido esculpido como un oso polar agazapado, con una puerta de acero en el pecho, de pie sobre el suelo del sótano en una neblina fría con cables serpenteando hasta él.
 object.shelf = Un armario contra la pared de ladrillo del sótano bajo un manto de telarañas, junto al pie de los escalones.
-object.coins = Un trozo oscuro del suelo de piedra del sótano junto a la pared de ladrillo, apenas iluminado.
-object.shelf3 = Un escritorio de acero con los cajones abiertos y una silla verde metida debajo, junto a las tuberías de la gran caldera, unos pocos libros encima y ladrillos desperdigados por las piedras.
+object.shelf3 = Un alto mueble de baldas de madera oscura con cajas de archivo gris pálido de etiquetas garabateadas, detrás de un escritorio de acero bajo una gruesa tubería de hierro.
 object.shelf2 = Una estantería contra la pared del sótano con una hilera de bombonas de gas azules apiladas debajo, un cajón naranja al lado y un marco de ventana apoyado en los ladrillos.
 object.f2door = Una puerta en lo alto de la escalera de tablones del sótano junto a una gruesa tubería negra, la cabeza pálida del frigorífico de oso polar abajo.
 object.kim = Un hombre delgado con una cazadora bomber naranja sobre una camisa blanca y pantalones oscuros, el pelo oscuro peinado hacia atrás y gafas redondas, con una pequeña libreta abierta en una mano y un bolígrafo en la otra.

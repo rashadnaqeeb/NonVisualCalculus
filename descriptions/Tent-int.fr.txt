@@ -1,6 +1,6 @@
 # Descriptions du monde en français. Registre : français écrit standard, neutre et concis, celui de lang/fr.txt ; noms de lieux et de personnes repris de la version française du jeu.
 zone.tent.title = l'intérieur de la tente
-zone.tent.body = L'intérieur de la tente en bâche, un triangle exigu de toile bleue sur des perches éclairé par une lanterne pendue au faîte, avec un tapis à motifs sur le sable, une pile de radios et un lecteur de cassettes contre un côté, une caisse et un seau, un drap drapé sur un tas d'affaires et une plante en pot près du rabat.
+zone.tent.body = L'intérieur de la tente en bâche, un triangle exigu de toile bleue sur des perches avec une lampe suspendue haut sur l'armature, un tapis à motifs sur le sable, une pile de radios et un lecteur de cassettes contre un côté, une caisse et un seau, des bidons et des bacs blancs empilés au fond et un drap jeté sur un tas d'affaires.
 object.exit = Le rabat de la tente à côté d'une caisse en bois, d'une pile de radios et d'un lecteur de cassettes, une lampe à abat-jour en osier et un pot sur le tapis, la lumière du jour se déversant sur le sable.
 object.egghead = Un jeune homme en veste verte à capuche avec une couronne de pointes blondes, vautré sur le tapis le dos contre une caisse, les jambes étendues.
 object.andre = Un jeune homme en veste bleue assis sur une caisse près des radios de la tente un genou relevé, une tasse à la main.

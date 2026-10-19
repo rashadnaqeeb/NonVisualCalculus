@@ -3,7 +3,7 @@ zone pawnshoppines 6.11 4.56 63.59
 zone kineemakerb 14.86 4.27 67.09
 zone stepspines 4.11 2.86 69.59
 zone plazastairs 4.36 3.23 77.34
-zone waterstairs -8.39 1.48 79.09
+zone waterstairs -6.03 1.40 81.46
 zone plaza 16.86 4.28 81.09
 zone terracesteps -7.14 2.31 84.84
 zone bookstorefront 4.11 4.28 84.84
@@ -20,7 +20,7 @@ zone yellowpier -5.14 1.03 130.84
 zone harbourstair -2.39 2.27 133.09
 zone cranelanding -0.14 3.21 135.34
 zone plazastairfoot 5.97 3.77 66.71
-zone waterstairfoot -8.28 1.43 78.96
+zone waterstairfoot -9.28 0.90 78.71
 zone shackcorner 32.72 4.08 107.46
 object exit = template-exit
 object kim = Kim Kitsuragi

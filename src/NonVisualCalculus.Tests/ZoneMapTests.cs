@@ -260,6 +260,94 @@ namespace NonVisualCalculus.Tests
             Assert.Null(map.ZoneAt(new Vector3(40f, 0f, 40f)));            // outside the grid
         }
 
+        private static ZoneCuration Seeds(params Vector3[] seeds)
+            => new ZoneCuration(new CurationWall[0], new Vector3[0][], new Vector3[0], seeds);
+
+        [Fact]
+        public void AnchorsSharingARegionDivideItByWalkingDistance()
+        {
+            // One open 16 by 8 m hall the watershed keeps whole, named twice.
+            var r = Plan(16f, 8f);
+            Fill(r, 0f, 0f, 16f, 8f);
+            Assert.Single(Build(r).Zones);
+            var map = Build(r, Seeds(new Vector3(2f, 0f, 4f), new Vector3(14f, 0f, 4f)));
+            Assert.Equal(2, map.Zones.Count);
+            Assert.Equal(1, map.AnchorSplits);
+            var west = map.ZoneAt(new Vector3(2f, 0f, 4f));
+            var east = map.ZoneAt(new Vector3(14f, 0f, 4f));
+            Assert.NotSame(west, east);
+            Assert.Same(west, map.ZoneAt(new Vector3(7f, 0f, 1f)));   // nearer the west anchor
+            Assert.Same(east, map.ZoneAt(new Vector3(9f, 0f, 7f)));   // nearer the east anchor
+        }
+
+        [Fact]
+        public void UnnamedRegionJoinsANamedNeighbour()
+        {
+            var map = Build(TwoRooms(), Seeds(new Vector3(4f, 0f, 4f)));
+            Assert.Single(map.Zones);
+            Assert.Equal(1, map.AnchorJoins);
+            Assert.Same(map.ZoneAt(new Vector3(4f, 0f, 4f)), map.ZoneAt(new Vector3(13f, 0f, 4f)));
+        }
+
+        [Fact]
+        public void SealedUnnamedGroundStaysItsOwnZone()
+        {
+            // The right room has no doorway: nothing to join, so it stays (and the audit reports it).
+            var r = Plan(17f, 8f);
+            Fill(r, 0f, 0f, 8f, 8f);
+            Fill(r, 9f, 0f, 17f, 8f);
+            var map = Build(r, Seeds(new Vector3(4f, 0f, 4f)));
+            Assert.Equal(2, map.Zones.Count);
+            Assert.Equal(0, map.AnchorJoins);
+        }
+
+        [Fact]
+        public void UnnamedSpeckIsDroppedInANamedScene()
+        {
+            var r = Plan(17f, 8f);
+            Fill(r, 0f, 0f, 8f, 8f);
+            Fill(r, 12f, 3f, 13.5f, 4.5f); // a 2 m2 island joined to nothing
+            var map = Build(r, Seeds(new Vector3(4f, 0f, 4f)));
+            Assert.Single(map.Zones);
+            Assert.Equal(1, map.AnchorSpecks);
+            Assert.Null(map.ZoneAt(new Vector3(12.75f, 0f, 3.75f)));
+        }
+
+        [Fact]
+        public void DropNeedsADirectHit()
+        {
+            // A drop placed where no patch loaded must not take the zone beside it.
+            var curation = new ZoneCuration(new CurationWall[0], new Vector3[0][], new[] { new Vector3(8.2f, 0f, 1f) });
+            var map = Build(TwoRooms(), curation);
+            Assert.Equal(2, map.Zones.Count);
+        }
+
+        [Fact]
+        public void TwoNamedRegionsNeverMerge()
+        {
+            var map = Build(TwoRooms(), Seeds(new Vector3(4f, 0f, 4f), new Vector3(13f, 0f, 4f)));
+            Assert.Equal(2, map.Zones.Count);
+            Assert.Equal(0, map.AnchorSplits);
+            Assert.Equal(0, map.AnchorJoins);
+        }
+
+        [Fact]
+        public void IsNearHoldsAZoneWithinItsBandPastTheBoundary()
+        {
+            var map = Build(TwoRooms());
+            var left = map.ZoneAt(new Vector3(4f, 0f, 4f))!;
+            var right = map.ZoneAt(new Vector3(13f, 0f, 4f))!;
+            Assert.NotSame(left, right);
+            Assert.True(map.IsNear(new Vector3(4f, 0f, 4f), left, 0.75f));    // inside it
+            float edge = 4f;
+            while (!ReferenceEquals(map.ZoneAt(new Vector3(edge, 0f, 4f)), right)) edge += Cell;
+            Assert.True(map.IsNear(new Vector3(edge + 0.4f, 0f, 4f), left, 0.75f));   // just across the boundary
+            Assert.False(map.IsNear(new Vector3(edge + 1.5f, 0f, 4f), left, 0.75f));  // well into the next zone
+            Assert.False(map.IsNear(new Vector3(4f, 5f, 4f), left, 0.75f));   // another level
+            var other = Build(TwoRooms()).ZoneAt(new Vector3(4f, 0f, 4f))!;
+            Assert.False(map.IsNear(new Vector3(4f, 0f, 4f), other, 0.75f));  // a zone of another map
+        }
+
         [Fact]
         public void DumpCarriesHeaderLabelsZonesAndExits()
         {

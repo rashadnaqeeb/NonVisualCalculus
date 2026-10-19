@@ -1,10 +1,10 @@
 zone.waitingroom.title = the container waiting room
-zone.waitingroom.body = The inside of a shipping container with a yellow steel frame, draped with red cloth along one side, a floor of scuffed boards, a row of folding chairs and a stand of steel urns against the wall, with a staircase of boards climbing to the office above.
+zone.waitingroom.body = The inside of a shipping container with a yellow steel frame, draped with red cloth along one side, a floor of steel mesh panels, a row of folding chairs and a stand of steel urns against the wall, with a staircase of boards climbing to the office above.
 zone.office.title = the container office
 zone.office.body = A container furnished as an office, red banners hanging around its mesh walls: a heavy wooden desk heaped with papers and a lamp, a patterned rug on the floor, a wall of filing cabinets with a stuffed fish mounted above them, pot plants in the corners and crates by the staircase.
 zone.officestep.title = the office step
 zone.officestep.body = The top of the board staircase from the waiting room, at the office's door.
 object.exit = The doorway at the container's end, hung with red cloth, with boards laid down across its sill.
 object.coffeetable = A red-topped table against the mesh wall holding two steel urns with taps, stacks of white paper cups and a cardboard box, with folding chairs in green and olive stacked and scattered around it.
-object.evrart = A heavy wooden desk heaped with papers, folders, a lamp, a cup and bottles, a leather chair behind it and the patterned rug beyond.
+object.evrart = A very heavy man with dark hair and glasses, in a brown jacket over a yellow shirt, sitting in a big leather armchair at the cluttered desk with his hands on a typewriter.
 object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.

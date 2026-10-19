@@ -1,6 +1,6 @@
 # Descrições do mod em português do Brasil. Registro: tratamento por você, estilo neutro e conciso de leitor de tela, como em lang/pt-br.txt.
 zone.shop.title = o Frittte
-zone.shop.body = Uma loja pequena e clara com piso de ladrilhos gastos. Um balcão de vidro e vitrines refrigeradas correm ao longo do fundo sob prateleiras de garrafas, com uma máquina de tara e uma caixa registradora no balcão; uma geladeira de bebidas e um expositor de salgadinhos ficam junto à porta, cartazes cobrem a parede, e as janelas da frente estão cheias de flores e plantas em vaso.
+zone.shop.body = Uma loja pequena com piso de ladrilhos gastos. Um balcão de vidro e vitrines refrigeradas correm ao longo do fundo sob prateleiras de garrafas, com uma máquina de tara e uma caixa registradora no balcão. Uma geladeira de bebidas e uma máquina verde com tela ficam no canto do fundo, cartazes cobrem a parede, e as janelas da frente estão cheias de flores e plantas em vaso.
 object.apothecary = Um balcão no fundo da loja com um rádio cinza em cima sob um cartaz de lábios vermelhos, um engradado branco de garrafas ao lado e uma cesta de arame de mercadorias no chão.
 object.taremachine = Uma máquina alta verde contra a parede do fundo da loja com um painel emoldurado na frente, um armário envidraçado de xícaras ao lado e um cartaz na parede.
 object.alcohol = Uma bancada de cozinha de armários verdes com uma pia de aço, fileiras de garrafas verdes e marrons enfileiradas ao longo do fundo com etiquetas de preço amarelas, e uma vitrine de vidro de mercadorias acima.

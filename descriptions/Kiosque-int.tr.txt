@@ -1,6 +1,6 @@
 # Türkçe: standart yazı dili, kısa ve yalın cümleler, lang/tr.txt ile aynı ölçün; yer ve kişi adları oyunun kendi Türkçe çevirisinden.
 zone.shop.title = Frittte Market
-zone.shop.body = Aşınmış fayans zeminli küçük, aydınlık bir dükkân. Arka boyunca şişe raflarının altında cam bir tezgâh ve soğutmalı vitrinler uzanıyor, tezgâhta bir depozito makinesi ve bir yazar kasa; kapının yanında bir içecek dolabı ve bir atıştırmalık standı duruyor, duvarı posterler kaplıyor ve ön pencereler çiçek ve saksı bitkileriyle dolu.
+zone.shop.body = Aşınmış fayans zeminli küçük bir dükkân. Arka boyunca şişe raflarının altında cam bir tezgâh ve soğutmalı vitrinler uzanıyor, tezgâhta bir depozito makinesi ve bir yazar kasa var. Arka köşede bir içecek dolabı ve ekranlı yeşil bir makine duruyor, duvarı posterler kaplıyor ve ön pencereler çiçek ve saksı bitkileriyle dolu.
 object.apothecary = Dükkânın arkasında, kırmızı dudaklı bir posterin altında üstünde gri bir radyo olan bir tezgâh, yanında beyaz bir şişe kasası ve yerde tel bir mal sepeti.
 object.taremachine = Dükkânın arka duvarına dayalı, ön yüzünde çerçeveli bir panel olan uzun yeşil bir makine, yanında cam önlü bir fincan dolabı ve duvarda bir poster.
 object.alcohol = Çelik lavabolu yeşil dolaplardan bir mutfak tezgâhı, arkası boyunca sarı fiyat etiketli sıra sıra yeşil ve kahverengi şişeler ve üstünde cam bir mal vitrini.

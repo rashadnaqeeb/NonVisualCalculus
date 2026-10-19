@@ -1,6 +1,6 @@
 # Descriptions du monde en français. Registre : français écrit standard, neutre et concis, celui de lang/fr.txt ; noms de lieux et de personnes repris de la version française du jeu.
 zone.house.title = la maison du village
-zone.house.body = Une seule pièce chaleureuse aux murs de planches et au plancher nu, éclairée par deux fenêtres garnies de rideaux jaunes. Des étagères de bocaux et de boîtes de conserve tapissent le mur au-dessus d'une longue table sous les fenêtres, des lits superposés aux couvertures bleues se trouvent dans le coin derrière un rideau jaune, et un poêle avec une bouilloire et une cheminée de brique occupe le mur du fond.
+zone.house.body = Une seule pièce aux murs de planches et au plancher nu, avec deux fenêtres ornées de rideaux jaunes. Des étagères de bocaux et de boîtes tapissent le mur au-dessus d'une longue table et d'un banc recouvert de toile beige sous les fenêtres, un lit superposé à couvertures bleues se trouve dans le coin derrière un rideau jaune, et un poêle de faïence encastré dans la brique se dresse contre le mur du fond.
 object.exit = Une porte de planches ouverte dans le mur de la maison à côté d'une fenêtre à petits carreaux, le soleil tombant à travers sur le plancher nu.
 object.bedbox = Une valise brune et un carton sur le plancher nu au pied du lit, dans le coin près du poêle.
 object.grouse = Un oiseau brun naturalisé aux ailes déployées, monté sur l'étagère au-dessus du canapé parmi des bocaux et des boîtes de conserve, une bouilloire et des tasses sur la table en dessous sous les rideaux jaunes.

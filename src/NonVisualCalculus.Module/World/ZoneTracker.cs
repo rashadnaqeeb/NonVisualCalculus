@@ -68,11 +68,20 @@ namespace NonVisualCalculus.Module.World
         /// (129 zones at 0.7, 153 at 0.5, with the plaza and the yards still whole).</summary>
         public ZoneMapOptions Options { get; set; } = new ZoneMapOptions { Persist = 0.5f };
 
+        /// <summary>Whether the ground under people's standing spots goes back into the raster (see
+        /// CollectFootings); held here so a dev session can compare a scene with and without.</summary>
+        public bool FillStandingSpots { get; set; } = true;
+
         /// <summary>The scene's authored walls and merges; none until the description store lands.</summary>
         public ZoneCuration Curation { get; set; } = ZoneCuration.None;
 
         /// <summary>The current scene's zones, or null while none is built.</summary>
         public ZoneMap Map { get; private set; }
+
+        /// <summary>Whether the map was built after the scene's obstacles settled (the settle rebuild or a
+        /// later one, or a cached map from an earlier visit). The first map of a visit can join ground the
+        /// parked vehicles and props divide a few frames later.</summary>
+        public bool Settled { get; private set; }
 
         /// <summary>The scene the map belongs to.</summary>
         public string Scene => _builtFor;
@@ -80,7 +89,7 @@ namespace NonVisualCalculus.Module.World
         /// <summary>Dev only: while set, no build starts or resumes and no scheduled rebuild fires, so a
         /// survey's zone ids stay those of the map the scene built on entry (its own state switches and
         /// blocker toggles would otherwise rebuild through the hooks). The survey sets it on its first
-        /// Frame or Teleport and clears it in Restore.</summary>
+        /// Frame or Teleport and clears it in Restore; a scene change clears it too.</summary>
         public bool HoldRebuilds { get; set; }
 
         /// <summary>Whether a build is in flight (the map, if any, is the previous one meanwhile).</summary>
@@ -104,6 +113,7 @@ namespace NonVisualCalculus.Module.World
             if (scene != _builtFor)
             {
                 _builtFor = scene;
+                HoldRebuilds = false; // a survey's hold belongs to the scene it was set in
                 _job = null;
                 _retry = 0;
                 _invalidateAt = 0f;
@@ -113,6 +123,7 @@ namespace NonVisualCalculus.Module.World
                 // settling its obstacles.
                 _settled = _cache.TryGetValue(scene, out ZoneMap cached);
                 Map = cached;
+                Settled = _settled;
                 if (_settled) _invalidateAt = Time.unscaledTime + LoadSettle;
             }
             if (HoldRebuilds) return;
@@ -181,6 +192,7 @@ namespace NonVisualCalculus.Module.World
             }
             foreach (var m in c.Merges) { sb.Append('m'); foreach (var a in m) sb.Append(a.ToString()); }
             foreach (var d in c.Drops) sb.Append('d').Append(d.ToString());
+            foreach (var a in c.Seeds) sb.Append('s').Append(a.ToString());
             return sb.ToString();
         }
 
@@ -188,6 +200,7 @@ namespace NonVisualCalculus.Module.World
         public void Rebuild()
         {
             Map = null;
+            Settled = false;
             _job = null;
             _retry = 0;
             _invalidateAt = 0f;
@@ -206,6 +219,14 @@ namespace NonVisualCalculus.Module.World
 
         // ---- the resumable build ----
 
+        /// <summary>The ground a person's standing spot carves out of the mesh: a square in the grid's frame
+        /// (the mod's world frame) and the elevation the person stands at.</summary>
+        private struct Footing { public float X0, Z0, X1, Z1, Y; }
+
+        /// <summary>Any other carving obstacle (a door, a blocker, a parked vehicle) as its world-to-local
+        /// transform and its carve's half extents in local units, widened by the agent radius.</summary>
+        private struct Carve { public Matrix4x4 ToLocal; public Vector3 Center, Half; }
+
         private enum Phase { Flood, Sweep, Fill, Segment }
 
         /// <summary>One build in flight: the grid and the cursors of whichever phase is running, so a
@@ -223,6 +244,10 @@ namespace NonVisualCalculus.Module.World
             public WalkRaster Raster; public int FillGz;  // the fill's next row
             public Task<ZoneMap> Segment;
             public ZoneMapOptions Options; public ZoneCuration Curation;
+            public bool AfterSettle;                      // started once the scene's settle rebuild was scheduled
+            public List<Footing> Footings = new List<Footing>(); // where people stand, filled back in after the sweep
+            public List<Carve> Carves = new List<Carve>();       // every other carve, which a footing never fills
+            public int Filled;
             public int Samples, FloodSamples, SweepSamples;
             public long MainMs, FloodMs, SweepMs, FillMs;
             public System.Diagnostics.Stopwatch Wall = System.Diagnostics.Stopwatch.StartNew();
@@ -246,8 +271,9 @@ namespace NonVisualCalculus.Module.World
             {
                 Scene = scene, Phase = Phase.Flood, W = w, H = h, Cell = cell, X0 = x0, Z0 = z0, SeedY = seed.position.y,
                 Walk = new bool[n], Elev = new float[n], Tried = new float[n], TriedAny = new bool[n],
-                Options = (ZoneMapOptions)Options.MemberwiseCloneForBuild(), Curation = Curation,
+                Options = (ZoneMapOptions)Options.MemberwiseCloneForBuild(), Curation = Curation, AfterSettle = _settled,
             };
+            if (FillStandingSpots) CollectFootings(job);
             Snv seedCore = WorldConvert.ToSnv(seed.position);
             int sgx = (int)Math.Floor((seedCore.X - x0) / cell), sgz = (int)Math.Floor((seedCore.Z - z0) / cell);
             if (sgx < 0 || sgz < 0 || sgx >= w || sgz >= h) return null;
@@ -275,6 +301,7 @@ namespace NonVisualCalculus.Module.World
                             if (Sweep(job, sw))
                             {
                                 job.SweepMs = job.MainMs + (long)sw.ElapsedMilliseconds - job.FloodMs; job.SweepSamples = job.Samples - job.FloodSamples;
+                                FillFootings(job);
                                 if (!Crop(job)) { Finish(job, null, "no walkable cell"); return; }
                                 job.Phase = Phase.Fill;
                             }
@@ -318,11 +345,88 @@ namespace NonVisualCalculus.Module.World
                 return;
             }
             LastBuildMs = job.MainMs;
-            LastBuildBreakdown = $"grid {job.W}x{job.H}, flood {job.FloodSamples} samples {job.FloodMs} ms, sweep {job.SweepSamples} samples {job.SweepMs} ms, fill {job.FillMs} ms, segment off-thread, {job.Wall.ElapsedMilliseconds} ms wall";
+            LastBuildBreakdown = $"grid {job.W}x{job.H}, {job.Filled} cells under {job.Footings.Count} standing spots filled, flood {job.FloodSamples} samples {job.FloodMs} ms, sweep {job.SweepSamples} samples {job.SweepMs} ms, fill {job.FillMs} ms, segment off-thread, {job.Wall.ElapsedMilliseconds} ms wall";
             Map = map;
+            Settled = job.AfterSettle;
             _cache[job.Scene] = map;
             _curationSig[job.Scene] = Signature(job.Curation);
             _host.LogInfo($"ZoneTracker: {job.Scene}: {map.Zones.Count} zones over {WalkableArea(map):0} m2, {LastBuildMs} ms on the main thread ({LastBuildBreakdown})");
+        }
+
+        // Every character's schedule spot and the party's holding spot carry a small carving obstacle (a
+        // GameObject named "Nav Mesh Obstacle", 0.5 m box) so the player paths around whoever stands there.
+        // Where the people of this save stand would otherwise decide the zones: a person in a doorway or
+        // against a partition narrows it, and the watershed splits the floor differently from one save to
+        // the next. Their footprints, widened by the agent radius the carve adds, go back in as ground.
+        // Doors, story blockers and parked vehicles are not people and keep their carve.
+        private const string PersonObstacle = "Nav Mesh Obstacle";
+
+        private static void CollectFootings(BuildJob job)
+        {
+            float agent = NavMesh.GetSettingsByIndex(0).agentRadius;
+            foreach (var o in UnityEngine.Object.FindObjectsOfType<NavMeshObstacle>())
+            {
+                if (!o.isActiveAndEnabled || !o.carving) continue;
+                Vector3 s = o.transform.lossyScale;
+                if (o.gameObject.name != PersonObstacle)
+                {
+                    // The carve widens by the agent radius in world units; in local units that is over the scale.
+                    Vector3 size = o.shape == NavMeshObstacleShape.Capsule ? new Vector3(o.radius * 2f, o.height, o.radius * 2f) : o.size;
+                    job.Carves.Add(new Carve
+                    {
+                        ToLocal = o.transform.worldToLocalMatrix, Center = o.center,
+                        Half = new Vector3(size.x * 0.5f + (agent + job.Cell) / Mathf.Max(Mathf.Abs(s.x), 1e-3f), size.y * 0.5f + 1f / Mathf.Max(Mathf.Abs(s.y), 1e-3f),
+                                           size.z * 0.5f + (agent + job.Cell) / Mathf.Max(Mathf.Abs(s.z), 1e-3f)),
+                    });
+                    continue;
+                }
+                Vector3 c = o.transform.TransformPoint(o.center);
+                float half = Mathf.Max(Mathf.Abs(o.size.x * s.x), Mathf.Abs(o.size.z * s.z)) * 0.5f + agent + job.Cell;
+                Snv core = WorldConvert.ToSnv(c);
+                job.Footings.Add(new Footing { X0 = core.X - half, Z0 = core.Z - half, X1 = core.X + half, Z1 = core.Z + half, Y = c.y });
+            }
+        }
+
+        private static bool InOtherCarve(BuildJob job, float coreX, float y, float coreZ)
+        {
+            Vector3 p = WorldConvert.ToUnity(new Snv(coreX, y, coreZ));
+            foreach (var c in job.Carves)
+            {
+                Vector3 l = c.ToLocal.MultiplyPoint3x4(p) - c.Center;
+                if (Mathf.Abs(l.x) <= c.Half.x && Mathf.Abs(l.y) <= c.Half.y && Mathf.Abs(l.z) <= c.Half.z) return true;
+            }
+            return false;
+        }
+
+        // Inside a footing, a cell goes back in as ground only where the footing holds ground at the
+        // person's level on both sides of it along one axis, and no other obstacle's carve covers it: the
+        // hole a person cuts in open floor or in a doorway closes, while a wall, a counter or the blocker
+        // beside the person (ground on one side only, or another carve) stays out. Decided on the swept grid before any fill, so nothing cascades. A spot
+        // parked off the mesh (the scene origin) holds no ground and adds nothing.
+        private static void FillFootings(BuildJob job)
+        {
+            var fill = new List<int>();
+            float gate = job.Options.HeightGate;
+            foreach (var f in job.Footings)
+            {
+                int gx0 = Math.Max(Mathf.FloorToInt((f.X0 - job.X0) / job.Cell), 0), gx1 = Math.Min(Mathf.FloorToInt((f.X1 - job.X0) / job.Cell), job.W - 1);
+                int gz0 = Math.Max(Mathf.FloorToInt((f.Z0 - job.Z0) / job.Cell), 0), gz1 = Math.Min(Mathf.FloorToInt((f.Z1 - job.Z0) / job.Cell), job.H - 1);
+                bool Ground(int gx, int gz) { int i = gz * job.W + gx; return job.Walk[i] && Math.Abs(job.Elev[i] - f.Y) <= gate; }
+                for (int gz = gz0; gz <= gz1; gz++)
+                    for (int gx = gx0; gx <= gx1; gx++)
+                    {
+                        if (job.Walk[gz * job.W + gx]) continue;
+                        bool w = false, e = false, s = false, n = false;
+                        for (int x = gx - 1; x >= gx0 && !w; x--) w = Ground(x, gz);
+                        for (int x = gx + 1; x <= gx1 && !e; x++) e = Ground(x, gz);
+                        for (int z = gz - 1; z >= gz0 && !s; z--) s = Ground(gx, z);
+                        for (int z = gz + 1; z <= gz1 && !n; z++) n = Ground(gx, z);
+                        if (((w && e) || (s && n)) && !InOtherCarve(job, job.X0 + (gx + 0.5f) * job.Cell, f.Y, job.Z0 + (gz + 0.5f) * job.Cell))
+                            fill.Add(gz * job.W + gx);
+                    }
+                foreach (int i in fill) { if (!job.Walk[i]) { job.Walk[i] = true; job.Elev[i] = f.Y; job.Filled++; } }
+                fill.Clear();
+            }
         }
 
         // Breadth-first over 4-neighbours: each is sampled at the elevation of the cell it is reached

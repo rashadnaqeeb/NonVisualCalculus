@@ -31,22 +31,32 @@ namespace NonVisualCalculus.Core.World.Zoning
     /// </summary>
     public sealed class ZoneCuration
     {
-        public static readonly ZoneCuration None = new ZoneCuration(new CurationWall[0], new Vector3[0][], new Vector3[0]);
+        public static readonly ZoneCuration None = new ZoneCuration(new CurationWall[0], new Vector3[0][], new Vector3[0], new Vector3[0]);
 
         public IReadOnlyList<CurationWall> Walls { get; }
         public IReadOnlyList<IReadOnlyList<Vector3>> Merges { get; }
         /// <summary>Anchors whose zone is removed from the map: navmesh the character can never stand on
         /// (a stray patch at the scene origin where the game parks disabled things).</summary>
         public IReadOnlyList<Vector3> Drops { get; }
+        /// <summary>The named zones' anchors. When any are given they steer the segmentation's last step:
+        /// a region holding several is divided between them by walking distance, and a region holding none
+        /// joins a named neighbour, so every name has its zone and no ground speaks a fallback whatever
+        /// the save's doors, vehicles and people do to the watershed.</summary>
+        public IReadOnlyList<Vector3> Seeds { get; }
 
         public ZoneCuration(IReadOnlyList<CurationWall> walls, IReadOnlyList<IReadOnlyList<Vector3>> merges)
-            : this(walls, merges, new Vector3[0]) { }
+            : this(walls, merges, new Vector3[0], new Vector3[0]) { }
 
         public ZoneCuration(IReadOnlyList<CurationWall> walls, IReadOnlyList<IReadOnlyList<Vector3>> merges, IReadOnlyList<Vector3> drops)
+            : this(walls, merges, drops, new Vector3[0]) { }
+
+        public ZoneCuration(IReadOnlyList<CurationWall> walls, IReadOnlyList<IReadOnlyList<Vector3>> merges,
+                            IReadOnlyList<Vector3> drops, IReadOnlyList<Vector3> seeds)
         {
             Walls = walls;
             Merges = merges;
             Drops = drops;
+            Seeds = seeds;
         }
     }
 }

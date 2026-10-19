@@ -1,8 +1,8 @@
 # 語體：台灣標準書面繁體中文，全形標點，不加空格，與 lang/zh-tw.txt 一致。
 zone.gunhall.title = 砲廳
-zone.gunhall.body = 堡壘下一座混凝土大廳，地面是龜裂的石板，由地上的一盞燈照亮。一台罩著防塵布的生鏽機器立在牆邊一道短鐵樓梯旁，地板上嵌著一個圓艙口，朝海一側的牆已經崩塌成一道瓦礫和沙的斜坡，通往滑道的門就在那裡。
-zone.eastdoor.title = 東門
-zone.eastdoor.body = 堡壘東門內一條短而黑暗的通道，通到砲廳上層有欄杆的轉盤旁。
+zone.gunhall.body = 堡壘下一座混凝土大廳，地面是龜裂的石板。一台罩著防塵布的生鏽機器立在牆邊一道短鐵樓梯旁，地板上嵌著一個圓艙口，一側的牆已經崩塌成一道瓦礫和沙的斜坡，通往滑道的門就在那裡。
+zone.eastdoor.title = 上層入口
+zone.eastdoor.body = 堡壘上層門口內的一條短通道，通到砲廳上層有欄杆的轉盤旁。
 zone.turntable.title = 轉盤
 zone.turntable.body = 嵌在混凝土裡的一圈圓形鐵軌，四周有欄杆，中央的底座上是砲塔生鏽的砲座和齒輪，上方垂著從屋頂吊下的纜線。
 zone.upperdeck.title = 上層廊台
@@ -12,9 +12,9 @@ zone.entrycorridor.body = 正門內一條混凝土走廊，牆邊有一個灰色
 zone.upperstair.title = 上層樓梯
 zone.upperstair.body = 一道有欄杆的鐵樓梯，從入口走廊爬上上方的細縫窗房間，經過混凝土牆上一幅褪色的肖像畫。
 zone.desertersroom.title = 細縫窗房間
-zone.desertersroom.body = 一間弧形的混凝土房間，在一道長長的細縫窗下，牆上掛著灰色布單，遠端牆邊有一張用破布和毯子鋪成的床，架上一台發電機的纜線拖過地面，一張放著罐頭和碗的桌子，一疊書，窗邊靠著一把步槍。
+zone.desertersroom.body = 一間弧形的混凝土房間，在一道長長的細縫窗下，牆上掛著灰色布單，遠端牆邊有一張用破布和毯子鋪成的床，一張放著罐頭和碗的桌子，還有一疊書。一具裝在帶輪支架上的長條光學儀器立在窗邊，半披著布，旁邊是一張堆滿書的椅子。
 zone.holepassage.title = 洞口通道
-zone.holepassage.body = 一條從堡壘牆上破洞延伸的碎混凝土板通道，地上有瓦礫和一個碗，日光透過缺口射進長長的光柱，生鏽的鐵條撐在缺口上。
+zone.holepassage.body = 一條從堡壘牆上破洞延伸的碎混凝土板通道，地上有瓦礫和一個碗，生鏽的鐵條撐在缺口上。
 object.exiteast = 混凝土牆上一道帶著厚重鉸鏈塊的生鏽鋼門，被照成紫羅蘭色。
 object.exithole = 通道岩牆上一個用生鏽鐵條撐住的破洞，裡面堆著巨石，橘色和粉紅色的光湧進來。
 object.exitmain = 生鏽混凝土牆上的一道門口，橘色和粉紅色的光從中湧進來。
