@@ -34,3 +34,4 @@ object.barrel3 = Um tambor de óleo enferrujado deitado na areia à beira da ág
 object.canister = Um galão enferrujado na areia ao lado da tenda de lona, um fogareiro de pés atrás dele.
 object.shelf = Prateleiras de potes e latas na parede da sala dos beliches ao lado da escada de mão para a cama de cima.
 object.kim = Um homem magro de jaqueta bomber laranja sobre camisa branca e calça escura, cabelo escuro penteado para trás e óculos redondos, um caderninho aberto numa mão e uma caneta na outra.
+object.ruby = Uma mulher de cabelo ruivo preso para trás sob um par de fones de ouvido, de colete acolchoado laranja sobre uma blusa escura de manga comprida, short escuro sobre meia-calça escura e botas marrons de cano alto.

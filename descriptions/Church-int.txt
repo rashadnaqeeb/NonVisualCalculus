@@ -29,3 +29,4 @@ object acele = acele
 object soona = soona
 object egghead = egghead
 object kim = Kim Kitsuragi
+object radiocomputer = int_radiocompter_outline

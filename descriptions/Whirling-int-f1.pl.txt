@@ -66,3 +66,4 @@ object.vicquemare = Mężczyzna z siwymi włosami w niebieskiej kurtce siedzący
 object.cryptofascist = Mężczyzna z jasnymi blond włosami w jasnoszarej koszuli z podwiniętymi rękawami, stojący przy ladzie baru między dwoma stołkami z czerwonymi siedziskami.
 object.minot = Kobieta z ciemnymi włosami do ramion, w ciemnoniebieskim płaszczu, stojąca na skraju mozaiki w kształcie słońca obok końca długiego stołu.
 object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.
+object.sleepingdockworker = Mężczyzna w zielonej kurtce roboczej i pomarańczowej dzianej czapce, osunięty do przodu nad szklaną półką przy miejscach przy oknach, z głową opartą na ramionach, na plecach ma pomarańczową torbę, a przy dłoniach dwa kubki.

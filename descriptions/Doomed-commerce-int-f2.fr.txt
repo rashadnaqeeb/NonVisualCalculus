@@ -38,3 +38,4 @@ object.bookstoredoorbroken = Une porte sombre à panneaux au bout de la salle de
 object.basementdoor = Une ouverture dans le mur de brique de la salle de la tour à côté du tableau de schémas à la craie, de la brume dérivant sur le sol devant.
 object.dicemaker = Une femme aux cheveux blonds en veste bleue, assise à l'établi sous la fenêtre à barreaux de la tour, le dos à la pièce, des papiers et des boîtes entassés autour d'elle.
 object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.
+object.radiooutline = Un petit poste de radio en caisson à cadran, posé au sommet d'un haut châssis ouvert de fines tiges d'acier parmi des meubles couverts de housses anti-poussière, un panneau marqué à la craie appuyé à côté.

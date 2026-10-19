@@ -66,3 +66,4 @@ object.vicquemare = Un hombre de pelo gris con una chaqueta azul sentado en el e
 object.cryptofascist = Un hombre de pelo rubio pálido con una camisa gris claro de mangas remangadas, de pie en el mostrador de la barra entre dos taburetes de asiento rojo.
 object.minot = Una mujer de pelo oscuro hasta los hombros con un abrigo azul oscuro, de pie al borde del mosaico del sol junto al extremo de una mesa larga.
 object.kim = Un hombre delgado con una cazadora bomber naranja sobre una camisa blanca y pantalones oscuros, el pelo oscuro peinado hacia atrás y gafas redondas, con una pequeña libreta abierta en una mano y un bolígrafo en la otra.
+object.sleepingdockworker = Un hombre con una chaqueta de trabajo verde y un gorro de punto naranja, desplomado hacia delante sobre la repisa de cristal de los asientos de las ventanas, con la cabeza sobre los brazos, una mochila naranja a la espalda y dos tazas junto a las manos.

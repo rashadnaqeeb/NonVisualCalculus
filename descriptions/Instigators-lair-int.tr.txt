@@ -34,3 +34,4 @@ object.barrel3 = Su kenarında kumda yatan paslı bir yağ varili, yanına dayan
 object.canister = Muşamba çadırın yanında kumda paslı bir bidon, arkasında ayaklı bir ocak.
 object.shelf = Ranza odasının duvarında üst ranzaya çıkan el merdiveninin yanında kavanoz ve teneke kutu rafları.
 object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.
+object.ruby = Kırmızı saçları kulaklığın altında geriye toplanmış, koyu uzun kollu bir üstün üzerine turuncu kapitone bir yelek, koyu külotlu çorabın üzerine koyu şort ve uzun kahverengi çizmeler giymiş bir kadın.

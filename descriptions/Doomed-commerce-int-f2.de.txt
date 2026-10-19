@@ -38,3 +38,4 @@ object.bookstoredoorbroken = Eine dunkle Kassettentür am Ende der Boxhalle, ein
 object.basementdoor = Eine Türöffnung in der Backsteinwand des Turmzimmers neben der bekreideten Tafel mit Diagrammen, Dunst zieht über den Boden davor.
 object.dicemaker = Eine Frau mit blondem Haar in einer blauen Jacke sitzt an der Werkbank unter dem vergitterten Fenster des Turms, mit dem Rücken zum Raum, Papiere und Kartons um sie herum aufgehäuft.
 object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.
+object.radiooutline = Ein kleines kastenförmiges Radiogerät mit Skala, oben auf einem hohen offenen Gestell aus dünnen Stahlstäben zwischen Möbeln unter Staubtüchern, daneben eine Kreidetafel angelehnt.

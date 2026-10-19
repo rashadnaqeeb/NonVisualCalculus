@@ -64,3 +64,4 @@ object.clubberman5 = Koyu saçlı, pas kahvesi deri ceketli ve kot pantolonlu bi
 object.tequilasunset2 = Kısa koyu saçlı, turuncu gömlekli, koyu pantolonlu ve uzun botlu bir adam, aşağıdaki kafe zemininde soyulmuş tuğla kemerin yanında duruyor.
 object.tommy2 = Soluk gri takım elbiseli ince bir adam, galerinin altındaki kafe zemininde yeşil bar tezgâhına yaslanıyor.
 object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.
+object.brokenwindow = Odanın cam duvarından bir cam çerçevesinden kırılıp çıkmış, boşluktan yırtık beyaz bir perde sarkıyor ve altındaki fayanslarda koyu lekeler var.

@@ -38,3 +38,4 @@ object.bookstoredoorbroken = Una puerta oscura de paneles en el extremo del gimn
 object.basementdoor = Una puerta en la pared de ladrillo de la sala de la torre junto al tablero de diagramas escrito con tiza, neblina flotando por el suelo delante.
 object.dicemaker = Una mujer de pelo rubio con una chaqueta azul, sentada al banco de trabajo bajo la ventana enrejada de la torre de espaldas a la sala, papeles y cajas amontonados a su alrededor.
 object.kim = Un hombre delgado con una cazadora bomber naranja sobre una camisa blanca y pantalones oscuros, el pelo oscuro peinado hacia atrás y gafas redondas, con una pequeña libreta abierta en una mano y un bolígrafo en la otra.
+object.radiooutline = Una pequeña radio cuadrada con dial, colocada encima de un alto armazón abierto de finas varillas de acero entre muebles cubiertos con sábanas contra el polvo, una pizarra marcada con tiza apoyada al lado.

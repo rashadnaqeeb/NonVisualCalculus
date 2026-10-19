@@ -64,3 +64,4 @@ object.clubberman5 = Ein Mann mit dunklem Haar in einer rostbraunen Lederjacke u
 object.tequilasunset2 = Ein Mann mit kurzem dunklem Haar in einem orangefarbenen Hemd, dunkler Hose und hohen Stiefeln, der unten auf dem Caféboden beim abgeschlagenen Backsteinbogen steht.
 object.tommy2 = Ein schlanker Mann in einem hellgrauen Anzug, der unten auf dem Caféboden unter der Galerie rücklings am grünen Bartresen lehnt.
 object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.
+object.brokenwindow = Eine Scheibe der Glaswand des Zimmers, aus ihrem Rahmen geschlagen, ein zerrissener weißer Vorhang hängt durch die Lücke, darunter dunkle Flecken auf den Fliesen.

@@ -8,3 +8,5 @@ object.luggage = Otwarta walizka wypełniona ubraniami na stojaku w nogach łó�
 object.books = Półka z książkami na niebieskiej ścianie przy otwartych drzwiach, płaszcz wiszący po wewnętrznej stronie drzwi, widziana za krzywizną żebrowanego sklepienia.
 object.plaisance = Kobieta z upiętymi ciemnymi włosami, w czarnej kamizelce na białej koszuli i brązowej spódnicy.
 object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.
+object.door = Zwykłe ciemne drzwi z płycinami i metalową klamką, stojące na kamiennym progu w ścianie korytarza wejściowego mieszkania.
+object.mugs = Wąska półka ścienna zastawiona kubkami, filiżankami i talerzem w ceglanym sklepieniu mieszkania, nad niebieskim stołem z książką i talerzem, obok trzy małe lampki ścienne.

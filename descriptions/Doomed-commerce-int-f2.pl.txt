@@ -38,3 +38,4 @@ object.bookstoredoorbroken = Ciemne drzwi płycinowe na końcu sali, wyważone, 
 object.basementdoor = Wejście w ceglanej ścianie pokoju w wieży obok tablicy zapisanej kredą schematami, przed nim mgiełka snująca się po podłodze.
 object.dicemaker = Kobieta z jasnymi włosami w niebieskiej kurtce, siedząca przy warsztacie pod zakratowanym oknem wieży tyłem do pokoju, dookoła niej spiętrzone papiery i pudła.
 object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.
+object.radiooutline = Mały pudełkowaty odbiornik radiowy z tarczą, stojący na szczycie wysokiego otwartego stelaża z cienkich stalowych prętów wśród mebli okrytych pokrowcami od kurzu, obok oparta tablica zapisana kredą.

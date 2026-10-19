@@ -34,3 +34,4 @@ object.barrel3 = Ein verrostetes Ölfass, das auf dem Sand am Wasserrand liegt, 
 object.canister = Ein verrosteter Kanister auf dem Sand neben dem Planenzelt, ein Kocher auf Beinen dahinter.
 object.shelf = Regale mit Gläsern und Dosen an der Wand des Kojenraums neben der Leiter zur oberen Koje.
 object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.
+object.ruby = Eine Frau mit roten Haaren, unter Kopfhörern zurückgebunden, in einer orangefarbenen Steppweste über einem dunklen langärmeligen Oberteil, dunkle Shorts über dunkler Strumpfhose und hohe braune Stiefel.

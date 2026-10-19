@@ -38,3 +38,4 @@ object.bookstoredoorbroken = Spor salonunun ucunda koyu renk panelli bir kapı, 
 object.basementdoor = Kule odasının tuğla duvarında, şemalarla dolu tebeşirli tahtanın yanında bir kapı aralığı, önünde zeminde süzülen pus.
 object.dicemaker = Mavi ceketli, sarı saçlı bir kadın, kulenin parmaklıklı penceresinin altındaki tezgâhta sırtı odaya dönük oturuyor, çevresine kâğıtlar ve kutular yığılmış.
 object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.
+object.radiooutline = Kadranlı küçük, kutu biçimli bir radyo cihazı, toz örtülerine sarılı mobilyaların arasında ince çelik çubuklardan yapılmış uzun açık bir çerçevenin tepesinde duruyor, yanına tebeşirle yazılmış bir tahta yaslanmış.

@@ -34,3 +34,4 @@ object.barrel3 = Un bidón oxidado tumbado en la arena al borde del agua, una ca
 object.canister = Un bidón oxidado en la arena junto a la tienda de lona, un hornillo sobre patas detrás.
 object.shelf = Baldas de tarros y latas en la pared de la sala de las literas junto a la escalera de mano a la cama de arriba.
 object.kim = Un hombre delgado con una cazadora bomber naranja sobre una camisa blanca y pantalones oscuros, el pelo oscuro peinado hacia atrás y gafas redondas, con una pequeña libreta abierta en una mano y un bolígrafo en la otra.
+object.ruby = Una mujer de pelo rojo recogido hacia atrás bajo unos auriculares, con un chaleco acolchado naranja sobre una camiseta oscura de manga larga, pantalones cortos oscuros sobre medias oscuras y botas altas marrones.

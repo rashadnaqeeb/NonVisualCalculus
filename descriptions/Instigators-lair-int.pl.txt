@@ -34,3 +34,4 @@ object.barrel3 = Zardzewiała beczka po oleju leżąca na piasku nad samą wodą
 object.canister = Zardzewiały kanister na piasku obok namiotu z plandeki, za nim kuchenka na nóżkach.
 object.shelf = Półki ze słoikami i puszkami na ścianie izby z pryczą obok drabiny na górne posłanie.
 object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.
+object.ruby = Kobieta z czerwonymi włosami związanymi z tyłu pod słuchawkami, w pomarańczowej pikowanej kamizelce na ciemnej bluzce z długim rękawem, w ciemnych szortach na ciemnych rajstopach i wysokich brązowych butach.

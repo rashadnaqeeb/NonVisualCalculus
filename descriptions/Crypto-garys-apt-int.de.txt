@@ -8,3 +8,5 @@ object.luggage = Ein offener Koffer mit Kleidung, auf einem Ständer am Fußende
 object.books = Ein Bücherregal an der blauen Wand bei der offenen Tür, ein Mantel hängt an der Türinnenseite, an der Rundung des Rippengewölbes vorbei zu sehen.
 object.plaisance = Eine Frau mit hochgestecktem dunklem Haar, in einer schwarzen Weste über einem weißen Hemd und einem braunen Rock.
 object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.
+object.door = Eine schlichte dunkle Kassettentür mit Metallgriff, auf einer Steinschwelle in der Wand des Eingangsflurs der Wohnung.
+object.mugs = Ein schmales Wandregal voller Becher, Tassen und einem Teller im Backsteingewölbe der Wohnung, über einem blauen Tisch mit einem Buch und einem Teller darauf, drei kleine Wandlampen daneben.

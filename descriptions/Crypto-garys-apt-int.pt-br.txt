@@ -8,3 +8,5 @@ object.luggage = Uma mala aberta cheia de roupas sobre um suporte ao pé da cama
 object.books = Uma prateleira de livros na parede azul junto à porta aberta, um casaco pendurado no lado de dentro da porta, visto além da curva da abóbada nervurada.
 object.plaisance = Uma mulher de cabelo escuro preso para cima, de colete preto sobre camisa branca e saia marrom.
 object.kim = Um homem magro de jaqueta bomber laranja sobre camisa branca e calça escura, cabelo escuro penteado para trás e óculos redondos, um caderninho aberto numa mão e uma caneta na outra.
+object.door = Uma porta simples de painéis escuros com maçaneta de metal, sobre uma soleira de pedra na parede do corredor de entrada do apartamento.
+object.mugs = Uma prateleira estreita na parede, lotada de canecas, xícaras e um prato, na abóbada de tijolo do apartamento, acima de uma mesa azul com um livro e um prato, três pequenas lâmpadas de parede ao lado.

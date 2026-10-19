@@ -65,3 +65,4 @@ object.vicquemare = A man with grey hair in a blue jacket sitting on the end of 
 object.cryptofascist = A man with pale blond hair in a light grey shirt with the sleeves rolled, standing at the bar counter between two red topped stools.
 object.minot = A woman with dark shoulder length hair in a dark blue coat, standing at the edge of the sunburst mosaic beside the end of a long table.
 object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.
+object.sleepingdockworker = A man in a green work jacket and an orange knitted cap slumped forward over the glass ledge of the window seats, his head down on his arms, an orange bag on his back and two cups by his hands.

@@ -268,6 +268,18 @@ and specks the anchors made. A save loaded into the scene already showing schedu
 the scene name does not change. The zone-change announcement holds the last zone spoken until the
 cursor is 0.75 m clear of it, so walking along a jagged boundary does not flap between two names.
 
+Scenes no save starts in are reached from a loaded scene through the game's own transitions. A
+door (`FortressOccident.TransitionEntity`, whose `area` names the target scene) is switched off
+while the character is far from it, which stops its transition coroutine; warp the character
+beside it with `DevSurvey.Teleport`, then switch it on, clear `IsLocked` and call `OnUse(null)`.
+The dream islet's fortress doors are switched off by the story, and the same steps open them. The
+harbour secretary's office has no door of its own in play: the Measurehead conversation sends the
+character there with the Lua function `TeleportToAndFocusCamera("Secretary-int", ...)`, and its
+harbour door works with the steps above. The corpse yard dream (Dream-2) is the end-of-day
+cutscene `Sunshine.CorpseDream`, added to the `World` object's GameObject and enabled the way
+`EnddayManager.DreamScene` does; its opening bed conversation runs to its end before the dream can
+be walked. A transition autosaves and rotates the oldest autosave away; never save a survey state.
+
 ### What the game cannot give us
 
 The decompile was checked for a ready-made zoning source and there is none. `Sunshine.Location`

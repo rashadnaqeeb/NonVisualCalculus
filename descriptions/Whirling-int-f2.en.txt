@@ -63,3 +63,4 @@ object.clubberman5 = A man with dark hair in a rust brown leather jacket and jea
 object.tequilasunset2 = A man with short dark hair in an orange shirt, dark trousers and tall boots, standing on the café floor below by the stripped brick archway.
 object.tommy2 = A slim man in a pale grey suit leaning back against the green bar counter on the café floor below the gallery.
 object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.
+object.brokenwindow = A pane of the room's glass wall smashed out of its frame, a torn white curtain hanging through the gap and dark stains on the tiles below it.

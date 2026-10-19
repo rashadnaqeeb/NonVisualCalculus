@@ -66,3 +66,4 @@ object.vicquemare = Ein Mann mit grauem Haar in einer blauen Jacke sitzt am Ende
 object.cryptofascist = Ein Mann mit hellblondem Haar in einem hellgrauen Hemd mit hochgekrempelten Ärmeln, der am Bartresen zwischen zwei Hockern mit roten Sitzen steht.
 object.minot = Eine Frau mit dunklem schulterlangem Haar in einem dunkelblauen Mantel, die am Rand des Sonnenmosaiks neben dem Ende eines langen Tischs steht.
 object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.
+object.sleepingdockworker = Ein Mann in einer grünen Arbeitsjacke und einer orangefarbenen Strickmütze, über die gläserne Ablage der Fensterplätze nach vorn gesunken, den Kopf auf den Armen, einen orangefarbenen Rucksack auf dem Rücken und zwei Tassen neben den Händen.

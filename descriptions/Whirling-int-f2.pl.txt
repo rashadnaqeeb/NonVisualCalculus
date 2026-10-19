@@ -64,3 +64,4 @@ object.clubberman5 = Mężczyzna z ciemnymi włosami w rdzawobrązowej skórzane
 object.tequilasunset2 = Mężczyzna z krótkimi ciemnymi włosami, w pomarańczowej koszuli, ciemnych spodniach i wysokich butach, stojący na podłodze kawiarni poniżej przy łuku z odsłoniętej cegły.
 object.tommy2 = Szczupły mężczyzna w jasnoszarym garniturze, oparty plecami o zieloną ladę baru na podłodze kawiarni poniżej galerii.
 object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.
+object.brokenwindow = Szyba szklanej ściany pokoju wybita z ramy, przez lukę zwisa rozdarta biała zasłona, a na kafelkach pod nią widać ciemne plamy.

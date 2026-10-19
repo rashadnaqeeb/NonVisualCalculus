@@ -64,3 +64,4 @@ object.clubberman5 = Un hombre de pelo oscuro con una chaqueta de cuero marrón 
 object.tequilasunset2 = Un hombre de pelo corto y oscuro con una camisa naranja, pantalones oscuros y botas altas, de pie en el suelo del café de abajo junto al arco de ladrillo desnudo.
 object.tommy2 = Un hombre delgado con un traje gris pálido, recostado contra el mostrador verde de la barra en el suelo del café bajo la galería.
 object.kim = Un hombre delgado con una cazadora bomber naranja sobre una camisa blanca y pantalones oscuros, el pelo oscuro peinado hacia atrás y gafas redondas, con una pequeña libreta abierta en una mano y un bolígrafo en la otra.
+object.brokenwindow = Un cristal de la pared acristalada de la habitación, arrancado de su marco, con una cortina blanca rasgada colgando por el hueco y manchas oscuras en las baldosas de debajo.

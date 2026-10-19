@@ -64,3 +64,4 @@ object.clubberman5 = Um homem de cabelo escuro, de jaqueta de couro marrom cor d
 object.tequilasunset2 = Um homem de cabelo escuro curto, de camisa laranja, calça escura e botas altas, em pé no piso do café abaixo, junto ao arco de tijolo exposto.
 object.tommy2 = Um homem magro de terno cinza claro recostado no balcão verde do bar no piso do café abaixo da galeria.
 object.kim = Um homem magro de jaqueta bomber laranja sobre camisa branca e calça escura, cabelo escuro penteado para trás e óculos redondos, um caderninho aberto numa mão e uma caneta na outra.
+object.brokenwindow = Um vidro da parede de vidro do quarto arrancado da moldura e estilhaçado, uma cortina branca rasgada pendendo pelo vão e manchas escuras nos ladrilhos abaixo.

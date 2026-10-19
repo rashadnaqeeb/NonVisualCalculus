@@ -64,3 +64,4 @@ object.clubberman5 = Un homme aux cheveux sombres, en blouson de cuir brun roux 
 object.tequilasunset2 = Un homme aux cheveux courts et sombres, en chemise orange, pantalon sombre et hautes bottes, debout sur le sol du café en contrebas près de l'arcade de brique mise à nu.
 object.tommy2 = Un homme mince en costume gris pâle adossé au comptoir vert du bar sur le sol du café en contrebas de la galerie.
 object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.
+object.brokenwindow = Un carreau de la paroi de verre de la chambre arraché de son cadre, un rideau blanc déchiré pendant dans la brèche et des taches sombres sur les carreaux en dessous.

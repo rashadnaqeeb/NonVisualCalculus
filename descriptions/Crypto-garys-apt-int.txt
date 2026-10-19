@@ -6,3 +6,5 @@ object luggage = Crypto Luggage
 object books = Crypto Books
 object plaisance = Plaisance
 object kim = Kim Kitsuragi
+object mugs = colonial mug collection
+object door = int-door-default

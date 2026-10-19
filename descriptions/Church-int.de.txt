@@ -40,3 +40,4 @@ object.acele = Eine junge Frau, über einen Lautsprecherkoffer auf den Planken d
 object.soona = Eine Frau mit dunklem Haar in einer blauen Jacke, über eine Tastatur auf dem Mischpult gebeugt, zwischen den Bildschirmen und Kabeln der Konsole.
 object.egghead = Ein junger Mann in einer grünen Kapuzenjacke mit einer Krone aus blonden Stacheln, auf dem Teppich hingestreckt, den Rücken an einer Kiste, die Beine ausgestreckt.
 object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.
+object.radiocomputer = Ein hohes Gestell aus dünnen, verrosteten Stahlstäben mit einem kastenförmigen Radiogerät, dessen Türchen offen hängt und an dessen Front ein orangefarbenes Typenschild sitzt, Kabel schleifen davon über den gemusterten Boden unter dem zerschlagenen Wandbild.

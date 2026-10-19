@@ -23,3 +23,4 @@ object barrel3 = clickable_barrel_3
 object canister = clickable_canister
 object shelf = clickable_shelf
 object kim = Kim Kitsuragi
+object ruby = instigator

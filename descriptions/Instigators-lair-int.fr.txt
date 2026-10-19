@@ -34,3 +34,4 @@ object.barrel3 = Un fût rouillé couché sur le sable au bord de l'eau, une can
 object.canister = Un jerrican rouillé sur le sable à côté de la tente en bâche, un réchaud sur pieds derrière.
 object.shelf = Des étagères de bocaux et de boîtes de conserve sur le mur du dortoir à côté de l'échelle de la couchette du haut.
 object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.
+object.ruby = Une femme aux cheveux roux tirés en arrière sous un casque audio, en gilet matelassé orange sur un haut sombre à manches longues, short sombre sur collants sombres et hautes bottes brunes.

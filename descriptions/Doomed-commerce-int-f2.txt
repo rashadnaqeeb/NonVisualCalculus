@@ -26,3 +26,4 @@ object bookstoredoorbroken = doomed-1st-floor-door broken
 object basementdoor = doomed-basement-door
 object dicemaker = Dicemaker
 object kim = Kim Kitsuragi
+object radiooutline = int_radiocompter_outline

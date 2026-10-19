@@ -8,3 +8,5 @@ object.luggage = Une valise ouverte pleine de vêtements sur un support au pied 
 object.books = Une étagère de livres sur le mur bleu près de la porte ouverte, un manteau accroché à l'intérieur de la porte, vus par-delà la courbe de la voûte nervurée.
 object.plaisance = Une femme aux cheveux sombres relevés, en gilet noir sur une chemise blanche et une jupe brune.
 object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.
+object.door = Une simple porte sombre à panneaux et poignée de métal, posée sur un seuil de pierre dans le mur du couloir d'entrée de l'appartement.
+object.mugs = Une étroite étagère murale encombrée de chopes, de tasses et d'une assiette dans la voûte de brique de l'appartement, au-dessus d'une table bleue portant un livre et une assiette, trois petites lampes murales à côté.

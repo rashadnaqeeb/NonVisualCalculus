@@ -7,3 +7,5 @@ object.luggage = An open suitcase packed with clothes on a stand at the foot of 
 object.books = A shelf of books on the blue wall by the open door, a coat hanging on the door's inside, seen past the curve of the ribbed vault.
 object.plaisance = A woman with dark hair pinned up, in a black waistcoat over a white shirt and a brown skirt.
 object.kim = A slim man in an orange bomber jacket over a white shirt and dark trousers, dark hair swept back and round glasses, a small notebook open in one hand and a pen in the other.
+object.mugs = A narrow wall shelf crowded with mugs, cups and a plate in the flat's brick vault, above a blue table with a book and a plate on it, three small wall lamps beside it.
+object.door = A plain dark panelled door with a metal handle, standing on a stone sill in the wall of the flat's entrance passage.

@@ -66,3 +66,4 @@ object.vicquemare = Mavi ceketli, gri saçlı bir adam güneş ışını mozaiğ
 object.cryptofascist = Soluk sarı saçlı, kolları sıvalı açık gri gömlekli bir adam, kırmızı oturaklı iki taburenin arasında bar tezgâhında duruyor.
 object.minot = Koyu renk omuz hizasında saçlı, koyu mavi paltolu bir kadın, güneş ışını mozaiğinin kenarında uzun bir masanın ucunun yanında duruyor.
 object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.
+object.sleepingdockworker = Yeşil iş ceketli ve turuncu örgü şapkalı bir adam, pencere kenarı koltuklarının cam çıkıntısının üstüne öne doğru yığılmış, başı kollarının üstünde, sırtında turuncu bir çanta ve ellerinin yanında iki fincan.

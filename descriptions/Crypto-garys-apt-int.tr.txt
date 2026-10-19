@@ -8,3 +8,5 @@ object.luggage = Yatağın ayak ucunda bir sehpanın üstünde giysi dolu açık
 object.books = Açık kapının yanındaki mavi duvarda bir kitap rafı, kapının iç yüzünde asılı bir palto, nervürlü tonozun kıvrımının ötesinden görünüyor.
 object.plaisance = Siyah saçlarını topuz yapmış, beyaz gömlek üstüne siyah yelek ve kahverengi etek giymiş bir kadın.
 object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.
+object.door = Metal kollu sade, koyu renk, panelli bir kapı, dairenin giriş koridorunun duvarında taş bir eşiğin üstünde duruyor.
+object.mugs = Dairenin tuğla tonozunda kupalar, fincanlar ve bir tabakla dolu dar bir duvar rafı, üstünde bir kitap ve bir tabak olan mavi bir masanın üstünde, yanında üç küçük duvar lambası.

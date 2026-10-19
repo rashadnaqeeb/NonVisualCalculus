@@ -40,3 +40,4 @@ object.acele = Nefin kalaslarında bir hoparlör kasasının üstüne çömelmi�
 object.soona = Mavi ceketli, siyah saçlı bir kadın, miksaj platformunda konsolun ekranları ve kabloları arasında bir klavyenin üstüne eğilmiş.
 object.egghead = Sarı dikenlerden bir taçla yeşil kapüşonlu ceketli genç bir adam, sırtı bir kasaya dayalı halıya yayılmış, bacakları uzatılmış.
 object.kim = Beyaz gömlek ve koyu pantolon üstüne turuncu bomber ceket giymiş ince bir adam, siyah saçları geriye taranmış, yuvarlak gözlüklü, bir elinde açık küçük bir not defteri, öbüründe bir kalem.
+object.radiocomputer = İnce paslı çelik çubuklardan yapılmış uzun bir çerçeve kutu biçimli bir radyo cihazını tutuyor, küçük kapağı açık sarkıyor ve önünde turuncu bir isim plakası var, kablolar ondan parçalanmış duvar resminin altındaki desenli zemin boyunca uzanıyor.

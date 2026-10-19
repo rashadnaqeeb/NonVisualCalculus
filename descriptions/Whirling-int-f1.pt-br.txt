@@ -66,3 +66,4 @@ object.vicquemare = Um homem de cabelo grisalho e jaqueta azul sentado na ponta 
 object.cryptofascist = Um homem de cabelo loiro claro, de camisa cinza clara com as mangas arregaçadas, em pé no balcão do bar entre duas banquetas de assento vermelho.
 object.minot = Uma mulher de cabelo escuro na altura dos ombros e casaco azul escuro, em pé na borda do mosaico de sol, ao lado da ponta de uma mesa comprida.
 object.kim = Um homem magro de jaqueta bomber laranja sobre camisa branca e calça escura, cabelo escuro penteado para trás e óculos redondos, um caderninho aberto numa mão e uma caneta na outra.
+object.sleepingdockworker = Um homem de jaqueta de trabalho verde e gorro de tricô laranja, caído para a frente sobre o parapeito de vidro dos assentos das janelas, a cabeça sobre os braços, uma mochila laranja nas costas e duas xícaras junto às mãos.
