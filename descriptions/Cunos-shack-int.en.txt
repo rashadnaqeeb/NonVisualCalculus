@@ -2,7 +2,6 @@ zone.shack.title = Cuno's shack
 zone.shack.body = A hut of rough planks with a dirt floor, a torn mattress and a heap of junk in one corner, a workbench of boards against the wall with bottles and tins on it, a cable strung across the room with a bare bulb, and a crude painting of a shark's jaws on the wall by the door. A ladder of nailed boards climbs to a hatch in the roof.
 object.roofhatch = A ladder of nailed boards leaning on the plank wall beside a pig's head with crossed-out eyes, above the workbench of bottles and tins.
 object.exit = The shack's plank door, a bare bulb on a cable above it and a torn mattress on the dirt floor inside.
-object.jar = The workbench of boards along the shack's wall with bottles, a tin and a yellow pail on it, a plate and jars on the shelf above.
 detail.pighead.title = pig's head
 detail.pighead.body = A pig's head of pink plaster with a single blue cross painted over one eye, set on the bench by the ladder of nailed boards beside an old wooden chair, its snout toward the room.
 detail.sharkjaws.title = shark jaws painting

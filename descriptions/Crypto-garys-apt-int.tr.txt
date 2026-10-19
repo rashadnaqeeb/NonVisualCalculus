@@ -3,7 +3,6 @@ zone.bedroomdoor.title = yatak odası kapısı
 zone.bedroomdoor.body = Küçük mavi bir yatak odasına açılan kapı aralığı, kitap ve kutularla dolu eğri bir tuğla kemerin yanında. Duvar lambasının altında buruşuk çarşaflı pirinç bir yatak duruyor, ayak ucunda açık bir sandık var ve yerde mavi bir masa lambası duruyor.
 zone.apartment.title = tonozlu daire
 zone.apartment.body = Tuğla ve sıvadan, bir küme lambalı alçak tonozlu bir bodrum odası, kemerin altında kitap ve kâğıt yığılı bir masa ve mavi bir masa, bir kitaplık, yeşil bir battaniye örtülü bir kanepe, duvarda sarı bir bayrak, kapının yanında damalı fayans bir zemin ve bir bölmenin arkasında lavabolu küçük bir banyo.
-object.shelf = Üstünde bir lamba, açık bir kitap ve bir dosya rafı olan ahşap bir masa, önünde döner bir sandalye, çizgili bir bayrak asılı bir rafın altında, yatak odası kapısının yanında.
 object.luggage = Yatağın ayak ucunda bir sehpanın üstünde giysi dolu açık bir bavul, yanında sarı bir battaniye ve bir lamba.
 object.books = Açık kapının yanındaki mavi duvarda bir kitap rafı, kapının iç yüzünde asılı bir palto, nervürlü tonozun kıvrımının ötesinden görünüyor.
 object.plaisance = Siyah saçlarını topuz yapmış, beyaz gömlek üstüne siyah yelek ve kahverengi etek giymiş bir kadın.

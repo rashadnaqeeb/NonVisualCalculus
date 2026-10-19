@@ -1,7 +1,6 @@
 zone.shack.title = the fishing shack
 zone.shack.body = A hut of grey weathered planks with gaps between the boards, a floor of plank boards, a wooden chair with an orange seat against the wall, a metal shelf unit at the back and a small window beside the door.
 object.exit = The shack's plank door with a small window beside it, sunlight and the village's colours showing through the gap.
-object.box = Bare grey board shelves built into the shack's corner, a tall clay vase of dry grass on the top one and loose papers on a lower one.
 object.postcard = A pale card pinned to the grey planks of the shack's wall above the shelf, beside a small ring hung from a nail.
 object.pierbox = A small pale cardboard box on the middle board of the corner shelves, beside a folded blue cloth.
 object.plaisance = A woman with dark hair pinned up, in a black waistcoat over a white shirt and a brown skirt.

@@ -25,7 +25,6 @@ object.exit = La boca del canal hacia la orilla, donde altos juncos secos y hier
 object.pipe = Una tubería oxidada que sale curvándose de la arena bajo una lona gris, un bidón y un barril al lado y un puntal de madera cruzado por delante.
 object.felddoor = Una puerta de hierro oxidado encajada en la pared de ladrillo de la sala de bombas, llena de escombros, con una puerta de acero abollada colgando abierta al lado y grandes tuberías pasando por lo alto.
 object.steeldoor = Una alta abertura enmarcada por pesadas vigas de acero oxidadas, abierta en un muro de ladrillo rojo desmoronado, con un suelo de placas de acero cuadradas más allá.
-object.portrait = Una mesa en la sala de las literas con una tetera, cazuelas, cuencos y latas, un taburete metido debajo y un retrato con barba clavado en el poste de arriba.
 object.tent = Una tienda de lona montada sobre palos encima de un colchón verde sembrado de papeles, un bidón y un hornillo al lado sobre la arena.
 object.barrel1 = Un bidón oxidado tumbado bajo una lona gris en el borde del canal.
 object.barrel2 = Dos bidones oxidados tumbados bajo una lona gris en el borde del canal.

@@ -14,7 +14,6 @@ zone.boardgames.body = Dükkânın demir galerinin altındaki kısmı, dökme de
 object.exit = Dükkânın köşesinde iki cumba penceresinin arasında cam panelli uzun koyu bir kapı, pencerelerin rafları parlak ciltsiz kitaplar ve dergilerle dolu.
 object.crimebooks = Galeride uzun ahşap bir kitaplık, rafları kırmızı, yeşil ve mavi yıpranmış ciltli kitaplarla sıkışık, yanında bir tabure ve çerçeveli kelebek ve yusufçuk baskıları, yuvarlak kırmızı bir halının üstünde.
 object.boardgames = Galerinin altında parlak renkli kutu oyunu kutularıyla dolu yuvarlak ahşap bir sergi masası, altıgen fayansların üstünde dökme demir bir sütunun yanında.
-object.primer = Üstünde açık bir kitap, bir kahve fincanı ve mavi bir tramvay maketi olan cam önlü uzun bir tezgâh, aşağı sarkan sarmaşıklı uzun kitap raflarının altında.
 object.hjelmdall = Cumba penceresinin yanında uzun beyaz bir sergi standı, üstüne sıra sıra sarı ve turuncu ciltsiz kitaplar dizilmiş, arkasındaki pervaz boyunca daha fazlası.
 object.biographies = Dükkânın karanlık arka kısmında çıplak tahta döşemede uzun ahşap bir kitaplık, üstünde mermer bir büst ve yanında kitap tıkılmış bir şifonyer.
 object.upstairsdoor = Örtülü odanın arkasında beyaz notlarla kaplanmış koyu renk panelli bir kapı, dibinde çatlak fayansların üstünde sürünen kablolar ve yanında bir sandalye.

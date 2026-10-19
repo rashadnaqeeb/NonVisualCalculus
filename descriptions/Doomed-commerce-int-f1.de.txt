@@ -14,7 +14,6 @@ zone.boardgames.body = Der Teil des Ladens unter der eisernen Galerie, wo ein ru
 object.exit = Eine hohe dunkle Tür mit einer Glasscheibe in der Ecke des Ladens zwischen den beiden Erkerfenstern, deren Regale mit bunten Taschenbüchern und Zeitschriften vollgestapelt sind.
 object.crimebooks = Ein hohes Holzbücherregal auf der Galerie, seine Bretter dicht mit abgegriffenen gebundenen Büchern in Rot, Grün und Blau gefüllt, neben einem Hocker und gerahmten Drucken von Schmetterlingen und Libellen, auf einem runden roten Teppich.
 object.boardgames = Ein runder hölzerner Auslagetisch unter der Galerie, mit Brettspielschachteln in leuchtenden Farben beladen, neben einer gusseisernen Säule auf den Sechseckfliesen.
-object.primer = Ein langer Tresen mit Glasfront, obenauf ein aufgeschlagenes Buch, eine Kaffeetasse und das Modell einer blauen Straßenbahn, unter hohen Bücherregalen, von denen Efeu herabhängt.
 object.hjelmdall = Ein langer weißer Auslagetisch am Erkerfenster, mit Reihen gelber und orangefarbener Taschenbücher belegt, weitere auf dem Sims dahinter aufgereiht.
 object.biographies = Ein hohes Holzbücherregal auf nackten Dielen im dunklen hinteren Teil des Ladens, eine Marmorbüste obenauf und eine mit Büchern vollgestopfte Kommode daneben.
 object.upstairsdoor = Eine dunkle Kassettentür hinten im verhüllten Raum, mit weißen Zetteln beklebt, Kabel ziehen über die gesprungenen Fliesen an ihrem Fuß und ein Stuhl daneben.

@@ -25,7 +25,6 @@ object.exit = A boca do canal para a margem, onde juncos secos altos e capim ens
 object.pipe = Um cano enferrujado curvando-se para fora da areia sob um pano de lona cinza, um tambor de óleo e um barril ao lado e uma escora de madeira inclinada atravessada.
 object.felddoor = Uma porta de ferro enferrujado embutida na parede de tijolo da sala das bombas, entulhada de escombros, com uma porta de aço amassada pendendo aberta ao lado e canos grandes passando no alto.
 object.steeldoor = Uma porta alta emoldurada por pesadas vigas de aço enferrujadas, aberta numa parede de tijolo vermelho em ruínas, com um piso de placas quadradas de aço além.
-object.portrait = Uma mesa na sala dos beliches posta com uma chaleira, panelas, tigelas e latas, um banquinho enfiado embaixo e um retrato de homem barbado pregado no poste acima.
 object.tent = Uma tenda de lona armada em varas sobre um colchão verde coberto de papéis, um galão e um fogareiro ao lado na areia.
 object.barrel1 = Um tambor de óleo enferrujado deitado sob um pano de lona cinza na borda do canal.
 object.barrel2 = Dois tambores de óleo enferrujados deitados sob um pano de lona cinza na borda do canal.

@@ -25,7 +25,6 @@ object.exit = Die Mündung der Rinne zum Ufer, wo hohes trockenes Schilf und son
 object.pipe = Ein verrostetes Rohr, das sich unter einer grauen Plane aus dem Sand biegt, ein Ölfass und eine Tonne daneben und eine Holzstütze, die quer darüber lehnt.
 object.felddoor = Eine Türöffnung aus verrostetem Eisen in der Backsteinwand des Pumpenraums, mit Schutt vollgehäuft, mit einer verbeulten Stahltür, die offen daneben hängt, und großen Rohren über Kopf.
 object.steeldoor = Eine hohe Türöffnung, von schweren verrosteten Stahlträgern gerahmt, in eine bröckelnde rote Backsteinwand eingelassen, mit einem Boden aus quadratischen Stahlplatten dahinter.
-object.portrait = Ein Tisch im Kojenraum, mit einem Kessel, Pfannen, Schalen und Dosen gedeckt, ein Hocker darunter geschoben und ein bärtiges Porträt an den Pfosten darüber geheftet.
 object.tent = Ein Planenzelt auf Stangen über einer grünen Matratze voller Papiere, ein Kanister und ein Kocher daneben auf dem Sand.
 object.barrel1 = Ein verrostetes Ölfass, das unter einer grauen Plane am Rand der Rinne liegt.
 object.barrel2 = Zwei verrostete Ölfässer, die unter einer grauen Plane am Rand der Rinne liegen.

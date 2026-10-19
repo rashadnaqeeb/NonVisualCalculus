@@ -14,7 +14,6 @@ zone.boardgames.body = Część sklepu pod żelazną galerią, gdzie obok żeliw
 object.exit = Wysokie ciemne drzwi z szybą w kącie sklepu między dwoma wykuszowymi oknami, na ich półkach stosy kolorowych książek w miękkiej oprawie i czasopism.
 object.crimebooks = Wysoki drewniany regał na galerii, półki ciasno zastawione wytartymi książkami w twardej oprawie w czerwieni, zieleni i błękicie, obok stołek i oprawione ryciny motyli i ważek, na okrągłym czerwonym dywaniku.
 object.boardgames = Okrągły drewniany stół wystawowy pod galerią zawalony pudełkami gier planszowych w jaskrawych kolorach, obok żeliwnej kolumny na sześciokątnych kafelkach.
-object.primer = Długa przeszklona lada z otwartą książką, filiżanką kawy i modelem niebieskiego tramwaju na blacie, pod wysokimi półkami książek ze zwieszającym się bluszczem.
 object.hjelmdall = Długi biały stojak wystawowy przy wykuszowym oknie, z rozłożonymi rzędami żółtych i pomarańczowych książek w miękkiej oprawie, więcej ustawionych wzdłuż parapetu za nim.
 object.biographies = Wysoki drewniany regał na gołych deskach w ciemnej głębi sklepu, na nim marmurowe popiersie, a obok komoda wypchana książkami.
 object.upstairsdoor = Ciemne drzwi płycinowe w głębi zasłoniętego pokoju, oklejone białymi karteczkami, u ich stóp kable ciągnące się po popękanych kafelkach, a obok krzesło.

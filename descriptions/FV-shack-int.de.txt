@@ -2,7 +2,6 @@
 zone.shack.title = die Fischerhütte
 zone.shack.body = Eine Hütte aus grauen, verwitterten Planken mit Lücken zwischen den Brettern, einem Boden aus Plankenbrettern, einem Holzstuhl mit orangefarbenem Sitz an der Wand, einem Metallregal hinten und einem kleinen Fenster neben der Tür.
 object.exit = Die Plankentür der Hütte mit einem kleinen Fenster daneben, Sonnenlicht und die Farben des Dorfs scheinen durch den Spalt.
-object.box = Kahle graue Bretterborde, in die Ecke der Hütte eingebaut, oben eine hohe Tonvase mit trockenem Gras und auf einem unteren lose Papiere.
 object.postcard = Eine blasse Karte, an die grauen Planken der Hüttenwand über dem Regal geheftet, neben einem kleinen Ring an einem Nagel.
 object.pierbox = Ein kleiner heller Pappkarton auf dem mittleren Brett der Eckregale, neben einem gefalteten blauen Tuch.
 object.plaisance = Eine Frau mit hochgestecktem dunklem Haar, in einer schwarzen Weste über einem weißen Hemd und einem braunen Rock.

@@ -1,7 +1,6 @@
 # The fishing village shack. Mod world frame.
 zone shack -5.03 1.2 2.45
 object exit = fv-shack-door
-object box = Shack Box
 object postcard = Shack Postcard
 object pierbox = Box_1 pier
 object plaisance = Plaisance

@@ -25,7 +25,6 @@ object.exit = L'embouchure du chenal sur la rive, où de hauts roseaux secs et d
 object.pipe = Un tuyau rouillé sortant en courbe du sable sous un pan de bâche grise, un fût et un tonneau à côté et un étai de bois penché en travers.
 object.felddoor = Une porte de fer rouillé encastrée dans le mur de brique de la salle des pompes, encombrée de gravats, avec une porte d'acier cabossée ouverte à côté et de gros tuyaux passant au-dessus.
 object.steeldoor = Une haute embrasure encadrée de lourdes poutrelles d'acier rouillées, percée dans un mur de brique rouge qui s'effrite, avec un sol de plaques d'acier carrées au-delà.
-object.portrait = Une table dans le dortoir garnie d'une bouilloire, de casseroles, de bols et de boîtes de conserve, un tabouret glissé dessous et un portrait barbu épinglé au poteau au-dessus.
 object.tent = Une tente en bâche dressée sur des perches au-dessus d'un matelas vert jonché de papiers, un jerrican et un réchaud à côté sur le sable.
 object.barrel1 = Un fût rouillé couché sous un pan de bâche grise au bord du chenal.
 object.barrel2 = Deux fûts rouillés couchés sous un pan de bâche grise au bord du chenal.

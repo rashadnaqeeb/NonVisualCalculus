@@ -6,7 +6,6 @@ object.washbasin = Uma bacia branca sobre um suporte de ferro enferrujado no can
 object.floorboard = Um trecho do piso de pranchas nuas entre a cama e a mesa, junto a uma cadeira ciano, onde a luz do sol da janela cai sobre as tábuas.
 object.exit = Uma porta de madeira marrom com maçaneta de latão na parede de pranchas, do outro lado das tábuas em relação à cama.
 object.mirror = Um espelho pequeno na parede de pranchas acima da bacia no canto do fundo, ao lado de uma xícara numa prateleira e da chaminé amarela de fogão.
-object.clothbox = A cama estreita sob a janela com sua colcha branca e travesseiro listrado, uma caixa escura ao pé.
 object.exit2 = Uma porta de madeira marrom com maçaneta de latão na parede de pranchas, do outro lado das tábuas em relação à cama.
 object.plaisance = Uma mulher de cabelo escuro preso para cima, de colete preto sobre camisa branca e saia marrom.
 object.kim = Um homem magro de jaqueta bomber laranja sobre camisa branca e calça escura, cabelo escuro penteado para trás e óculos redondos, um caderninho aberto numa mão e uma caneta na outra.

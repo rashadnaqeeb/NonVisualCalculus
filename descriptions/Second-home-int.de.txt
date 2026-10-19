@@ -6,7 +6,6 @@ object.washbasin = Ein weißes Becken auf einem verrosteten Eisenständer in der
 object.floorboard = Ein Stück des nackten Plankenbodens zwischen dem Bett und dem Tisch, bei einem türkisfarbenen Stuhl, wo Sonnenlicht vom Fenster über die Bretter fällt.
 object.exit = Eine braune Holztür mit Messinggriff in der Plankenwand, jenseits der Dielen vom Bett aus.
 object.mirror = Ein kleiner Spiegel an der Plankenwand über dem Waschbecken in der hinteren Ecke, neben einer Tasse auf einem Regal und dem gelben Ofenrohr.
-object.clothbox = Das schmale Bett unter dem Fenster mit seiner weißen Steppdecke und dem gestreiften Kissen, eine dunkle Kiste an seinem Fußende.
 object.exit2 = Eine braune Holztür mit Messinggriff in der Plankenwand, jenseits der Dielen vom Bett aus.
 object.plaisance = Eine Frau mit hochgestecktem dunklem Haar, in einer schwarzen Weste über einem weißen Hemd und einem braunen Rock.
 object.kim = Ein schlanker Mann in einer orangefarbenen Bomberjacke über einem weißen Hemd und dunkler Hose, dunkles zurückgekämmtes Haar und runde Brille, ein kleines Notizbuch aufgeschlagen in der einen Hand und einen Stift in der anderen.

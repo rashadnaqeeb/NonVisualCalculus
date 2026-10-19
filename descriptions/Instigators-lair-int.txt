@@ -14,7 +14,6 @@ object exit = instigators-exit
 object pipe = clickable_pipe-1
 object felddoor = instigators-feld
 object steeldoor = steel-door
-object portrait = KrazMazovPortrait
 object tent = Instigators Tent
 object barrel1 = clickable_barrel_1
 object barrel2 = clickable_barrel_2

@@ -7,7 +7,6 @@ zone boardgames -1.99 0.02 2.6
 object exit = doomed-exit
 object crimebooks = Crime-books
 object boardgames = Board-games
-object primer = Primer-book
 object hjelmdall = Man from Hjemdall series
 object biographies = Biographies of Fames
 object upstairsdoor = doomed-2nd-floor-door

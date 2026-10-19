@@ -2,7 +2,6 @@
 zone.shack.title = o barraco de pesca
 zone.shack.body = Uma cabana de pranchas cinza castigadas pelo tempo com frestas entre as tábuas, um piso de tábuas, uma cadeira de madeira de assento laranja contra a parede, uma estante de metal no fundo e uma janela pequena ao lado da porta.
 object.exit = A porta de pranchas do barraco com uma janela pequena ao lado, a luz do sol e as cores da vila aparecendo pela fresta.
-object.box = Prateleiras de tábuas cinza nuas embutidas no canto do barraco, um vaso alto de barro com capim seco na de cima e papéis soltos numa mais baixa.
 object.postcard = Um cartão pálido pregado nas pranchas cinza da parede do barraco acima da prateleira, ao lado de uma argola pequena pendurada num prego.
 object.pierbox = Uma pequena caixa de papelão clara na tábua do meio das prateleiras do canto, ao lado de um pano azul dobrado.
 object.plaisance = Uma mulher de cabelo escuro preso para cima, de colete preto sobre camisa branca e saia marrom.

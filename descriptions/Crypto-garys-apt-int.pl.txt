@@ -3,7 +3,6 @@ zone.bedroomdoor.title = wejście do sypialni
 zone.bedroomdoor.body = Przejście do małej niebieskiej sypialni, obok zakrzywionego ceglanego łuku zastawionego książkami i pudłami. Mosiężne łóżko ze zmiętą pościelą stoi pod kinkietem, w jego nogach stoi otwarty kufer, a na podłodze niebieska lampka biurkowa.
 zone.apartment.title = sklepione mieszkanie
 zone.apartment.body = Niski sklepiony pokój piwniczny z cegły i tynku z gronem lamp, biurkiem i niebieskim stołem pod łukiem, zawalonymi książkami i papierami, regałem na książki, sofą udrapowaną zielonym kocem, żółtym sztandarem na ścianie, podłogą z kafelków w szachownicę przy drzwiach i małą łazienką z umywalką za przepierzeniem.
-object.shelf = Drewniane biurko z lampą, otwartą książką i stojakiem na teczki, przed nim obrotowe krzesło, pod półką z zawieszoną flagą w paski, przy drzwiach sypialni.
 object.luggage = Otwarta walizka wypełniona ubraniami na stojaku w nogach łóżka, obok żółty koc i lampa.
 object.books = Półka z książkami na niebieskiej ścianie przy otwartych drzwiach, płaszcz wiszący po wewnętrznej stronie drzwi, widziana za krzywizną żebrowanego sklepienia.
 object.plaisance = Kobieta z upiętymi ciemnymi włosami, w czarnej kamizelce na białej koszuli i brązowej spódnicy.

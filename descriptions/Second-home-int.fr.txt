@@ -6,7 +6,6 @@ object.washbasin = Une cuvette blanche sur un support de fer rouillé dans le co
 object.floorboard = Un bout du plancher nu entre le lit et la table, près d'une chaise cyan, où le soleil de la fenêtre tombe sur les planches.
 object.exit = Une porte en bois brun à poignée de laiton dans le mur de planches, de l'autre côté des planches par rapport au lit.
 object.mirror = Un petit miroir sur le mur de planches au-dessus de la cuvette dans le coin du fond, à côté d'une tasse sur une étagère et du tuyau de poêle jaune.
-object.clothbox = Le lit étroit sous la fenêtre avec sa couette blanche et son oreiller rayé, une boîte sombre à son pied.
 object.exit2 = Une porte en bois brun à poignée de laiton dans le mur de planches, de l'autre côté des planches par rapport au lit.
 object.plaisance = Une femme aux cheveux sombres relevés, en gilet noir sur une chemise blanche et une jupe brune.
 object.kim = Un homme mince en blouson bombardier orange sur une chemise blanche et un pantalon sombre, cheveux foncés coiffés en arrière et lunettes rondes, un petit carnet ouvert dans une main et un stylo dans l'autre.

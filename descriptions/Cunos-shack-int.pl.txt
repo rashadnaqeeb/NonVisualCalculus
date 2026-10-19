@@ -3,7 +3,6 @@ zone.shack.title = szopa Cuna
 zone.shack.body = Chata z nieheblowanych desek z klepiskiem, podartym materacem i stertą rupieci w jednym kącie, warsztatem z desek pod ścianą z butelkami i puszkami, kablem rozciągniętym w poprzek pomieszczenia z gołą żarówką i prymitywnym malunkiem paszczy rekina na ścianie przy drzwiach. Drabina ze zbitych gwoździami desek wspina się do klapy w dachu.
 object.roofhatch = Drabina ze zbitych gwoździami desek oparta o ścianę z desek obok świńskiego łba z przekreślonymi oczami, nad warsztatem z butelkami i puszkami.
 object.exit = Drzwi szopy z desek, nad nimi goła żarówka na kablu, a w środku podarty materac na klepisku.
-object.jar = Warsztat z desek wzdłuż ściany szopy z butelkami, puszką i żółtym wiadrem, na półce nad nim talerz i słoiki.
 detail.pighead.title = świński łeb
 detail.pighead.body = Świński łeb z różowego gipsu z jednym niebieskim krzyżem namalowanym nad okiem, ustawiony na warsztacie przy drabinie ze zbitych gwoździami desek, obok starego drewnianego krzesła, ryjem ku pomieszczeniu.
 detail.sharkjaws.title = malunek paszczy rekina

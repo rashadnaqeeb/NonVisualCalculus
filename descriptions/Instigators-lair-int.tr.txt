@@ -25,7 +25,6 @@ object.exit = Kanalın kıyıya açılan ağzı, ahşap direklerin arasında uzu
 object.pipe = Gri bir muşamba örtüsünün altında kumdan kıvrılarak çıkan paslı bir boru, yanında bir yağ varili ve bir fıçı ve çapraz yaslanmış bir kereste destek.
 object.felddoor = Pompa odasının tuğla duvarına yerleştirilmiş paslı demirden bir kapı aralığı, molozla yığılı, yanında açık sarkan hırpalanmış çelik bir kapı ve tepede uzanan büyük borular.
 object.steeldoor = Ağır paslı çelik kirişlerle çerçevelenmiş, dökülen kırmızı tuğla bir duvara yerleştirilmiş uzun bir kapı aralığı, ötesinde kare çelik plakalardan bir zemin.
-object.portrait = Ranza odasında bir çaydanlık, tavalar, kâseler ve teneke kutularla donatılmış bir masa, altına sokulmuş bir tabure ve üstteki direğe tutturulmuş sakallı bir portre.
 object.tent = Kâğıtlar saçılmış yeşil bir şiltenin üstüne sırıklara kurulmuş muşamba bir çadır, yanında kumda bir bidon ve bir ocak.
 object.barrel1 = Kanalın kenarında gri bir muşamba örtüsünün altında yatan paslı bir yağ varili.
 object.barrel2 = Kanalın kenarında gri bir muşamba örtüsünün altında yatan iki paslı yağ varili.

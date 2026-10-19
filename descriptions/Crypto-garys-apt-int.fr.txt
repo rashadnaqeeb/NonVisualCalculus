@@ -3,7 +3,6 @@ zone.bedroomdoor.title = la porte de la chambre
 zone.bedroomdoor.body = L'embrasure donnant sur une petite chambre bleue, à côté d'une arche de brique cintrée chargée de livres et de caisses. Un lit de cuivre aux draps froissés se trouve sous une lampe murale, un coffre ouvert à son pied, et une lampe de bureau bleue est posée au sol.
 zone.apartment.title = l'appartement voûté
 zone.apartment.body = Une pièce basse voûtée de sous-sol en brique et plâtre avec un groupe de lampes, un bureau et une table bleue sous l'arche chargés de livres et de papiers, une bibliothèque, un canapé drapé d'une couverture verte, une bannière jaune au mur, un sol de carreaux en damier près de la porte et une petite salle de bains avec un lavabo derrière une cloison.
-object.shelf = Un bureau en bois avec une lampe, un livre ouvert et un casier de dossiers, une chaise pivotante devant, sous une étagère où pend un drapeau rayé, près de la porte de la chambre.
 object.luggage = Une valise ouverte pleine de vêtements sur un support au pied du lit, une couverture jaune et une lampe à côté.
 object.books = Une étagère de livres sur le mur bleu près de la porte ouverte, un manteau accroché à l'intérieur de la porte, vus par-delà la courbe de la voûte nervurée.
 object.plaisance = Une femme aux cheveux sombres relevés, en gilet noir sur une chemise blanche et une jupe brune.

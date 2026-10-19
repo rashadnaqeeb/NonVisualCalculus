@@ -7,7 +7,6 @@ object.alcohol = Uma bancada de cozinha de armários verdes com uma pia de aço,
 object.exit = Uma porta na parede da loja entre duas janelas cheias de flores e plantas em vaso, o piso ladrilhado dentro listrado de luz.
 object.knicknacks = Um balcão de vidro de exposição com armação de aço laranja, doces e garrafas nas prateleiras, etiquetas de preço amarelas coladas no vidro, no piso ladrilhado junto ao degrau.
 object.liquorpodium = Um balcão de vidro junto à janela da loja com garrafas e caixas sob o tampo, uma cadeira de vime e uma palmeira em vaso ao lado e um pote de lápis sobre o vidro.
-object.cigarettes = Os balcões de vidro junto ao caixa da atendente, doces e garrafas sob os tampos, um pote de lápis e uma luminária sobre o vidro.
 object.jamdoor = A porta de vidro da loja entre as janelas, plantas em vaso no parapeito do lado de fora.
 object.clerk = Uma jovem de cabelo escuro e blusa roxa, de pé atrás do balcão de vidro com um livro aberto nas mãos.
 object.kim = Um homem magro de jaqueta bomber laranja sobre camisa branca e calça escura, cabelo escuro penteado para trás e óculos redondos, um caderninho aberto numa mão e uma caneta na outra.

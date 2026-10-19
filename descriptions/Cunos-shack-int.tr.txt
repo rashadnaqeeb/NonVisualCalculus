@@ -3,7 +3,6 @@ zone.shack.title = Cuno'nun barakası
 zone.shack.body = Kaba kalaslardan toprak zeminli bir kulübe, bir köşede yırtık bir şilte ve bir hurda yığını, duvara dayalı, üstünde şişeler ve teneke kutular olan tahtadan bir tezgâh, odanın bir ucundan öbürüne gerilmiş çıplak ampullü bir kablo ve kapının yanındaki duvarda kaba bir köpekbalığı çenesi resmi. Çivili tahtalardan bir el merdiveni çatıdaki bir kapağa tırmanıyor.
 object.roofhatch = Gözleri çarpı işaretli bir domuz kafasının yanında kalas duvara dayanmış çivili tahtalardan bir el merdiveni, şişeli ve teneke kutulu tezgâhın üstünde.
 object.exit = Barakanın kalas kapısı, üstünde bir kablodaki çıplak bir ampul ve içeride toprak zeminde yırtık bir şilte.
-object.jar = Barakanın duvarı boyunca uzanan tahta tezgâh, üstünde şişeler, bir teneke kutu ve sarı bir kova, üstündeki rafta bir tabak ve kavanozlar.
 detail.pighead.title = domuz kafası
 detail.pighead.body = Bir gözünün üstüne tek bir mavi çarpı çizilmiş pembe alçıdan bir domuz kafası, çivili tahtalardan el merdiveninin yanında eski bir ahşap sandalyenin yanındaki tezgâha konmuş, burnu odaya dönük.
 detail.sharkjaws.title = köpekbalığı çenesi resmi

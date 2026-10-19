@@ -6,7 +6,6 @@ object.washbasin = Biała miska na zardzewiałym żelaznym stojaku w dalszym ką
 object.floorboard = Kawałek gołej podłogi z desek między łóżkiem a stolikiem, przy błękitnym krześle, gdzie światło słońca z okna pada w poprzek desek.
 object.exit = Brązowe drewniane drzwi z mosiężną klamką w ścianie z desek, po drugiej stronie desek podłogi od łóżka.
 object.mirror = Małe lustro na ścianie z desek nad umywalką w dalszym kącie, obok kubka na półce i żółtej rury od pieca.
-object.clothbox = Wąskie łóżko pod oknem z białą kołdrą i poduszką w paski, w jego nogach ciemne pudło.
 object.exit2 = Brązowe drewniane drzwi z mosiężną klamką w ścianie z desek, po drugiej stronie desek podłogi od łóżka.
 object.plaisance = Kobieta z upiętymi ciemnymi włosami, w czarnej kamizelce na białej koszuli i brązowej spódnicy.
 object.kim = Szczupły mężczyzna w pomarańczowej kurtce bomberce na białej koszuli i ciemnych spodniach, ciemne włosy zaczesane do tyłu i okrągłe okulary, w jednej ręce otwarty mały notes, w drugiej długopis.

@@ -6,7 +6,6 @@ object.washbasin = Una palangana blanca sobre un soporte de hierro oxidado en el
 object.floorboard = Un trozo del suelo de tablas desnudo entre la cama y la mesa, junto a una silla cian, donde la luz del sol de la ventana cae sobre las tablas.
 object.exit = Una puerta de madera marrón con el picaporte de latón en la pared de tablas, al otro lado de la tarima desde la cama.
 object.mirror = Un espejo pequeño en la pared de tablas sobre el lavamanos en el rincón del fondo, junto a una taza en una balda y el tubo de estufa amarillo.
-object.clothbox = La cama estrecha bajo la ventana con su colcha blanca y su almohada a rayas, una caja oscura a sus pies.
 object.exit2 = Una puerta de madera marrón con el picaporte de latón en la pared de tablas, al otro lado de la tarima desde la cama.
 object.plaisance = Una mujer de pelo oscuro recogido, con un chaleco negro sobre una camisa blanca y una falda marrón.
 object.kim = Un hombre delgado con una cazadora bomber naranja sobre una camisa blanca y pantalones oscuros, el pelo oscuro peinado hacia atrás y gafas redondas, con una pequeña libreta abierta en una mano y un bolígrafo en la otra.

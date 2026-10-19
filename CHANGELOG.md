@@ -9,7 +9,7 @@ New Features and improvements:
 - Every map is divided into named zones (the plaza, the fountain circle, the kitchen); the zone is spoken on arrival, as you move between zones, and after the area in the location readout. The announcement has a toggle in the mod menu.
 - Shift+E describes the zone the cursor is in: a short authored picture of the painted surroundings. E describes the scanned thing.
 - A new scanner category, details, lists painted things with no game object behind them (a mosaic, a mural, a chalkboard); they cycle with the items keys, can be walked to, and E reads their description.
-- Every zone of every map has a name and a description, and E describes every scanned door, container and prop; descriptions follow the story (the hanged man, the graffiti wall, the pinball machine, the bedroom).
+- Every zone of every map has a name and a description, and E describes scanned doors, containers and props; descriptions follow the story (the hanged man, the graffiti wall, the pinball machine, the bedroom).
 - Zones rebuild when the story changes the ground (a gate repaired, boards raised, a blocked passage cleared), not only when a door moves.
 - Zone maps build in the background and are kept per map for the session, so entering a map or opening a door no longer freezes the game.
 - E describes people too, and every door and exit in Martinaise, including ones the story has not yet opened.

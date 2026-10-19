@@ -2,7 +2,6 @@
 zone.shack.title = la cabaña de pesca
 zone.shack.body = Una choza de tablas grises curtidas con rendijas entre las tablas, un suelo de tablones, una silla de madera de asiento naranja contra la pared, un mueble de baldas metálico al fondo y una pequeña ventana junto a la puerta.
 object.exit = La puerta de tablas de la cabaña con una ventana pequeña al lado, la luz del sol y los colores de la aldea asomando por la rendija.
-object.box = Baldas desnudas de tablas grises construidas en el rincón de la choza, un alto jarrón de barro con hierba seca en la de arriba y papeles sueltos en una más baja.
 object.postcard = Una tarjeta pálida clavada en las tablas grises de la pared de la cabaña sobre la balda, junto a una pequeña anilla colgada de un clavo.
 object.pierbox = Una pequeña caja de cartón pálida en la tabla del medio de las baldas del rincón, junto a un paño azul doblado.
 object.plaisance = Una mujer de pelo oscuro recogido, con un chaleco negro sobre una camisa blanca y una falda marrón.

@@ -3,7 +3,6 @@ zone.shack.title = Cunos Schuppen
 zone.shack.body = Eine Hütte aus rauen Planken mit Lehmboden, einer zerrissenen Matratze und einem Haufen Gerümpel in einer Ecke, einer Werkbank aus Brettern an der Wand mit Flaschen und Dosen darauf, einem quer durch den Raum gespannten Kabel mit einer nackten Glühbirne und einem groben Gemälde von einem Haifischmaul an der Wand neben der Tür. Eine Leiter aus genagelten Brettern steigt zu einer Luke im Dach.
 object.roofhatch = Eine Leiter aus genagelten Brettern, an die Plankenwand gelehnt, neben einem Schweinekopf mit durchgestrichenen Augen, über der Werkbank mit Flaschen und Dosen.
 object.exit = Die Plankentür des Schuppens, eine nackte Glühbirne an einem Kabel darüber und eine zerrissene Matratze auf dem Lehmboden innen.
-object.jar = Die Werkbank aus Brettern an der Wand des Schuppens mit Flaschen, einer Dose und einem gelben Eimer darauf, ein Teller und Gläser auf dem Regal darüber.
 detail.pighead.title = Schweinekopf
 detail.pighead.body = Ein Schweinekopf aus rosa Gips mit einem einzelnen blauen Kreuz über einem Auge gemalt, auf die Bank bei der Leiter aus genagelten Brettern neben einem alten Holzstuhl gesetzt, die Schnauze zum Raum hin.
 detail.sharkjaws.title = Gemälde von einem Haifischmaul

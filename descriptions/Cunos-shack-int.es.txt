@@ -3,7 +3,6 @@ zone.shack.title = la choza de Cuno
 zone.shack.body = Una choza de tablas toscas con el suelo de tierra, un colchón roto y un montón de trastos en un rincón, un banco de trabajo de tablas contra la pared con botellas y latas encima, un cable tendido a través de la habitación con una bombilla desnuda, y una pintura tosca de las fauces de un tiburón en la pared junto a la puerta. Una escalera de tablas clavadas sube a una trampilla en el techo.
 object.roofhatch = Una escalera de tablas clavadas apoyada en la pared de tablas junto a una cabeza de cerdo con los ojos tachados, sobre el banco de trabajo de botellas y latas.
 object.exit = La puerta de tablas de la choza, una bombilla desnuda en un cable encima y un colchón roto sobre el suelo de tierra dentro.
-object.jar = El banco de trabajo de tablas a lo largo de la pared de la choza con botellas, una lata y un cubo amarillo encima, un plato y tarros en la balda de arriba.
 detail.pighead.title = cabeza de cerdo
 detail.pighead.body = Una cabeza de cerdo de yeso rosa con una sola cruz azul pintada sobre un ojo, puesta sobre el banco junto a la escalera de tablas clavadas, al lado de una vieja silla de madera, con el hocico hacia la habitación.
 detail.sharkjaws.title = pintura de fauces de tiburón

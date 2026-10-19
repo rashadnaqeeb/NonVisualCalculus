@@ -2,7 +2,6 @@
 zone.shack.title = la cabane de pêcheur
 zone.shack.body = Une cabane de planches grises délavées avec des jours entre les planches, un sol de planches, une chaise de bois à assise orange contre le mur, un meuble d'étagères en métal au fond et une petite fenêtre à côté de la porte.
 object.exit = La porte de planches de la cabane avec une petite fenêtre à côté, le soleil et les couleurs du village visibles par la fente.
-object.box = Des étagères nues de planches grises aménagées dans le coin de la cabane, un grand vase d'argile d'herbe sèche sur celle du haut et des papiers en vrac sur une plus basse.
 object.postcard = Une carte pâle épinglée aux planches grises du mur de la cabane au-dessus de l'étagère, à côté d'un petit anneau pendu à un clou.
 object.pierbox = Un petit carton pâle sur la planche du milieu des étagères d'angle, près d'un tissu bleu plié.
 object.plaisance = Une femme aux cheveux sombres relevés, en gilet noir sur une chemise blanche et une jupe brune.

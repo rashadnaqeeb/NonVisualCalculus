@@ -25,7 +25,6 @@ object.exit = Wylot kanału na brzeg, gdzie między drewnianymi słupami rosną 
 object.pipe = Zardzewiała rura wyginająca się z piasku pod zwisającą szarą plandeką, obok beczka po oleju i beczka, a w poprzek pochylony drewniany stempel.
 object.felddoor = Wejście z zardzewiałego żelaza osadzone w ceglanej ścianie pompowni, zawalone gruzem, obok otwarte poobijane stalowe drzwi, a nad nimi biegną wielkie rury.
 object.steeldoor = Wysoki otwór drzwiowy obramowany ciężkimi zardzewiałymi stalowymi dźwigarami, osadzony w kruszącej się ścianie z czerwonej cegły, a za nim podłoga z kwadratowych stalowych płyt.
-object.portrait = Stół w izbie z pryczą zastawiony czajnikiem, garnkami, miskami i puszkami, wsunięty pod niego stołek i brodaty portret przypięty do słupa powyżej.
 object.tent = Namiot z plandeki rozbity na żerdziach nad zielonym materacem zasłanym papierami, obok na piasku kanister i kuchenka.
 object.barrel1 = Zardzewiała beczka po oleju leżąca pod zwisającą szarą plandeką na skraju kanału.
 object.barrel2 = Dwie zardzewiałe beczki po oleju leżące pod zwisającą szarą plandeką na skraju kanału.

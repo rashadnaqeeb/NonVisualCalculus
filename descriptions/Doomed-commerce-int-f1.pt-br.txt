@@ -14,7 +14,6 @@ zone.boardgames.body = A parte da loja sob a galeria de ferro, onde uma mesa red
 object.exit = Uma porta alta escura com um vidro no canto da loja entre as duas janelas de sacada, suas prateleiras empilhadas de brochuras coloridas e revistas.
 object.crimebooks = Uma estante alta de madeira na galeria, as prateleiras apertadas de livros de capa dura gastos em vermelho, verde e azul, ao lado de um banquinho e de gravuras emolduradas de borboletas e libélulas, num tapete redondo vermelho.
 object.boardgames = Uma mesa redonda de exposição de madeira sob a galeria coberta de caixas de jogos de tabuleiro em cores vivas, ao lado de uma coluna de ferro fundido nos ladrilhos hexagonais.
-object.primer = Um balcão comprido envidraçado com um livro aberto, uma xícara de café e uma miniatura de bonde azul em cima, sob prateleiras altas de livros com hera pendendo.
 object.hjelmdall = Um expositor branco comprido junto à janela de sacada, coberto de fileiras de brochuras amarelas e laranja, mais delas enfileiradas no parapeito atrás.
 object.biographies = Uma estante alta de madeira sobre tábuas nuas no fundo escuro da loja, um busto de mármore em cima e uma cômoda abarrotada de livros ao lado.
 object.upstairsdoor = Uma porta escura de almofadas no fundo da sala encoberta, forrada de bilhetes brancos, cabos escorrendo pelos ladrilhos rachados ao pé dela e uma cadeira ao lado.

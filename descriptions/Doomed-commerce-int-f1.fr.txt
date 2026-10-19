@@ -14,7 +14,6 @@ zone.boardgames.body = La partie de la boutique sous la galerie de fer, où une 
 object.exit = Une haute porte sombre à carreau de verre dans le coin de la boutique entre les deux vitrines en saillie, leurs étagères empilées de livres de poche aux couleurs vives et de magazines.
 object.crimebooks = Une haute bibliothèque en bois sur la galerie, ses étagères serrées de livres reliés usés rouges, verts et bleus, à côté d'un tabouret et de gravures encadrées de papillons et de libellules, sur un tapis rond rouge.
 object.boardgames = Une table ronde de présentation en bois sous la galerie, chargée de boîtes de jeux de société aux couleurs vives, à côté d'une colonne de fonte sur les carreaux hexagonaux.
-object.primer = Un long comptoir vitré avec un livre ouvert, une tasse de café et une maquette de tramway bleu dessus, sous de hautes étagères de livres d'où retombe du lierre.
 object.hjelmdall = Un long présentoir blanc près de la vitrine en saillie, couvert de rangées de livres de poche jaunes et orange, d'autres alignés sur le rebord derrière.
 object.biographies = Une haute bibliothèque en bois sur des planches nues au fond sombre de la boutique, un buste de marbre dessus et une commode bourrée de livres à côté.
 object.upstairsdoor = Une porte sombre à panneaux au fond de la pièce sous les housses, tapissée de notes blanches, des câbles traînant sur les carreaux fissurés à son pied et une chaise à côté.

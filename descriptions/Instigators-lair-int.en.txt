@@ -24,7 +24,6 @@ object.exit = The channel's mouth onto the shore, where tall dry reeds and sunli
 object.pipe = A rusted pipe curving out of the sand under a drape of grey tarpaulin, an oil drum and a barrel beside it and a timber prop leaning across.
 object.felddoor = A doorway of rusted iron set in the pump room's brick wall, piled with rubble, with a battered steel door hanging open beside it and big pipes running overhead.
 object.steeldoor = A tall doorway framed in heavy rusted steel girders, set in a crumbling red brick wall, with a floor of square steel plates beyond.
-object.portrait = A table in the bunk room set with a kettle, pans, bowls and tins, a stool tucked under it and a bearded portrait pinned to the post above.
 object.tent = A tarpaulin tent pitched on poles over a green mattress strewn with papers, a jerrycan and a stove beside it on the sand.
 object.barrel1 = A rusted oil drum lying under a drape of grey tarpaulin at the channel's edge.
 object.barrel2 = Two rusted oil drums lying under a drape of grey tarpaulin at the channel's edge.
