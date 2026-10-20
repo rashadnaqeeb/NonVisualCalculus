@@ -17,6 +17,7 @@ New Features and improvements:
 - The mod runs on the Mac version of the game on Apple Silicon Macs; see the macOS install guide.
 - On a Mac, speech goes through a screen reader with a Prism plugin, else the system voice, or VoiceOver if chosen in settings.
 - The end credits are read as they scroll, and Escape closes them to the main menu.
+- A new installer for Windows and Mac installs, updates, repairs and uninstalls the mod, launches the game, and takes over an existing install.
 
 ## V1.2.2
 

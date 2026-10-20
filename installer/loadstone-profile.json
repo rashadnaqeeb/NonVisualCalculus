@@ -1,0 +1,7 @@
+{
+  "mode": "single-mod",
+  "mod": "non-visual-calculus",
+  "title": "Non-Visual Calculus Installer",
+  "registries": ["github:rashadnaqeeb/NonVisualCalculus"],
+  "lockRegistries": true
+}

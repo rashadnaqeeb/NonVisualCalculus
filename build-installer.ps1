@@ -1,74 +1,25 @@
-# Build the standalone installer exe (installer/, Rust + wxWidgets) into
-# releases\NonVisualCalculusInstaller.exe. Needs cargo and libclang (the wxWidgets
-# build uses bindgen); LIBCLANG_PATH is probed from the usual LLVM locations.
+# Build the Windows installer, releases\NonVisualCalculusInstaller.exe: the Loadstone mod manager
+# branded as a single-mod installer by installer\loadstone-profile.json, which pins it to this
+# repo's loadstone-packages\ registry. Loadstone is a checkout beside this repo (..\loadstone),
+# or wherever LOADSTONE_DIR points. Its build script needs Visual Studio's C++ workload, CMake and
+# Rust; the first run builds wxWidgets once into %LOCALAPPDATA%\loadstone.
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$installerDir = Join-Path $scriptDir "installer"
 $releaseDir = Join-Path $scriptDir "releases"
-$outputExe = Join-Path $releaseDir "NonVisualCalculusInstaller.exe"
-
-if (-not (Test-Path (Join-Path $installerDir "Cargo.toml"))) {
-    throw "Installer project not found: $installerDir"
+$profilePath = Join-Path $scriptDir "installer\loadstone-profile.json"
+$loadstoneDir = $env:LOADSTONE_DIR
+if ([string]::IsNullOrWhiteSpace($loadstoneDir)) {
+    $loadstoneDir = Join-Path (Split-Path -Parent $scriptDir) "loadstone"
 }
+$buildScript = Join-Path $loadstoneDir "scripts\build_windows_app.ps1"
 
-if ([string]::IsNullOrWhiteSpace($env:LIBCLANG_PATH)) {
-    $libclangCandidates = @(
-        "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\x64\bin",
-        "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Tools\Llvm\x64\bin",
-        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\Llvm\x64\bin",
-        "C:\Program Files\Microsoft Visual Studio\2022\BuildTools\VC\Tools\Llvm\x64\bin",
-        "C:\Program Files\LLVM\bin"
-    )
-    foreach ($candidate in $libclangCandidates) {
-        if (Test-Path (Join-Path $candidate "libclang.dll")) {
-            $env:LIBCLANG_PATH = $candidate
-            break
-        }
-    }
-}
-
-# The wxWidgets build drives CMake with the Ninja generator; Visual Studio ships a
-# ninja.exe that is not on PATH by default.
-if ($null -eq (Get-Command ninja -ErrorAction SilentlyContinue)) {
-    $ninjaCandidates = @(
-        "C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja",
-        "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja",
-        "C:\Program Files\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja"
-    )
-    foreach ($candidate in $ninjaCandidates) {
-        if (Test-Path (Join-Path $candidate "ninja.exe")) {
-            $env:PATH = "$candidate;$env:PATH"
-            break
-        }
-    }
-}
-
-Push-Location $installerDir
-try {
-    cargo build --release
-    if ($LASTEXITCODE -ne 0) {
-        throw "Installer build failed with exit code $LASTEXITCODE"
-    }
-    # The target dir may be redirected off the repo (e.g. a global target-dir on
-    # C:, since rustc cannot delete temp dirs on a network share), so ask cargo.
-    $targetDir = (cargo metadata --format-version 1 --no-deps | ConvertFrom-Json).target_directory
-    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($targetDir)) {
-        throw "cargo metadata failed to report the target directory"
-    }
-}
-finally {
-    Pop-Location
-}
-$targetExe = Join-Path $targetDir "release\non-visual-calculus-installer.exe"
-
-if (-not (Test-Path $targetExe)) {
-    throw "Expected installer executable not found: $targetExe"
+if (-not (Test-Path $buildScript)) {
+    throw "Loadstone checkout not found: $buildScript (clone github.com/bradjrenshaw/loadstone beside this repo or set LOADSTONE_DIR)"
 }
 
 New-Item -ItemType Directory -Force $releaseDir | Out-Null
-Copy-Item -LiteralPath $targetExe -Destination $outputExe -Force
-
-Write-Host "Installer: $outputExe"
+& $buildScript -ProfilePath $profilePath -Name "NonVisualCalculusInstaller" -Out $releaseDir
+Write-Host "Installer: $(Join-Path $releaseDir 'NonVisualCalculusInstaller.exe')"

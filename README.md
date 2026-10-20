@@ -15,13 +15,11 @@ The only thing that does not work is the game's collage mode, which is used to t
 
 ## Install and update
 
-1. Download the installer: **[NonVisualCalculusInstaller.exe](https://github.com/rashadnaqeeb/NonVisualCalculus/releases/latest/download/NonVisualCalculusInstaller.exe)**
-2. Run it. It finds your game folder on its own (Steam, GOG, or Epic; you can browse to it if needed) and downloads and installs the latest release.
-3. Launch the game through Steam, GOG Galaxy, or the Epic Games Launcher. The first launch takes a few minutes while the mod loader generates files, so be patient if it seems frozen. This is only a one-time issue.
+1. Download the installer: on Windows, **[NonVisualCalculusInstaller.exe](https://github.com/rashadnaqeeb/NonVisualCalculus/releases/latest/download/NonVisualCalculusInstaller.exe)**; on an Apple Silicon Mac, **[NonVisualCalculusInstaller.dmg](https://github.com/rashadnaqeeb/NonVisualCalculus/releases/latest/download/NonVisualCalculusInstaller.dmg)** (see the [macOS guide](macos/README.md)).
+2. Run it. It finds your Steam copy of the game on its own (for GOG or Epic, browse to the game folder) and installs the latest release. An existing install, from the old installer or by hand, is taken over and cleaned up.
+3. Press Launch in the installer, or start the game the way you usually do. The first launch takes a few minutes while the mod loader generates files, so be patient if it seems frozen. This is only a one-time issue.
 
-To **update** later, run the installer again.
-
-On a Mac, follow the [macOS guide](macos/README.md) instead: it installs from a zip with `install.sh` and one Steam launch option.
+To **update** later, run the installer again; it updates itself as well as the mod. It also repairs a damaged install and uninstalls the mod. The installer is [Loadstone](https://github.com/bradjrenshaw/loadstone), an accessible mod manager, set up for this mod alone.
 
 ## How the mod works
 

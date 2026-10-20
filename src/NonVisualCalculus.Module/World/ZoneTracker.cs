@@ -258,7 +258,7 @@ namespace NonVisualCalculus.Module.World
         private BuildJob Start(string scene, Vector3 playerUnity)
         {
             if (!SceneBounds(scene, out Bounds b)) return null;
-            if (!NavMesh.SamplePosition(playerUnity, out NavMeshHit seed, StepReach, NavMesh.AllAreas)) return null;
+            if (!NavMesh.SamplePosition(playerUnity, out NavMeshHit seed, StepReach, WorldEnvironment.AllAreas)) return null;
 
             float cell = DefaultCell;
             while ((b.size.x / cell + 3) * (b.size.z / cell + 3) > MaxCells) cell *= 1.5f;
@@ -548,7 +548,7 @@ namespace NonVisualCalculus.Module.World
             var core = new Snv(job.X0 + (gx + 0.5f) * job.Cell, atElevation, job.Z0 + (gz + 0.5f) * job.Cell);
             Vector3 p = WorldConvert.ToUnity(core);
             job.Samples++;
-            if (!NavMesh.SamplePosition(p, out NavMeshHit hit, reach, NavMesh.AllAreas)) return false;
+            if (!NavMesh.SamplePosition(p, out NavMeshHit hit, reach, WorldEnvironment.AllAreas)) return false;
             float dx = hit.position.x - p.x, dz = hit.position.z - p.z;
             if (dx * dx + dz * dz > job.Cell * job.Cell * 0.25f) return false;
             y = hit.position.y;

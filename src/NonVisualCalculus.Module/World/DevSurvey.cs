@@ -699,7 +699,7 @@ namespace NonVisualCalculus.Module.World
             if (_savedScene == null) _savedScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
             var agent = player.GetComponent<UnityEngine.AI.NavMeshAgent>();
             Vector3 u = WorldConvert.ToUnity(new Snv(x, y, z));
-            if (!UnityEngine.AI.NavMesh.SamplePosition(u, out UnityEngine.AI.NavMeshHit hit, 4f, UnityEngine.AI.NavMesh.AllAreas))
+            if (!UnityEngine.AI.NavMesh.SamplePosition(u, out UnityEngine.AI.NavMeshHit hit, 4f, WorldEnvironment.AllAreas))
                 return Err("no navmesh within 4 m of the point");
             if (!_savedPlayer) { _savedPlayer = true; _savedPlayerPos = player.transform.position; }
             if (agent != null) agent.Warp(hit.position); else player.transform.position = hit.position;

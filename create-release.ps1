@@ -1,8 +1,8 @@
-# Publish a GitHub release for an existing, pushed tag: uploads the mod zip, the compat zip
-# (the same release under the pre-rename asset name, which is all a Whirling in Words-era
-# installer exe recognizes), the installer exe, and the macOS zip from releases\ with notes taken
-# from the tag's CHANGELOG.md section. Run build_release.ps1 and build-installer.ps1 first, and
-# build_release.sh on a Mac (the macOS zip compiles against interop generated from the Mac game).
+# Publish a GitHub release for an existing, pushed tag: uploads the Windows and macOS mod zips, the
+# Windows and macOS installers, and loadstone-release.json from releases\ with notes taken from the
+# tag's CHANGELOG.md section. Run build_release.ps1 and build-installer.ps1 first, then on a Mac
+# build_release.sh (the macOS zip compiles against interop generated from the Mac game),
+# build-installer.sh and package-release.sh, which hashes everything into loadstone-release.json.
 
 param(
     [Parameter(Mandatory = $true, Position = 0)]
@@ -83,8 +83,9 @@ function Get-ChangelogSection {
     return $section
 }
 
-# The installer finds the mod zip by the asset name pattern NonVisualCalculus-v<maj>.<min>.<patch>.zip
-# and parses that version with semver, so only a strict three-part tag produces a release it can consume.
+# Installers from before Loadstone find the mod zip by the asset name pattern
+# NonVisualCalculus-v<maj>.<min>.<patch>.zip and parse that version with semver, and the mod's update
+# check parses the tag, so only a strict three-part tag produces a release they can consume.
 if ($VersionTag -notmatch '^v\d+\.\d+\.\d+$') {
     Fail "Version tag must be lowercase 'v' plus a three-part version, for example v1.0.0."
 }
@@ -93,10 +94,10 @@ $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $releaseDir = Join-Path $scriptDir "releases"
 $changelogPath = Join-Path $scriptDir "CHANGELOG.md"
 $zipPath = Join-Path $releaseDir "NonVisualCalculus-$VersionTag.zip"
-$compatZipPath = Join-Path $releaseDir "WhirlingInWords-$VersionTag.zip"
 $installerPath = Join-Path $releaseDir "NonVisualCalculusInstaller.exe"
-# The asset name is the contract a macOS installer will match: NonVisualCalculus-macOS-v<maj>.<min>.<patch>.zip.
 $macZipPath = Join-Path $releaseDir "NonVisualCalculus-macOS-$VersionTag.zip"
+$macInstallerPath = Join-Path $releaseDir "NonVisualCalculusInstaller.dmg"
+$loadstoneReleasePath = Join-Path $releaseDir "loadstone-release.json"
 $releaseTitle = "V$($VersionTag.Substring(1))"
 
 Push-Location $scriptDir
@@ -110,16 +111,20 @@ try {
         Fail "Release zip not found: $zipPath"
     }
 
-    if (-not (Test-Path -LiteralPath $compatZipPath -PathType Leaf)) {
-        Fail "Compat zip not found: $compatZipPath"
-    }
-
     if (-not (Test-Path -LiteralPath $installerPath -PathType Leaf)) {
         Fail "Installer not found: $installerPath"
     }
 
     if (-not (Test-Path -LiteralPath $macZipPath -PathType Leaf)) {
         Fail "macOS zip not found: $macZipPath (build it with build_release.sh on a Mac)"
+    }
+
+    if (-not (Test-Path -LiteralPath $macInstallerPath -PathType Leaf)) {
+        Fail "macOS installer not found: $macInstallerPath (build it with build-installer.sh on a Mac)"
+    }
+
+    if (-not (Test-Path -LiteralPath $loadstoneReleasePath -PathType Leaf)) {
+        Fail "Release manifest not found: $loadstoneReleasePath (write it with package-release.sh on a Mac)"
     }
 
     $null = & git ls-remote --exit-code --tags origin "refs/tags/$VersionTag"
@@ -139,7 +144,7 @@ try {
         }
 
         Invoke-Checked "GitHub release creation" {
-            & gh.exe release create $VersionTag $zipPath $compatZipPath $installerPath $macZipPath --title $releaseTitle --notes-file $notesFile
+            & gh.exe release create $VersionTag $zipPath $macZipPath $installerPath $macInstallerPath $loadstoneReleasePath --title $releaseTitle --notes-file $notesFile
         }
     }
     finally {

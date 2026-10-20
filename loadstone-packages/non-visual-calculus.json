@@ -1,0 +1,122 @@
+{
+  "manifestVersion": 1,
+  "id": "non-visual-calculus",
+  "name": "Non-Visual Calculus",
+  "description": "Screen-reader accessibility for Disco Elysium: The Final Cut, for blind and visually-impaired players: speaks the dialogue, menus and screens, adds keyboard navigation over the whole UI, and makes the world playable with a movement cursor, a scanner of everything around you, and audio cues for geometry and objects.",
+  "authors": ["Rashad Naqeeb"],
+  "license": "MIT",
+  "game": "disco-elysium",
+  "distributions": {
+    "steam": "supported",
+    "gog": "supported",
+    "epic": "supported"
+  },
+  "install": [
+    {
+      "step": "expect",
+      "when": { "platform": "macos" },
+      "checks": [
+        { "arch": "arm64", "message": "Non-Visual Calculus on macOS needs an Apple Silicon Mac." }
+      ]
+    },
+    {
+      "step": "delete-files",
+      "paths": [
+        "${gameDir}/BepInEx/plugins/NonVisualCalculus/**/*",
+        "${gameDir}/BepInEx/plugins/WhirlingInWords/**/*",
+        "${gameDir}/BepInEx/config/NonVisualCalculus/install.json",
+        "${gameDir}/BepInEx/config/NonVisualCalculus/backups/**/*",
+        "${gameDir}/BepInEx/config/WhirlingInWords/install.json",
+        "${gameDir}/BepInEx/core/**/*",
+        "${gameDir}/BepInEx/licenses/**/*",
+        "${gameDir}/dotnet/**/*",
+        "${gameDir}/NonVisualCalculus.app/**/*"
+      ]
+    },
+    {
+      "step": "extract-archive",
+      "routes": [
+        { "from": "**", "to": "${gameDir}", "when": { "platform": "windows" } },
+        { "from": "game/**", "to": "${gameDir}", "when": { "platform": "macos" } }
+      ]
+    },
+    {
+      "step": "expect",
+      "checks": [
+        {
+          "fileExists": "${gameDir}/BepInEx/plugins/NonVisualCalculus/NonVisualCalculus.dll",
+          "message": "The download didn't contain the mod (no BepInEx/plugins/NonVisualCalculus/NonVisualCalculus.dll)."
+        }
+      ]
+    },
+    {
+      "step": "notice",
+      "when": { "platform": "macos", "not": { "steamLaunchOptions": "NonVisualCalculus.app" } },
+      "message": "To start the mod from Steam itself, right-click Disco Elysium in Steam, open Properties, General, and paste the launch option line below into Launch Options. Until then, start the game with the Launch button here. The first modded launch prepares the mod for your copy of the game, which takes a minute or two with a black screen.",
+      "clipboard": "\"${gameDir}/NonVisualCalculus.app\" %command%"
+    },
+    {
+      "step": "notice",
+      "when": { "platform": "windows" },
+      "message": "The first modded launch prepares the mod for your copy of the game, which takes a minute or two before the main menu."
+    }
+  ],
+  "launch": [
+    {
+      "step": "expect",
+      "when": { "distribution": "steam" },
+      "checks": [
+        {
+          "processRunning": ["steam", "steam_osx"],
+          "message": "Steam isn't running. Open Steam, then press Launch again."
+        }
+      ]
+    },
+    {
+      "step": "open-url",
+      "when": { "platform": "windows", "distribution": "steam" },
+      "url": "steam://rungameid/${steam.appId}"
+    },
+    {
+      "step": "run",
+      "when": { "platform": "windows", "distribution": "gog", "fileExists": "${gameDir}/disco.exe" },
+      "program": "${gameDir}/disco.exe"
+    },
+    {
+      "step": "run",
+      "when": { "platform": "windows", "distribution": "gog", "not": { "fileExists": "${gameDir}/disco.exe" } },
+      "program": "${gameDir}/Disco Elysium.exe"
+    },
+    {
+      "step": "notice",
+      "when": { "distribution": ["epic", "standalone"] },
+      "message": "Start Disco Elysium the way you usually do; the mod loads with it."
+    },
+    {
+      "step": "open-url",
+      "when": { "platform": "macos", "steamLaunchOptions": "NonVisualCalculus.app" },
+      "url": "steam://rungameid/${steam.appId}"
+    },
+    {
+      "step": "run",
+      "when": { "platform": "macos", "not": { "steamLaunchOptions": "NonVisualCalculus.app" } },
+      "program": "${gameDir}/run-modded.sh",
+      "args": ["--open"],
+      "env": { "SteamAppId": "${steam.appId}" }
+    }
+  ],
+  "uninstall": [
+    {
+      "step": "delete-files",
+      "paths": [
+        "${gameDir}/BepInEx/interop/**/*",
+        "${gameDir}/BepInEx/cache/**/*",
+        "${gameDir}/BepInEx/unity-libs/**/*",
+        "${gameDir}/BepInEx/LogOutput.log",
+        "${gameDir}/BepInEx/config/BepInEx.cfg",
+        "${gameDir}/BepInEx/patchers"
+      ]
+    }
+  ],
+  "userData": ["${gameDir}/BepInEx/config/com.rashad.nonvisualcalculus.cfg"]
+}

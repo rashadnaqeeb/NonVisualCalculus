@@ -3,8 +3,8 @@
 #   releases/NonVisualCalculus-macOS-v<version>.zip
 # holding install.sh, the macOS README, and game/ - the files that go beside disco.app: the loader
 # (third_party/bepinex-macos), the Release plugin output under BepInEx/plugins/NonVisualCalculus
-# with its audio assets, lang files and libprism.dylib, and the launcher (run-modded.sh and
-# NonVisualCalculus.app). Run on a Mac, from anywhere.
+# with its audio assets, lang files, scene descriptions and libprism.dylib, and the launcher
+# (run-modded.sh and NonVisualCalculus.app). Run on a Mac, from anywhere.
 set -eu
 
 repo="$(cd "$(dirname "$0")" && pwd)"
@@ -47,6 +47,8 @@ for set in cursor interactables walltones/1; do
 done
 mkdir -p "$plugin/lang"
 cp "$repo/lang/"*.txt "$plugin/lang/"
+mkdir -p "$plugin/descriptions"
+cp "$repo/descriptions/"*.txt "$plugin/descriptions/"
 mkdir -p "$game/BepInEx/licenses/prism"
 cp "$prism/NOTICE" "$game/BepInEx/licenses/prism/NOTICE"
 cp -R "$prism/LICENSES" "$game/BepInEx/licenses/prism/LICENSES"

@@ -1,0 +1,16 @@
+{
+  "manifestVersion": 1,
+  "kind": "game",
+  "id": "disco-elysium",
+  "name": "Disco Elysium",
+  "detect": {
+    "steam": { "appId": 632470, "dirName": "Disco Elysium" },
+    "gog": {},
+    "epic": {},
+    "markers": ["disco.exe", "Disco Elysium.exe", "disco.app"]
+  },
+  "userData": {
+    "windows": "${localLow}/ZAUM Studio/Disco Elysium",
+    "macos": "${home}/Library/Application Support/ZAUM Studio/Disco Elysium"
+  }
+}

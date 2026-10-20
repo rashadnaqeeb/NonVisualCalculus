@@ -1,16 +1,8 @@
-# Build the distributable mod zips: the vendored BepInEx game-folder layout, the Release
-# plugin output under BepInEx\plugins\NonVisualCalculus, the audio assets and lang files
-# beside the plugin, and prism.dll at the game-folder root. The zip root IS the game
-# folder, so the installer (and a manual user) extracts it straight into the game dir.
-#
-# Two zips come out. NonVisualCalculus-v<version>.zip is the release. WhirlingInWords-v<version>.zip
-# is the same release under the mod's pre-rename asset name, for installer exes from the
-# Whirling in Words era still on players' machines: they only recognize that asset name, and they
-# never delete files, only overwrite. So the compat zip adds a zero-byte file at every path the
-# old releases put under BepInEx\plugins\WhirlingInWords (the frozen 1.0.0/1.0.1 file list):
-# overwriting the old plugin with empty files kills it (BepInEx skips an unreadable DLL, and a
-# zero-byte file can never satisfy an assembly lookup the way a named stub assembly could), and
-# listing them in that installer's manifest keeps its uninstall able to remove them.
+# Build the distributable mod zip, releases\NonVisualCalculus-v<version>.zip: the vendored BepInEx
+# game-folder layout, the Release plugin output under BepInEx\plugins\NonVisualCalculus, the audio
+# assets, lang files and scene descriptions beside the plugin, and prism.dll at the game-folder
+# root. The zip root IS the game folder, so the installer (and a manual user) extracts it straight
+# into the game dir.
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
@@ -32,55 +24,6 @@ $prismDll = Join-Path $scriptDir "third_party\prism\prism.dll"
 $hostOutDir = Join-Path $scriptDir "src\NonVisualCalculus\bin\Release\net6.0"
 $moduleDll = Join-Path $scriptDir "src\NonVisualCalculus.Module\bin\Release\net6.0\NonVisualCalculus.Module.dll"
 $zipPath = Join-Path $releaseDir "NonVisualCalculus-v$version.zip"
-$compatZipPath = Join-Path $releaseDir "WhirlingInWords-v$version.zip"
-
-# Every file the 1.0.0/1.0.1 releases shipped under BepInEx\plugins\WhirlingInWords. Frozen: no
-# release will ever add to the old folder again, so this list never changes.
-$legacyPluginFiles = @(
-    "Microsoft.CodeAnalysis.CSharp.Scripting.dll"
-    "Microsoft.CodeAnalysis.CSharp.dll"
-    "Microsoft.CodeAnalysis.Scripting.dll"
-    "Microsoft.CodeAnalysis.dll"
-    "NAudio.Asio.dll"
-    "NAudio.Core.dll"
-    "NAudio.Midi.dll"
-    "NAudio.Wasapi.dll"
-    "NAudio.WinMM.dll"
-    "NAudio.dll"
-    "System.Collections.Immutable.dll"
-    "System.Reflection.Metadata.dll"
-    "WhirlingInWords.Core.dll"
-    "WhirlingInWords.Module.dll"
-    "WhirlingInWords.dll"
-    "assets\audio\cursor\cursor_impassable.wav"
-    "assets\audio\cursor\enter.wav"
-    "assets\audio\cursor\exit.wav"
-    "assets\audio\cursor\fog_enter.wav"
-    "assets\audio\cursor\fog_exit.wav"
-    "assets\audio\interactables\container.wav"
-    "assets\audio\interactables\door.wav"
-    "assets\audio\interactables\door_open.wav"
-    "assets\audio\interactables\interactable.wav"
-    "assets\audio\interactables\npc.wav"
-    "assets\audio\interactables\orb.wav"
-    "assets\audio\walltones\1\east.wav"
-    "assets\audio\walltones\1\north.wav"
-    "assets\audio\walltones\1\south.wav"
-    "assets\audio\walltones\1\west.wav"
-    "lang\ar.txt"
-    "lang\de.txt"
-    "lang\en.txt"
-    "lang\es.txt"
-    "lang\fr.txt"
-    "lang\ja.txt"
-    "lang\ko.txt"
-    "lang\pl.txt"
-    "lang\pt-br.txt"
-    "lang\ru.txt"
-    "lang\tr.txt"
-    "lang\zh-tw.txt"
-    "lang\zh.txt"
-)
 
 foreach ($required in @($bepinexZip, $prismDll)) {
     if (-not (Test-Path $required)) {
@@ -135,29 +78,36 @@ try {
     New-Item -ItemType Directory -Force $langDir | Out-Null
     Copy-Item -Path (Join-Path $scriptDir "lang\*.txt") -Destination $langDir
 
+    $descriptionsDir = Join-Path $pluginDir "descriptions"
+    New-Item -ItemType Directory -Force $descriptionsDir | Out-Null
+    Copy-Item -Path (Join-Path $scriptDir "descriptions\*.txt") -Destination $descriptionsDir
+
     Copy-Item -LiteralPath $prismDll -Destination $stageDir
 
     if (Test-Path $zipPath) {
         Remove-Item -LiteralPath $zipPath -Force
     }
-    Compress-Archive -Path (Join-Path $stageDir "*") -DestinationPath $zipPath -Force
-
-    # The compat zip: the same stage plus the zero-byte tombstones over the old plugin folder.
-    $legacyDir = Join-Path $stageDir "BepInEx\plugins\WhirlingInWords"
-    foreach ($rel in $legacyPluginFiles) {
-        $tombstone = Join-Path $legacyDir $rel
-        New-Item -ItemType Directory -Force (Split-Path -Parent $tombstone) | Out-Null
-        New-Item -ItemType File -Force $tombstone | Out-Null
+    # Written entry by entry: Compress-Archive names entries with backslashes and skips hidden
+    # files, and on the Mac share Windows reports dotfiles such as .doorstop_version as hidden.
+    # Files only, with forward-slash paths; the loader creates the folders it needs.
+    Add-Type -AssemblyName System.IO.Compression
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $stageRoot = (Get-Item -LiteralPath $stageDir).FullName.TrimEnd('\') + '\'
+    $zip = [System.IO.Compression.ZipFile]::Open($zipPath, [System.IO.Compression.ZipArchiveMode]::Create)
+    try {
+        foreach ($file in Get-ChildItem -LiteralPath $stageDir -Recurse -File -Force) {
+            $entryName = $file.FullName.Substring($stageRoot.Length).Replace('\', '/')
+            [void][System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
+                $zip, $file.FullName, $entryName, [System.IO.Compression.CompressionLevel]::Optimal)
+        }
     }
-    if (Test-Path $compatZipPath) {
-        Remove-Item -LiteralPath $compatZipPath -Force
+    finally {
+        $zip.Dispose()
     }
-    Compress-Archive -Path (Join-Path $stageDir "*") -DestinationPath $compatZipPath -Force
 
     Remove-Item -LiteralPath $stageDir -Recurse -Force
 
     Write-Host "Release zip: $zipPath"
-    Write-Host "Compat zip (pre-rename installers): $compatZipPath"
 }
 finally {
     Pop-Location
