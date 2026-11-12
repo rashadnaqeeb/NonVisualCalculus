@@ -16,8 +16,9 @@ namespace NonVisualCalculus.Speech.Mac
     /// every line, and nothing on the utterance API changes it. So each message is rendered
     /// instead, with writeUtterance:toBufferCallback:, which delivers the same audio the voice
     /// would play in a fraction of its playing time with no silence in front and a few tens of
-    /// milliseconds behind. The samples are trimmed (<see cref="SpeechAudio.Trim"/>) and scheduled
-    /// back-to-back on an AVAudioPlayerNode of our own, in the voice's native format (Eloquence
+    /// milliseconds behind. The samples are trimmed (<see cref="SpeechAudio.Trim"/>), faded in and
+    /// out over a few milliseconds so a line that ends mid-waveform does not click
+    /// (<see cref="SpeechAudio.FadeEdges"/>), and scheduled back-to-back on an AVAudioPlayerNode of our own, in the voice's native format (Eloquence
     /// renders at 16 kHz, the compact voices at 22.05 kHz; the engine's mixer resamples to the
     /// output device). Our own AVAudioEngine, rather than the game's audio, keeps speech clear of
     /// the game's bus and gives it a volume of its own.
@@ -509,6 +510,7 @@ namespace NonVisualCalculus.Speech.Mac
 
             IntPtr channel = Marshal.ReadIntPtr(channels);
             SpeechAudio.Scale(trimmed, _volume);
+            SpeechAudio.FadeEdges(trimmed, sampleRate);
             Marshal.Copy(trimmed, 0, channel, trimmed.Length);
             int gap = frames - trimmed.Length;
             Marshal.Copy(
