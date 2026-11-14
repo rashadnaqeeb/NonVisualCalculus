@@ -6,6 +6,7 @@
   "authors": ["Rashad Naqeeb"],
   "license": "MIT",
   "game": "disco-elysium",
+  "platforms": ["windows", "macos/arm64"],
   "distributions": {
     "steam": "supported",
     "gog": "supported",
