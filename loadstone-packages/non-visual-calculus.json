@@ -1,8 +1,22 @@
 {
-  "manifestVersion": 1,
+  "manifestVersion": 2,
   "id": "non-visual-calculus",
   "name": "Non-Visual Calculus",
-  "description": "Screen-reader accessibility for Disco Elysium: The Final Cut, for blind and visually-impaired players: speaks the dialogue, menus and screens, adds keyboard navigation over the whole UI, and makes the world playable with a movement cursor, a scanner of everything around you, and audio cues for geometry and objects.",
+  "description": {
+    "en": "Screen-reader accessibility for Disco Elysium: The Final Cut, for blind and visually-impaired players: speaks the dialogue, menus and screens, adds keyboard navigation over the whole UI, and makes the world playable with a movement cursor, a scanner of everything around you, and audio cues for geometry and objects.",
+    "ar": "دعم قارئ الشاشة في ديسكو إليزيوم: ذا فاينل كت للاعبين المكفوفين وضعاف البصر: يقرأ الحوارات والقوائم والشاشات، ويضيف التنقل بلوحة المفاتيح في الواجهة كلها، ويجعل العالم قابلًا للعب بمؤشر للحركة، وماسح لكل ما حولك، وإشارات صوتية لمعالم المكان والأشياء.",
+    "de": "Screenreader-Unterstützung für Disco Elysium: The Final Cut, für blinde und sehbehinderte Spieler: liest Dialoge, Menüs und Bildschirme vor, ergänzt Tastaturnavigation in der gesamten Oberfläche und macht die Spielwelt spielbar mit einem Bewegungscursor, einem Scanner für alles um dich herum und Audiosignalen für Raumgeometrie und Objekte.",
+    "es": "Accesibilidad con lector de pantalla para Disco Elysium: The Final Cut, para jugadores ciegos y con discapacidad visual: lee los diálogos, los menús y las pantallas, añade navegación con teclado por toda la interfaz y hace jugable el mundo con un cursor de movimiento, un escáner de todo lo que te rodea y señales de audio para la geometría y los objetos.",
+    "fr": "Accessibilité au lecteur d'écran pour Disco Elysium : The Final Cut, destinée aux joueurs aveugles et malvoyants : lit les dialogues, les menus et les écrans, ajoute la navigation au clavier dans toute l'interface et rend le monde jouable grâce à un curseur de déplacement, un scanner de tout ce qui vous entoure et des repères sonores pour la géométrie et les objets.",
+    "ja": "ディスコ エリジウム ザ ファイナル カットを、目の見えないプレイヤーや視覚に障害のあるプレイヤーがスクリーンリーダーで遊べるようにするMODです。セリフ、メニュー、画面を読み上げ、UI全体をキーボードで操作できるようにし、移動カーソル、周囲のすべてを調べるスキャナー、地形や物体を知らせる音の合図で、ゲームの世界を遊べるようにします。",
+    "ko": "시각 장애인과 저시력 플레이어를 위한 디스코 엘리시움: 더 파이널 컷 스크린 리더 접근성 모드입니다. 대사와 메뉴, 화면을 읽어 주고, 전체 UI에 키보드 탐색을 더하며, 이동 커서와 주변의 모든 것을 알려 주는 스캐너, 지형과 물체를 알리는 소리 신호로 게임 세계를 플레이할 수 있게 합니다.",
+    "pl": "Dostępność z czytnikiem ekranu w Disco Elysium: The Final Cut dla niewidomych i słabowidzących graczy: czyta dialogi, menu i ekrany, dodaje nawigację klawiaturą po całym interfejsie i pozwala grać w świecie gry dzięki kursorowi ruchu, skanerowi wszystkiego wokół ciebie oraz sygnałom dźwiękowym dla geometrii otoczenia i obiektów.",
+    "pt-BR": "Acessibilidade com leitor de tela para Disco Elysium: The Final Cut, para jogadores cegos e com baixa visão: lê os diálogos, os menus e as telas, adiciona navegação pelo teclado em toda a interface e torna o mundo jogável com um cursor de movimento, um scanner de tudo ao seu redor e sinais sonoros para a geometria e os objetos.",
+    "ru": "Поддержка скринридеров в Disco Elysium: The Final Cut для незрячих и слабовидящих игроков: озвучивает диалоги, меню и экраны, добавляет управление с клавиатуры во всём интерфейсе и позволяет исследовать игровой мир с помощью курсора перемещения, сканера всего, что вас окружает, и звуковых сигналов для геометрии и объектов.",
+    "tr": "Kör ve az gören oyuncular için Disco Elysium: The Final Cut'a ekran okuyucu erişilebilirliği: diyalogları, menüleri ve ekranları seslendirir, tüm arayüzde klavyeyle gezinme ekler ve bir hareket imleci, çevrendeki her şey için bir tarayıcı, mekân geometrisi ve nesneler için sesli ipuçlarıyla oyun dünyasını oynanabilir kılar.",
+    "zh-Hans": "为盲人和视障玩家打造的《极乐迪斯科：最终剪辑版》屏幕阅读器无障碍模组：朗读对话、菜单和各个画面，为整个界面加入键盘导航，并通过移动光标、扫描周围一切的扫描器，以及提示地形和物体的音效，让玩家能够在游戏世界中自由行动。",
+    "zh-Hant": "為盲人與視障玩家打造的《極樂迪斯科：最終剪輯版》螢幕閱讀器無障礙模組：朗讀對話、選單與各個畫面，為整個介面加入鍵盤導覽，並透過移動游標、掃描周遭一切的掃描器，以及提示地形與物體的音效，讓玩家能在遊戲世界中自由行動。"
+  },
   "authors": ["Rashad Naqeeb"],
   "license": "MIT",
   "game": "disco-elysium",
@@ -17,7 +31,24 @@
       "step": "expect",
       "when": { "platform": "macos" },
       "checks": [
-        { "arch": "arm64", "message": "Non-Visual Calculus on macOS needs an Apple Silicon Mac." }
+        {
+          "arch": "arm64",
+          "message": {
+            "en": "Non-Visual Calculus on macOS needs an Apple Silicon Mac.",
+            "ar": "يتطلب الاستنتاج غير البصري على macOS جهاز Mac بمعالج Apple Silicon.",
+            "de": "Nicht-Visuelles Kalkül benötigt unter macOS einen Mac mit Apple Silicon.",
+            "es": "En macOS, Cálculo no visual necesita un Mac con Apple Silicon.",
+            "fr": "Sur macOS, Calcul non visuel nécessite un Mac avec puce Apple Silicon.",
+            "ja": "macOSで非視覚計算を使うには、Appleシリコン搭載のMacが必要です。",
+            "ko": "macOS에서 비시각화 분석을 사용하려면 Apple 실리콘 Mac이 필요합니다.",
+            "pl": "Matematyka niewzrokowa na macOS wymaga Maca z procesorem Apple Silicon.",
+            "pt-BR": "No macOS, o Cálculo Não Visual requer um Mac com Apple Silicon.",
+            "ru": "Для мода Невизуальный анализ на macOS нужен Mac с процессором Apple Silicon.",
+            "tr": "Görsel Olmayan Analiz, macOS'ta Apple Silicon işlemcili bir Mac gerektirir.",
+            "zh-Hans": "在 macOS 上使用非视觉计算需要搭载 Apple 芯片的 Mac。",
+            "zh-Hant": "在 macOS 上使用非視覺計算需要搭載 Apple 晶片的 Mac。"
+          }
+        }
       ]
     },
     {
@@ -46,20 +77,62 @@
       "checks": [
         {
           "fileExists": "${gameDir}/BepInEx/plugins/NonVisualCalculus/NonVisualCalculus.dll",
-          "message": "The download didn't contain the mod (no BepInEx/plugins/NonVisualCalculus/NonVisualCalculus.dll)."
+          "message": {
+            "en": "The download didn't contain the mod (no BepInEx/plugins/NonVisualCalculus/NonVisualCalculus.dll).",
+            "ar": "لم يحتوِ التنزيل على المود (لا يوجد BepInEx/plugins/NonVisualCalculus/NonVisualCalculus.dll).",
+            "de": "Der Download enthielt den Mod nicht (BepInEx/plugins/NonVisualCalculus/NonVisualCalculus.dll fehlt).",
+            "es": "La descarga no contenía el mod (falta BepInEx/plugins/NonVisualCalculus/NonVisualCalculus.dll).",
+            "fr": "Le téléchargement ne contenait pas le mod (BepInEx/plugins/NonVisualCalculus/NonVisualCalculus.dll est absent).",
+            "ja": "ダウンロードにMODが含まれていませんでした（BepInEx/plugins/NonVisualCalculus/NonVisualCalculus.dllがありません）。",
+            "ko": "다운로드한 파일에 모드가 없습니다(BepInEx/plugins/NonVisualCalculus/NonVisualCalculus.dll 없음).",
+            "pl": "Pobrany plik nie zawierał moda (brak BepInEx/plugins/NonVisualCalculus/NonVisualCalculus.dll).",
+            "pt-BR": "O download não continha o mod (falta BepInEx/plugins/NonVisualCalculus/NonVisualCalculus.dll).",
+            "ru": "В загруженном файле нет мода (отсутствует BepInEx/plugins/NonVisualCalculus/NonVisualCalculus.dll).",
+            "tr": "İndirilen dosyada mod yoktu (BepInEx/plugins/NonVisualCalculus/NonVisualCalculus.dll bulunamadı).",
+            "zh-Hans": "下载的文件中没有该模组（缺少 BepInEx/plugins/NonVisualCalculus/NonVisualCalculus.dll）。",
+            "zh-Hant": "下載的檔案中沒有此模組（缺少 BepInEx/plugins/NonVisualCalculus/NonVisualCalculus.dll）。"
+          }
         }
       ]
     },
     {
       "step": "notice",
       "when": { "platform": "macos", "not": { "steamLaunchOptions": "NonVisualCalculus.app" } },
-      "message": "To start the mod from Steam itself, right-click Disco Elysium in Steam, open Properties, General, and paste the launch option line below into Launch Options. Until then, start the game with the Launch button here. The first modded launch prepares the mod for your copy of the game, which takes a minute or two with a black screen.",
+      "message": {
+        "en": "To start the mod from Steam itself, right-click Disco Elysium in Steam, open Properties, General, and paste the launch option line below into Launch Options. Until then, start the game with the Launch game button here. The first modded launch prepares the mod for your copy of the game, which takes a minute or two with a black screen.",
+        "ar": "لتشغيل المود من Steam نفسه، انقر بزر الفأرة الأيمن على Disco Elysium في Steam، وافتح Properties ثم General، والصق سطر خيار التشغيل أدناه في Launch Options. وإلى أن تفعل ذلك، شغّل اللعبة بزر تشغيل اللعبة هنا. أول تشغيل بعد التثبيت يجهّز المود لنسختك من اللعبة، ويستغرق ذلك دقيقة أو دقيقتين مع شاشة سوداء.",
+        "de": "Um den Mod direkt aus Steam zu starten, klicke in Steam mit der rechten Maustaste auf Disco Elysium, öffne Eigenschaften, Allgemein, und füge die Startoptionszeile unten in die Startoptionen ein. Bis dahin starte das Spiel hier mit der Schaltfläche „Spiel starten“. Der erste Start nach der Installation bereitet den Mod für deine Kopie des Spiels vor; das dauert ein bis zwei Minuten bei schwarzem Bildschirm.",
+        "es": "Para iniciar el mod desde el propio Steam, haz clic derecho en Disco Elysium en Steam, abre Propiedades, General, y pega la línea de opción de lanzamiento de abajo en Opciones de lanzamiento. Hasta entonces, inicia el juego con el botón Iniciar el juego de aquí. El primer inicio tras la instalación prepara el mod para tu copia del juego, lo que tarda uno o dos minutos con la pantalla en negro.",
+        "fr": "Pour lancer le mod directement depuis Steam, faites un clic droit sur Disco Elysium dans Steam, ouvrez Propriétés, Général, et collez la ligne d'option de lancement ci-dessous dans Options de lancement. D'ici là, lancez le jeu avec le bouton Lancer le jeu ici. Le premier lancement après l'installation prépare le mod pour votre copie du jeu, ce qui prend une minute ou deux avec un écran noir.",
+        "ja": "Steamから直接MODを起動するには、SteamでDisco Elysiumを右クリックし、プロパティ、一般を開いて、下の起動オプションの行を起動オプションに貼り付けてください。それまでは、ここにある「ゲームを起動」ボタンでゲームを起動してください。インストール後の初回起動では、お使いのゲームに合わせてMODの準備が行われるため、黒い画面のまま1、2分かかります。",
+        "ko": "Steam에서 바로 모드를 실행하려면 Steam에서 Disco Elysium을 마우스 오른쪽 버튼으로 클릭하고 속성, 일반을 연 다음 아래의 실행 옵션 줄을 시작 옵션에 붙여 넣으십시오. 그때까지는 여기 있는 게임 실행 버튼으로 게임을 실행하십시오. 설치 후 첫 실행에서는 사용 중인 게임에 맞게 모드를 준비하므로 검은 화면으로 1~2분 걸립니다.",
+        "pl": "Aby uruchamiać moda bezpośrednio ze Steama, kliknij prawym przyciskiem myszy Disco Elysium w Steamie, otwórz Właściwości, Ogólne i wklej poniższy wiersz opcji uruchamiania w pole Opcje uruchamiania. Do tego czasu uruchamiaj grę tutaj przyciskiem Uruchom grę. Pierwsze uruchomienie po instalacji przygotowuje moda dla twojej kopii gry, co trwa minutę lub dwie przy czarnym ekranie.",
+        "pt-BR": "Para iniciar o mod pelo próprio Steam, clique com o botão direito em Disco Elysium no Steam, abra Propriedades, Geral, e cole a linha de opção de inicialização abaixo em Opções de inicialização. Até lá, inicie o jogo com o botão Iniciar o jogo daqui. A primeira inicialização após a instalação prepara o mod para a sua cópia do jogo, o que leva um ou dois minutos com a tela preta.",
+        "ru": "Чтобы запускать мод прямо из Steam, щёлкните правой кнопкой мыши по Disco Elysium в Steam, откройте «Свойства», «Общие» и вставьте строку параметра запуска ниже в поле «Параметры запуска». До тех пор запускайте игру здесь кнопкой «Запустить игру». Первый запуск после установки подготавливает мод для вашей копии игры, это занимает минуту-две с чёрным экраном.",
+        "tr": "Modu doğrudan Steam'den başlatmak için Steam'de Disco Elysium'a sağ tıkla, Özellikler'i ve Genel'i aç, aşağıdaki başlatma seçeneği satırını Başlatma Seçenekleri alanına yapıştır. O zamana kadar oyunu buradaki Oyunu başlat düğmesiyle başlat. Yüklemeden sonraki ilk başlatma, modu oyunun senin kopyasına göre hazırlar; bu, siyah ekranla bir iki dakika sürer.",
+        "zh-Hans": "若要直接从 Steam 启动模组，请在 Steam 中右键点击 Disco Elysium，打开属性、通用，然后将下方的启动选项行粘贴到启动选项中。在此之前，请使用这里的“启动游戏”按钮启动游戏。安装后首次启动时，会为你的游戏副本准备模组，期间会黑屏一两分钟。",
+        "zh-Hant": "若要直接從 Steam 啟動模組，請在 Steam 中於 Disco Elysium 上按右鍵，開啟內容、一般，然後將下方的啟動選項行貼到啟動選項中。在此之前，請使用這裡的「啟動遊戲」按鈕啟動遊戲。安裝後首次啟動時，會為你的遊戲副本準備模組，期間會黑畫面一兩分鐘。"
+      },
       "clipboard": "\"${gameDir}/NonVisualCalculus.app\" %command%"
     },
     {
       "step": "notice",
       "when": { "platform": "windows" },
-      "message": "The first modded launch prepares the mod for your copy of the game, which takes a minute or two before the main menu."
+      "message": {
+        "en": "The first modded launch prepares the mod for your copy of the game, which takes a minute or two before the main menu.",
+        "ar": "أول تشغيل بعد التثبيت يجهّز المود لنسختك من اللعبة، ويستغرق ذلك دقيقة أو دقيقتين قبل ظهور القائمة الرئيسية.",
+        "de": "Der erste Start nach der Installation bereitet den Mod für deine Kopie des Spiels vor; das dauert ein bis zwei Minuten, bis das Hauptmenü erscheint.",
+        "es": "El primer inicio tras la instalación prepara el mod para tu copia del juego, lo que tarda uno o dos minutos antes del menú principal.",
+        "fr": "Le premier lancement après l'installation prépare le mod pour votre copie du jeu, ce qui prend une minute ou deux avant le menu principal.",
+        "ja": "インストール後の初回起動では、お使いのゲームに合わせてMODの準備が行われるため、メインメニューが表示されるまで1、2分かかります。",
+        "ko": "설치 후 첫 실행에서는 사용 중인 게임에 맞게 모드를 준비하므로 메인 메뉴가 나올 때까지 1~2분 걸립니다.",
+        "pl": "Pierwsze uruchomienie po instalacji przygotowuje moda dla twojej kopii gry, co trwa minutę lub dwie, zanim pojawi się menu główne.",
+        "pt-BR": "A primeira inicialização após a instalação prepara o mod para a sua cópia do jogo, o que leva um ou dois minutos antes do menu principal.",
+        "ru": "Первый запуск после установки подготавливает мод для вашей копии игры, это занимает минуту-две до появления главного меню.",
+        "tr": "Yüklemeden sonraki ilk başlatma, modu oyunun senin kopyasına göre hazırlar; ana menü gelene kadar bu bir iki dakika sürer.",
+        "zh-Hans": "安装后首次启动时，会为你的游戏副本准备模组，需要一两分钟才会出现主菜单。",
+        "zh-Hant": "安裝後首次啟動時，會為你的遊戲副本準備模組，需要一兩分鐘才會出現主選單。"
+      }
     }
   ],
   "launch": [
@@ -69,7 +142,21 @@
       "checks": [
         {
           "processRunning": ["steam", "steam_osx"],
-          "message": "Steam isn't running. Open Steam, then press Launch again."
+          "message": {
+            "en": "Steam isn't running. Open Steam, then press Launch game again.",
+            "ar": "برنامج Steam غير مشغّل. افتح Steam، ثم اضغط تشغيل اللعبة مرة أخرى.",
+            "de": "Steam läuft nicht. Öffne Steam und drücke dann erneut „Spiel starten“.",
+            "es": "Steam no se está ejecutando. Abre Steam y vuelve a pulsar Iniciar el juego.",
+            "fr": "Steam n'est pas lancé. Ouvrez Steam, puis appuyez de nouveau sur Lancer le jeu.",
+            "ja": "Steamが起動していません。Steamを開いてから、もう一度「ゲームを起動」を押してください。",
+            "ko": "Steam이 실행 중이 아닙니다. Steam을 연 다음 게임 실행을 다시 누르십시오.",
+            "pl": "Steam nie jest uruchomiony. Otwórz Steama, a potem ponownie naciśnij Uruchom grę.",
+            "pt-BR": "O Steam não está aberto. Abra o Steam e pressione Iniciar o jogo novamente.",
+            "ru": "Steam не запущен. Откройте Steam, затем снова нажмите «Запустить игру».",
+            "tr": "Steam çalışmıyor. Steam'i aç, ardından Oyunu başlat düğmesine yeniden bas.",
+            "zh-Hans": "Steam 未运行。请打开 Steam，然后再次按“启动游戏”。",
+            "zh-Hant": "Steam 未執行。請開啟 Steam，然後再按一次「啟動遊戲」。"
+          }
         }
       ]
     },
@@ -91,7 +178,21 @@
     {
       "step": "notice",
       "when": { "distribution": ["epic", "standalone"] },
-      "message": "Start Disco Elysium the way you usually do; the mod loads with it."
+      "message": {
+        "en": "Start Disco Elysium the way you usually do; the mod loads with it.",
+        "ar": "شغّل ديسكو إليزيوم كما تفعل عادةً؛ وسيُحمَّل المود معها.",
+        "de": "Starte Disco Elysium wie gewohnt; der Mod wird mit dem Spiel geladen.",
+        "es": "Inicia Disco Elysium como sueles hacerlo; el mod se carga con el juego.",
+        "fr": "Lancez Disco Elysium comme d'habitude ; le mod se charge avec le jeu.",
+        "ja": "いつもの方法でディスコ エリジウムを起動してください。MODも一緒に読み込まれます。",
+        "ko": "평소와 같은 방법으로 디스코 엘리시움을 실행하십시오. 모드도 함께 로드됩니다.",
+        "pl": "Uruchom Disco Elysium tak jak zwykle; mod wczyta się razem z grą.",
+        "pt-BR": "Inicie o Disco Elysium como você costuma fazer; o mod é carregado junto com o jogo.",
+        "ru": "Запустите Disco Elysium как обычно; мод загрузится вместе с игрой.",
+        "tr": "Disco Elysium'u her zamanki gibi başlat; mod onunla birlikte yüklenir.",
+        "zh-Hans": "请照常启动极乐迪斯科，模组会随游戏一起加载。",
+        "zh-Hant": "請照常啟動極樂迪斯科，模組會隨遊戲一起載入。"
+      }
     },
     {
       "step": "open-url",
