@@ -1,11 +1,10 @@
 #!/bin/sh
-# Writes releases/loadstone-release.json, the release manifest the installer reads: Loadstone's
-# `package` command freezes loadstone-packages/non-visual-calculus.json for this version, hashes
-# both mod zips (Windows and macOS, each tagged with its platform) and stamps both installers so
-# running copies can update themselves. The release notes are the version's CHANGELOG.md section.
-# Run on a Mac after build_release.ps1, build-installer.ps1, build_release.sh and
-# build-installer.sh have filled releases/. Loadstone is a checkout beside this repo
-# (../loadstone), or wherever LOADSTONE_DIR points.
+# Writes releases/loadstone-release.json, the release manifest the Loadstone mod manager reads:
+# Loadstone's `package` command freezes loadstone-packages/non-visual-calculus.json for this
+# version and hashes both mod zips (Windows and macOS, each tagged with its platform). The release
+# notes are the version's CHANGELOG.md section. Run on a Mac after build_release.ps1 and
+# build_release.sh have filled releases/. Loadstone is a checkout beside this repo (../loadstone),
+# or wherever LOADSTONE_DIR points.
 set -eu
 
 repo="$(cd "$(dirname "$0")" && pwd)"
@@ -20,9 +19,7 @@ version="$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' "$repo/Directory.Build.
 releases="$repo/releases"
 win_zip="$releases/NonVisualCalculus-v$version.zip"
 mac_zip="$releases/NonVisualCalculus-macOS-v$version.zip"
-win_installer="$releases/NonVisualCalculusInstaller.exe"
-mac_installer="$releases/NonVisualCalculusInstaller.dmg"
-for required in "$win_zip" "$mac_zip" "$win_installer" "$mac_installer"; do
+for required in "$win_zip" "$mac_zip"; do
     [ -f "$required" ] || { echo "Release artifact not found: $required" >&2; exit 1; }
 done
 
@@ -57,7 +54,7 @@ PY
 (cd "$loadstone" && cargo build -q --release -p loadstone-cli)
 cli="$loadstone/target/release/loadstone"
 "$cli" package --manifest "$work/non-visual-calculus.json" --scope "$repo/loadstone-packages" \
-    --version "v$version" --installer "$win_installer" --installer "$mac_installer" \
+    --version "v$version" \
     --notes-file "$work/notes.md" --out "$releases/loadstone-release.json"
 "$cli" validate --scope "$repo/loadstone-packages" "$releases/loadstone-release.json"
 rm -rf "$work"

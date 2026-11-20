@@ -237,26 +237,25 @@ never copied from Windows. Player-facing details are in `macos/README.md`.
   bytes is broken on arm64: Il2CppInterop passes the return buffer as the first argument, where
   arm64 passes it in x8. Check the signature before patching such a method.
 - **Release:** `build_release.sh` builds `releases/NonVisualCalculus-macOS-v<version>.zip`
-  (`install.sh`, the macOS README, and `game/` for beside `disco.app`); `build-installer.sh`
-  builds the signed, notarized `releases/NonVisualCalculusInstaller.dmg` (see Installer below).
+  (`install.sh`, the macOS README, and `game/` for beside `disco.app`). Players install it
+  through Loadstone (see below).
 
-## Installer
+## Loadstone
 
-The installer is **Loadstone** (github.com/bradjrenshaw/loadstone), an accessible mod manager,
-built as a branded single-mod installer from a checkout beside this repo (`../loadstone`, or
-`LOADSTONE_DIR`). The package relies on engine changes in bradjrenshaw/loadstone#1 (read-only
-overwrites, folder pruning, clipboard notices); until that merges, build from its branch,
-`fix/readonly-overwrite` on rashadnaqeeb/loadstone. What it does is data, not code: `loadstone-packages/non-visual-calculus.json`
-(install, migration clean-up, launch and uninstall steps, frozen into each release, so a change
-ships with the next release) and `disco-elysium.json` (detection, user-data paths, read live from
-`main`, so a fix reaches every installer on push). `installer/loadstone-profile.json` pins the build to this repo. `build-installer.ps1` (VM)
-and `build-installer.sh` (Mac) build the exe and the dmg; `package-release.sh` (Mac) writes
-`releases/loadstone-release.json`, which freezes the manifest per release and hashes both zips
-and both installers. Check package files with `../loadstone/target/release/loadstone validate
+Players install, update, launch and uninstall the mod with **Loadstone**
+(github.com/bradjrenshaw/loadstone), the accessible mod manager shared by all of the user's access
+mods; the mod ships no installer of its own. It is listed through a link file in
+bradjrenshaw/loadstone-registry, which Brad maintains. What Loadstone does is data, not code:
+`loadstone-packages/non-visual-calculus.json` (install, migration clean-up, launch and uninstall
+steps, frozen into each release, so a change ships with the next release) and `disco-elysium.json`
+(detection, user-data paths, read live from `main`, so a fix reaches every player on push).
+`package-release.sh` (Mac) writes `releases/loadstone-release.json` with the CLI from a Loadstone
+checkout beside this repo (`../loadstone`, or `LOADSTONE_DIR`); it freezes the manifest per
+release and hashes both zips. Check package files with `../loadstone/target/release/loadstone validate
 loadstone-packages`; test an install into a scratch folder with `loadstone install
 non-visual-calculus --scope loadstone-packages --game-dir <dir> --state-dir <dir>
 --local-release <loadstone-release.json>` (a folder holding an empty `disco.app` passes
-detection). The dmg's notarization uses the `notary` notarytool keychain profile.
+detection).
 
 ## Architecture
 

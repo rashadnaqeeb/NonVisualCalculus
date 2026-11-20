@@ -15,11 +15,13 @@ The only thing that does not work is the game's collage mode, which is used to t
 
 ## Install and update
 
-1. Download the installer: on Windows, **[NonVisualCalculusInstaller.exe](https://github.com/rashadnaqeeb/NonVisualCalculus/releases/latest/download/NonVisualCalculusInstaller.exe)**; on an Apple Silicon Mac, **[NonVisualCalculusInstaller.dmg](https://github.com/rashadnaqeeb/NonVisualCalculus/releases/latest/download/NonVisualCalculusInstaller.dmg)** (see the [macOS guide](macos/README.md)).
-2. Run it. It finds your Steam copy of the game on its own (for GOG or Epic, browse to the game folder) and installs the latest release. An existing install, from the old installer or by hand, is taken over and cleaned up.
-3. Press Launch in the installer, or start the game the way you usually do. The first launch takes a few minutes while the mod loader generates files, so be patient if it seems frozen. This is only a one-time issue.
+The mod installs through [Loadstone](https://github.com/bradjrenshaw/loadstone), an accessible mod manager for screen-reader accessibility mods.
 
-To **update** later, run the installer again; it updates itself as well as the mod. It also repairs a damaged install and uninstalls the mod. The installer is [Loadstone](https://github.com/bradjrenshaw/loadstone), an accessible mod manager, set up for this mod alone.
+1. Download Loadstone from its **[latest release](https://github.com/bradjrenshaw/loadstone/releases/latest)**: `Loadstone.exe` on Windows, `Loadstone.dmg` on an Apple Silicon Mac (see the [macOS guide](macos/README.md)).
+2. Open it, choose Non-Visual Calculus in the list of mods, and press Install. Loadstone finds your Steam copy of the game on its own (for GOG or Epic, browse to the game folder) and installs the latest release. An existing install, from the old installer or by hand, is taken over and cleaned up.
+3. Press Launch in Loadstone, or start the game the way you usually do. The first launch takes a few minutes while the mod loader generates files, so be patient if it seems frozen. This is only a one-time issue.
+
+To **update** later, open Loadstone and press Update on the mod's page; Loadstone keeps itself up to date too. The same page uninstalls the mod.
 
 ## How the mod works
 

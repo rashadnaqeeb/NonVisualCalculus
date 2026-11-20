@@ -1,8 +1,8 @@
-# Publish a GitHub release for an existing, pushed tag: uploads the Windows and macOS mod zips, the
-# Windows and macOS installers, and loadstone-release.json from releases\ with notes taken from the
-# tag's CHANGELOG.md section. Run build_release.ps1 and build-installer.ps1 first, then on a Mac
-# build_release.sh (the macOS zip compiles against interop generated from the Mac game),
-# build-installer.sh and package-release.sh, which hashes everything into loadstone-release.json.
+# Publish a GitHub release for an existing, pushed tag: uploads the Windows and macOS mod zips and
+# loadstone-release.json from releases\ with notes taken from the tag's CHANGELOG.md section. Run
+# build_release.ps1 first, then on a Mac build_release.sh (the macOS zip compiles against interop
+# generated from the Mac game) and package-release.sh, which hashes both zips into
+# loadstone-release.json.
 
 param(
     [Parameter(Mandatory = $true, Position = 0)]
@@ -94,9 +94,7 @@ $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $releaseDir = Join-Path $scriptDir "releases"
 $changelogPath = Join-Path $scriptDir "CHANGELOG.md"
 $zipPath = Join-Path $releaseDir "NonVisualCalculus-$VersionTag.zip"
-$installerPath = Join-Path $releaseDir "NonVisualCalculusInstaller.exe"
 $macZipPath = Join-Path $releaseDir "NonVisualCalculus-macOS-$VersionTag.zip"
-$macInstallerPath = Join-Path $releaseDir "NonVisualCalculusInstaller.dmg"
 $loadstoneReleasePath = Join-Path $releaseDir "loadstone-release.json"
 $releaseTitle = "V$($VersionTag.Substring(1))"
 
@@ -111,16 +109,8 @@ try {
         Fail "Release zip not found: $zipPath"
     }
 
-    if (-not (Test-Path -LiteralPath $installerPath -PathType Leaf)) {
-        Fail "Installer not found: $installerPath"
-    }
-
     if (-not (Test-Path -LiteralPath $macZipPath -PathType Leaf)) {
         Fail "macOS zip not found: $macZipPath (build it with build_release.sh on a Mac)"
-    }
-
-    if (-not (Test-Path -LiteralPath $macInstallerPath -PathType Leaf)) {
-        Fail "macOS installer not found: $macInstallerPath (build it with build-installer.sh on a Mac)"
     }
 
     if (-not (Test-Path -LiteralPath $loadstoneReleasePath -PathType Leaf)) {
@@ -144,7 +134,7 @@ try {
         }
 
         Invoke-Checked "GitHub release creation" {
-            & gh.exe release create $VersionTag $zipPath $macZipPath $installerPath $macInstallerPath $loadstoneReleasePath --title $releaseTitle --notes-file $notesFile
+            & gh.exe release create $VersionTag $zipPath $macZipPath $loadstoneReleasePath --title $releaseTitle --notes-file $notesFile
         }
     }
     finally {
